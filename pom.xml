@@ -8,7 +8,7 @@
     <artifactId>bce-java-sdk</artifactId>
     <version>0.8.1</version>
     <description>The BCE SDK for Java provides Java APIs for all of BCE services.</description>
-    <url>https://bce.baidu.com/sdkforjava</url>
+    <url>http://bce.baidu.com/sdk/index.html</url>
 
     <scm>
         <url>https://github.com/baidubce/bce-sdk-java.git</url>
@@ -25,8 +25,8 @@
     <developers>
         <developer>
             <id>bce</id>
-            <organization>Baidu Cloud for Enterprise</organization>
-            <organizationUrl>https://bce.baidu.com</organizationUrl>
+            <organization>Baidu Open Cloud</organization>
+            <organizationUrl>http://bce.baidu.com</organizationUrl>
             <roles>
                 <role>developer</role>
             </roles>
@@ -205,14 +205,37 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <repository>
-            <id>Baidu_Local</id>
-            <url>http://maven.scm.baidu.com:8081/nexus/content/repositories/Baidu_Local</url>
-        </repository>
-        <snapshotRepository>
-            <id>Baidu_Local_Snapshots</id>
-            <url>http://maven.scm.baidu.com:8081/nexus/content/repositories/Baidu_Local_Snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+  <profiles>
+      <profile>
+        <id>publishing</id>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-gpg-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>sign-artifacts</id>
+                  <phase>verify</phase>
+                  <goals>
+                    <goal>sign</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+
+            <plugin>
+              <groupId>org.sonatype.plugins</groupId>
+              <artifactId>nexus-staging-maven-plugin</artifactId>
+              <version>1.5.1</version>
+              <extensions>true</extensions>
+              <configuration>
+                <serverId>sonatype-nexus-staging</serverId>
+                <nexusUrl>https://oss.sonatype.org</nexusUrl>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
 </project>
