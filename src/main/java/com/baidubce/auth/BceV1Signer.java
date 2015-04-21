@@ -193,7 +193,7 @@ public class BceV1Signer implements Signer {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(new SecretKeySpec(signingKey.getBytes(UTF8), "HmacSHA256"));
-            return Hex.encodeHexString(mac.doFinal(stringToSign.getBytes(UTF8)));
+            return new String(Hex.encodeHex(mac.doFinal(stringToSign.getBytes(UTF8))));
         } catch (Exception e) {
             throw new BceClientException("Fail to generate the signature", e);
         }

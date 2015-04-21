@@ -866,7 +866,7 @@ public class BosClient extends AbstractBceClient {
             FileInputStream fileInputStream = null;
             try {
                 fileInputStream = new FileInputStream(file);
-                metadata.setBceContentSha256(Hex.encodeHexString(HashUtils.computeSha256Hash(fileInputStream)));
+                metadata.setBceContentSha256(new String(Hex.encodeHex(HashUtils.computeSha256Hash(fileInputStream))));
             } catch (Exception e) {
                 throw new BceClientException("Unable to calculate SHA-256 hash", e);
             } finally {

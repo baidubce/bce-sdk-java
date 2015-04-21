@@ -72,13 +72,13 @@ import org.apache.http.nio.protocol.BasicAsyncResponseConsumer;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
@@ -251,7 +251,13 @@ public class BceHttpClient {
                 }
                 if (httpResponse != null) {
                     try {
-                        EntityUtils.consume(httpResponse.getEntity());
+                        HttpEntity entity = httpResponse.getEntity();
+                        if (entity != null && entity.isStreaming()) {
+                            final InputStream instream = entity.getContent();
+                            if (instream != null) {
+                                instream.close();
+                            }
+                        }
                     } catch (IOException e1) {
                         logger.debug("Fail to consume entity.", e1);
                         try {
