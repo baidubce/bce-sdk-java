@@ -24,6 +24,8 @@ public class BceResponseMetadata {
 
     private String contentDisposition;
 
+    private String transferEncoding;
+
     private String contentEncoding;
 
     private long contentLength = -1;
@@ -156,6 +158,27 @@ public class BceResponseMetadata {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getTransferEncoding() {
+        return transferEncoding;
+    }
+
+    public void setTransferEncoding(String transferEncoding) {
+        this.transferEncoding = transferEncoding;
+    }
+
+    @Override
+    public String toString() {
+        return "BceResponseMetadata [\n  bceRequestId=" + bceRequestId
+                + ", \n  bceContentSha256=" + bceContentSha256
+                + ", \n  contentDisposition=" + contentDisposition
+                + ", \n  contentEncoding=" + contentEncoding + ", \n  contentLength="
+                + contentLength + ", \n  contentMd5=" + contentMd5
+                + ", \n  contentRange=" + contentRange + ", \n  contentType="
+                + contentType + ", \n  date=" + date + ", \n  eTag=" + eTag
+                + ", \n  expires=" + expires + ", \n  lastModified=" + lastModified
+                + ", \n  server=" + server + ", \n  location=" + location + "]";
     }
 
 }

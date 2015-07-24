@@ -27,6 +27,7 @@ import com.baidubce.util.JsonUtils;
  * HTTP error response handler for Baidu BCE responses.
  */
 public class BceErrorResponseHandler implements HttpResponseHandler {
+    
     @Override
     public boolean handle(BceHttpResponse httpResponse, AbstractBceResponse response) throws Exception {
         if (httpResponse.getStatusCode() / 100 == HttpStatus.SC_OK / 100) {
@@ -36,14 +37,22 @@ public class BceErrorResponseHandler implements HttpResponseHandler {
         BceServiceException bse = null;
         InputStream content = httpResponse.getContent();
         if (content != null) {
-            if (response.getMetadata().getContentLength() > 0) {
-                BceErrorResponse bceErrorResponse = JsonUtils.loadFrom(content, BceErrorResponse.class);
-                if (bceErrorResponse.getMessage() != null) {
-                    bse = new BceServiceException(bceErrorResponse.getMessage());
-                    bse.setErrorCode(bceErrorResponse.getCode());
-                    bse.setRequestId(bceErrorResponse.getRequestId());
-                }
+            /*
+             * content-length is not set in the error respond message of the media service
+             */
+//            if (response.getMetadata().getContentLength() > 0) {
+//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(content));
+//            String line;
+//            while ((line = bufferedReader.readLine()) != null){
+//                System.out.println(line);
+//            }
+            BceErrorResponse bceErrorResponse = JsonUtils.loadFrom(content, BceErrorResponse.class);
+            if (bceErrorResponse.getMessage() != null) {
+                bse = new BceServiceException(bceErrorResponse.getMessage());
+                bse.setErrorCode(bceErrorResponse.getCode());
+                bse.setRequestId(bceErrorResponse.getRequestId());
             }
+            //            }
             content.close();
         }
         if (bse == null) {
@@ -58,4 +67,5 @@ public class BceErrorResponseHandler implements HttpResponseHandler {
         }
         throw bse;
     }
+
 }

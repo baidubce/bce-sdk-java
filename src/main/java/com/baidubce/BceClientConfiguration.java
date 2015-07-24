@@ -810,4 +810,22 @@ public class BceClientConfiguration {
         this.setCredentials(credentials);
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "BceClientConfiguration [ \n  userAgent=" + userAgent
+                + ", \n  retryPolicy=" + retryPolicy + ", \n  localAddress="
+                + localAddress + ", \n  protocol=" + protocol + ", \n  proxyHost="
+                + proxyHost + ", \n  proxyPort=" + proxyPort + ", \n  proxyUsername="
+                + proxyUsername + ", \n  proxyPassword=" + proxyPassword
+                + ", \n  proxyDomain=" + proxyDomain + ", \n  proxyWorkstation="
+                + proxyWorkstation + ", \n  proxyPreemptiveAuthenticationEnabled="
+                + proxyPreemptiveAuthenticationEnabled + ", \n  maxConnections="
+                + maxConnections + ", \n  socketTimeoutInMillis="
+                + socketTimeoutInMillis + ", \n  connectionTimeoutInMillis="
+                + connectionTimeoutInMillis + ", \n  socketBufferSizeInBytes="
+                + socketBufferSizeInBytes + ", \n  endpoint=" + endpoint
+                + ", \n  region=" + region + ", \n  credentials=" + credentials + "]\n";
+    }
+    
 }

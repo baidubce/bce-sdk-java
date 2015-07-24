@@ -47,7 +47,7 @@ import java.util.Set;
  * <tr>
  * <td>expirationInSeconds</td>
  * <td>The time until the signature will expire, which starts from the timestamp. By default, it is set to 1800 (half an
- * hour). The expiration <i>MUST NOT</i> be less than 300 (5 minutes), or greater than 129600 (1.5 days).</td>
+ * hour). </td>
  * </tr>
  * *
  * </table>
@@ -60,9 +60,11 @@ public class SignOptions {
 
     public static final int DEFAULT_EXPIRATION_IN_SECONDS = 1800;
 
-    public static final int DEFAULT_MIN_EXPIRATION_IN_SECONDS = 300;
+    @Deprecated
+    public static final int DEFAULT_MIN_EXPIRATION_IN_SECONDS = 1;
 
-    public static final int DEFAULT_MAX_EXPIRATION_IN_SECONDS = 129600;
+    @Deprecated
+    public static final int DEFAULT_MAX_EXPIRATION_IN_SECONDS = 2147483647;
 
     /**
      * The set of headers to be signed.
@@ -129,14 +131,16 @@ public class SignOptions {
      *
      * @param expirationInSeconds The time until the signature will expire.
      *
-     * @throws IllegalArgumentException The expirationInSeconds expected in range [300, 129600].
      */
     public void setExpirationInSeconds(int expirationInSeconds) {
-        checkArgument(expirationInSeconds >= DEFAULT_MIN_EXPIRATION_IN_SECONDS
-                && expirationInSeconds <= DEFAULT_MAX_EXPIRATION_IN_SECONDS,
-                        "Invalid expirationInSeconds, expected in range [300, 129600], actual %s",
-                                expirationInSeconds);
-
         this.expirationInSeconds = expirationInSeconds;
     }
+
+    @Override
+    public String toString() {
+        return "SignOptions [\n  headersToSign=" + headersToSign + ",\n  timestamp="
+                + timestamp + ",\n  expirationInSeconds=" + expirationInSeconds
+                + "]";
+    }
+    
 }

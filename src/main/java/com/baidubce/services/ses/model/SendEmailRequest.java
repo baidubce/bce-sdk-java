@@ -135,6 +135,11 @@ public class SendEmailRequest extends SesRequest {
              */
             private String from;
             /**
+             * The display name of sender, which can be custom by the users themselves
+             */
+            @JsonProperty("name")
+            private String displayName;
+            /**
              * The return path.
              */
             @JsonProperty("return_path")
@@ -160,6 +165,14 @@ public class SendEmailRequest extends SesRequest {
 
             public void setFrom(String from) {
                 this.from = from;
+            }
+
+            public String getDisplayName() {
+                return displayName;
+            }
+
+            public void setDisplayName(String displayName) {
+                this.displayName = displayName;
             }
 
             public String getReturnPath() {

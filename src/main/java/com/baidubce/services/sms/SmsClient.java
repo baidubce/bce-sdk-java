@@ -16,8 +16,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.internal.InternalRequest;
-import com.baidubce.services.sms.model.SmsRequest;
-import com.baidubce.services.sms.model.SmsResponse;
 import com.baidubce.services.sms.model.CreateTemplateRequest;
 import com.baidubce.services.sms.model.CreateTemplateResponse;
 import com.baidubce.services.sms.model.DeleteTemplateRequest;
@@ -29,11 +27,10 @@ import com.baidubce.services.sms.model.QueryMessageDetailResponse;
 import com.baidubce.services.sms.model.QueryQuotaResponse;
 import com.baidubce.services.sms.model.SendMessageRequest;
 import com.baidubce.services.sms.model.SendMessageResponse;
+import com.baidubce.services.sms.model.SmsRequest;
+import com.baidubce.services.sms.model.SmsResponse;
 import com.baidubce.services.sms.model.StatReceiverRequest;
 import com.baidubce.services.sms.model.StatReceiverResponse;
-import com.baidubce.services.sms.model.UpdateQuotaRequest;
-import com.baidubce.services.sms.model.UpdateTemplateRequest;
-import com.baidubce.services.sms.model.UpdateTemplateResponse;
 import com.baidubce.util.JsonUtils;
 
 /**
@@ -143,29 +140,6 @@ public class SmsClient extends SmsClientSupport {
     }
 
     /**
-     * Update message template
-     * 
-     * @param request The request object which includes the name, content and status of template which is ready to be
-     *            updated
-     * @return The response object which is empty
-     * 
-     * @see com.baidubce.services.sms.model.UpdateTemplateRequest
-     * @see com.baidubce.services.sms.model.UpdateTemplateResponse
-     */
-    public UpdateTemplateResponse updateTemplate(UpdateTemplateRequest request) {
-        checkNotNull(request, "object request should not be null.");
-        assertStringNotNullOrEmpty(request.getTemplateId(), "object templateId should not be null or empty.");
-
-        InternalRequest internalRequest =
-                this.createRequest("template", request, HttpMethodName.PUT, request.getTemplateId());
-
-        // fill in the request payload
-        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
-
-        return this.invokeHttpClient(internalRequest, UpdateTemplateResponse.class);
-    }
-
-    /**
      * Delete message template
      * 
      * @param request The request object which includes the id of template which is ready to be deleted
@@ -214,24 +188,6 @@ public class SmsClient extends SmsClientSupport {
 
         InternalRequest internalRequest = this.createRequest("template", request, HttpMethodName.GET);
         return this.invokeHttpClient(internalRequest, ListTemplateResponse.class);
-    }
-
-    /**
-     * Set the sending quota
-     * 
-     * @param request The request object which includes the detail of sending quota which is ready to be set
-     * 
-     * @see com.baidubce.services.sms.model.UpdateQuotaRequest
-     */
-    public void updateQuota(UpdateQuotaRequest request) {
-        checkNotNull(request, "object request should not be null.");
-
-        InternalRequest internalRequest = this.createRequest("quota", request, HttpMethodName.PUT);
-
-        // fill in the request payload
-        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
-
-        this.invokeHttpClient(internalRequest, SmsResponse.class);
     }
 
     /**

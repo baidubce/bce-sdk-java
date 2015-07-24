@@ -50,6 +50,9 @@ import com.baidubce.util.HttpUtils;
 public abstract class SesClientSupport extends AbstractBceClient {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    protected static final Pattern DEFAULT_EMAIL_PATTERN = Pattern
+            .compile("[-+.\\w]+@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+
     protected static final HttpResponseHandler[] SES_HANDLERS = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler() };
 
@@ -81,7 +84,7 @@ public abstract class SesClientSupport extends AbstractBceClient {
         // set headersToSign
         SignOptions options = SignOptions.DEFAULT;
         Set<String> headersToSign = new HashSet<String>();
-        headersToSign.add("content-type");
+        //headersToSign.add("content-type");
         headersToSign.add("host");
         headersToSign.add("x-bce-date");
         headersToSign.add("x-bce-request-id");
@@ -160,10 +163,8 @@ public abstract class SesClientSupport extends AbstractBceClient {
     }
 
     protected void checkIsEmail(String email) {
-        String regExp = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
-        Pattern pattern = Pattern.compile(regExp);
-        Matcher matcher = pattern.matcher(email);
-        if (!matcher.find()) {
+        Matcher matcher = DEFAULT_EMAIL_PATTERN.matcher(email);
+        if (!matcher.matches()) {
             throw new IllegalArgumentException("illegal email.");
         }
     }

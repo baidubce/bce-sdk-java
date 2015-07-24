@@ -67,7 +67,7 @@ public class BceV1Signer implements Signer {
      */
     @Override
     public void sign(InternalRequest request, BceCredentials credentials) {
-        this.sign(request, credentials, SignOptions.DEFAULT);
+        this.sign(request, credentials, null);
     }
 
     /**
@@ -80,10 +80,17 @@ public class BceV1Signer implements Signer {
     @Override
     public void sign(InternalRequest request, BceCredentials credentials, SignOptions options) {
         checkNotNull(request, "request should not be null.");
-        checkNotNull(options, "options should not be null.");
 
         if (credentials == null) {
             return;
+        }
+
+        if (options == null) {
+            if (request.getSignOptions() != null) {
+                options = request.getSignOptions();
+            } else {
+                options = SignOptions.DEFAULT;
+            }
         }
 
         String accessKeyId = credentials.getAccessKeyId();

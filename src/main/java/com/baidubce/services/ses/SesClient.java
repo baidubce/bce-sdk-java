@@ -44,12 +44,12 @@ import com.baidubce.services.ses.model.ListVerifiedEmailResponse;
 import com.baidubce.services.ses.model.SendEmailRequest;
 import com.baidubce.services.ses.model.SendEmailRequest.Mail;
 import com.baidubce.services.ses.model.SendEmailRequest.Mail.Attachment;
+import com.baidubce.services.ses.model.SendEmailRequest.Mail.Attachment.FileData;
 import com.baidubce.services.ses.model.SendEmailRequest.Mail.Destination;
+import com.baidubce.services.ses.model.SendEmailRequest.Mail.Destination.Addr;
 import com.baidubce.services.ses.model.SendEmailRequest.Mail.Message;
 import com.baidubce.services.ses.model.SendEmailRequest.Mail.Source;
 import com.baidubce.services.ses.model.SendEmailRequest.Mail.Subject;
-import com.baidubce.services.ses.model.SendEmailRequest.Mail.Attachment.FileData;
-import com.baidubce.services.ses.model.SendEmailRequest.Mail.Destination.Addr;
 import com.baidubce.services.ses.model.SendEmailResponse;
 import com.baidubce.services.ses.model.SesRequest;
 import com.baidubce.services.ses.model.SesResponse;
@@ -388,7 +388,7 @@ public class SesClient extends SesClientSupport {
     /**
      * Send email.
      * <p>
-     * Simple to send email, all optional parameters use system default value.
+     * Simple to send email without display name, all optional parameters use system default value.
      * 
      * @param from The sender, which is required
      * @param toAddr The receive, which is required
@@ -401,9 +401,30 @@ public class SesClient extends SesClientSupport {
      */
     public SendEmailResponse sendEmail(String from, String[] toAddr, String subject, String body,
             File...attachmentFiles) {
+        return sendEmail(from, "", toAddr, subject, body, attachmentFiles);
+    }
+
+    /**
+     * Send email.
+     * <p>
+     * Simple to send email, all optional parameters use system default value.
+     * 
+     * @param from The sender, which is required
+     * @param displayName The display name of sender, which can be custom by the users themselves
+     * @param toAddr The receive, which is required
+     * @param subject The title of the email, which is required
+     * @param body The content of the email, which is required
+     * @param attachmentFiles The array of attachment file. If you need send attachment then set it, it's optional
+     *            parameters
+     * 
+     * @see com.baidubce.services.ses.SesClient#sendEmail(com.baidubce.services.ses.model.SendEmailRequest request)
+     */
+    public SendEmailResponse sendEmail(String from, String displayName, String[] toAddr, String subject, String body,
+            File...attachmentFiles) {
         SendEmailRequest request =
                 buildSendEmailRequest(from, from, from, toAddr, new String[] { "" }, new String[] { "" }, subject,
                         body, 1, 1);
+        request = fillDisplayName(request, displayName);
         request = fillAttachment(request, attachmentFiles);
 
         return sendEmail(request);
@@ -415,6 +436,7 @@ public class SesClient extends SesClientSupport {
      * Simple to send email, partly optional parameters use system default value.
      * 
      * @param from The sender, which is required
+     * @param displayName The display name of sender, which can be custom by the users themselves
      * @param toAddr The receive, which is required
      * @param ccAddr The CC, which is optional
      * @param bccAddr The BCC which is optional
@@ -425,10 +447,11 @@ public class SesClient extends SesClientSupport {
      * 
      * @see com.baidubce.services.ses.SesClient#sendEmail(com.baidubce.services.ses.model.SendEmailRequest request)
      */
-    public SendEmailResponse sendEmail(String from, String[] toAddr, String[] ccAddr, String[] bccAddr, String subject,
-            String body, File...attachmentFiles) {
+    public SendEmailResponse sendEmail(String from, String displayName, String[] toAddr, String[] ccAddr,
+            String[] bccAddr, String subject, String body, File...attachmentFiles) {
         SendEmailRequest request =
                 buildSendEmailRequest(from, from, from, toAddr, ccAddr, bccAddr, subject, body, 1, 1);
+        request = fillDisplayName(request, displayName);
         request = fillAttachment(request, attachmentFiles);
 
         return sendEmail(request);
@@ -440,6 +463,7 @@ public class SesClient extends SesClientSupport {
      * Full to send email, all optional parameters need you set.
      * 
      * @param from The sender, which is required
+     * @param displayName The display name of sender, which can be custom by the users themselves
      * @param returnPath Optional parameters
      * @param replyTo Optional parameters
      * @param toAddr The receive, which is required
@@ -454,12 +478,13 @@ public class SesClient extends SesClientSupport {
      * 
      * @see com.baidubce.services.ses.SesClient#sendEmail(com.baidubce.services.ses.model.SendEmailRequest request)
      */
-    public SendEmailResponse sendEmail(String from, String returnPath, String replyTo, String[] toAddr,
-            String[] ccAddr, String[] bccAddr, String subject, String body, int priority, int charset,
+    public SendEmailResponse sendEmail(String from, String displayName, String returnPath, String replyTo,
+            String[] toAddr, String[] ccAddr, String[] bccAddr, String subject, String body, int priority, int charset,
             File...attachmentFiles) {
         SendEmailRequest request =
                 buildSendEmailRequest(from, returnPath, replyTo, toAddr, ccAddr, bccAddr, subject, body, priority,
                         charset);
+        request = fillDisplayName(request, displayName);
         request = fillAttachment(request, attachmentFiles);
 
         return sendEmail(request);
@@ -724,7 +749,7 @@ public class SesClient extends SesClientSupport {
             attachments = new ArrayList<SendEmailRequest.Mail.Attachment>();
         }
         attachments.add(attachment);
-        
+
         mail.setAttachments(attachments);
 
         return request;
@@ -750,6 +775,13 @@ public class SesClient extends SesClientSupport {
         SendEmailRequest request = new SendEmailRequest();
         request.setMail(mail);
 
+        return request;
+    }
+
+    private SendEmailRequest fillDisplayName(SendEmailRequest request, String displayName) {
+        if (request != null && request.getMail() != null && request.getMail().getSource() != null) {
+            request.getMail().getSource().setDisplayName(displayName);
+        }
         return request;
     }
 

@@ -101,19 +101,19 @@ public class BceHttpClient {
     /**
      * Internal client for sending HTTP requests
      */
-    private CloseableHttpClient httpClient;
+    protected CloseableHttpClient httpClient;
 
     /**
      * Internal asyncClient for sending HTTP requests
      */
-    private CloseableHttpAsyncClient httpAsyncClient;
+    protected CloseableHttpAsyncClient httpAsyncClient;
 
     /**
      * Client configuration options, such as proxy settings, max retries, etc.
      */
-    private BceClientConfiguration config;
+    protected BceClientConfiguration config;
 
-    private Signer signer;
+    protected Signer signer;
 
     private HttpClientConnectionManager connectionManager;
 
@@ -180,12 +180,12 @@ public class BceHttpClient {
             HttpResponseHandler[] responseHandlers) {
         // Apply whatever request options we know how to handle, such as user-agent.
         request.addHeader(Headers.USER_AGENT, this.config.getUserAgent());
-        BceCredentials credentials = this.config.getCredentials();
+        BceCredentials credentials = config.getCredentials();
         if (request.getCredentials() != null) {
             credentials = request.getCredentials();
         }
         long delayForNextRetryInMillis = 0;
-        for (int attempt = 1; ; ++attempt) {
+        for (int attempt = 1;  ; ++attempt) {
             HttpRequestBase httpRequest = null;
             CloseableHttpResponse httpResponse = null;
             try {
@@ -210,7 +210,7 @@ public class BceHttpClient {
                 } else {
                     httpResponse = this.httpClient.execute(httpRequest, httpContext);
                 }
-
+                HttpUtils.printRequest(httpRequest); 
                 BceHttpResponse bceHttpResponse = new BceHttpResponse(httpResponse);
 
                 T response = responseClass.newInstance();
@@ -298,7 +298,7 @@ public class BceHttpClient {
      * @param retryPolicy The retryPolicy being used.
      * @return The deley time before next retry.
      */
-    private long getDelayBeforeNextRetryInMillis(HttpRequestBase method, BceClientException exception, int attempt,
+    protected long getDelayBeforeNextRetryInMillis(HttpRequestBase method, BceClientException exception, int attempt,
             RetryPolicy retryPolicy) {
         int retries = attempt - 1;
 
@@ -354,7 +354,7 @@ public class BceHttpClient {
      * @return Connection manager for asynchronous http client.
      * @throws IOReactorException
      */
-    private NHttpClientConnectionManager createNHttpClientConnectionManager() throws IOReactorException {
+    protected NHttpClientConnectionManager createNHttpClientConnectionManager() throws IOReactorException {
         ConnectingIOReactor ioReactor =
                 new DefaultConnectingIOReactor(IOReactorConfig.custom()
                         .setSoTimeout(this.config.getSocketTimeoutInMillis()).setTcpNoDelay(true).build());
@@ -389,7 +389,7 @@ public class BceHttpClient {
      * @param connectionManager Asynchronous http client connection manager.
      * @return Asynchronous http client based on connection manager.
      */
-    private CloseableHttpAsyncClient createHttpAsyncClient (NHttpClientConnectionManager connectionManager) {
+    protected CloseableHttpAsyncClient createHttpAsyncClient (NHttpClientConnectionManager connectionManager) {
         HttpAsyncClientBuilder builder = HttpAsyncClients.custom().setConnectionManager(connectionManager);
 
         int socketBufferSizeInBytes = this.config.getSocketBufferSizeInBytes();
@@ -407,7 +407,7 @@ public class BceHttpClient {
      * @param request The request to convert to an HttpClient method object.
      * @return The converted HttpClient method object with any parameters, headers, etc. from the original request set.
      */
-    private HttpRequestBase createHttpRequest(InternalRequest request) {
+    protected HttpRequestBase createHttpRequest(InternalRequest request) {
         String uri = request.getUri().toASCIIString();
         String encodedParams = HttpUtils.getCanonicalQueryString(request.getParameters(), false);
 
@@ -469,7 +469,7 @@ public class BceHttpClient {
      * @param request The internal request.
      * @return HttpClient Context object.
      */
-    private HttpClientContext createHttpContext(InternalRequest request) {
+    protected HttpClientContext createHttpContext(InternalRequest request) {
         HttpClientContext context = HttpClientContext.create();
         context.setRequestConfig(this.requestConfigBuilder.setExpectContinueEnabled(request.isExpectContinueEnabled())
                 .build());

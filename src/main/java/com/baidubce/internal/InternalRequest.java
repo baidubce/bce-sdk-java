@@ -13,6 +13,7 @@
 package com.baidubce.internal;
 
 import com.baidubce.auth.BceCredentials;
+import com.baidubce.auth.SignOptions;
 import com.baidubce.http.HttpMethodName;
 
 import com.google.common.collect.Maps;
@@ -56,6 +57,8 @@ public class InternalRequest {
     private RestartableInputStream content;
 
     private BceCredentials credentials;
+
+    private SignOptions signOptions;
 
     private boolean expectContinueEnabled;
 
@@ -112,6 +115,14 @@ public class InternalRequest {
 
     public void setCredentials(BceCredentials credentials) {
         this.credentials = credentials;
+    }
+
+    public SignOptions getSignOptions() {
+        return this.signOptions;
+    }
+
+    public void setSignOptions(SignOptions signOptions) {
+        this.signOptions = signOptions;
     }
 
     public boolean isExpectContinueEnabled() {

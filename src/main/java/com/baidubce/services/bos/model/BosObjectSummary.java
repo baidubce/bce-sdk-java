@@ -162,4 +162,11 @@ public class BosObjectSummary {
         this.owner = owner;
     }
 
+    @Override
+    public String toString() {
+        return "BosObjectSummary [\n  bucketName=" + bucketName + ", \n  key=" + key
+                + ", \n  eTag=" + eTag + ", \n  size=" + size + ", \n  lastModified="
+                + lastModified + ", \n  owner=" + owner + "\n]";
+    }
+
 }

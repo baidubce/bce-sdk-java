@@ -138,6 +138,14 @@ public abstract class AbstractBceClient {
         return this.serviceId;
     }
 
+    public BceHttpClient getClient() {
+        return client;
+    }
+
+    public void setClient(BceHttpClient client) {
+        this.client = client;
+    }
+
     /**
      * Shuts down the client and releases all underlying resources.
      *
@@ -195,10 +203,15 @@ public abstract class AbstractBceClient {
         String className = this.getClass().getName();
         String expectedClassName =
                 packageName + '.' + Character.toUpperCase(serviceId.charAt(0)) + serviceId.substring(1) + "Client";
-        if (!className.equals(expectedClassName)) {
-            throw new IllegalStateException("Invalid class name "
-                    + className + ", " + expectedClassName + " expected");
-        }
+        /**
+         * Comment out this verification for media services, since media service is a suit of 
+         * services, the media package contains multiple Client classes.
+         * 
+         */
+//        if (!className.equals(expectedClassName)) {
+//            throw new IllegalStateException("Invalid class name "
+//                    + className + ", " + expectedClassName + " expected");
+//        }
         return serviceId;
     }
 

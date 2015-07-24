@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.Writer;
 
 import com.baidubce.BceClientException;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -35,9 +36,9 @@ public class JsonUtils {
     static {
         JsonUtils.objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         JsonUtils.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        JsonUtils.objectMapper.setSerializationInclusion(Include.NON_NULL);
     }
 
-    ;
     private static final ObjectWriter writer = JsonUtils.objectMapper.writer();
     private static final ObjectWriter prettyWriter = JsonUtils.objectMapper.writerWithDefaultPrettyPrinter();
 

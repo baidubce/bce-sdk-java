@@ -15,6 +15,7 @@ package com.baidubce.model;
 import org.apache.http.annotation.NotThreadSafe;
 
 import com.baidubce.auth.BceCredentials;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Base class for all BCE web service request objects.
@@ -34,6 +35,7 @@ public abstract class AbstractBceRequest {
      * @return The optional credentials to use to sign this request, overriding the default credentials set at the
      * client level.
      */
+    @JsonIgnore
     public BceCredentials getRequestCredentials() {
         return this.credentials;
     }
@@ -45,6 +47,7 @@ public abstract class AbstractBceRequest {
      * @param credentials The optional BCE security credentials to use for this request, overriding the default
      *                    credentials set at the client level.
      */
+    @JsonIgnore
     public void setRequestCredentials(BceCredentials credentials) {
         this.credentials = credentials;
     }

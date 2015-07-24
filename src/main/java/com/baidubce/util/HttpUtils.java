@@ -12,10 +12,7 @@
  */
 package com.baidubce.util;
 
-import com.baidubce.Protocol;
-import com.baidubce.http.Headers;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -25,7 +22,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.apache.http.Header;
+import org.apache.http.StatusLine;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
+
+import com.baidubce.Protocol;
+import com.baidubce.http.Headers;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 public class HttpUtils {
 
@@ -35,6 +41,8 @@ public class HttpUtils {
     private static String[] PERCENT_ENCODED_STRINGS = new String[256];
 
     private static final Joiner queryStringJoiner = Joiner.on('&');
+    private static boolean HTTP_VERBOSE = Boolean.parseBoolean(System.getProperty("bce.sdk.http", "false"));
+//    private static boolean HTTP_VERBOSE = true;
 
     /**
      * Regex which matches any of the sequences that we need to fix up after URLEncoder.encode().
@@ -249,4 +257,40 @@ public class HttpUtils {
             throw new RuntimeException("Unexpected error", e);
         }
     }
+    
+    public static void printRequest(HttpRequestBase request) {
+        if (!HTTP_VERBOSE) {
+            return;
+        }
+        System.out.println("\n-------------> ");
+        System.out.println(request.getRequestLine());
+        for (Header h : request.getAllHeaders()) {
+            System.out.println(h.getName() + " : " + h.getValue());
+        }
+        RequestConfig config = request.getConfig();
+        if (config != null) {
+            System.out.println("getConnectionRequestTimeout: "
+                    + config.getConnectionRequestTimeout());
+            System.out.println("getConnectTimeout: "
+                    + config.getConnectTimeout());
+            System.out.println("getCookieSpec: " + config.getCookieSpec());
+            System.out.println("getLocalAddress: " + config.getLocalAddress());
+
+        }
+    }
+
+    public static void printResponse(CloseableHttpResponse response) {
+        if (!HTTP_VERBOSE) {
+            return;
+        }
+        System.out.println("\n<------------- ");
+        StatusLine status = response.getStatusLine();
+        System.out.println(status.getStatusCode() + " - "
+                + status.getReasonPhrase());
+        Header[] heads = response.getAllHeaders();
+        for (Header h : heads) {
+            System.out.println(h.getName() + " : " + h.getValue());
+        }
+    }
+
 }

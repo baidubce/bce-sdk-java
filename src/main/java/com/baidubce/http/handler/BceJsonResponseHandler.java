@@ -26,7 +26,8 @@ public class BceJsonResponseHandler implements HttpResponseHandler {
     public boolean handle(BceHttpResponse httpResponse, AbstractBceResponse response) throws Exception {
         InputStream content = httpResponse.getContent();
         if (content != null) {
-            if (response.getMetadata().getContentLength() > 0) {
+            if (response.getMetadata().getContentLength() > 0
+                    || "chunked".equalsIgnoreCase(response.getMetadata().getTransferEncoding())) {
                 JsonUtils.load(content, response);
             }
             content.close();
