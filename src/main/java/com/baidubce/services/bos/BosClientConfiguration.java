@@ -30,6 +30,18 @@ public class BosClientConfiguration extends BceClientConfiguration {
         return this.streamBufferSize;
     }
 
+    public BosClientConfiguration() {
+        super();
+    }
+    
+    public BosClientConfiguration(BceClientConfiguration clientConfiguration) {
+        super(clientConfiguration, null);
+    }
+    
+    public BosClientConfiguration(BceClientConfiguration clientConfiguration, String bosEndpoint) {
+        super(clientConfiguration, bosEndpoint);
+    }
+    
     public void setStreamBufferSize(int streamBufferSize) {
         checkArgument(streamBufferSize > 0, "streamBufferSize should be positive.");
         this.streamBufferSize = streamBufferSize;

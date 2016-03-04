@@ -32,6 +32,11 @@ public class SetBucketAclRequest extends GenericBucketRequest {
     private List<Grant> accessControlList;
 
     /**
+     * The json style of acl of this specified bucket.
+     */
+    private String jsonAcl = null;
+
+    /**
      * Constructs a new SetBucketAclRequest object, ready to set the specified
      * canned ACL on the specified bucket when this request is executed.
      *
@@ -42,6 +47,19 @@ public class SetBucketAclRequest extends GenericBucketRequest {
     public SetBucketAclRequest(String bucketName, CannedAccessControlList cannedAcl) {
         super(bucketName);
         this.setCannedAcl(cannedAcl);
+    }
+
+    /**
+     * Constructs a new SetBucketAclRequest object, ready to set the specified
+     * canned ACL on the specified bucket when this request is executed.
+     *
+     * @param bucketName The name of the bucket whose ACL will be set by this request.
+     * @param jsonAcl  The json style of acl to apply to the specified
+     *                   bucket when this request is executed.
+     */
+    public SetBucketAclRequest(String bucketName, String jsonAcl) {
+        super(bucketName);
+        this.setJsonAcl(jsonAcl);
     }
 
     /**
@@ -135,6 +153,42 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      */
     public SetBucketAclRequest withAccessControlList(List<Grant> accessControlList) {
         this.setAccessControlList(accessControlList);
+        return this;
+    }
+
+
+    /**
+     * Returns the custom json style of  ACL to be applied to the specified bucket when this
+     * request is executed. A request can use either a custom ACL or a canned
+     * ACL, but not both.
+     *
+     * @return The custom json style of ACL to be applied to the specified bucket when this
+     *         request is executed.
+     */
+    public String getJsonAcl() {
+        return this.jsonAcl;
+    }
+
+    /**
+     * Sets the custom json style of ACL containing the access rules to
+     * apply to the specified bucket when this request is executed.
+     *
+     * @param jsonAcl The custom json style of acl containing the access rules to
+     *            apply to the specified bucket when this request is executed.
+     */
+    public void setJsonAcl(String jsonAcl) {
+        this.jsonAcl = jsonAcl;
+    }
+
+    /**
+     * Sets the custom Access Control List containing the access rules to
+     * apply to the specified bucket when this request is executed.
+     *
+     * @param jsonAcl The custom json style of acl containing the access rules to
+     *            apply to the specified bucket when this request is executed.
+     */
+    public SetBucketAclRequest withJsonAcl(String jsonAcl) {
+        this.setJsonAcl(jsonAcl);
         return this;
     }
 }

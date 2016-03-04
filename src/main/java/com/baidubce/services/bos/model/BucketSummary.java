@@ -39,6 +39,11 @@ public class BucketSummary {
     private Date creationDate = null;
 
     /**
+     * The location of this Baidu Bos bucket.
+     */
+    private String location = null;
+
+    /**
      * Constructs a bucket without any name specified.
      */
     public BucketSummary() {
@@ -91,9 +96,29 @@ public class BucketSummary {
         this.creationDate = creationDate;
     }
 
+    /**
+     * Gets the location of the bucket.
+     *
+     * @return The location of this bucket.
+     */
+    public String getLocation() {
+        return this.location;
+    }
+
+    /**
+     * Sets the location of the bucket. All buckets in Baidu Bos share a single namespace;
+     * ensure the bucket is given a unique name.
+     *
+     * @param location The location for the bucket.
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
-        return "Bucket [name=" + this.name + ", creationDate=" + this.creationDate + "]";
+        return "Bucket [name=" + this.name + ", creationDate=" + this.creationDate
+                + ", Location=" + this.location + "]";
     }
 
 }

@@ -97,6 +97,9 @@ public class BceV1Signer implements Signer {
         String secretAccessKey = credentials.getSecretKey();
 
         request.addHeader(Headers.HOST, HttpUtils.generateHostHeader(request.getUri()));
+        if (credentials instanceof BceSessionCredentials) {
+            request.addHeader(Headers.BCE_SECURE_TOKEN, ((BceSessionCredentials) credentials).getSessionToken());
+        }
 
         Date timestamp = options.getTimestamp();
         if (timestamp == null) {

@@ -167,7 +167,7 @@ public class BceClientConfiguration {
         if (region == null) {
             region = "";
         }
-        DEFAULT_USER_AGENT = Joiner.on('/').join("bce-sdk-java", "0.2.0", System.getProperty("os.name"),
+        DEFAULT_USER_AGENT = Joiner.on('/').join("bce-sdk-java", BceConstants.VERSION, System.getProperty("os.name"),
                 System.getProperty("os.version"),
                 System.getProperty("java.vm.name"),
                 System.getProperty("java.vm.version"),
@@ -203,6 +203,34 @@ public class BceClientConfiguration {
         this.userAgent = other.userAgent;
         this.socketBufferSizeInBytes = other.socketBufferSizeInBytes;
         this.endpoint = other.endpoint;
+        this.region = other.region;
+        this.credentials = other.credentials;
+    }
+
+    /**
+     * Constructs a new BceClientConfiguration instance with the same settings as the specified configuration.
+     * This constructor is used to create a client configuration from one SDK to another SDK. e.g. from VOD to BOS.
+     * In this case endpoint should be changed while other attributes keep same.
+     *
+     * @param other the configuration to copy settings from.
+     */
+    public BceClientConfiguration(BceClientConfiguration other, String endpoint) {
+        this.endpoint = endpoint;
+        this.connectionTimeoutInMillis = other.connectionTimeoutInMillis;
+        this.maxConnections = other.maxConnections;
+        this.retryPolicy = other.retryPolicy;
+        this.localAddress = other.localAddress;
+        this.protocol = other.protocol;
+        this.proxyDomain = other.proxyDomain;
+        this.proxyHost = other.proxyHost;
+        this.proxyPassword = other.proxyPassword;
+        this.proxyPort = other.proxyPort;
+        this.proxyUsername = other.proxyUsername;
+        this.proxyWorkstation = other.proxyWorkstation;
+        this.proxyPreemptiveAuthenticationEnabled = other.proxyPreemptiveAuthenticationEnabled;
+        this.socketTimeoutInMillis = other.socketTimeoutInMillis;
+        this.userAgent = other.userAgent;
+        this.socketBufferSizeInBytes = other.socketBufferSizeInBytes;
         this.region = other.region;
         this.credentials = other.credentials;
     }
@@ -706,7 +734,13 @@ public class BceClientConfiguration {
      * @return the service endpoint URL to which the client will connect.
      */
     public String getEndpoint() {
-        return this.endpoint;
+        String url = this.endpoint;
+        // if the set endpoint does not contain a protocol, append protocol to head of it
+        if (this.endpoint != null && this.endpoint.length() > 0
+                && endpoint.indexOf("://") < 0) {
+            url = protocol.toString().toLowerCase() + "://" + endpoint;
+        }
+        return url;
     }
 
     /**
@@ -719,11 +753,6 @@ public class BceClientConfiguration {
     public void setEndpoint(String endpoint) {
         checkNotNull(endpoint, "endpoint should not be null.");
 
-        try {
-            new URL(endpoint);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Invalid endpoint.", e);
-        }
         this.endpoint = endpoint;
     }
 

@@ -49,10 +49,10 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Constructs a new <code>SmsClient</code> instance with the specified configuration.
-     * 
+     *
      * @param config the specified configuration, default inherit super class
      *            <code>com.baidubce.BceClientConfiguration</code>
-     * 
+     *
      * @see com.baidubce.services.sms.SmsClientConfiguration
      */
     public SmsClient(SmsClientConfiguration config) {
@@ -67,19 +67,20 @@ public class SmsClient extends SmsClientSupport {
      * <p>
      * One or more receiver can be specified while sending message.
      * <p>
-     * 
+     *
      * @param request The request object which includes the content to send and one or more receiver
      * @return The response object which includes the id of message and the statistics of sending result
-     * 
+     *
      * @see com.baidubce.services.sms.model.SendMessageRequest
      * @see com.baidubce.services.sms.model.SendMessageResponse
      */
     public SendMessageResponse sendMessage(SendMessageRequest request) {
         checkNotNull(request, "object request should not be null.");
-        assertStringNotNullOrEmpty(request.getTemplateId(), 
+        assertStringNotNullOrEmpty(request.getTemplateId(),
                 "string templateId of request should not be null or empty.");
         assertListNotNullOrEmpty(request.getReceiver(), "list receiver of request should not be null or empty.");
-        assertStringNotNullOrEmpty(request.getContentVar(), "contentVar should not be null or empty.");
+        // allow params is empty
+        //  assertStringNotNullOrEmpty(request.getContentVar(), "contentVar should not be null or empty.");
 
         // validate the receiver
         for (String receiver : request.getReceiver()) {
@@ -96,11 +97,11 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Query message detail
-     * 
+     *
      * @param request The request object which includes the id of message to query
      * @return The response object which includes all the detail result, for example <code>id</code>,
      *         <code>content</code>, <code>receiver</code>, <code>sendTime</code> etc
-     * 
+     *
      * @see com.baidubce.services.sms.model.QueryMessageDetailRequest
      * @see com.baidubce.services.sms.model.QueryMessageDetailResponse
      */
@@ -118,10 +119,10 @@ public class SmsClient extends SmsClientSupport {
      * <p>
      * The template which is created will have a unique id. after audited by BCE administrator, it can be used normally.
      * <p>
-     * 
+     *
      * @param request The request object which includes the name and content of template which is ready to be created
      * @return The response object which includes the id of template which is created
-     * 
+     *
      * @see com.baidubce.services.sms.model.CreateTemplateRequest
      * @see com.baidubce.services.sms.model.CreateTemplateResponse
      */
@@ -141,9 +142,9 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Delete message template
-     * 
+     *
      * @param request The request object which includes the id of template which is ready to be deleted
-     * 
+     *
      * @see com.baidubce.services.sms.model.DeleteTemplateRequest
      */
     public void deleteTemplate(DeleteTemplateRequest request) {
@@ -157,11 +158,11 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Get the detail of message template
-     * 
+     *
      * @param request The request object which includes the id of template which is ready to be get
      * @return The response object which includes all of the detail of message template, refer to
      *         <code>com.baidubce.services.sms.model.GetTemplateDetailResponse</code>
-     * 
+     *
      * @see com.baidubce.services.sms.model.GetTemplateDetailRequest
      * @see com.baidubce.services.sms.model.GetTemplateDetailResponse
      */
@@ -176,11 +177,11 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Get the list of message template
-     * 
+     *
      * @param request The request object which is empty
      * @return The response object which includes all of the detail of message template,refer to
      *         <code>com.baidubce.services.sms.model.ListTemplateResponse</code>
-     * 
+     *
      * @see com.baidubce.services.sms.model.ListTemplateResponse
      */
     public ListTemplateResponse listTemplate(SmsRequest request) {
@@ -192,11 +193,11 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Query the sending quota
-     * 
+     *
      * @param request The request object which is empty
      * @return The response object which includes the detail of sending quota, refer to
      *         <code>com.baidubce.services.sms.model.QueryQuotaResponse</code>
-     * 
+     *
      * @see com.baidubce.services.sms.model.QueryQuotaResponse
      */
     public QueryQuotaResponse queryQuota(SmsRequest request) {
@@ -208,10 +209,10 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Get the statistics about receiving message
-     * 
+     *
      * @param request refer to <code>com.baidubce.services.sms.model.StatReceiverRequest</code>
      * @return refer to <code>com.baidubce.services.sms.model.StatReceiverResponse</code>
-     * 
+     *
      * @see com.baidubce.services.sms.model.StatReceiverRequest
      * @see com.baidubce.services.sms.model.StatReceiverResponse
      */

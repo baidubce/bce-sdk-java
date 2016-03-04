@@ -97,15 +97,24 @@ public abstract class AbstractBceClient {
      *     safe to change the configuration after then.
      * @param responseHandlers a list of handlers for processing HTTP responses from services. See
      *     {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
+     * @param isHttpAsyncPutEnabled whether or not PUT method use Async manner.
      * @throws IllegalStateException if the class name does not follow the naming convention for BCE clients.
      * @throws IllegalArgumentException if the endpoint specified in the client configuration is not a valid URI.
      */
-    public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers) {
+    public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers, 
+            boolean isHttpAsyncPutEnabled) {
         this.serviceId = this.computeServiceId();
         this.config = config;
         this.endpoint = this.computeEndpoint();
-        this.client = new BceHttpClient(config, new BceV1Signer());
+        this.client = new BceHttpClient(config, new BceV1Signer(), isHttpAsyncPutEnabled);
         this.responseHandlers = responseHandlers;
+    }
+
+    /**
+     * constructor with isHttpAsyncPutEnabled default value : false
+     */
+    public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers) {
+        this(config, responseHandlers, false);
     }
 
     /**

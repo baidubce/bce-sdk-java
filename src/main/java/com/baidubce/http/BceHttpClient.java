@@ -102,12 +102,7 @@ public class BceHttpClient {
      * Internal client for sending HTTP requests
      */
     protected CloseableHttpClient httpClient;
-
-    /**
-     * Internal asyncClient for sending HTTP requests
-     */
-    protected CloseableHttpAsyncClient httpAsyncClient;
-
+    
     /**
      * Client configuration options, such as proxy settings, max retries, etc.
      */
@@ -120,6 +115,8 @@ public class BceHttpClient {
     private RequestConfig.Builder requestConfigBuilder;
     private CredentialsProvider credentialsProvider;
     private HttpHost proxyHttpHost;
+
+    private boolean isHttpAsyncPutEnabled = false;
 
     /**
      * Constructs a new BCE client using the specified client configuration options (ex: max retry attempts, proxy
@@ -166,6 +163,17 @@ public class BceHttpClient {
     }
 
     /**
+     * Constructs a new BCE Http Client with httpAsyncPutEnabled.
+     * @param config Configuration options specifying how this client will communicate with BCE (ex: proxy settings,
+     *               retry count, etc.).
+     * @param isHttpAsyncPutEnabled whether use Async for PUT method.
+     */
+    public BceHttpClient(BceClientConfiguration config, Signer signer, boolean isHttpAsyncPutEnabled) {
+        this(config, signer);
+        this.isHttpAsyncPutEnabled = isHttpAsyncPutEnabled;
+    }
+
+    /**
      * Executes the request and returns the result.
      *
      * @param request          The BCE request to send to the remote server
@@ -188,6 +196,7 @@ public class BceHttpClient {
         for (int attempt = 1;  ; ++attempt) {
             HttpRequestBase httpRequest = null;
             CloseableHttpResponse httpResponse = null;
+            CloseableHttpAsyncClient httpAsyncClient = null;
             try {
                 // Sign the request if credentials were provided
                 if (credentials != null) {
@@ -200,10 +209,10 @@ public class BceHttpClient {
 
                 HttpContext httpContext = this.createHttpContext(request);
 
-                if (httpRequest.getMethod().equals("PUT")) {
-                    this.httpAsyncClient = this.createHttpAsyncClient(this.createNHttpClientConnectionManager());
-                    this.httpAsyncClient.start();
-                    Future<HttpResponse> future = this.httpAsyncClient.execute(HttpAsyncMethods.create(httpRequest),
+                if (this.isHttpAsyncPutEnabled && httpRequest.getMethod().equals("PUT")) {
+                    httpAsyncClient = this.createHttpAsyncClient(this.createNHttpClientConnectionManager());
+                    httpAsyncClient.start();
+                    Future<HttpResponse> future = httpAsyncClient.execute(HttpAsyncMethods.create(httpRequest),
                                                                                new BasicAsyncResponseConsumer(),
                                                                                httpContext, null);
                     httpResponse = new BceCloseableHttpResponse(future.get());
@@ -269,8 +278,8 @@ public class BceHttpClient {
                 }
             } finally {
                 try {
-                    if (this.httpAsyncClient != null) {
-                        this.httpAsyncClient.close();
+                    if (httpAsyncClient != null) {
+                        httpAsyncClient.close();
                     }
                 } catch (IOException e) {
                     logger.debug("Fail to close HttpAsyncClient", e);

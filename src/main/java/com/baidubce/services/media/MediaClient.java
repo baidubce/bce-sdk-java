@@ -427,10 +427,27 @@ public class MediaClient extends AbstractBceClient {
      * @param sourceBucket The name of source bucket in Bos.
      * @param targetBucket The name of target bucket in Bos.
      * @param capacity     The concurrent capability of the new pipeline.
+     *
+     */
+    public CreatePipelineResponse createPipeline(
+            String pipelineName, String description,  String sourceBucket, String targetBucket, int capacity) {
+        return createPipeline(pipelineName, description, sourceBucket, targetBucket, capacity, null);
+    }
+
+    /**
+     * Creates a pipeline which enable you to perform multiple transcodes in parallel.
+     *
+     * @param pipelineName The name of new pipeline.
+     * @param description  The optional description of the new pipeline.
+     * @param sourceBucket The name of source bucket in Bos.
+     * @param targetBucket The name of target bucket in Bos.
+     * @param capacity     The concurrent capability of the new pipeline.
+     * @param notification The name of notification
      * 
      */
     public CreatePipelineResponse createPipeline(
-            String pipelineName, String description, String sourceBucket, String targetBucket, int capacity) {
+            String pipelineName, String description, String sourceBucket, String targetBucket, int capacity,
+            String notification) {
         CreatePipelineRequest request = new CreatePipelineRequest();
         request.setPipelineName(pipelineName);
         request.setDescription(description);
@@ -438,6 +455,7 @@ public class MediaClient extends AbstractBceClient {
         request.setTargetBucket(targetBucket);
         PipelineConfig config = new PipelineConfig();
         config.setCapacity(capacity);
+        config.setNotification(notification);
         request.setConfig(config);
         
         return createPipeline(request);
@@ -788,23 +806,6 @@ public class MediaClient extends AbstractBceClient {
     public CreatePresetResponse createPreset(CreatePresetRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
         
-        checkStringNotEmpty(request.getPresetName(), "The parameter presetName should NOT be null or empty string.");
-        checkStringNotEmpty(request.getContainer(), "The parameter container should NOT be null or empty string.");
-        if (request.getAudio() != null) {
-            checkIsTrue(request.getAudio().getBitRateInBps() > 0,
-                    "The audio's parameter bitRateInBps should be greater then zero.");
-        }
-        if (request.getVideo() != null) {
-            checkIsTrue(request.getVideo().getBitRateInBps() > 0,
-                    "The video's parameter bitRateInBps should be greater then zero.");
-        }
-        if (request.getEncryption() != null) {
-            checkStringNotEmpty(request.getEncryption().getStrategy(),
-                    "The encryption's parameter strategy should NOT be null or empty string.");
-            checkStringNotEmpty(request.getEncryption().getAesKey(),
-                    "The encryption's parameter strategy should NOT be null or empty string.");
-        }
-
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, PRESET);
 
         return invokeHttpClient(internalRequest, CreatePresetResponse.class);

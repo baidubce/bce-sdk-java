@@ -15,6 +15,7 @@ package com.baidubce.services.media.model;
 
 public class PipelineConfig {
     private Integer capacity = null;
+    private String notification = null;
 
     // public enum capacityEnum { };
 
@@ -29,8 +30,24 @@ public class PipelineConfig {
         this.capacity = capacity;
     }
 
+    /**
+     * 通知
+     **/
+    public String getNotification() {
+        return notification;
+    }
+
+    public void setNotification(String notification) {
+        this.notification = notification;
+    }
+
     public PipelineConfig withCapacity(Integer capacity) {
         this.capacity = capacity;
+        return this;
+    }
+
+    public PipelineConfig withNotification(String notification) {
+        this.notification = notification;
         return this;
     }
 
@@ -40,6 +57,7 @@ public class PipelineConfig {
         sb.append("class PipelineConfig {\n");
 
         sb.append("    capacity: ").append(capacity).append("\n");
+        sb.append("    notification: ").append(notification).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

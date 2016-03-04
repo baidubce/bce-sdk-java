@@ -37,7 +37,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
     /**
      * Optional field specifying the object metadata for the new object
      */
-    private ObjectMetadata newObjectMetadata = new ObjectMetadata();
+    private ObjectMetadata newObjectMetadata = null;
 
     /**
      * Optional ETag value that constrain the copy request to only be executed

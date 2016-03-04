@@ -80,7 +80,7 @@ public class BosClient extends AbstractBceClient {
      *                            connects to Bos (e.g. proxy settings, retry counts, etc).
      */
     public BosClient(BosClientConfiguration clientConfiguration) {
-        super(clientConfiguration, bos_handlers);
+        super(clientConfiguration, bos_handlers, true);
     }
 
     /**
@@ -268,6 +268,56 @@ public class BosClient extends AbstractBceClient {
     }
 
     /**
+     * Gets the Location for the specified Bos bucket.
+     *
+     * <p>
+     * Each bucket and object in Bos has an Location that defines its location
+     *
+     * @param bucketName The name of the bucket whose Location is being retrieved.
+     * @return The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket.
+     */
+    public GetBucketLocationResponse getBucketLocation(String bucketName) {
+        return this.getBucketLocation(new GetBucketLocationRequest(bucketName));
+    }
+
+    /**
+     * Gets the Location for the specified Bos bucket.
+     *
+     * <p>
+     * Each bucket and object in Bos has an Location that defines its location
+     *
+     * @param request The request containing the name of the bucket whose Location is being retrieved.
+     * @return The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket.
+     */
+    public GetBucketLocationResponse getBucketLocation(GetBucketLocationRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("location", null);
+
+        GetBucketLocationResponse response = this.invokeHttpClient(internalRequest, GetBucketLocationResponse.class);
+
+        return response;
+    }
+
+
+    /**
+     * Sets the json style of bucket acl for the specified Bos bucket using one of
+     * the pre-configured <code>CannedAccessControlLists</code>.
+     *
+     * <p>
+     * A <code>json style of bucket acl</code>
+     * provides a quick way to configure an object or bucket with commonly used
+     * access control policies.
+     *
+     * @param bucketName The name of the bucket whose ACL is being set.
+     * @param jsonAcl The pre-configured <code>CannedAccessControlLists</code> to set for the specified bucket.
+     */
+    public void setBucketAcl(String bucketName, String jsonAcl) {
+        this.setBucketAcl(new SetBucketAclRequest(bucketName, jsonAcl));
+    }
+
+    /**
      * Sets the CannedAccessControlList for the specified Bos bucket using one of
      * the pre-configured <code>CannedAccessControlLists</code>.
      *
@@ -332,6 +382,17 @@ public class BosClient extends AbstractBceClient {
             } catch (UnsupportedEncodingException e) {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        } else if (request.getJsonAcl() != null) {
+            byte[] json = null;
+            try {
+                json = request.getJsonAcl().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
             internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
             internalRequest.setContent(RestartableInputStream.wrap(json));
@@ -425,16 +486,7 @@ public class BosClient extends AbstractBceClient {
                 .appendUri(this.getEndpoint(), URL_PREFIX, request.getBucketName(), request.getKey()));
         internalRequest.setCredentials(request.getRequestCredentials());
         SignOptions options = new SignOptions();
-        if (request.getExpiration() != -1) {
-            options.setExpirationInSeconds(request.getExpiration());
-            internalRequest.addHeader(Headers.EXPIRES,
-                                      new DateUtils().formatRfc822Date(new Date(System.currentTimeMillis()
-                                                                                + 1000 * request.getExpiration())));
-        } else {
-            internalRequest.addHeader(Headers.EXPIRES,
-                                      new DateUtils().formatRfc822Date(new Date(System.currentTimeMillis()
-                                                                                + 1000 * 1800)));
-        }
+        options.setExpirationInSeconds(request.getExpiration());
 
         for (Entry<String, String> entry : request.getRequestHeaders().entrySet()) {
             if (entry.getValue() == null) {
@@ -840,7 +892,6 @@ public class BosClient extends AbstractBceClient {
         InputStream input = request.getInputStream();
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
-        internalRequest.setExpectContinueEnabled(true);
 
         // If a file is specified for upload, we need to pull some additional information from it to auto-configure a
         // few options
@@ -1045,7 +1096,6 @@ public class BosClient extends AbstractBceClient {
         }
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
-        internalRequest.setExpectContinueEnabled(true);
         internalRequest.addParameter("uploadId", request.getUploadId());
         internalRequest.addParameter("partNumber", String.valueOf(request.getPartNumber()));
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(request.getPartSize()));
@@ -1411,7 +1461,7 @@ public class BosClient extends AbstractBceClient {
                     serverSideHash = Hex.decodeHex(objectMetadata.getBceContentSha256().toCharArray());
                     clientSideHash = HashUtils.computeSha256Hash(new FileInputStream(destinationFile));
                 } else if (objectMetadata.getContentMd5() != null) {
-                    serverSideHash = Base64.decodeBase64(objectMetadata.getContentMd5());
+                    serverSideHash = Base64.decodeBase64(objectMetadata.getContentMd5().getBytes(DEFAULT_ENCODING));
                     clientSideHash = HashUtils.computeMd5Hash(new FileInputStream(destinationFile));
                 }
             } catch (Exception e) {
