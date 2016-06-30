@@ -48,20 +48,11 @@ public class GetPlayerCodeRequest extends AbstractBceRequest {
         return sb.toString();
     }
 
-    /**
-     * Gets the media ID value for the media resource.
-     *
-     * @return The ETag value for the new object.
-     */
     public String getMediaId() {
         return mediaId;
     }
 
-    /**
-     * Sets the ETag value for the new object that was created from the associated <code>putObject</code> request.
-     *
-     * @param eTag The ETag value for the new object.
-     */
+
     public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
     }
@@ -71,20 +62,12 @@ public class GetPlayerCodeRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * Gets the ETag value for the newly created object.
-     *
-     * @return The ETag value for the new object.
-     */
+
     public int getWidth() {
         return width;
     }
 
-    /**
-     * Sets the ETag value for the new object that was created from the associated <code>putObject</code> request.
-     *
-     * @param eTag The ETag value for the new object.
-     */
+
     public void setWidth(int width) {
         this.width = width;
     }
@@ -95,20 +78,12 @@ public class GetPlayerCodeRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * Gets the ETag value for the newly created object.
-     *
-     * @return The ETag value for the new object.
-     */
+
     public int getHeight() {
         return height;
     }
 
-    /**
-     * Sets the ETag value for the new object that was created from the associated <code>putObject</code> request.
-     *
-     * @param eTag The ETag value for the new object.
-     */
+
     public void setHeight(int height) {
         this.height = height;
     }
@@ -118,20 +93,12 @@ public class GetPlayerCodeRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * Gets the ETag value for the newly created object.
-     *
-     * @return The ETag value for the new object.
-     */
+
     public Boolean isAutoStart() {
         return autoStart;
     }
 
-    /**
-     * Sets the ETag value for the new object that was created from the associated <code>putObject</code> request.
-     *
-     * @param eTag The ETag value for the new object.
-     */
+
     public void setAutoStart(Boolean autoStart) {
         this.autoStart = autoStart;
     }

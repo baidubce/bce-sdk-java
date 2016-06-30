@@ -14,19 +14,57 @@ package com.baidubce.services.sts.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
+import java.util.Date;
+
 public class GetSessionTokenResponse extends AbstractBceResponse {
-    private Credentials credentials;
+    private String accessKeyId;
 
-    public Credentials getCredentials() {
-        return credentials;
+    private String secretAccessKey;
+
+    private String sessionToken;
+
+    private Date expiration;
+
+    public String getAccessKeyId() {
+        return accessKeyId;
     }
 
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
+    public void setAccessKeyId(String accessKeyId) {
+        this.accessKeyId = accessKeyId;
     }
 
-    public GetSessionTokenResponse withCredentials(Credentials credentials) {
-        this.credentials = credentials;
-        return this;
+    public String getSecretAccessKey() {
+        return secretAccessKey;
+    }
+
+    public void setSecretAccessKey(String secretAccessKey) {
+        this.secretAccessKey = secretAccessKey;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
+    }
+
+    public Date getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(Date expiration) {
+        this.expiration = expiration;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Credentials{");
+        sb.append("accessKeyId='").append(accessKeyId).append('\'');
+        sb.append(", secretAccessKey='").append(secretAccessKey).append('\'');
+        sb.append(", sessionToken='").append(sessionToken).append('\'');
+        sb.append(", expiration=").append(expiration);
+        sb.append('}');
+        return sb.toString();
     }
 }

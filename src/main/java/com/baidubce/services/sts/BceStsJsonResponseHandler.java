@@ -12,14 +12,13 @@
  */
 package com.baidubce.services.sts;
 
-import java.io.InputStream;
-
 import com.baidubce.http.BceHttpResponse;
 import com.baidubce.http.handler.BceJsonResponseHandler;
 import com.baidubce.model.AbstractBceResponse;
-import com.baidubce.services.sts.model.Credentials;
 import com.baidubce.services.sts.model.GetSessionTokenResponse;
 import com.baidubce.util.JsonUtils;
+
+import java.io.InputStream;
 
 /**
  * HTTP body json response handler for Baidu Sts responses.
@@ -37,9 +36,7 @@ public class BceStsJsonResponseHandler extends BceJsonResponseHandler {
             if (content != null) {
                 if (response.getMetadata().getContentLength() > 0
                         || "chunked".equalsIgnoreCase(response.getMetadata().getTransferEncoding())) {
-                    Credentials credentials = new Credentials();
-                    JsonUtils.load(content, credentials);
-                    getSessionTokenResponse.setCredentials(credentials);
+                    JsonUtils.load(content, getSessionTokenResponse);
                 }
                 content.close();
             }

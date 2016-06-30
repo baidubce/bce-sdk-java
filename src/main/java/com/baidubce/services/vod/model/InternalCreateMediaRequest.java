@@ -22,12 +22,18 @@ public class InternalCreateMediaRequest extends AbstractBceRequest {
      */
     private String description;
 
+    /*
+     * The media extension string
+     */
+    private String sourceExtension;
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("InternalCreateMediaRequest { \n");
         sb.append("  mediaId = ").append(mediaId).append("\n");
         sb.append("  title = ").append(title).append("\n");
         sb.append("  description = ").append(description).append("\n");
+        sb.append("  sourceExtension = ").append(sourceExtension).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
@@ -68,6 +74,19 @@ public class InternalCreateMediaRequest extends AbstractBceRequest {
 
     public InternalCreateMediaRequest withDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public String getSourceExtension() {
+        return sourceExtension;
+    }
+
+    public void setSourceExtension(String sourceExtension) {
+        this.sourceExtension = sourceExtension;
+    }
+
+    public InternalCreateMediaRequest withSourceExtension(String sourceExtension) {
+        this.sourceExtension = sourceExtension;
         return this;
     }
 

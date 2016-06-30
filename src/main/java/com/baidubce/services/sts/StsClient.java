@@ -82,6 +82,9 @@ public class StsClient extends AbstractBceClient {
 
         InternalRequest internalRequest = new InternalRequest(HttpMethodName.POST,
                 HttpUtils.appendUri(this.getEndpoint(), URL_PREFIX, GET_SESSION_TOKEN_PATH));
+        if (request.getDurationSeconds() != null) {
+            internalRequest.addParameter("durationSeconds", String.valueOf(request.getDurationSeconds()));
+        }
         internalRequest.setCredentials(request.getRequestCredentials());
         internalRequest.addHeader(Headers.CONTENT_LENGTH,
                 String.valueOf(request.getAcl() == null ? 0 : request.getAcl().length()));

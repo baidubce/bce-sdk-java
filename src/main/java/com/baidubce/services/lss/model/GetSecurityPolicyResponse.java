@@ -24,17 +24,15 @@ public class GetSecurityPolicyResponse  extends AbstractBceResponse {
 
     private Encryption encryption = null;
 
+    private String createTime = null;
+
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public GetSecurityPolicyResponse withName(String name) {
-        this.name = name;
-        return this;
     }
 
     public AuthInfo getAuth() {
@@ -45,22 +43,12 @@ public class GetSecurityPolicyResponse  extends AbstractBceResponse {
         this.auth = auth;
     }
 
-    public GetSecurityPolicyResponse withAuth(AuthInfo auth) {
-        this.auth = auth;
-        return this;
-    }
-
     public AntiLeech getAntiLeech() {
         return antiLeech;
     }
 
     public void setAntiLeech(AntiLeech antiLeech) {
         this.antiLeech = antiLeech;
-    }
-
-    public GetSecurityPolicyResponse withAntiLeech(AntiLeech antiLeech) {
-        this.antiLeech = antiLeech;
-        return this;
     }
 
     public Encryption getEncryption() {
@@ -71,9 +59,12 @@ public class GetSecurityPolicyResponse  extends AbstractBceResponse {
         this.encryption = encryption;
     }
 
-    public GetSecurityPolicyResponse withEncryption(Encryption encryption) {
-        this.encryption = encryption;
-        return this;
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     @Override
@@ -84,6 +75,7 @@ public class GetSecurityPolicyResponse  extends AbstractBceResponse {
         sb.append("    auth: ").append(auth).append("\n");
         sb.append("    antiLeech: ").append(antiLeech).append("\n");
         sb.append("    encryption: ").append(encryption).append("\n");
+        sb.append("    createTime: ").append(createTime).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

@@ -25,20 +25,20 @@ public class ListMediaResourceResponse extends AbstractBceResponse {
     /*
      * The list of all media resources managed by VOD service
      */
-    List<MediaResource> medias = new ArrayList<MediaResource>();
+    List<MediaResource> media = new ArrayList<MediaResource>();
 
-    public List<MediaResource> getMedias() {
-        return medias;
+    public List<MediaResource> getMedia() {
+        return media;
     }
 
-    public void setMedias(List<MediaResource> medias) {
-        this.medias = medias;
+    public void setMedia(List<MediaResource> media) {
+        this.media = media;
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder("ListMediaResourceResponse { \n");
 
-        for (MediaResource mediaResource : getMedias()) {
+        for (MediaResource mediaResource : getMedia()) {
             sb.append(mediaResource).append("\n");
         }
         sb.append("}\n");

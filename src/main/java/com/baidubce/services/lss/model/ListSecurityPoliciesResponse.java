@@ -18,13 +18,13 @@ import java.util.List;
 import com.baidubce.model.AbstractBceResponse;
 
 public class ListSecurityPoliciesResponse extends AbstractBceResponse {
-    private List<SecurityPolicy> securityPolicies = null;
+    private List<SecurityPolicyInfo> securityPolicies = null;
 
-    public List<SecurityPolicy> getSecurityPolicies() {
+    public List<SecurityPolicyInfo> getSecurityPolicies() {
         return securityPolicies;
     }
 
-    public void setSecurityPolicies(List<SecurityPolicy> securityPolicies) {
+    public void setSecurityPolicies(List<SecurityPolicyInfo> securityPolicies) {
         this.securityPolicies = securityPolicies;
     }
 

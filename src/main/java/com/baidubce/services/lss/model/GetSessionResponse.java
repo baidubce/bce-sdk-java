@@ -32,11 +32,15 @@ public class GetSessionResponse extends AbstractBceResponse {
 
     private String streamingStatus = null;
 
+    private String recording = null;
+
     private LivePublish publish = null;
 
     private LivePlay play = null;
 
     private SessionErrorInfo error = null;
+
+    private RealTimeSessionStatistics statistics = null;
 
     public String getSessionId() {
         return sessionId;
@@ -118,12 +122,28 @@ public class GetSessionResponse extends AbstractBceResponse {
         this.streamingStatus = streamingStatus;
     }
 
+    public String getRecording() {
+        return recording;
+    }
+
+    public void setRecording(String recording) {
+        this.recording = recording;
+    }
+
     public SessionErrorInfo getError() {
         return error;
     }
 
     public void setError(SessionErrorInfo error) {
         this.error = error;
+    }
+
+    public RealTimeSessionStatistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(RealTimeSessionStatistics statistics) {
+        this.statistics = statistics;
     }
 
     @Override
@@ -138,9 +158,11 @@ public class GetSessionResponse extends AbstractBceResponse {
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
         sb.append("    streamingStatus: ").append(streamingStatus).append("\n");
+        sb.append("    recording: ").append(recording).append("\n");
         sb.append("    publish: ").append(publish).append("\n");
         sb.append("    play: ").append(play).append("\n");
         sb.append("    error: ").append(error).append("\n");
+        sb.append("    statistics: ").append(statistics).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

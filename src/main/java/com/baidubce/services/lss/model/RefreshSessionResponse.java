@@ -32,6 +32,8 @@ public class RefreshSessionResponse extends AbstractBceResponse {
 
     private String streamingStatus = null;
 
+    private String recording = null;
+
     private LivePublish publish = null;
 
     private LivePlay play = null;
@@ -102,6 +104,14 @@ public class RefreshSessionResponse extends AbstractBceResponse {
         this.streamingStatus = streamingStatus;
     }
 
+    public String getRecording() {
+        return recording;
+    }
+
+    public void setRecording(String recording) {
+        this.recording = recording;
+    }
+
     public LivePublish getPublish() {
         return publish;
     }
@@ -138,6 +148,7 @@ public class RefreshSessionResponse extends AbstractBceResponse {
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
         sb.append("    streamingStatus: ").append(streamingStatus).append("\n");
+        sb.append("    recording: ").append(recording).append("\n");
         sb.append("    publish: ").append(publish).append("\n");
         sb.append("    play: ").append(play).append("\n");
         sb.append("    error: ").append(error).append("\n");

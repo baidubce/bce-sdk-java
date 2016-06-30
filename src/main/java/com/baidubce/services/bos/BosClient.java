@@ -1588,7 +1588,7 @@ public class BosClient extends AbstractBceClient {
         // we treat consecutive "/"s in AmazonS3Client#presignRequest(...)
         String urlPath = "/" + resourcePath;
         urlPath = urlPath.replaceAll("(?<=/)/", "%2F");
-        String urlString = this.config.getEndpoint() + urlPath;
+        String urlString = this.getEndpoint() + urlPath;
 
         boolean firstParam = true;
         for (String param : request.getParameters().keySet()) {

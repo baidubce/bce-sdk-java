@@ -21,7 +21,7 @@ public class GetSessionTokenRequest extends AbstractBceRequest {
     private String acl;
 
     @Override
-    public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
+    public GetSessionTokenRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }

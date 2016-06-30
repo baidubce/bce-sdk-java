@@ -75,7 +75,7 @@ public interface Headers {
 
     public static final String BCE_REQUEST_ID = "x-bce-request-id";
 
-    public static final String BCE_SECURE_TOKEN = "x-bce-secure-token";
+    public static final String BCE_SECURITY_TOKEN = "x-bce-security-token";
 
     /*
      * BOS HTTP Headers

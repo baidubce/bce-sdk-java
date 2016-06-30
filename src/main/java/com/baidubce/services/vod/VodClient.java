@@ -21,8 +21,10 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.baidubce.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +65,10 @@ import com.baidubce.services.vod.model.StopMediaResourceRequest;
 import com.baidubce.services.vod.model.StopMediaResourceResponse;
 import com.baidubce.services.vod.model.UpdateMediaResourceRequest;
 import com.baidubce.services.vod.model.UpdateMediaResourceResponse;
+import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoRequest;
+import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoResponse;
+import com.baidubce.services.vod.model.GenerateMediaPlayerCodeRequest;
+import com.baidubce.services.vod.model.GenerateMediaPlayerCodeResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 
@@ -98,7 +104,22 @@ public class VodClient extends AbstractBceClient {
     private static final String PARA_WIDTH = "width";
     private static final String PARA_HEIGHT = "height";
     private static final String PARA_AUTO_START = "auto_start";
+    private static final String PARA_AUTO_START_NEW = "autostart";
     private static final String PARA_ATTRIBUTES = "attributes";
+    private static final String PARA_APPLY = "apply";
+    private static final String PARA_PROCESS = "process";
+    private static final String PARA_GENDELIVERY = "delivery";
+    private static final String PARA_GENCODE = "code";
+    private static final String PARA_AK = "ak";
+    private static final String PARA_PAGENO = "pageNo";
+    private static final String PARA_PAGESIZE = "pageSize";
+    private static final String PARA_STATUS = "status";
+    private static final String PARA_BEGIN = "begin";
+    private static final String PARA_END = "end";
+    private static final String PARA_TITLE = "title";
+    private static final int LIST_MAX_PAGESIZE = 1000;
+    private static final int LIST_MIN_PAGESIZE = 1;
+    private static final int MAX_SOURCE_EXTENSION_LENGTH = 10;
 
     private static Logger logger = LoggerFactory.getLogger(VodClient.class);
 
@@ -116,7 +137,7 @@ public class VodClient extends AbstractBceClient {
     /**
      * Constructs a new client using the client configuration.
      *
-     * @param clientConfiguration The client configuration options controlling how this client connects to Vod services
+     * @param vodConfig The client configuration options controlling how this client connects to Vod services
      *            (e.g. proxy settings, retry counts, etc).
      */
     public VodClient(BceClientConfiguration vodConfig) {
@@ -131,7 +152,7 @@ public class VodClient extends AbstractBceClient {
     /**
      * Constructs a new client using the client configuration. Used for test only
      *
-     * @param clientConfiguration The client configuration options controlling how this client connects to Vod services
+     * @param vodConfig The client configuration options controlling how this client connects to Vod services
      *            (e.g. proxy settings, retry counts, etc).
      */
     VodClient(BceClientConfiguration vodConfig, BosClientConfiguration bosConfig) {
@@ -153,8 +174,17 @@ public class VodClient extends AbstractBceClient {
         if (!file.exists()) {
             throw new FileNotFoundException("The media file " + file.getAbsolutePath() + " doesn't exist!");
         }
+        // try get file extension
+        String sourceExtension = null;
+        String filename = file.getName();
+        if (filename.lastIndexOf(".") != -1) {
+            sourceExtension = filename.substring(filename.lastIndexOf(".") + 1);
+            if (sourceExtension.length() <= 0 || sourceExtension.length() > MAX_SOURCE_EXTENSION_LENGTH) {
+                sourceExtension = null;
+            }
+        }
         // get a BOS bucket and extract mediaId from it
-        GenerateMediaIdResponse generateMediaIdresponse = generateMediaId();
+        GenerateMediaIdResponse generateMediaIdresponse = applyMedia();
         String bosKey = generateMediaIdresponse.getSourceKey();
         String mediaId = generateMediaIdresponse.getMediaId();
         String bucket = generateMediaIdresponse.getSourceBucket();
@@ -166,8 +196,9 @@ public class VodClient extends AbstractBceClient {
 
         if (session.upload(file, bucket, bosKey)) {
             InternalCreateMediaRequest request =
-                    new InternalCreateMediaRequest().withMediaId(mediaId).withTitle(title).withDescription(description);
-            InternalCreateMediaResponse internalResponse = internalCreateMediaResource(request);
+                    new InternalCreateMediaRequest().withMediaId(mediaId).withTitle(title)
+                            .withDescription(description).withSourceExtension(sourceExtension);
+            InternalCreateMediaResponse internalResponse = processMedia(request);
             response.setMediaId(internalResponse.getMediaId());
         }
 
@@ -196,8 +227,16 @@ public class VodClient extends AbstractBceClient {
         checkIsTrue(metaData != null && metaData.getContentLength() > 0,
                "The object corresponding to [bucket] = " + sourceBucket + ", [key] = " + sourceKey + " doesn't exist.");
 
+        // try get file extension
+        String sourceExtension = null;
+        if (sourceKey.lastIndexOf(".") != -1) {
+            sourceExtension = sourceKey.substring(sourceKey.lastIndexOf(".") + 1);
+            if (sourceExtension.length() <= 0 || sourceExtension.length() > MAX_SOURCE_EXTENSION_LENGTH) {
+                sourceExtension = null;
+            }
+        }
         // generate media Id
-        GenerateMediaIdResponse generateMediaIdresponse = generateMediaId();
+        GenerateMediaIdResponse generateMediaIdresponse = applyMedia();
         String mediaId = generateMediaIdresponse.getMediaId();
         String targetBucket = generateMediaIdresponse.getSourceBucket();
         String targetKey = generateMediaIdresponse.getSourceKey();
@@ -207,8 +246,9 @@ public class VodClient extends AbstractBceClient {
 
         // create mediaId
         InternalCreateMediaRequest request =
-                new InternalCreateMediaRequest().withMediaId(mediaId).withTitle(title).withDescription(description);
-        InternalCreateMediaResponse internalResponse = internalCreateMediaResource(request);
+                new InternalCreateMediaRequest().withMediaId(mediaId).withTitle(title)
+                        .withDescription(description).withSourceExtension(sourceExtension);
+        InternalCreateMediaResponse internalResponse = processMedia(request);
 
         CreateMediaResourceResponse response = new CreateMediaResourceResponse();
         response.setMediaId(internalResponse.getMediaId());
@@ -216,17 +256,19 @@ public class VodClient extends AbstractBceClient {
         return response;
     }
 
-    private InternalCreateMediaResponse internalCreateMediaResource(InternalCreateMediaRequest request) {
+    public InternalCreateMediaResponse processMedia(InternalCreateMediaRequest request) {
         InternalRequest internalRequest =
-                createRequest(HttpMethodName.POST, request, PATH_INTERNAL_MEDIA, request.getMediaId());
+                createRequest(HttpMethodName.PUT, request, PATH_MEDIA, request.getMediaId());
+        internalRequest.addParameter(PARA_PROCESS, null);
 
         return invokeHttpClient(internalRequest, InternalCreateMediaResponse.class);
     }
 
-    private GenerateMediaIdResponse generateMediaId() {
+    public GenerateMediaIdResponse applyMedia() {
         GenerateMediaIdRequest request = new GenerateMediaIdRequest();
         InternalRequest internalRequest =
-                createRequest(HttpMethodName.GET, request, PATH_INTERNAL_MEDIA);
+                createRequest(HttpMethodName.POST, request, PATH_MEDIA);
+        internalRequest.addParameter(PARA_APPLY, null);
 
         return invokeHttpClient(internalRequest, GenerateMediaIdResponse.class);
     }
@@ -270,10 +312,68 @@ public class VodClient extends AbstractBceClient {
      *
      * @return The properties of all specific media resources
      */
+    @Deprecated
     public ListMediaResourceResponse listMediaResources() {
         ListMediaResourceRequest request = new ListMediaResourceRequest();
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.GET, request, PATH_MEDIA);
+
+        return invokeHttpClient(internalRequest, ListMediaResourceResponse.class);
+    }
+
+    /**
+     * List the properties of all media resource managed by VOD service.
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param pageNo The pageNo need to list, must >0
+     * @param pageSize The pageSize ,must in range [LIST_MIN_PAGESIZE,LIST_MAX_PAGESIZE]
+     * @pagam status The media status, can be null
+     * @param begin The media create date after begin
+     * @param end The media create date before end
+     * @param title The media title, use prefix search
+     * @return The properties of all specific media resources
+     */
+    public ListMediaResourceResponse listMediaResources(int pageNo, int pageSize, String status,
+                                                        Date begin, Date end, String title) {
+        ListMediaResourceRequest request =
+                new ListMediaResourceRequest().withPageNo(pageNo).withPageSize(pageSize)
+                .withStatus(status).withBegin(begin).withEnd(end).withTitle(title);
+
+        return listMediaResources(request);
+    }
+
+    /**
+     * List the properties of all media resource managed by VOD service.
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param request The request wrapper object containing all options.
+     * @return The properties of all specific media resources
+     */
+    public ListMediaResourceResponse listMediaResources(ListMediaResourceRequest request) {
+        checkIsTrue(request.getPageNo() > 0, "pageNo should greater than 0!");
+        checkIsTrue(request.getPageSize() >= LIST_MIN_PAGESIZE
+                && request.getPageSize() <= LIST_MAX_PAGESIZE, "pageSize is not Valid!");
+
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, PATH_MEDIA);
+        internalRequest.addParameter(PARA_PAGENO, String.valueOf(request.getPageNo()));
+        internalRequest.addParameter(PARA_PAGESIZE, String.valueOf(request.getPageSize()));
+        if (request.getStatus() != null) {
+            internalRequest.addParameter(PARA_STATUS, request.getStatus());
+        }
+        if (request.getBegin() != null) {
+            internalRequest.addParameter(PARA_BEGIN, DateUtils.formatAlternateIso8601Date(request.getBegin()));
+        }
+        if (request.getEnd() != null) {
+            internalRequest.addParameter(PARA_END, DateUtils.formatAlternateIso8601Date(request.getEnd()));
+        }
+        if (request.getTitle() != null) {
+            internalRequest.addParameter(PARA_TITLE, request.getTitle());
+        }
 
         return invokeHttpClient(internalRequest, ListMediaResourceResponse.class);
     }
@@ -409,6 +509,7 @@ public class VodClient extends AbstractBceClient {
      * @param mediaId The unique ID for each media resource
      * @return the playable URL address
      */
+    @Deprecated
     public GetPlayableUrlResponse getPlayableUrl(String mediaId) {
         GetPlayableUrlRequest request = new GetPlayableUrlRequest().withMediaId(mediaId);
         return getPlayableUrl(request);
@@ -420,6 +521,7 @@ public class VodClient extends AbstractBceClient {
      * @param request The request object containing all the options on how to
      * @return the playable URL address
      */
+    @Deprecated
     public GetPlayableUrlResponse getPlayableUrl(GetPlayableUrlRequest request) {
         checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PATH_SERVICE_FILE);
@@ -437,6 +539,7 @@ public class VodClient extends AbstractBceClient {
      * @param autoStart Indicate whether or not play the media resource automatically when web page is loaded.
      * @return The Flash and HTML5 code snippet
      */
+    @Deprecated
     public GetPlayerCodeResponse getPlayerCode(String mediaId, int width, int height, boolean autoStart) {
         GetPlayerCodeRequest request = new GetPlayerCodeRequest()
                 .withMediaId(mediaId).withWidth(width).withHeight(height).withAutoStart(autoStart);
@@ -449,6 +552,7 @@ public class VodClient extends AbstractBceClient {
      * @param request The request object containing all the options on how to
      * @return The Flash and HTML5 code snippet
      */
+    @Deprecated
     public GetPlayerCodeResponse getPlayerCode(GetPlayerCodeRequest request) {
 
         checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
@@ -462,6 +566,72 @@ public class VodClient extends AbstractBceClient {
         internalRequest.addParameter(PARA_AUTO_START, Boolean.toString(request.isAutoStart()));
 
         return invokeHttpClient(internalRequest, GetPlayerCodeResponse.class);
+    }
+
+    /**
+     * Generate media delivery info by media ID.
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param mediaId The unique ID for each media resource
+     * @return media delivery info
+     */
+    public GenerateMediaDeliveryInfoResponse generateMediaDeliveryInfo(String mediaId) {
+        GenerateMediaDeliveryInfoRequest request = new GenerateMediaDeliveryInfoRequest().withMediaId(mediaId);
+        return generateMediaDeliveryInfo(request);
+    }
+
+    /**
+     * Delete the specific media resource managed by VOD service.
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param request The request object containing all the options on how to
+     * @return empty response will be returned
+     */
+    public GenerateMediaDeliveryInfoResponse generateMediaDeliveryInfo(GenerateMediaDeliveryInfoRequest request) {
+        checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, PATH_MEDIA, request.getMediaId(), PARA_GENDELIVERY);
+        return invokeHttpClient(internalRequest, GenerateMediaDeliveryInfoResponse.class);
+    }
+
+    /**
+     * Get the HTML5 code snippet (encoded in Base64) to play the specific media resource.
+     *
+     * @param mediaId The unique ID for each media resource
+     * @param width The width of player view
+     * @param height The height of player view
+     * @param autoStart Indicate whether or not play the media resource automatically when web page is loaded.
+     * @return The Flash and HTML5 code snippet
+     */
+    public GenerateMediaPlayerCodeResponse generateMediaPlayerCode(String mediaId, int width,
+                                                                   int height, boolean autoStart) {
+        GenerateMediaPlayerCodeRequest request = new GenerateMediaPlayerCodeRequest()
+                .withMediaId(mediaId).withWidth(width).withHeight(height).withAutoStart(autoStart);
+        return generateMediaPlayerCode(request);
+    }
+
+    /**
+     * Get the HTML5 code snippet (encoded in Base64) to play the specific media resource.
+     *
+     * @param request The request object containing all the options on how to
+     * @return The Flash and HTML5 code snippet
+     */
+    public GenerateMediaPlayerCodeResponse generateMediaPlayerCode(GenerateMediaPlayerCodeRequest request) {
+
+        checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
+        checkIsTrue(request.getHeight() > 0, "Height of playback view should be positive!");
+        checkIsTrue(request.getWidth() > 0, "Width of playback view should be positive!");
+
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, PATH_MEDIA, request.getMediaId(), PARA_GENCODE);
+        internalRequest.addParameter(PARA_WIDTH, Integer.toString(request.getWidth()));
+        internalRequest.addParameter(PARA_HEIGHT, Integer.toString(request.getHeight()));
+        internalRequest.addParameter(PARA_AUTO_START_NEW, Boolean.toString(request.isAutoStart()));
+        internalRequest.addParameter(PARA_AK, config.getCredentials().getAccessKeyId());
+
+        return invokeHttpClient(internalRequest, GenerateMediaPlayerCodeResponse.class);
     }
 
     /**

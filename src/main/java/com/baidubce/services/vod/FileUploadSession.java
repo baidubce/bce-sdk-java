@@ -1,7 +1,6 @@
 package com.baidubce.services.vod;
-
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +38,7 @@ public class FileUploadSession {
     public FileUploadSession(BosClient bosClient) {
         this.bosClient = bosClient;
     }
-
+    
     public boolean upload(File file, String bucket, String bosKey) {
         this.file = file;
         this.bucket = bucket;

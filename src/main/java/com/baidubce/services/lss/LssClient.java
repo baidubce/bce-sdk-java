@@ -21,6 +21,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
@@ -54,15 +60,23 @@ import com.baidubce.services.lss.model.GetNotificationRequest;
 import com.baidubce.services.lss.model.GetNotificationResponse;
 import com.baidubce.services.lss.model.GetPresetRequest;
 import com.baidubce.services.lss.model.GetPresetResponse;
+import com.baidubce.services.lss.model.GetRecordingRequest;
+import com.baidubce.services.lss.model.GetRecordingResponse;
 import com.baidubce.services.lss.model.GetSecurityPolicyRequest;
 import com.baidubce.services.lss.model.GetSecurityPolicyResponse;
 import com.baidubce.services.lss.model.GetSessionRequest;
 import com.baidubce.services.lss.model.GetSessionResponse;
+import com.baidubce.services.lss.model.GetSessionSourceInfoRequest;
+import com.baidubce.services.lss.model.GetSessionSourceInfoResponse;
 import com.baidubce.services.lss.model.Hls;
+import com.baidubce.services.lss.model.InsertCuePointInnerRequest;
+import com.baidubce.services.lss.model.InsertCuePointRequest;
+import com.baidubce.services.lss.model.InsertCuePointResponse;
 import com.baidubce.services.lss.model.ListNotificationsRequest;
 import com.baidubce.services.lss.model.ListNotificationsResponse;
 import com.baidubce.services.lss.model.ListPresetsRequest;
 import com.baidubce.services.lss.model.ListPresetsResponse;
+import com.baidubce.services.lss.model.ListRecordingsResponse;
 import com.baidubce.services.lss.model.ListSecurityPoliciesRequest;
 import com.baidubce.services.lss.model.ListSecurityPoliciesResponse;
 import com.baidubce.services.lss.model.ListSessionsRequest;
@@ -78,6 +92,10 @@ import com.baidubce.services.lss.model.ResumeSessionResponse;
 import com.baidubce.services.lss.model.Rtmp;
 import com.baidubce.services.lss.model.StartPullSessionRequest;
 import com.baidubce.services.lss.model.StartPullSessionResponse;
+import com.baidubce.services.lss.model.StartRecordingRequest;
+import com.baidubce.services.lss.model.StartRecordingResponse;
+import com.baidubce.services.lss.model.StopRecordingRequest;
+import com.baidubce.services.lss.model.StopRecordingResponse;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyInnerRequest;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyRequest;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyResponse;
@@ -118,6 +136,11 @@ public class LssClient extends AbstractBceClient {
     private static final String LIVE_SECURITY_POLICY = "securitypolicy";
 
     /**
+     * The common URI prefix for live recording services.
+     */
+    private static final String RECORDING = "recording";
+
+    /**
      * Parameter for list live session with status.
      */
     private static final String STATUS = "status";
@@ -141,6 +164,16 @@ public class LssClient extends AbstractBceClient {
      * Parameter for starting pulling live session.
      */
     private static final String PULL = "pull";
+
+    /**
+     * Parameter for getting live source info.
+     */
+    private static final String SOURCE_INFO = "sourceInfo";
+
+    /**
+     * Parameter for inserting cue point.
+     */
+    private static final String CUE_POINT = "cuepoint";
 
     /**
      * Responsible for handling httpResponses from all service calls.
@@ -346,14 +379,15 @@ public class LssClient extends AbstractBceClient {
      * @param preset  The name of the new live session.
      * @param notification The notification of the new live session.
      * @param securityPolicy The security policy of the new live session.
+     * @param recording The recording preset of the new live session.
      * @param publish       Specify the LivePublishInfo of live session.
      *
      */
     public CreateSessionResponse createSession(String description, String preset, String notification,
-                                               String securityPolicy, LivePublishInfo publish) {
+                                               String securityPolicy, String recording, LivePublishInfo publish) {
         CreateSessionRequest request = new CreateSessionRequest();
         request.withPreset(preset).withDescription(description).withNotification(notification);
-        request.withSecurityPolicy(securityPolicy).withPublish(publish);
+        request.withSecurityPolicy(securityPolicy).withPublish(publish).withRecording(recording);
         return createSession(request);
     }
 
@@ -424,6 +458,59 @@ public class LssClient extends AbstractBceClient {
         GetSessionRequest request = new GetSessionRequest();
         request.setSessionId(sessionId);
         return getSession(request);
+    }
+
+    /**
+     * Get your live session with token by live session id.
+     *
+     * @param sessionId  Live session id.
+     * @param timeoutInMinute  Timeout of token.
+     *
+     * @return Your live session with token.
+     */
+    public GetSessionResponse getSessionWithToken(String sessionId, Integer timeoutInMinute) {
+        GetSessionResponse getSessionResponse = getSession(sessionId);
+        if (timeoutInMinute == null) {
+            return getSessionResponse;
+        }
+        DateTime dateTime = new DateTime(DateTimeZone.UTC);
+        DateTime expireTime = dateTime.plusMinutes(timeoutInMinute);
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String expire = formatter.print(expireTime);
+
+        GetSecurityPolicyResponse getSecurityPolicyResponse = getSecurityPolicy(getSessionResponse.getSecurityPolicy());
+        if (getSecurityPolicyResponse.getAuth().getPlay()) {
+            String hlsUrl = getSessionResponse.getPlay().getHlsUrl();
+            String rtmpUrl = getSessionResponse.getPlay().getRtmpUrl();
+            if (hlsUrl != null) {
+                String hlsToken = LssUtils.hmacSha256(
+                        String.format("/%s/live.m3u8;%s", sessionId, expire),
+                        getSecurityPolicyResponse.getAuth().getKey());
+                if (hlsUrl.lastIndexOf('?') == -1) {
+                    hlsUrl += String.format("?token=%s&expire=%s", hlsToken, expire);
+                } else {
+                    hlsUrl += String.format("&token=%s&expire=%s", hlsToken, expire);
+                }
+                getSessionResponse.getPlay().setHlsUrl(hlsUrl);
+            }
+            if (rtmpUrl != null) {
+                String rtmpToken = LssUtils.hmacSha256(
+                        String.format("%s;%s", sessionId, expire),
+                        getSecurityPolicyResponse.getAuth().getKey());
+                rtmpUrl += String.format("?token=%s&expire=%s", rtmpToken, expire);
+                getSessionResponse.getPlay().setRtmpUrl(rtmpUrl);
+            }
+        }
+
+        if (getSecurityPolicyResponse.getAuth().getPush()) {
+            String pushUrl = getSessionResponse.getPublish().getPushUrl();
+            String pushToken = LssUtils.hmacSha256(
+                    String.format("%s;%s", getSessionResponse.getPublish().getPushStream(), expire),
+                    getSecurityPolicyResponse.getAuth().getKey());
+            pushUrl += String.format("?token=%s&expire=%s", pushToken, expire);
+            getSessionResponse.getPublish().setPushUrl(pushUrl);
+        }
+        return getSessionResponse;
     }
 
     /**
@@ -574,6 +661,111 @@ public class LssClient extends AbstractBceClient {
         internalRequest.addParameter(PULL, null);
         return invokeHttpClient(internalRequest, StartPullSessionResponse.class);
     }
+
+    /**
+     * Start live session recording.
+     *
+     * @param sessionId Live session id.
+     * @param recording Live recording preset name.
+     */
+    public StartRecordingResponse startRecording(String sessionId, String recording) {
+        checkStringNotEmpty(sessionId, "The parameter sessionId should NOT be null or empty string.");
+        checkStringNotEmpty(recording, "The parameter recording should NOT be null or empty string.");
+        StartRecordingRequest request = new StartRecordingRequest().withSessionId(sessionId);
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, LIVE_SESSION, sessionId);
+        internalRequest.addParameter(RECORDING, recording);
+        return invokeHttpClient(internalRequest, StartRecordingResponse.class);
+    }
+
+    /**
+     * Stop live session recording.
+     *
+     * @param sessionId Live session id.
+     */
+    public StopRecordingResponse stopRecording(String sessionId) {
+        checkStringNotEmpty(sessionId, "The parameter sessionId should NOT be null or empty string.");
+        StopRecordingRequest request = new StopRecordingRequest().withSessionId(sessionId);
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, LIVE_SESSION, sessionId);
+        internalRequest.addParameter(RECORDING, null);
+        return invokeHttpClient(internalRequest, StopRecordingResponse.class);
+    }
+
+    /**
+     * Get your live session source info by live session id.
+     *
+     * @param sessionId Live session id.
+     *
+     * @return Your live session source info
+     */
+    public GetSessionSourceInfoResponse getSessionSourceInfo(String sessionId) {
+        checkStringNotEmpty(sessionId, "The parameter sessionId should NOT be null or empty string.");
+        GetSessionSourceInfoRequest request = new GetSessionSourceInfoRequest();
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, LIVE_SESSION, sessionId);
+        internalRequest.addParameter(SOURCE_INFO, null);
+        return invokeHttpClient(internalRequest, GetSessionSourceInfoResponse.class);
+    }
+
+    /**
+     * Insert a cue point into your live session by live session id.
+     *
+     * @param sessionId  Live session id.
+     * @param callback  Call back method name.
+     * @param arguments  Call back method arguments.
+     *
+     */
+    public InsertCuePointResponse insertCuePoint(String sessionId, String callback, Map<String, String> arguments) {
+        InsertCuePointRequest request = new InsertCuePointRequest()
+                .withSessionId(sessionId).withCallback(callback).withArguments(arguments);
+        return insertCuePoint(request);
+    }
+
+    /**
+     * Insert a cue point into your live session by live session id.
+     *
+     * @param request The request object containing all parameters for inserting a cue point into session.
+     *
+     */
+    public InsertCuePointResponse insertCuePoint(InsertCuePointRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getSessionId(),
+                "The parameter sessionId should NOT be null or empty string.");
+        checkStringNotEmpty(request.getCallback(),
+                "The parameter callback should NOT be null or empty string.");
+        InsertCuePointInnerRequest innerRequest = new InsertCuePointInnerRequest()
+                .withArguments(request.getArguments()).withCallback(request.getCallback());
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, innerRequest, LIVE_SESSION,
+                request.getSessionId());
+        internalRequest.addParameter(CUE_POINT, null);
+        return invokeHttpClient(internalRequest, InsertCuePointResponse.class);
+    }
+
+
+
+    /**
+     * Get your live recording preset by live recording preset name.
+     *
+     * @param recording Live recording preset name.
+     *
+     * @return Your live recording preset
+     */
+    public GetRecordingResponse getRecording(String recording) {
+        checkStringNotEmpty(recording, "The parameter recording should NOT be null or empty string.");
+        GetRecordingRequest request = new GetRecordingRequest();
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, RECORDING, recording);
+        return invokeHttpClient(internalRequest, GetRecordingResponse.class);
+    }
+
+    /**
+     * List all your live recording presets.
+     *
+     * @return The list of all your live recording preset.
+     */
+    public ListRecordingsResponse listRecordings() {
+        GetRecordingRequest request = new GetRecordingRequest();
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, RECORDING);
+        return invokeHttpClient(internalRequest, ListRecordingsResponse.class);
+    }
+
 
     /**
      * List all your live notifications.

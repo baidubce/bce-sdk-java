@@ -26,6 +26,8 @@ public class CreateSessionRequest extends AbstractBceRequest {
 
     private String securityPolicy = null;
 
+    private String recording = null;
+
     private LivePublishInfo publish = null;
 
     public String getDescription() {
@@ -80,6 +82,19 @@ public class CreateSessionRequest extends AbstractBceRequest {
         return this;
     }
 
+    public String getRecording() {
+        return recording;
+    }
+
+    public void setRecording(String recording) {
+        this.recording = recording;
+    }
+
+    public CreateSessionRequest withRecording(String recording) {
+        this.recording = recording;
+        return this;
+    }
+
     public LivePublishInfo getPublish() {
         return publish;
     }
@@ -106,6 +121,7 @@ public class CreateSessionRequest extends AbstractBceRequest {
         sb.append("    preset: ").append(preset).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
+        sb.append("    recording: ").append(recording).append("\n");
         sb.append("    publish: ").append(publish).append("\n");
         sb.append("}\n");
         return sb.toString();

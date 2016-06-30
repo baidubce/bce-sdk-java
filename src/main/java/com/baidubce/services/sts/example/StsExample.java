@@ -38,16 +38,15 @@ public class StsExample {
 
         // build DefaultBceSessionCredentials object from response:
         BceCredentials tempCredentials = new DefaultBceSessionCredentials(
-               response.getCredentials().getAccessKeyId(),
-               response.getCredentials().getSecretAccessKey(),
-               response.getCredentials().getSessionToken()
-        );
+                response.getAccessKeyId(),
+                response.getSecretAccessKey(),
+                response.getSessionToken());
         System.out.println("==================================");
         System.out.println("GetSessionToken result:");
-        System.out.println("    accessKeyId:  " + response.getCredentials().getAccessKeyId());
-        System.out.println("    secretAccessKey:  " + response.getCredentials().getSecretAccessKey());
-        System.out.println("    securityToken:  " + response.getCredentials().getSessionToken());
-        System.out.println("    expiresAt:  " + response.getCredentials().getExpiration().toString());
+        System.out.println("    accessKeyId:  " + response.getAccessKeyId());
+        System.out.println("    secretAccessKey:  " + response.getSecretAccessKey());
+        System.out.println("    securityToken:  " + response.getSessionToken());
+        System.out.println("    expiresAt:  " + response.getExpiration().toString());
         System.out.println("==================================");
     }
 }

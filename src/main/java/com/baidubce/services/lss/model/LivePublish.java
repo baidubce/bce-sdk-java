@@ -20,6 +20,8 @@ public class LivePublish {
 
     private String pushUrl = null;
 
+    private String pushStream = null;
+
     public String getRegion() {
         return region;
     }
@@ -59,6 +61,19 @@ public class LivePublish {
         return this;
     }
 
+    public String getPushStream() {
+        return pushStream;
+    }
+
+    public void setPushStream(String pushStream) {
+        this.pushStream = pushStream;
+    }
+
+    public LivePublish withPushStream(String pushStream) {
+        this.pushStream = pushStream;
+        return this;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -66,6 +81,7 @@ public class LivePublish {
         sb.append("    region: ").append(region).append("\n");
         sb.append("    pullUrl: ").append(pullUrl).append("\n");
         sb.append("    pushUrl: ").append(pushUrl).append("\n");
+        sb.append("    pushStream: ").append(pushStream).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
