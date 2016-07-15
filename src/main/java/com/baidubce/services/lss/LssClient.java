@@ -13,21 +13,6 @@
 
 package com.baidubce.services.lss;
 
-import static com.baidubce.util.Validate.checkIsTrue;
-import static com.baidubce.util.Validate.checkNotNull;
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -83,10 +68,14 @@ import com.baidubce.services.lss.model.ListSessionsRequest;
 import com.baidubce.services.lss.model.ListSessionsResponse;
 import com.baidubce.services.lss.model.LivePublishInfo;
 import com.baidubce.services.lss.model.LiveThumbnail;
+import com.baidubce.services.lss.model.PauseAppStreamRequest;
+import com.baidubce.services.lss.model.PauseAppStreamResponse;
 import com.baidubce.services.lss.model.PauseSessionRequest;
 import com.baidubce.services.lss.model.PauseSessionResponse;
 import com.baidubce.services.lss.model.RefreshSessionRequest;
 import com.baidubce.services.lss.model.RefreshSessionResponse;
+import com.baidubce.services.lss.model.ResumeAppStreamRequest;
+import com.baidubce.services.lss.model.ResumeAppStreamResponse;
 import com.baidubce.services.lss.model.ResumeSessionRequest;
 import com.baidubce.services.lss.model.ResumeSessionResponse;
 import com.baidubce.services.lss.model.Rtmp;
@@ -101,8 +90,31 @@ import com.baidubce.services.lss.model.UpdateSecurityPolicyRequest;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyResponse;
 import com.baidubce.services.lss.model.Video;
 import com.baidubce.services.lss.model.Watermarks;
+import com.baidubce.services.lss.model.GetAppResponse;
+import com.baidubce.services.lss.model.GetAppRequest;
+import com.baidubce.services.lss.model.GetAppStreamResponse;
+import com.baidubce.services.lss.model.GetAppStreamRequest;
+import com.baidubce.services.lss.model.ListAppResponse;
+import com.baidubce.services.lss.model.ListAppRequest;
+import com.baidubce.services.lss.model.ListAppStreamsResponse;
+import com.baidubce.services.lss.model.ListAppStreamsRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.baidubce.util.Validate.checkIsTrue;
+import static com.baidubce.util.Validate.checkNotNull;
+import static com.baidubce.util.Validate.checkStringNotEmpty;
 
 /**
  * Client for accessing Live Streaming Service. All service calls made
@@ -124,6 +136,11 @@ public class LssClient extends AbstractBceClient {
      * The common URI prefix for live session services.
      */
     private static final String LIVE_SESSION = "session";
+
+    /**
+     * The common URI prefix for live app services.
+     */
+    private static final String LIVE_APP = "app";
 
     /**
      * The common URI prefix for live notification services.
@@ -394,13 +411,37 @@ public class LssClient extends AbstractBceClient {
     /**
      * Create a live session in the live stream service.
      *
+     * @param description The description of the new live session.
+     * @param presets  The name of the new live session.
+     * @param notification The notification of the new live session.
+     * @param securityPolicy The security policy of the new live session.
+     * @param recording The recording preset of the new live session.
+     * @param publish       Specify the LivePublishInfo of live session.
+     *
+     */
+    public CreateSessionResponse createSession(String description, List<String> presets, String notification,
+                                               String securityPolicy, String recording, LivePublishInfo publish) {
+        CreateSessionRequest request = new CreateSessionRequest();
+        Map<String, String> presetMap = new HashMap<String, String>();
+        for (int i = 0; i < presets.size(); i++) {
+            presetMap.put("L" + i, presets.get(i));
+        }
+        request.withPresets(presetMap).withDescription(description).withNotification(notification);
+        request.withSecurityPolicy(securityPolicy).withPublish(publish).withRecording(recording);
+        return createSession(request);
+    }
+
+    /**
+     * Create a live session in the live stream service.
+     *
      * @param request The request object containing all options for creating live session.
      */
     public CreateSessionResponse createSession(CreateSessionRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
 
-        checkStringNotEmpty(request.getPreset(),
-                "The parameter preset should NOT be null or empty string.");
+        if (request.getPreset() == null && request.getPresets() == null) {
+            throw new IllegalArgumentException("The parameter preset and presets should NOT both be null or empty.");
+        }
 
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, LIVE_SESSION);
         return invokeHttpClient(internalRequest, CreateSessionResponse.class);
@@ -479,10 +520,37 @@ public class LssClient extends AbstractBceClient {
         String expire = formatter.print(expireTime);
 
         GetSecurityPolicyResponse getSecurityPolicyResponse = getSecurityPolicy(getSessionResponse.getSecurityPolicy());
+        Map<String, String> hlsUrls = new HashMap<String, String>();
+        Map<String, String> rtmpUrls = new HashMap<String, String>();
+        Map<String, String> flvUrls = new HashMap<String, String>();
         if (getSecurityPolicyResponse.getAuth().getPlay()) {
-            String hlsUrl = getSessionResponse.getPlay().getHlsUrl();
-            String rtmpUrl = getSessionResponse.getPlay().getRtmpUrl();
-            if (hlsUrl != null) {
+            if (getSessionResponse.getPlay().getHlsUrls() != null) {
+                for (Map.Entry<String, String> entry : getSessionResponse.getPlay().getHlsUrls().entrySet()) {
+                    String line = entry.getKey();
+                    String hlsUrl = entry.getValue();
+                    if (hlsUrl != null) {
+                        String hlsToken = null;
+                        if (line.equals("L0")) {
+                            hlsToken = LssUtils.hmacSha256(
+                                    String.format("/%s/live.m3u8;%s", sessionId, expire),
+                                    getSecurityPolicyResponse.getAuth().getKey());
+                        } else {
+                            hlsToken = LssUtils.hmacSha256(
+                                    String.format("/%s-%s/live.m3u8;%s", sessionId, line, expire),
+                                    getSecurityPolicyResponse.getAuth().getKey());
+                        }
+                        if (hlsUrl.lastIndexOf('?') == -1) {
+                            hlsUrl += String.format("?token=%s&expire=%s", hlsToken, expire);
+                        } else {
+                            hlsUrl += String.format("&token=%s&expire=%s", hlsToken, expire);
+                        }
+                        hlsUrls.put(line, hlsUrl);
+                    }
+                }
+
+                getSessionResponse.getPlay().setHlsUrls(hlsUrls);
+            } else if (getSessionResponse.getPlay().getHlsUrl() != null) {
+                String hlsUrl = getSessionResponse.getPlay().getHlsUrl();
                 String hlsToken = LssUtils.hmacSha256(
                         String.format("/%s/live.m3u8;%s", sessionId, expire),
                         getSecurityPolicyResponse.getAuth().getKey());
@@ -491,14 +559,57 @@ public class LssClient extends AbstractBceClient {
                 } else {
                     hlsUrl += String.format("&token=%s&expire=%s", hlsToken, expire);
                 }
+
                 getSessionResponse.getPlay().setHlsUrl(hlsUrl);
             }
-            if (rtmpUrl != null) {
+
+            if (getSessionResponse.getPlay().getRtmpUrls() != null) {
+                for (Map.Entry<String, String> entry : getSessionResponse.getPlay().getRtmpUrls().entrySet()) {
+                    String line = entry.getKey();
+                    String rtmpUrl = entry.getValue();
+                    if (rtmpUrl != null) {
+                        String rtmpToken = LssUtils.hmacSha256(
+                                String.format("%s;%s", sessionId, expire),
+                                getSecurityPolicyResponse.getAuth().getKey());
+                        rtmpUrl += String.format("?token=%s&expire=%s", rtmpToken, expire);
+                    }
+                    rtmpUrls.put(line, rtmpUrl);
+                }
+
+                getSessionResponse.getPlay().setRtmpUrls(rtmpUrls);
+            } else if (getSessionResponse.getPlay().getRtmpUrl() != null) {
+                String rtmpUrl = getSessionResponse.getPlay().getRtmpUrl();
                 String rtmpToken = LssUtils.hmacSha256(
                         String.format("%s;%s", sessionId, expire),
                         getSecurityPolicyResponse.getAuth().getKey());
                 rtmpUrl += String.format("?token=%s&expire=%s", rtmpToken, expire);
+
                 getSessionResponse.getPlay().setRtmpUrl(rtmpUrl);
+            }
+
+            if (getSessionResponse.getPlay().getFlvUrls() != null) {
+                for (Map.Entry<String, String> entry : getSessionResponse.getPlay().getFlvUrls().entrySet()) {
+                    String line = entry.getKey();
+                    String flvUrl = entry.getValue();
+                    if (flvUrl != null) {
+                        String flvToken = LssUtils.hmacSha256(
+                                String.format("%s;%s", flvUrl, expire),
+                                getSecurityPolicyResponse.getAuth().getKey());
+                        flvUrl += String.format("?token=%s&expire=%s", flvToken, expire);
+                    }
+                    flvUrls.put(line, flvUrl);
+                }
+
+                getSessionResponse.getPlay().setFlvUrls(flvUrls);
+            } else if (getSessionResponse.getPlay().getFlvUrl() != null) {
+                String flvUrl = getSessionResponse.getPlay().getFlvUrl();
+                String flvToken = LssUtils.hmacSha256(
+                        String.format("%s;%s", flvUrl, expire),
+                        getSecurityPolicyResponse.getAuth().getKey());
+                flvUrl += String.format("?token=%s&expire=%s", flvToken, expire);
+
+                getSessionResponse.getPlay().setFlvUrl(flvUrl);
+
             }
         }
 
@@ -510,6 +621,7 @@ public class LssClient extends AbstractBceClient {
             pushUrl += String.format("?token=%s&expire=%s", pushToken, expire);
             getSessionResponse.getPublish().setPushUrl(pushUrl);
         }
+
         return getSessionResponse;
     }
 
@@ -581,6 +693,155 @@ public class LssClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, PauseSessionResponse.class);
     }
 
+    /**
+     * get detail of your app by name
+     *
+     * @param app  app name
+     *
+     */
+    public GetAppResponse queryApp(String app) {
+        GetAppRequest request = new GetAppRequest();
+        request.setApp(app);
+        return queryApp(request);
+    }
+
+    /**
+     * get detail of your app by name
+     *
+     * @param request  The request object containing all parameters for querying app.
+     *
+     */
+    public GetAppResponse queryApp(GetAppRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getApp(), "The parameter app should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, LIVE_APP,
+                request.getApp());
+        return invokeHttpClient(internalRequest, GetAppResponse.class);
+    }
+
+    /**
+     * list all your apps
+     *
+     */
+    public ListAppResponse listApp() {
+        ListAppRequest request = new ListAppRequest();
+        return listApp(request);
+    }
+
+    /**
+     * list all your apps
+     *
+     * @param request  The request object containing all parameters for list all apps.
+     *
+     */
+    public ListAppResponse listApp(ListAppRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, LIVE_APP);
+        return invokeHttpClient(internalRequest, ListAppResponse.class);
+    }
+
+    /**
+     * get detail of your stream by app name and stream name
+     *
+     * @param app  app name
+     * @param stream  stream name
+     *
+     */
+    public GetAppStreamResponse queryAppStream(String app, String stream) {
+        GetAppStreamRequest request = new GetAppStreamRequest();
+        request.setApp(app);
+        request.setStream(stream);
+        return queryAppStream(request);
+    }
+
+    /**
+     * get detail of your stream by app name and stream name
+     *
+     *  @param request The request object containing all parameters for query app stream.
+     *
+     */
+    public GetAppStreamResponse queryAppStream(GetAppStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getApp(), "The parameter app should NOT be null or empty string.");
+        checkStringNotEmpty(request.getStream(), "The parameter stream should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, LIVE_APP,
+                request.getApp(), LIVE_SESSION, request.getStream());
+        return invokeHttpClient(internalRequest, GetAppStreamResponse.class);
+    }
+
+    /**
+     * list your streams by app name and stream status
+     *
+     * @param app  app name
+     * @param status stream status
+     *
+     */
+    public ListAppStreamsResponse listAppStreams(String app, String status) {
+        ListAppStreamsRequest request = new ListAppStreamsRequest();
+        request.setApp(app);
+        request.setStatus(status);
+        return listAppStreams(request);
+    }
+
+
+    /**
+     * list your streams by app name
+     *
+     * @param app  app name
+     *
+     */
+    public ListAppStreamsResponse listAppStreams(String app) {
+        ListAppStreamsRequest request = new ListAppStreamsRequest();
+        request.setApp(app);
+        return listAppStreams(request);
+    }
+
+    /**
+     * list your streams by app name and stream status
+     *
+     * @param request The request object containing all parameters for list app streams.
+     *
+     */
+    public ListAppStreamsResponse listAppStreams(ListAppStreamsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getApp(), "The parameter app should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, LIVE_APP,
+                request.getApp(), LIVE_SESSION);
+        if (request.getStatus() != null) {
+            internalRequest.addParameter("status", request.getStatus());
+        }
+        return invokeHttpClient(internalRequest, ListAppStreamsResponse.class);
+    }
+
+    /**
+     * Pause your app stream by app name and stream name
+     *
+     * @param app  app name
+     * @param stream  stream name
+     *
+     */
+    public PauseAppStreamResponse pauseAppStream(String app, String stream) {
+        PauseAppStreamRequest pauseAppStreamRequest = new PauseAppStreamRequest();
+        pauseAppStreamRequest.setApp(app);
+        pauseAppStreamRequest.setStream(stream);
+        return pauseAppStream(pauseAppStreamRequest);
+    }
+
+    /**
+     * Pause your app stream by app name and stream name
+     *
+     *  @param request The request object containing all parameters for pausing app session.
+     *
+     */
+    public PauseAppStreamResponse pauseAppStream(PauseAppStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getApp(), "The parameter app should NOT be null or empty string.");
+        checkStringNotEmpty(request.getStream(), "The parameter stream should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, LIVE_APP,
+                request.getApp(), LIVE_SESSION, request.getStream());
+        internalRequest.addParameter(PAUSE, null);
+        return invokeHttpClient(internalRequest, PauseAppStreamResponse.class);
+    }
 
     /**
      * Resume your live session by live session id.
@@ -607,6 +868,36 @@ public class LssClient extends AbstractBceClient {
                 request.getSessionId());
         internalRequest.addParameter(RESUME, null);
         return invokeHttpClient(internalRequest, ResumeSessionResponse.class);
+    }
+
+    /**
+     * Resume your app stream by app name and stream name
+     *
+     * @param app  app name
+     * @param stream  stream name
+     *
+     */
+    public ResumeAppStreamResponse resumeAppStream(String app, String stream) {
+        ResumeAppStreamRequest request = new ResumeAppStreamRequest();
+        request.setApp(app);
+        request.setStream(stream);
+        return resumeAppStream(request);
+    }
+
+    /**
+     * Resume your app stream by app name and stream name
+     *
+     *  @param request The request object containing all parameters for resuming app session.
+     *
+     */
+    public ResumeAppStreamResponse resumeAppStream(ResumeAppStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getApp(), "The parameter app should NOT be null or empty string.");
+        checkStringNotEmpty(request.getStream(), "The parameter stream should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, LIVE_APP,
+                request.getApp(), LIVE_SESSION, request.getStream());
+        internalRequest.addParameter(RESUME, null);
+        return invokeHttpClient(internalRequest, ResumeAppStreamResponse.class);
     }
 
     /**

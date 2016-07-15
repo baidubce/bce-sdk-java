@@ -13,12 +13,16 @@
 
 package com.baidubce.services.lss.model;
 
+import java.util.Map;
+
 public class LiveSession {
     private String sessionId = null;
 
     private String description = null;
 
     private String preset = null;
+
+    private Map<String, String> presets = null;
 
     private String createTime = null;
 
@@ -134,6 +138,14 @@ public class LiveSession {
         this.error = error;
     }
 
+    public Map<String, String> getPresets() {
+        return presets;
+    }
+
+    public void setPresets(Map<String, String> presets) {
+        this.presets = presets;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -141,6 +153,7 @@ public class LiveSession {
         sb.append("    sessionId: ").append(sessionId).append("\n");
         sb.append("    description: ").append(description).append("\n");
         sb.append("    preset: ").append(preset).append("\n");
+        sb.append("    presets: ").append(presets).append("\n");
         sb.append("    createTime: ").append(createTime).append("\n");
         sb.append("    status: ").append(status).append("\n");
         sb.append("    notification: ").append(notification).append("\n");

@@ -1,33 +1,20 @@
-/*
- * Copyright (c) 2015 Baidu.com, Inc. All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- */
-
 package com.baidubce.services.lss.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
 import java.util.Map;
 
-public class CreateSessionResponse extends AbstractBceResponse {
-
-    private String sessionId = null;
+/**
+ * Created by wuyafei on 16/6/28.
+ */
+public class GetAppResponse extends AbstractBceResponse {
+    private String name = null;
 
     private String description = null;
 
-    private String preset = null;
-
     private Map<String, String> presets = null;
 
-    private String createTime = null;
+    private String preset = null;
 
     private String status = null;
 
@@ -37,16 +24,16 @@ public class CreateSessionResponse extends AbstractBceResponse {
 
     private String recording = null;
 
-    private LivePublish publish = null;
+    private PlayPrefix playPrefix = null;
 
-    private LivePlay play = null;
+    private PublishPrefix publishPrefix = null;
 
-    public String getSessionId() {
-        return sessionId;
+    public String getName() {
+        return name;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -63,14 +50,6 @@ public class CreateSessionResponse extends AbstractBceResponse {
 
     public void setPreset(String preset) {
         this.preset = preset;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 
     public String getStatus() {
@@ -105,20 +84,20 @@ public class CreateSessionResponse extends AbstractBceResponse {
         this.recording = recording;
     }
 
-    public LivePublish getPublish() {
-        return publish;
+    public PlayPrefix getPlayPrefix() {
+        return playPrefix;
     }
 
-    public void setPublish(LivePublish publish) {
-        this.publish = publish;
+    public void setPlayPrefix(PlayPrefix playPrefix) {
+        this.playPrefix = playPrefix;
     }
 
-    public LivePlay getPlay() {
-        return play;
+    public PublishPrefix getPublishPrefix() {
+        return publishPrefix;
     }
 
-    public void setPlay(LivePlay play) {
-        this.play = play;
+    public void setPublishPrefix(PublishPrefix publishPrefix) {
+        this.publishPrefix = publishPrefix;
     }
 
     public Map<String, String> getPresets() {
@@ -132,18 +111,17 @@ public class CreateSessionResponse extends AbstractBceResponse {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("class CreateSessionResponse {\n");
-        sb.append("    sessionId: ").append(sessionId).append("\n");
+        sb.append("class GetAppResponse {\n");
+        sb.append("    name: ").append(name).append("\n");
         sb.append("    description: ").append(description).append("\n");
         sb.append("    preset: ").append(preset).append("\n");
         sb.append("    presets: ").append(presets).append("\n");
-        sb.append("    createTime: ").append(createTime).append("\n");
         sb.append("    status: ").append(status).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
         sb.append("    recording: ").append(recording).append("\n");
-        sb.append("    publish: ").append(publish).append("\n");
-        sb.append("    play: ").append(play).append("\n");
+        sb.append("    playPrefix: ").append(playPrefix).append("\n");
+        sb.append("    publishPrefix: ").append(publishPrefix).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

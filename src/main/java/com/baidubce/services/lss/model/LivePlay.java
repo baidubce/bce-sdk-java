@@ -13,11 +13,19 @@
 
 package com.baidubce.services.lss.model;
 
+import java.util.Map;
+
 public class LivePlay {
 
     private String rtmpUrl = null;
 
     private String hlsUrl = null;
+
+    private String flvUrl = null;
+
+    private Map<String, String> hlsUrls;
+    private Map<String, String> rtmpUrls;
+    private Map<String, String> flvUrls;
 
     public String getRtmpUrl() {
         return rtmpUrl;
@@ -29,6 +37,19 @@ public class LivePlay {
 
     public LivePlay withRtmpUrl(String rtmpUrl) {
         this.rtmpUrl = rtmpUrl;
+        return this;
+    }
+
+    public Map<String, String> getRtmpUrls() {
+        return rtmpUrls;
+    }
+
+    public void setRtmpUrls(Map<String, String> rtmpUrls) {
+        this.rtmpUrls = rtmpUrls;
+    }
+
+    public LivePlay withRtmpUrls(Map<String, String> rtmpUrls) {
+        this.rtmpUrls = rtmpUrls;
         return this;
     }
 
@@ -45,12 +66,55 @@ public class LivePlay {
         return this;
     }
 
+    public Map<String, String> getHlsUrls() {
+        return hlsUrls;
+    }
+
+    public void setHlsUrls(Map<String, String> hlsUrls) {
+        this.hlsUrls = hlsUrls;
+    }
+
+    public LivePlay withHlsUrls(Map<String, String> hlsUrls) {
+        this.hlsUrls = hlsUrls;
+        return this;
+    }
+
+    public String getFlvUrl() {
+        return flvUrl;
+    }
+
+    public void setFlvUrl(String flvUrl) {
+        this.flvUrl = flvUrl;
+    }
+
+    public LivePlay withFlvUrl(String flvUrl) {
+        this.flvUrl = flvUrl;
+        return this;
+    }
+
+    public Map<String, String> getFlvUrls() {
+        return flvUrls;
+    }
+
+    public void setFlvUrls(Map<String, String> flvUrls) {
+        this.flvUrls = flvUrls;
+    }
+
+    public LivePlay withFlvUrls(Map<String, String> flvUrls) {
+        this.flvUrls = flvUrls;
+        return this;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("class LivePlay {\n");
         sb.append("    rtmpUrl: ").append(rtmpUrl).append("\n");
         sb.append("    hlsUrl: ").append(hlsUrl).append("\n");
+        sb.append("    flvUrl: ").append(flvUrl).append("\n");
+        sb.append("    rtmpUrls: ").append(rtmpUrls).append("\n");
+        sb.append("    hlsUrls: ").append(hlsUrls).append("\n");
+        sb.append("    flvUrls: ").append(flvUrls).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

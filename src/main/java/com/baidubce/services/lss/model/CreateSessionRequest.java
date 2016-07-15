@@ -16,11 +16,15 @@ package com.baidubce.services.lss.model;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 
+import java.util.Map;
+
 public class CreateSessionRequest extends AbstractBceRequest {
 
     private String description = null;
 
     private String preset = null;
+
+    private Map<String, String> presets = null;
 
     private String notification = null;
 
@@ -53,6 +57,19 @@ public class CreateSessionRequest extends AbstractBceRequest {
 
     public CreateSessionRequest withPreset(String preset) {
         this.preset = preset;
+        return this;
+    }
+
+    public Map<String, String> getPresets() {
+        return presets;
+    }
+
+    public void setPresets(Map<String, String> presets) {
+        this.presets = presets;
+    }
+
+    public CreateSessionRequest withPresets(Map<String, String> presets) {
+        this.presets = presets;
         return this;
     }
 
@@ -119,6 +136,7 @@ public class CreateSessionRequest extends AbstractBceRequest {
         sb.append("class CreateSessionRequest {\n");
         sb.append("    description: ").append(description).append("\n");
         sb.append("    preset: ").append(preset).append("\n");
+        sb.append("    presets: ").append(presets).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
         sb.append("    recording: ").append(recording).append("\n");

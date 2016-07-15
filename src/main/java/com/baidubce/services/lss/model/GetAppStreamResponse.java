@@ -1,23 +1,13 @@
-/*
- * Copyright (c) 2015 Baidu.com, Inc. All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- */
-
 package com.baidubce.services.lss.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
 import java.util.Map;
 
-public class RefreshSessionResponse extends AbstractBceResponse {
+/**
+ * Created by wuyafei on 16/6/28.
+ */
+public class GetAppStreamResponse extends AbstractBceResponse {
     private String sessionId = null;
 
     private String description = null;
@@ -43,6 +33,8 @@ public class RefreshSessionResponse extends AbstractBceResponse {
     private LivePlay play = null;
 
     private SessionErrorInfo error = null;
+
+    private RealTimeSessionStatistics statistics = null;
 
     public String getSessionId() {
         return sessionId;
@@ -100,22 +92,6 @@ public class RefreshSessionResponse extends AbstractBceResponse {
         this.securityPolicy = securityPolicy;
     }
 
-    public String getStreamingStatus() {
-        return streamingStatus;
-    }
-
-    public void setStreamingStatus(String streamingStatus) {
-        this.streamingStatus = streamingStatus;
-    }
-
-    public String getRecording() {
-        return recording;
-    }
-
-    public void setRecording(String recording) {
-        this.recording = recording;
-    }
-
     public LivePublish getPublish() {
         return publish;
     }
@@ -132,12 +108,36 @@ public class RefreshSessionResponse extends AbstractBceResponse {
         this.play = play;
     }
 
+    public String getStreamingStatus() {
+        return streamingStatus;
+    }
+
+    public void setStreamingStatus(String streamingStatus) {
+        this.streamingStatus = streamingStatus;
+    }
+
+    public String getRecording() {
+        return recording;
+    }
+
+    public void setRecording(String recording) {
+        this.recording = recording;
+    }
+
     public SessionErrorInfo getError() {
         return error;
     }
 
     public void setError(SessionErrorInfo error) {
         this.error = error;
+    }
+
+    public RealTimeSessionStatistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(RealTimeSessionStatistics statistics) {
+        this.statistics = statistics;
     }
 
     public Map<String, String> getPresets() {
@@ -151,7 +151,7 @@ public class RefreshSessionResponse extends AbstractBceResponse {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("class RefreshSessionResponse {\n");
+        sb.append("class GetAppStreamResponse {\n");
         sb.append("    sessionId: ").append(sessionId).append("\n");
         sb.append("    description: ").append(description).append("\n");
         sb.append("    preset: ").append(preset).append("\n");
@@ -165,6 +165,7 @@ public class RefreshSessionResponse extends AbstractBceResponse {
         sb.append("    publish: ").append(publish).append("\n");
         sb.append("    play: ").append(play).append("\n");
         sb.append("    error: ").append(error).append("\n");
+        sb.append("    statistics: ").append(statistics).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
