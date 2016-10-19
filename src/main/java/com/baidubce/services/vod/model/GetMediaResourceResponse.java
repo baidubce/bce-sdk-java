@@ -44,6 +44,8 @@ public class GetMediaResourceResponse extends AbstractBceResponse {
      */
     private String publishTime;
 
+    private VodError error;
+
     /*
      * The time when the media resource was created.
      */
@@ -97,6 +99,14 @@ public class GetMediaResourceResponse extends AbstractBceResponse {
         this.createTime = createTime;
     }
 
+    public VodError getError() {
+        return error;
+    }
+
+    public void setError(VodError error) {
+        this.error = error;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GetMediaResourceResponse { \n");
@@ -106,6 +116,9 @@ public class GetMediaResourceResponse extends AbstractBceResponse {
         sb.append("  meta = ").append(meta).append("\n");
         sb.append("  createTime = ").append(createTime).append("\n");
         sb.append("  publishTime = ").append(publishTime).append("\n");
+        if (this.error != null) {
+            sb.append(this.error).append("\n");
+        }
         sb.append("}\n");
         return sb.toString();
     }

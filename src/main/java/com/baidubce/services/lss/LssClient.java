@@ -98,6 +98,8 @@ import com.baidubce.services.lss.model.ListAppResponse;
 import com.baidubce.services.lss.model.ListAppRequest;
 import com.baidubce.services.lss.model.ListAppStreamsResponse;
 import com.baidubce.services.lss.model.ListAppStreamsRequest;
+import com.baidubce.services.lss.model.GetSessionStatisticsRequest;
+import com.baidubce.services.lss.model.GetSessionStatisticsResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import org.joda.time.DateTime;
@@ -191,6 +193,11 @@ public class LssClient extends AbstractBceClient {
      * Parameter for inserting cue point.
      */
     private static final String CUE_POINT = "cuepoint";
+
+    /**
+     * Parameter for statistics.
+     */
+    private static final String STATISTICS = "statistics";
 
     /**
      * Responsible for handling httpResponses from all service calls.
@@ -428,6 +435,33 @@ public class LssClient extends AbstractBceClient {
         }
         request.withPresets(presetMap).withDescription(description).withNotification(notification);
         request.withSecurityPolicy(securityPolicy).withPublish(publish).withRecording(recording);
+        return createSession(request);
+    }
+
+    /**
+     * Create a live session in the live stream service.
+     *
+     * @param description The description of the new live session.
+     * @param presets  The name of the new live session.
+     * @param notification The notification of the new live session.
+     * @param securityPolicy The security policy of the new live session.
+     * @param recording The recording preset of the new live session.
+     * @param publish       Specify the LivePublishInfo of live session.
+     * @param thumbnail The thumbnail of new live session
+     * @param watermarks The watermarks of new live session
+     *
+     */
+    public CreateSessionResponse createSession(String description, List<String> presets, String notification,
+                                               String securityPolicy, String recording, LivePublishInfo publish,
+                                               String thumbnail, Watermarks watermarks) {
+        CreateSessionRequest request = new CreateSessionRequest();
+        Map<String, String> presetMap = new HashMap<String, String>();
+        for (int i = 0; i < presets.size(); i++) {
+            presetMap.put("L" + i, presets.get(i));
+        }
+        request.withPresets(presetMap).withDescription(description).withNotification(notification);
+        request.withSecurityPolicy(securityPolicy).withPublish(publish).withRecording(recording);
+        request.withThumbnail(thumbnail).withWatermarks(watermarks);
         return createSession(request);
     }
 
@@ -1225,6 +1259,31 @@ public class LssClient extends AbstractBceClient {
                 request.getName());
         return invokeHttpClient(internalRequest, UpdateSecurityPolicyResponse.class);
 
+    }
+
+    public GetSessionStatisticsResponse getSessionStatistics(String sessionId, String startDate,
+                                                             String endDate, Boolean aggregate) {
+
+        GetSessionStatisticsRequest request = new GetSessionStatisticsRequest();
+        request.withSessionId(sessionId).withStartDate(startDate).withEndDate(endDate).withAggregate(aggregate);
+        return getSessionStatistics(request);
+    }
+
+    public GetSessionStatisticsResponse getSessionStatistics(GetSessionStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getSessionId(), "The parameter sessionId should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, STATISTICS, LIVE_SESSION,
+                request.getSessionId());
+        if (request.getStartDate() != null) {
+            internalRequest.addParameter("startDate", request.getStartDate());
+        }
+        if (request.getEndDate() != null) {
+            internalRequest.addParameter("endDate", request.getEndDate());
+        }
+        if (request.getAggregate() != null) {
+            internalRequest.addParameter("aggregate", request.getAggregate().toString());
+        }
+        return invokeHttpClient(internalRequest, GetSessionStatisticsResponse.class);
     }
 
 

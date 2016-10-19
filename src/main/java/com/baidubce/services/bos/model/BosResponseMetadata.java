@@ -16,14 +16,14 @@ import com.baidubce.BceResponseMetadata;
 
 public class BosResponseMetadata extends BceResponseMetadata {
 
-    private String bosDebugId;
+    private String debugId;
 
     public String getBosDebugId() {
-        return this.bosDebugId;
+        return this.debugId;
     }
 
-    public void setBosDebugId(String bosDebugId) {
-        this.bosDebugId = bosDebugId;
+    public void setBosDebugId(String debugId) {
+        this.debugId = debugId;
     }
 
 }

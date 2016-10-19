@@ -38,6 +38,10 @@ public class GetSessionResponse extends AbstractBceResponse {
 
     private String recording = null;
 
+    private String thumbnail = null;
+
+    private Watermarks watermarks = null;
+
     private LivePublish publish = null;
 
     private LivePlay play = null;
@@ -134,6 +138,22 @@ public class GetSessionResponse extends AbstractBceResponse {
         this.recording = recording;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public Watermarks getWatermarks() {
+        return watermarks;
+    }
+
+    public void setWatermarks(Watermarks watermarks) {
+        this.watermarks = watermarks;
+    }
+
     public SessionErrorInfo getError() {
         return error;
     }
@@ -172,6 +192,8 @@ public class GetSessionResponse extends AbstractBceResponse {
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
         sb.append("    streamingStatus: ").append(streamingStatus).append("\n");
         sb.append("    recording: ").append(recording).append("\n");
+        sb.append("    thumbnail: ").append(thumbnail).append("\n");
+        sb.append("    watermarks: ").append(watermarks).append("\n");
         sb.append("    publish: ").append(publish).append("\n");
         sb.append("    play: ").append(play).append("\n");
         sb.append("    error: ").append(error).append("\n");

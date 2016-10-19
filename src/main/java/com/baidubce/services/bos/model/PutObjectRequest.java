@@ -53,6 +53,12 @@ public class PutObjectRequest extends GenericObjectRequest {
     private ObjectMetadata objectMetadata = new ObjectMetadata();
 
     /**
+     * The StorageClass is an identification that distinguish between infrequent access bos
+     * and standard bos. 
+     */
+    private String storageClass;
+
+    /**
      * Constructs a new PutObjectRequest object to upload a file to the
      * specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
@@ -305,6 +311,37 @@ public class PutObjectRequest extends GenericObjectRequest {
      */
     public PutObjectRequest withInputStream(InputStream inputStream) {
         this.setInputStream(inputStream);
+        return this;
+    }
+    /**
+     * Gets the storageClass of the input file which is be uploaded to Baidu Bos.
+     * 
+     * @return storageClass  The StorageClass is an identification that distinguish between infrequent access bos
+     * and standard bos.
+     */
+    public String getStorageClass() {
+        return storageClass;
+    }
+
+    /**
+     * Sets the storageClass of the input file which is be uploaded to Baidu Bos.
+     * 
+     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     */
+    public void setStorageClass(String storageClass) {
+        this.storageClass = storageClass;
+    }
+
+    /**
+     * Sets the storageClass of the input file which is be uploaded to Baidu Bos.
+     * 
+     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     * @return This PutObjectRequest, so that additional method calls can be chained together.
+     */
+    public PutObjectRequest withStorageClass(String storageClass) {
+        this.setStorageClass(storageClass);
         return this;
     }
 }

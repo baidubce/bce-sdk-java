@@ -28,8 +28,8 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bos.BosClient;
 import com.baidubce.services.bos.BosClientConfiguration;
 import com.baidubce.services.bos.model.PutObjectResponse;
-import com.baidubce.services.doc.model.GetDocumentResponse;
 import com.baidubce.services.doc.model.GetDocumentRequest;
+import com.baidubce.services.doc.model.GetDocumentResponse;
 import com.baidubce.services.doc.model.GetDocumentDownloadResponse;
 import com.baidubce.services.doc.model.GetDocumentDownloadRequest;
 import com.baidubce.services.doc.model.CreateDocumentRequest;
@@ -54,6 +54,9 @@ import com.baidubce.services.doc.model.RegisterDocumentResponse;
 import com.baidubce.services.doc.model.RegisterDocumentRequest;
 import com.baidubce.services.doc.model.PublishDocumentResponse;
 import com.baidubce.services.doc.model.PublishDocumentRequest;
+import com.baidubce.services.doc.model.DisableReadTokenResponse;
+import com.baidubce.services.doc.model.DisableReadTokenRequest;
+
 
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -187,6 +190,28 @@ public class DocClient extends AbstractBceClient {
     /**
      * Create a Document.
      *
+     * @param file  The document .
+     * @param title  The document title.
+     * @param format  The document format.
+     * @param notification  The document notification name.
+     * @param access  The document access privilege(PUBLIC/PRIVATE).
+     *
+     * @return A CreateDocumentResponse object containing the information returned by Document.
+     */
+    public CreateDocumentResponse createDocument(File file, String title, String format,
+                                                 String notification, String access) {
+        CreateDocumentRequest request = new CreateDocumentRequest();
+        request.setFile(file);
+        request.setTitle(title);
+        request.setFormat(format);
+        request.setNotification(notification);
+        request.setAccess(access);
+        return this.createDocument(request);
+    }
+
+    /**
+     * Create a Document.
+     *
      * @param request  The request object containing all the parameters to upload a new doc.
      *
      * @return A CreateDocumentResponse object containing the information returned by Document.
@@ -201,6 +226,7 @@ public class DocClient extends AbstractBceClient {
         regRequest.setFormat(request.getFormat());
         regRequest.setTitle(request.getTitle());
         regRequest.setNotification(request.getNotification());
+        regRequest.setAccess(request.getAccess());
 
         RegisterDocumentResponse regResponse = registerDocument(regRequest);
 
@@ -238,6 +264,31 @@ public class DocClient extends AbstractBceClient {
         request.setTitle(title);
         request.setFormat(format);
         request.setNotification(notification);
+        return this.createDocumentFromBos(request);
+    }
+
+    /**
+     * Create a Document.
+     *
+     * @param bucket  The document bucket.
+     * @param object  The document object.
+     * @param title  The document title.
+     * @param format  The document format.
+     * @param notification  The document notification name.
+     * @param access  The document access privilege(PUBLIC/PRIVATE).
+     *
+     * @return A CreateDocumentFromBosResponse object containing the information returned by Document.
+     */
+    public CreateDocumentFromBosResponse createDocumentFromBos(String bucket, String object,
+                                                               String title, String format,
+                                                               String notification, String access) {
+        CreateDocumentFromBosRequest request = new CreateDocumentFromBosRequest();
+        request.setBucket(bucket);
+        request.setObject(object);
+        request.setTitle(title);
+        request.setFormat(format);
+        request.setNotification(notification);
+        request.setAccess(access);
         return this.createDocumentFromBos(request);
     }
 
@@ -515,6 +566,35 @@ public class DocClient extends AbstractBceClient {
         return response;
     }
 
+    /**
+     * get a Document Download link.
+     *
+     * @param documentId the documentId need to download.
+     * @param expireInSeconds the Download link expire time in second. -1 set never expire.
+     *
+     * @return A GetDocumentDownloadResponse object containing the information returned by Document.
+     */
+    public GetDocumentDownloadResponse getDocumentDownload(String documentId, long expireInSeconds) {
+        checkNotNull(documentId, "documentId should not be null.");
+        GetDocumentDownloadRequest request = new GetDocumentDownloadRequest();
+        request.setDocumentId(documentId);
+        InternalRequest internalRequest = this.createRequest(HttpMethodName.GET, request, DOC, request.getDocumentId());
+        internalRequest.addParameter("download", null);
+        internalRequest.addParameter("expireInSeconds", String.valueOf(expireInSeconds));
+        GetDocumentDownloadResponse response;
+        try {
+            response = this.invokeHttpClient(internalRequest, GetDocumentDownloadResponse.class);
+        } finally {
+            try {
+                internalRequest.getContent().close();
+            } catch (Exception e) {
+                // ignore exception
+            }
+        }
+
+        return response;
+    }
+
 
     /**
      * read a Document, get document reader infomation.
@@ -526,6 +606,21 @@ public class DocClient extends AbstractBceClient {
     public ReadDocumentResponse readDocument(String documentId) {
         ReadDocumentRequest request = new ReadDocumentRequest();
         request.setDocumentId(documentId);
+        return this.readDocument(request);
+    }
+
+    /**
+     * read a Document, get document reader infomation.
+     *
+     * @param documentId  The document id.
+     * @param expireInSeconds The expire time
+     *
+     * @return A ReadDocumentResponse object containing the information returned by Document.
+     */
+    public ReadDocumentResponse readDocument(String documentId, long expireInSeconds) {
+        ReadDocumentRequest request = new ReadDocumentRequest();
+        request.setDocumentId(documentId);
+        request.setExpireInSeconds(expireInSeconds);
         return this.readDocument(request);
     }
 
@@ -545,6 +640,50 @@ public class DocClient extends AbstractBceClient {
         ReadDocumentResponse response;
         try {
             response = this.invokeHttpClient(internalRequest, ReadDocumentResponse.class);
+        } finally {
+            try {
+                internalRequest.getContent().close();
+            } catch (Exception e) {
+                // ignore exception
+            }
+        }
+
+        return response;
+    }
+
+    /**
+     * Disable read token.
+     *
+     * @param documentId  The document id.
+     * @param token The token need to disable
+     *
+     * @return A DisableReadTokenResponse object.
+     */
+    public DisableReadTokenResponse disableReadToken(String documentId, String token) {
+        DisableReadTokenRequest request = new DisableReadTokenRequest();
+        request.setDocumentId(documentId);
+        request.setToken(token);
+        return this.disableReadToken(request);
+    }
+
+    /**
+     * Disable read token.
+     *
+     * @param request  The request object containing a documentId.
+     *
+     * @return A DisableReadTokenResponse object.
+     */
+    public DisableReadTokenResponse disableReadToken(DisableReadTokenRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getDocumentId(), "documentId should not be null.");
+        checkNotNull(request.getToken(), "token should not be null.");
+        InternalRequest internalRequest = this.createRequest(
+                HttpMethodName.PUT, request, DOC, request.getDocumentId());
+        internalRequest.addParameter("disableReadToken", null);
+        internalRequest.addParameter("token", request.getToken());
+        DisableReadTokenResponse response;
+        try {
+            response = this.invokeHttpClient(internalRequest, DisableReadTokenResponse.class);
         } finally {
             try {
                 internalRequest.getContent().close();

@@ -71,6 +71,12 @@ public class ListPartsResponse extends BosResponse {
     private int partNumberMarker;
 
     /**
+     * The storageClass is an identification that distinguish between low
+     * frequency storagey and normal strategy.
+     */
+    private String storageClass;
+
+    /**
      * The list of parts described in this part listing.
      */
     private List<PartSummary> parts;
@@ -298,4 +304,23 @@ public class ListPartsResponse extends BosResponse {
         this.parts = parts;
     }
 
+    /**
+     * Returns the storageClass.
+     * 
+     * @return storageClass The StorageClass is an identification that distinguish between
+     * infrequent access bos and standard bos.
+     */
+    public String getStorageClass() {
+        return storageClass;
+    }
+
+    /**
+     * Sets the storageClass.
+     * 
+     * @param storageClass The StorageClass is an identification that distinguish between
+     * infrequent access bos and standard bos.
+     */
+    public void setStorageClass(String storageClass) {
+        this.storageClass = storageClass;
+    }
 }

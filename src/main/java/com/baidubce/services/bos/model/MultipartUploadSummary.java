@@ -45,6 +45,12 @@ public class MultipartUploadSummary {
     private Date initiated;
 
     /**
+     * The StorageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos. 
+     */
+    private String storageClass;
+
+    /**
      * Returns the key by which this upload is stored.
      *
      * @return The key by which this upload is stored.
@@ -116,4 +122,23 @@ public class MultipartUploadSummary {
         this.initiated = initiated;
     }
 
+    /**
+     * Return the storageClass.
+     * 
+     * @return storageClass The StorageClass is an identification that distinguish between
+     * infrequent access bos and standard bos.
+     */
+    public String getStorageClass() {
+        return storageClass;
+    }
+
+    /**
+     * Sets the storageClass.
+     * 
+     * @param storageClass The StorageClass is an identification that distinguish between
+     * infrequent access bos and standard bos.
+     */
+    public void setStorageClass(String storageClass) {
+        this.storageClass = storageClass;
+    }
 }

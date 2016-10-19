@@ -1,6 +1,7 @@
 package com.baidubce.services.doc.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import java.util.Date;
 
 /**
  * Created by baidu on 15/12/31.
@@ -10,6 +11,8 @@ public class ReadDocumentResponse extends AbstractBceResponse {
     private String host;
     private String docId;
     private String token;
+    private Date createTime;
+    private Date expireTime;
 
     public String getDocumentId() {
         return documentId;
@@ -43,6 +46,22 @@ public class ReadDocumentResponse extends AbstractBceResponse {
         this.token = token;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(Date expireTime) {
+        this.expireTime = expireTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -52,6 +71,12 @@ public class ReadDocumentResponse extends AbstractBceResponse {
         sb.append("    host: ").append(host).append("\n");
         sb.append("    docId: ").append(docId).append("\n");
         sb.append("    token: ").append(token).append("\n");
+        if (createTime != null) {
+            sb.append("    createTime: ").append(createTime).append("\n");
+        }
+        if (expireTime != null) {
+            sb.append("    expireTime: ").append(expireTime).append("\n");
+        }
         sb.append("}\n");
         return sb.toString();
     }

@@ -13,6 +13,7 @@ public class GetDocumentResponse extends AbstractBceResponse {
     private String title = null;
     private String format = null;
     private String notification = null;
+    private String access = null;
     private Date createTime = null;
     private DocumentUploadInfo uploadInfo = null;
     private DocumentPublishInfo publishInfo = null;
@@ -58,6 +59,14 @@ public class GetDocumentResponse extends AbstractBceResponse {
         this.notification = notification;
     }
 
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -100,6 +109,7 @@ public class GetDocumentResponse extends AbstractBceResponse {
         sb.append("    title: ").append(title).append("\n");
         sb.append("    format: ").append(format).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
+        sb.append("    access: ").append(access).append("\n");
         sb.append("    createTime: ").append(createTime).append("\n");
         if (this.status.equals("PUBLISHED")) {
             sb.append("    publishInfo:").append(publishInfo.toString()).append("\n");

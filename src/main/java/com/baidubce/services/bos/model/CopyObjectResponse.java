@@ -25,12 +25,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CopyObjectResponse extends BosResponse {
 
     /**
-     * The ETag value of the new object.
+     * The ETag value of the copied object.
      */
     private String eTag;
 
     /**
-     * The last modified date for the new object.
+     * The last modified date for the copied object.
      */
     private Date lastModified;
 

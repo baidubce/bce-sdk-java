@@ -52,6 +52,10 @@ public class ObjectMetadata {
 
     private String contentRange;
 
+    private String cacheControl;
+
+    private String storageClass;
+
     public ObjectMetadata() {
     }
 
@@ -68,6 +72,8 @@ public class ObjectMetadata {
         this.setETag(other.getETag());
         this.setInstanceLength(other.getInstanceLength());
         this.setLastModified(other.getLastModified());
+        this.setCacheControl(other.getCacheControl());
+        this.setStorageClass(other.getStorageClass());
     }
 
     /**
@@ -375,7 +381,29 @@ public class ObjectMetadata {
         if (this.lastModified != null) {
             builder.append(", lastModified=").append(this.lastModified);
         }
+        if (this.cacheControl != null) {
+            builder.append(", cacheControl=").append(this.cacheControl);
+        }
+        if (this.storageClass != null) {
+            builder.append(", storageClass=").append(this.storageClass);
+        }
         builder.append(']');
         return builder.toString();
+    }
+
+    public String getCacheControl() {
+        return cacheControl;
+    }
+
+    public void setCacheControl(String cacheControl) {
+        this.cacheControl = cacheControl;
+    }
+
+    public String getStorageClass() {
+        return storageClass;
+    }
+
+    public void setStorageClass(String storageClass) {
+        this.storageClass = storageClass;
     }
 }

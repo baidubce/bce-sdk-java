@@ -12,6 +12,7 @@ public class CreateDocumentFromBosRequest extends AbstractBceRequest {
     private String title = null;
     private String format = null;
     private String notification = null;
+    private String access = null;
 
     public CreateDocumentFromBosRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
@@ -48,4 +49,11 @@ public class CreateDocumentFromBosRequest extends AbstractBceRequest {
         this.title = title;
     }
 
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
 }

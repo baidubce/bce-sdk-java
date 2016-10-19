@@ -29,6 +29,13 @@ public class InitiateMultipartUploadRequest extends GenericObjectRequest {
     private ObjectMetadata objectMetadata = new ObjectMetadata();
 
     /**
+     * The StorageClass is an identification that distinguish between infrequent access bos
+     * and standard bos.
+     * 
+     */
+    private String storageClass;
+
+    /**
      * Constructs a request to initiate a new multipart upload in the specified
      * bucket, stored by the specified key.
      *
@@ -121,4 +128,37 @@ public class InitiateMultipartUploadRequest extends GenericObjectRequest {
         this.setObjectMetadata(objectMetadata);
         return this;
     }
+
+    /**
+     * Gets the storageClass of the input file which is be uploaded to Bos.
+     * 
+     * @return storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     */
+    public String getStorageClass() {
+        return storageClass;
+    }
+
+    /**
+     * Sets the storageClass of the object which is be uploaded to Bos.
+     * 
+     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     */
+    public void setStorageClass(String storageClass) {
+        this.storageClass = storageClass;
+    }
+
+    /**
+     * Sets the storageClass of the object which is be uploaded to Bos.
+     * 
+     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     * @return This PutObjectRequest, so that additional method calls can be chained together.
+     */
+    public InitiateMultipartUploadRequest withStorageClass(String storageClass) {
+        this.setStorageClass(storageClass);
+        return this;
+    }
+
 }

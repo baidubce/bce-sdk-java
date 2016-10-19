@@ -15,6 +15,7 @@ package com.baidubce.services.bos;
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientException;
 import com.baidubce.BceServiceException;
+import com.baidubce.BceServiceException.ErrorType;
 import com.baidubce.auth.BceV1Signer;
 import com.baidubce.auth.SignOptions;
 import com.baidubce.auth.Signer;
@@ -37,6 +38,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +47,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,10 +62,19 @@ public class BosClient extends AbstractBceClient {
     /**
      * Responsible for handling httpResponses from all Bos service calls.
      */
-    private static final HttpResponseHandler[] bos_handlers =
-            new HttpResponseHandler[]{new BceMetadataResponseHandler(), new BosMetadataResponseHandler(),
-                    new BceErrorResponseHandler(), new BosObjectResponseHandler(),
-                    new BceJsonResponseHandler()};
+    private static final HttpResponseHandler[] bos_handlers = new HttpResponseHandler[] {
+            new BceMetadataResponseHandler(), new BosMetadataResponseHandler(), new BceErrorResponseHandler(),
+            new BosObjectResponseHandler(), new BceJsonResponseHandler()};
+
+    /**
+     * Standard BOS storage class
+     */
+    public static final String STORAGE_CLASS_STANDARD = "STANDARD";
+
+    /**
+     * Infrequent access BOS storage class
+     */
+    public static final String STORAGE_CLASS_STANDARD_IA = "STANDARD_IA"; 
 
     /**
      * Constructs a new client to invoke service methods on Bos.
@@ -947,7 +957,9 @@ public class BosClient extends AbstractBceClient {
                 internalRequest.setContent(this.wrapRestartableInputStream(input));
             }
         }
-
+        if (request.getStorageClass() != null) {
+            metadata.setStorageClass(request.getStorageClass());
+        }
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(metadata.getContentLength()));
 
         populateRequestMetadata(internalRequest, metadata);
@@ -1003,7 +1015,9 @@ public class BosClient extends AbstractBceClient {
         if (request.getETag() != null) {
             internalRequest.addHeader(Headers.BCE_COPY_SOURCE_IF_MATCH, "\"" + request.getETag() + "\"");
         }
-
+        if (request.getStorageClass() != null) {
+            internalRequest.addHeader(Headers.BCE_STORAGE_CLASS, request.getStorageClass());
+        }
         ObjectMetadata newObjectMetadata = request.getNewObjectMetadata();
         if (newObjectMetadata != null) {
             internalRequest.addHeader(Headers.BCE_COPY_METADATA_DIRECTIVE, "replace");
@@ -1014,7 +1028,25 @@ public class BosClient extends AbstractBceClient {
 
         this.setZeroContentLength(internalRequest);
 
-        return this.invokeHttpClient(internalRequest, CopyObjectResponse.class);
+        CopyObjectResponseWithExceptionInfo intermidiateRes = this.invokeHttpClient(internalRequest,
+                CopyObjectResponseWithExceptionInfo.class);
+        // handle exception
+        if (intermidiateRes.getETag() == null 
+                && intermidiateRes.getLastModified() == null) {
+            if (intermidiateRes.getMessage() != null) {
+                BceServiceException bse = new BceServiceException(intermidiateRes.getMessage());
+                bse.setErrorCode(intermidiateRes.getCode());
+                bse.setRequestId(intermidiateRes.getRequestId());
+                if (bse.getErrorCode() == "InternalError") {
+                    bse.setErrorType(ErrorType.Service);
+                } else {
+                    bse.setErrorType(ErrorType.Client);
+                }
+                bse.setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+                throw bse;
+            }
+        }
+        return (CopyObjectResponse) intermidiateRes;
     }
 
     /**
@@ -1069,6 +1101,9 @@ public class BosClient extends AbstractBceClient {
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
         internalRequest.addParameter("uploads", null);
+        if (request.getStorageClass() != null) {
+            internalRequest.addHeader(Headers.BCE_STORAGE_CLASS, request.getStorageClass());
+        }
         this.setZeroContentLength(internalRequest);
 
         if (request.getObjectMetadata() != null) {
@@ -1126,7 +1161,7 @@ public class BosClient extends AbstractBceClient {
                 if (!Arrays.equals(clientSideHash, serverSideHash)) {
                     throw new BceClientException("Unable to verify integrity of data upload.  "
                             + "Client calculated content hash didn't match hash calculated by "
-                            + "Baidu BOS.  " + "You may need to delete the data stored in Baiddu BOS.");
+                            + "BOS.  " + "You may need to delete the data stored in BOS.");
                 }
             }
 
@@ -1371,6 +1406,12 @@ public class BosClient extends AbstractBceClient {
         }
         if (metadata.getETag() != null) {
             request.addHeader(Headers.ETAG, metadata.getETag());
+        }
+        if (metadata.getCacheControl() != null) {
+            request.addHeader(Headers.CACHE_CONTROL, metadata.getCacheControl());
+        }
+        if (metadata.getStorageClass() != null) {
+            request.addHeader(Headers.BCE_STORAGE_CLASS, metadata.getStorageClass());
         }
 
         Map<String, String> userMetadata = metadata.getUserMetadata();

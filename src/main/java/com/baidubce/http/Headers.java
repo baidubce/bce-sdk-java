@@ -23,11 +23,11 @@ public interface Headers {
 
     public static final String AUTHORIZATION = "Authorization";
 
+    public static final String CACHE_CONTROL = "Cache-Control";
+
     public static final String CONTENT_DISPOSITION = "Content-Disposition";
 
     public static final String CONTENT_ENCODING = "Content-Encoding";
-
-    public static final String TRANSFER_ENCODING = "Transfer-Encoding";
 
     public static final String CONTENT_LENGTH = "Content-Length";
 
@@ -51,13 +51,14 @@ public interface Headers {
 
     public static final String SERVER = "Server";
 
+    public static final String TRANSFER_ENCODING = "Transfer-Encoding";
+
     public static final String USER_AGENT = "User-Agent";
+    
 
     /*
      * BCE Common HTTP Headers
      */
-
-    public static final String BCE_PREFIX = "x-bce-";
 
     public static final String BCE_ACL = "x-bce-acl";
 
@@ -71,16 +72,16 @@ public interface Headers {
 
     public static final String BCE_DATE = "x-bce-date";
 
-    public static final String BCE_USER_METADATA_PREFIX = "x-bce-meta-";
+    public static final String BCE_DEBUG_ID = "x-bce-debug-id";
+
+    public static final String BCE_PREFIX = "x-bce-";
 
     public static final String BCE_REQUEST_ID = "x-bce-request-id";
 
     public static final String BCE_SECURITY_TOKEN = "x-bce-security-token";
 
-    /*
-     * BOS HTTP Headers
-     */
-
-    public static final String BOS_DEBUG_ID = "x-bce-bos-debug-id";
+    public static final String BCE_STORAGE_CLASS = "x-bce-storage-class";
+    
+    public static final String BCE_USER_METADATA_PREFIX = "x-bce-meta-";
 
 }

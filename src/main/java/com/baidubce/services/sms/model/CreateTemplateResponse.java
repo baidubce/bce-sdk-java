@@ -12,23 +12,54 @@
  */
 package com.baidubce.services.sms.model;
 
-public class CreateTemplateResponse extends SmsResponse {
-    /**
-     * The ID of message template. It is unique, whose pattern like this: smsTpl:6nHdNumZ4ZtGaKO.
-     */
-    private String templateId;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-    public String getTemplateId() {
-        return templateId;
+/**
+ * CreateTemplateResponse
+ */
+public class CreateTemplateResponse extends BaseResponse {
+
+    @JsonInclude(Include.NON_EMPTY)
+    private CreateTemplateData data = null;
+
+    public CreateTemplateData getData() {
+        return data;
     }
 
-    public void setTemplateId(String templateId) {
-        this.templateId = templateId;
+    public void setData(CreateTemplateData data) {
+        this.data = data;
+    }
+
+    public static class CreateTemplateData {
+        String templateId;
+
+        public String getTemplateId() {
+            return templateId;
+        }
+
+        public void setTemplateId(String templateId) {
+            this.templateId = templateId;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("{");
+            sb.append("templateId=\"").append(templateId).append("\"");
+            sb.append("}");
+            return sb.toString();
+        }
     }
 
     @Override
     public String toString() {
-        return "CreateTemplateResponse [templateId=" + templateId + "]";
+        final StringBuilder sb = new StringBuilder("SendMessageV2Response{");
+        sb.append("requestId=\"").append(this.getRequestId()).append("\"");
+        sb.append(", code=\"").append(this.getCode()).append("\"");
+        sb.append(", message=\"").append(this.getMessage()).append("\"");
+        sb.append(", data=").append(this.data).append("");
+        sb.append("}");
+        return sb.toString();
     }
 
 }

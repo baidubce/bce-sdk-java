@@ -32,6 +32,10 @@ public class CreateSessionRequest extends AbstractBceRequest {
 
     private String recording = null;
 
+    private String thumbnail = null;
+
+    private Watermarks watermarks = null;
+
     private LivePublishInfo publish = null;
 
     public String getDescription() {
@@ -125,6 +129,32 @@ public class CreateSessionRequest extends AbstractBceRequest {
         return this;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public CreateSessionRequest withThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+        return this;
+    }
+
+    public Watermarks getWatermarks() {
+        return watermarks;
+    }
+
+    public void setWatermarks(Watermarks watermarks) {
+        this.watermarks = watermarks;
+    }
+
+    public CreateSessionRequest withWatermarks(Watermarks watermarks) {
+        this.watermarks = watermarks;
+        return this;
+    }
+
     public CreateSessionRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
@@ -140,6 +170,8 @@ public class CreateSessionRequest extends AbstractBceRequest {
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
         sb.append("    recording: ").append(recording).append("\n");
+        sb.append("    thumbnail: ").append(thumbnail).append("\n");
+        sb.append("    watermarks: ").append(watermarks).append("\n");
         sb.append("    publish: ").append(publish).append("\n");
         sb.append("}\n");
         return sb.toString();

@@ -14,6 +14,12 @@ package com.baidubce.services.sms.model;
 
 import java.util.List;
 
+/**
+ * SendMessageRequest
+ *
+ * @see SendMessageV2Request
+ */
+@Deprecated
 public class SendMessageRequest extends SmsRequest {
     /**
      * The ID of message template. It is unique, whose pattern like this: smsTpl:6nHdNumZ4ZtGaKO.

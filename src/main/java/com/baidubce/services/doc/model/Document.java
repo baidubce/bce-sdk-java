@@ -11,6 +11,7 @@ public class Document {
     private String title = null;
     private String format = null;
     private String notification = null;
+    private String access = null;
     private DocumentError error = null;
     private Date createTime = null;
 
@@ -54,6 +55,14 @@ public class Document {
         this.notification = notification;
     }
 
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
+
     public DocumentError getError() {
         return error;
     }
@@ -79,6 +88,7 @@ public class Document {
         sb.append("    title: ").append(title).append("\n");
         sb.append("    format: ").append(format).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
+        sb.append("    access: ").append(access).append("\n");
         sb.append("    createTime: ").append(createTime).append("\n");
         if (error != null) {
             sb.append("    error: ").append(error.toString()).append("\n");

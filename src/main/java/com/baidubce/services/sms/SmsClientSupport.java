@@ -14,6 +14,7 @@ package com.baidubce.services.sms;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,14 +41,55 @@ import com.baidubce.util.HttpUtils;
  */
 public abstract class SmsClientSupport extends AbstractBceClient {
     protected static final HttpResponseHandler[] SMS_HANDLERS = new HttpResponseHandler[] {
-            new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler() };
+            new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler()};
 
     protected SmsClientSupport(BceClientConfiguration config, HttpResponseHandler[] responseHandlers) {
         super(config, responseHandlers);
     }
 
+    /**
+     * create general request: by pathPrefix(not contains v1 URL_PREFIX)
+     * pathPrefix combined with pathVariables will generate new path
+     * For example:/pathPrefix/../pathVariable1/pathVariable2
+     *
+     * @param pathPrefix    resourcePath
+     * @param bceRequest    bceRequest
+     * @param httpMethod    method: post、get etc.
+     * @param pathVariables variables
+     *
+     * @return send request message
+     */
+    protected InternalRequest createGeneralRequest(String pathPrefix, AbstractBceRequest bceRequest,
+                                                   HttpMethodName httpMethod, String... pathVariables) {
+        List<String> pathComponents = new ArrayList<String>();
+        assertStringNotNullOrEmpty(pathPrefix, "String resourceKey should not be null or empty");
+        pathComponents.add(pathPrefix);
+        if (pathVariables != null) {
+            Collections.addAll(pathComponents, pathVariables);
+        }
+
+        // get a InternalRequest instance
+        InternalRequest request =
+                new InternalRequest(httpMethod, HttpUtils.appendUri(this.getEndpoint(),
+                        pathComponents.toArray(new String[pathComponents.size()])));
+        request.setCredentials(bceRequest.getRequestCredentials());
+
+        // set headersToSign
+        SignOptions options = SignOptions.DEFAULT;
+        Set<String> headersToSign = new HashSet<String>();
+        // headersToSign.add("content-type");
+        headersToSign.add("host");
+        headersToSign.add("x-bce-date");
+        headersToSign.add("x-bce-request-id");
+        options.setHeadersToSign(headersToSign);
+
+        new BceV1Signer().sign(request, request.getCredentials(), options);
+
+        return request;
+    }
+
     protected InternalRequest createRequest(String resourceKey, AbstractBceRequest bceRequest,
-            HttpMethodName httpMethod, String...pathVariables) {
+                                            HttpMethodName httpMethod, String... pathVariables) {
         List<String> pathComponents = new ArrayList<String>();
         pathComponents.add(URL_PREFIX);
 

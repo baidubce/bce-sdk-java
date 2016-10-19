@@ -25,7 +25,7 @@ public class BosMetadataResponseHandler implements HttpResponseHandler {
     public boolean handle(BceHttpResponse httpResponse, AbstractBceResponse response) throws Exception {
         BceResponseMetadata metadata = response.getMetadata();
         if (metadata instanceof BosResponseMetadata) {
-            ((BosResponseMetadata) metadata).setBosDebugId(httpResponse.getHeader(Headers.BOS_DEBUG_ID));
+            ((BosResponseMetadata) metadata).setBosDebugId(httpResponse.getHeader(Headers.BCE_DEBUG_ID));
         }
         return false;
     }

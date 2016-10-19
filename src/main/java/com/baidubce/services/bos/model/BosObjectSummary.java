@@ -53,6 +53,12 @@ public class BosObjectSummary {
      */
     protected User owner;
 
+    
+    /**
+     * The storage class of object.
+     */
+    protected String storageClass;
+
     /**
      * Gets the name of the Baidu Bos bucket in which this object is stored.
      *
@@ -162,11 +168,30 @@ public class BosObjectSummary {
         this.owner = owner;
     }
 
+    /**
+     * Gets the storageClass of this object.
+     *
+     * @return The storageClass of this object.
+     */
+    public String getStorageClass() {
+        return this.storageClass;
+    }
+
+    /**
+     * Sets the storageClass of this object.
+     *
+     * @param storageClass The storageClass of this object.
+     */
+    public void setStorageClass(String storageClass) {
+        this.storageClass = storageClass;
+    }
+
     @Override
     public String toString() {
         return "BosObjectSummary [\n  bucketName=" + bucketName + ", \n  key=" + key
                 + ", \n  eTag=" + eTag + ", \n  size=" + size + ", \n  lastModified="
-                + lastModified + ", \n  owner=" + owner + "\n]";
+                + lastModified + ", \n  owner=" + owner + ", \n  storageClass="
+                + storageClass + "\n]";
     }
 
 }

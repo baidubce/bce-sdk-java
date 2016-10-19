@@ -69,6 +69,12 @@ import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoRequest;
 import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoResponse;
 import com.baidubce.services.vod.model.GenerateMediaPlayerCodeRequest;
 import com.baidubce.services.vod.model.GenerateMediaPlayerCodeResponse;
+import com.baidubce.services.vod.model.GetMediaStatisticRequest;
+import com.baidubce.services.vod.model.GetMediaStatisticResponse;
+import com.baidubce.services.vod.model.ReTranscodeRequest;
+import com.baidubce.services.vod.model.ReTranscodeResponse;
+import com.baidubce.services.vod.model.GetMediaSourceDownloadRequest;
+import com.baidubce.services.vod.model.GetMediaSourceDownloadResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 
@@ -98,6 +104,11 @@ public class VodClient extends AbstractBceClient {
      */
     private static final String PATH_SERVICE_FILE = "service/file";
 
+    /**
+     * The URI path for media statistic URL service.
+     */
+    private static final String MEDIA_STATISTIC = "statistic/media";
+
     private static final String PARA_PUBLISH = "publish";
     private static final String PARA_DISABLE = "disable";
     private static final String PARA_MEDIA_ID = "media_id";
@@ -117,6 +128,12 @@ public class VodClient extends AbstractBceClient {
     private static final String PARA_BEGIN = "begin";
     private static final String PARA_END = "end";
     private static final String PARA_TITLE = "title";
+    private static final String START_TIME = "startTime";
+    private static final String END_TIME = "endTime";
+    private static final String AGGREGATE = "aggregate";
+    private static final String PARA_RERUN = "rerun";
+    private static final String PARA_DOWNLOAD = "sourcedownload";
+    private static final String PARA_EXPIREDINSECONDS = "expiredInSeconds";
     private static final int LIST_MAX_PAGESIZE = 1000;
     private static final int LIST_MIN_PAGESIZE = 1;
     private static final int MAX_SOURCE_EXTENSION_LENGTH = 10;
@@ -632,6 +649,113 @@ public class VodClient extends AbstractBceClient {
         internalRequest.addParameter(PARA_AK, config.getCredentials().getAccessKeyId());
 
         return invokeHttpClient(internalRequest, GenerateMediaPlayerCodeResponse.class);
+    }
+
+    /**
+     * get media statistic info.
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param startTime, query media start time, default:2016-04-30T16:00:00Z
+     * @param endTime, query media end time, default:now
+     * @pagam aggregate, if need aggregate, default: true
+     * @return The media statistic info
+     */
+    public GetMediaStatisticResponse getMediaStatistic(String mediaId,
+                                                       Date startTime, Date endTime, boolean aggregate) {
+        GetMediaStatisticRequest request =
+                new GetMediaStatisticRequest().withMediaId(mediaId)
+                                              .withStartTime(startTime).withEndTime(endTime)
+                                                .withAggregate(aggregate);
+
+        return getMediaStatistic(request);
+    }
+
+    /**
+     * get media statistic info.
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param request The request wrapper object containing all options.
+     * @return The media statistic info
+     */
+    public GetMediaStatisticResponse getMediaStatistic(GetMediaStatisticRequest request) {
+        checkIsTrue(request.getMediaId() != null, "mediaId is null!");
+
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, MEDIA_STATISTIC, request.getMediaId());
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter(START_TIME,
+                    DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter(END_TIME,
+                    DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        internalRequest.addParameter(AGGREGATE, String.valueOf(request.isAggregate()));
+        return invokeHttpClient(internalRequest, GetMediaStatisticResponse.class);
+    }
+
+    /**
+     * Transcode the media again. Only status is FAILED or PUBLISHED media can use.
+     *
+     * @param mediaId The unique ID for each media resource
+     * @return
+     */
+    public ReTranscodeResponse reTranscode(String mediaId) {
+        ReTranscodeRequest request = new ReTranscodeRequest().withMediaId(mediaId);
+        return reTranscode(request);
+    }
+
+    /**
+     * Transcode the media again. Only status is FAILED or PUBLISHED media can use.
+     *
+     * @param request The request object containing mediaid
+     * @return
+     */
+    public ReTranscodeResponse reTranscode(ReTranscodeRequest request) {
+
+        checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
+
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.PUT, request, PATH_MEDIA, request.getMediaId());
+        internalRequest.addParameter(PARA_RERUN, null);
+
+        return invokeHttpClient(internalRequest, ReTranscodeResponse.class);
+    }
+
+    /**
+     * get media source download url.
+     *
+     * @param mediaId The unique ID for each media resource
+     * @param expiredInSeconds The expire time
+     * @return
+     */
+    public GetMediaSourceDownloadResponse getMediaSourceDownload(String mediaId, long expiredInSeconds) {
+        GetMediaSourceDownloadRequest request = new GetMediaSourceDownloadRequest()
+                                                        .withMediaId(mediaId)
+                                                        .withExpiredInSeconds(expiredInSeconds);
+        return getMediaSourceDownload(request);
+    }
+
+    /**
+     * Transcode the media again. Only status is FAILED or PUBLISHED media can use.
+     *
+     * @param request The request object containing mediaid
+     * @return
+     */
+    public GetMediaSourceDownloadResponse getMediaSourceDownload(GetMediaSourceDownloadRequest request) {
+
+        checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
+
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, PATH_MEDIA, request.getMediaId());
+        internalRequest.addParameter(PARA_DOWNLOAD, null);
+        internalRequest.addParameter(PARA_EXPIREDINSECONDS, String.valueOf(request.getExpiredInSeconds()));
+
+        return invokeHttpClient(internalRequest, GetMediaSourceDownloadResponse.class);
     }
 
     /**

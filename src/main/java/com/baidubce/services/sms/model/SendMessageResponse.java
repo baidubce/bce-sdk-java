@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.sms.model;
 
+@Deprecated
 public class SendMessageResponse extends SmsResponse {
     /**
      * The serial number of message

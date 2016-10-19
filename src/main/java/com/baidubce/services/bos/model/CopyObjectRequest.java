@@ -46,6 +46,12 @@ public class CopyObjectRequest extends GenericObjectRequest {
     private String eTag;
 
     /**
+     * The storage class is an identification that distinguish between infrequent access bos
+     * and standard bos.
+     */
+    private String storageClass;
+
+    /**
      * Constructs a new CopyObjectRequest with only basic options.
      *
      * @param sourceBucketName The name of the Bos bucket containing the object to copy.
@@ -227,6 +233,38 @@ public class CopyObjectRequest extends GenericObjectRequest {
      */
     public CopyObjectRequest withETag(String eTag) {
         this.setETag(eTag);
+        return this;
+    }
+
+    /**
+     * Gets the storageClass of the input file which is to be copyed to Baidu Bos.
+     * 
+     * @return storageClass  The storageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     */
+    public String getStorageClass() {
+        return storageClass;
+    }
+
+    /**
+     * Sets the storageClass of the input file which is to be copyed to Baidu Bos.
+     * 
+     * @param storageClass  The storageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     */
+    public void setStorageClass(String storageClass) {
+        this.storageClass = storageClass;
+    }
+
+    /**
+     * Sets the storageClass of the input file which is to be copyed to Baidu Bos.
+     * 
+     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
+     * and standard bos.
+     * @return This CopyObjectRequest, so that additional method calls can be chained together.
+     */
+    public CopyObjectRequest withStorageClass(String storageClass) {
+        this.setStorageClass(storageClass);
         return this;
     }
 }

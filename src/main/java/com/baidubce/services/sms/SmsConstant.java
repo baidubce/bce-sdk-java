@@ -15,4 +15,5 @@ package com.baidubce.services.sms;
 public interface SmsConstant {
     public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String CONTENT_TYPE = "application/json";
+    public static final String SUCCESS = "1000";
 }

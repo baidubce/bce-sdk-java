@@ -46,6 +46,13 @@ public class BosObjectResponseHandler implements HttpResponseHandler {
         objectMetadata.setContentEncoding(httpResponse.getHeader(Headers.CONTENT_ENCODING));
         objectMetadata.setContentMd5(httpResponse.getHeader(Headers.CONTENT_MD5));
         objectMetadata.setContentDisposition(httpResponse.getHeader(Headers.CONTENT_DISPOSITION));
+        objectMetadata.setCacheControl(httpResponse.getHeader(Headers.CACHE_CONTROL));
+        // set whatever the BOS server returns if not null
+        String storageClass = httpResponse.getHeader(Headers.BCE_STORAGE_CLASS);
+        if (storageClass == null) {
+            storageClass = BosClient.STORAGE_CLASS_STANDARD;
+        }
+        objectMetadata.setStorageClass(storageClass);
         String eTag = httpResponse.getHeader(Headers.ETAG);
         if (eTag != null) {
             objectMetadata.setETag(CharMatcher.is('"').trimFrom(eTag));

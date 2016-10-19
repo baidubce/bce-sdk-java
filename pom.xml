@@ -6,7 +6,7 @@
 
     <groupId>com.baidubce</groupId>
     <artifactId>bce-java-sdk</artifactId>
-    <version>0.10.6</version>
+    <version>0.10.12</version>
     <name>bce-sdk-java</name>
     <description>The BCE SDK for Java provides Java APIs for all of BCE services.</description>
     <url>http://bce.baidu.com/sdk/index.html</url>
@@ -174,7 +174,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>          
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
