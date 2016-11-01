@@ -34,6 +34,8 @@ import com.baidubce.services.lss.model.CreatePresetRequest;
 import com.baidubce.services.lss.model.CreatePresetResponse;
 import com.baidubce.services.lss.model.CreateSessionRequest;
 import com.baidubce.services.lss.model.CreateSessionResponse;
+import com.baidubce.services.lss.model.CreateStreamRequest;
+import com.baidubce.services.lss.model.CreateStreamResponse;
 import com.baidubce.services.lss.model.DeleteNotificationRequest;
 import com.baidubce.services.lss.model.DeleteNotificationResponse;
 import com.baidubce.services.lss.model.DeletePresetRequest;
@@ -41,8 +43,26 @@ import com.baidubce.services.lss.model.DeletePresetResponse;
 import com.baidubce.services.lss.model.DeleteSessionRequest;
 import com.baidubce.services.lss.model.DeleteSessionResponse;
 import com.baidubce.services.lss.model.Encryption;
+import com.baidubce.services.lss.model.GetAllDomainsBandwidthResponse;
+import com.baidubce.services.lss.model.GetAllDomainsPlayCountResponse;
+import com.baidubce.services.lss.model.GetAllDomainsStatisticsRequest;
+import com.baidubce.services.lss.model.GetAllDomainsTrafficResponse;
+import com.baidubce.services.lss.model.GetDomainStatisticsRequest;
+import com.baidubce.services.lss.model.GetDomainStatisticsResponse;
+import com.baidubce.services.lss.model.GetDomainSummaryStatisticsRequest;
+import com.baidubce.services.lss.model.GetDomainSummaryStatisticsResponse;
+import com.baidubce.services.lss.model.GetOneDomainTrafficResponse;
+import com.baidubce.services.lss.model.ListDomainStatisticsResponse;
+import com.baidubce.services.lss.model.GetStreamStatisticsResponse;
+import com.baidubce.services.lss.model.ListStreamStatisticsResponse;
+import com.baidubce.services.lss.model.ListDomainStatisticsRequest;
+import com.baidubce.services.lss.model.ListStreamStatisticsRequest;
+import com.baidubce.services.lss.model.GetStreamStatisticsRequest;
 import com.baidubce.services.lss.model.GetNotificationRequest;
 import com.baidubce.services.lss.model.GetNotificationResponse;
+import com.baidubce.services.lss.model.GetOneDomainBandwidthResponse;
+import com.baidubce.services.lss.model.GetOneDomainPlayCountResponse;
+import com.baidubce.services.lss.model.GetOneDomainStatisticsRequest;
 import com.baidubce.services.lss.model.GetPresetRequest;
 import com.baidubce.services.lss.model.GetPresetResponse;
 import com.baidubce.services.lss.model.GetRecordingRequest;
@@ -53,10 +73,14 @@ import com.baidubce.services.lss.model.GetSessionRequest;
 import com.baidubce.services.lss.model.GetSessionResponse;
 import com.baidubce.services.lss.model.GetSessionSourceInfoRequest;
 import com.baidubce.services.lss.model.GetSessionSourceInfoResponse;
+import com.baidubce.services.lss.model.GetStreamRequest;
+import com.baidubce.services.lss.model.GetStreamResponse;
 import com.baidubce.services.lss.model.Hls;
 import com.baidubce.services.lss.model.InsertCuePointInnerRequest;
 import com.baidubce.services.lss.model.InsertCuePointRequest;
 import com.baidubce.services.lss.model.InsertCuePointResponse;
+import com.baidubce.services.lss.model.ListDomainAppRequest;
+import com.baidubce.services.lss.model.ListDomainAppResponse;
 import com.baidubce.services.lss.model.ListNotificationsRequest;
 import com.baidubce.services.lss.model.ListNotificationsResponse;
 import com.baidubce.services.lss.model.ListPresetsRequest;
@@ -66,10 +90,14 @@ import com.baidubce.services.lss.model.ListSecurityPoliciesRequest;
 import com.baidubce.services.lss.model.ListSecurityPoliciesResponse;
 import com.baidubce.services.lss.model.ListSessionsRequest;
 import com.baidubce.services.lss.model.ListSessionsResponse;
+import com.baidubce.services.lss.model.ListStreamRequest;
+import com.baidubce.services.lss.model.ListStreamResponse;
 import com.baidubce.services.lss.model.LivePublishInfo;
 import com.baidubce.services.lss.model.LiveThumbnail;
 import com.baidubce.services.lss.model.PauseAppStreamRequest;
 import com.baidubce.services.lss.model.PauseAppStreamResponse;
+import com.baidubce.services.lss.model.PauseDomainStreamRequest;
+import com.baidubce.services.lss.model.PauseDomainStreamResponse;
 import com.baidubce.services.lss.model.PauseSessionRequest;
 import com.baidubce.services.lss.model.PauseSessionResponse;
 import com.baidubce.services.lss.model.RefreshSessionRequest;
@@ -78,6 +106,8 @@ import com.baidubce.services.lss.model.ResumeAppStreamRequest;
 import com.baidubce.services.lss.model.ResumeAppStreamResponse;
 import com.baidubce.services.lss.model.ResumeSessionRequest;
 import com.baidubce.services.lss.model.ResumeSessionResponse;
+import com.baidubce.services.lss.model.ResumeDomainStreamRequest;
+import com.baidubce.services.lss.model.ResumeDomainStreamResponse;
 import com.baidubce.services.lss.model.Rtmp;
 import com.baidubce.services.lss.model.StartPullSessionRequest;
 import com.baidubce.services.lss.model.StartPullSessionResponse;
@@ -138,6 +168,16 @@ public class LssClient extends AbstractBceClient {
      * The common URI prefix for live session services.
      */
     private static final String LIVE_SESSION = "session";
+
+    /**
+     * The common URI prefix for live domain services.
+     */
+    private static final String LIVE_DOMAIN = "domain";
+
+    /**
+     * The common URI prefix for live stream services.
+     */
+    private static final String LIVE_STREAM = "stream";
 
     /**
      * The common URI prefix for live app services.
@@ -1285,6 +1325,495 @@ public class LssClient extends AbstractBceClient {
         }
         return invokeHttpClient(internalRequest, GetSessionStatisticsResponse.class);
     }
+
+    /**
+     * Create a domain stream in the live stream service.
+     *
+     * @param request The request object containing all options for creating domain stream
+     */
+    public CreateStreamResponse createStream(CreateStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getPlayDomain(), "playDomain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "app should NOT be empty.");
+        checkNotNull(request.getPublish(), "publish should NOT be null.");
+        checkStringNotEmpty(request.getPublish().getPushStream(), "pushStream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.POST,
+                request, LIVE_DOMAIN, request.getPlayDomain(), LIVE_STREAM);
+        return invokeHttpClient(internalRequest, CreateStreamResponse.class);
+    }
+
+    /**
+     * Create a domain stream in the live stream service.
+     *
+     * @param playDomain The domain which this stream belongs to
+     * @param app The app which this stream belongs to, may not exist when create stream
+     * @param pushStream, name of this stream
+     */
+    public CreateStreamResponse createStream(String playDomain, String app, String pushStream) {
+        CreateStreamRequest request = new CreateStreamRequest();
+        request.withPlayDomain(playDomain)
+                .withApp(app)
+                .withPublish(new CreateStreamRequest.PublishInfo().withPushStream(pushStream));
+        return createStream(request);
+    }
+
+    /**
+     * List a domain's streams in the live stream service.
+     *
+     * @param request The request object containing all options for listing domain's streams
+     */
+    public ListStreamResponse listStream(ListStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getPlayDomain(), "playDomain should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET,
+                request, LIVE_DOMAIN, request.getPlayDomain(), LIVE_STREAM);
+        if (request.getStatus() != null) {
+            internalRequest.addParameter("status", request.getStatus());
+        }
+
+        if (request.getMarker() != null) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+
+        if (request.getMaxSize() != null) {
+            internalRequest.addParameter("maxSize", request.getMaxSize().toString());
+        }
+
+        return invokeHttpClient(internalRequest, ListStreamResponse.class);
+
+    }
+
+    /**
+     * List a domain's streams in the live stream service.
+     *
+     * @param playDomain The requested domain
+     */
+    public ListStreamResponse listStream(String playDomain) {
+        ListStreamRequest request = new ListStreamRequest();
+        request.setPlayDomain(playDomain);
+        return listStream(request);
+    }
+
+
+    /**
+     * List a domain's app in the live stream service.
+     *
+     * @param request The request object containing all options for listing domain's app
+     */
+    public ListDomainAppResponse listDomainApp(ListDomainAppRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getPlayDomain(), "playDomain should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET,
+                request, LIVE_DOMAIN, request.getPlayDomain(), LIVE_APP);
+        return invokeHttpClient(internalRequest, ListDomainAppResponse.class);
+    }
+
+    /**
+     * List a domain's streams in the live stream service.
+     *
+     * @param playDomain The requested domain name
+     */
+    public ListDomainAppResponse listDomainApp(String playDomain) {
+        ListDomainAppRequest request = new ListDomainAppRequest();
+        request.setPlayDomain(playDomain);
+        return listDomainApp(request);
+    }
+
+    /**
+     * Get detail of stream in the live stream service.
+     *
+     * @param request The request object containing all options for querying detail of stream
+     */
+    public GetStreamResponse getStream(GetStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getPlayDomain(), "playDomain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty.");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET,
+                request, LIVE_DOMAIN, request.getPlayDomain(),
+                LIVE_APP, request.getApp(),
+                LIVE_STREAM, request.getStream());
+        return invokeHttpClient(internalRequest, GetStreamResponse.class);
+    }
+
+    /**
+     * Get detail of stream in the live stream service.
+     *
+     * @param domain The requested domain
+     * @param app The requested app
+     * @param stream The requested stream
+     */
+    public GetStreamResponse getStream(String domain, String app, String stream) {
+        GetStreamRequest request = new GetStreamRequest();
+        request.withPlayDomain(domain).withApp(app).withStream(stream);
+        return getStream(request);
+    }
+
+
+    /**
+     * pause domain's stream in the live stream service.
+     *
+     * @param request The request object containing all options for pause a domain's stream
+     */
+    public PauseDomainStreamResponse pauseDomainStream(PauseDomainStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty.");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+                request, LIVE_DOMAIN, request.getDomain(),
+                LIVE_APP, request.getApp(),
+                LIVE_STREAM, request.getStream());
+        internalRequest.addParameter(PAUSE, null);
+        return invokeHttpClient(internalRequest, PauseDomainStreamResponse.class);
+    }
+
+    /**
+     * Get detail of stream in the live stream service.
+     *
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream to pause
+     */
+    public PauseDomainStreamResponse pauseDomainStream(String domain, String app, String stream) {
+        PauseDomainStreamRequest request = new PauseDomainStreamRequest();
+        request.withDomain(domain).withApp(app).withStream(stream);
+        return pauseDomainStream(request);
+    }
+
+    /**
+     * pause domain's stream in the live stream service.
+     *
+     * @param request The request object containing all options for pause a domain's stream
+     */
+    public ResumeDomainStreamResponse resumeDomainStream(ResumeDomainStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty.");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+                request, LIVE_DOMAIN, request.getDomain(),
+                LIVE_APP, request.getApp(),
+                LIVE_STREAM, request.getStream());
+        internalRequest.addParameter(RESUME, null);
+        return invokeHttpClient(internalRequest, ResumeDomainStreamResponse.class);
+    }
+
+    /**
+     * Get detail of stream in the live stream service.
+     *
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream to resume
+     */
+    public ResumeDomainStreamResponse resumeDomainStream(String domain, String app, String stream) {
+        ResumeDomainStreamRequest request = new ResumeDomainStreamRequest();
+        request.withDomain(domain).withApp(app).withStream(stream);
+        return resumeDomainStream(request);
+    }
+
+
+    /**
+     * get domain's statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting domain's statistics
+     */
+    public GetDomainStatisticsResponse getDomainStatistics(GetDomainStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, STATISTICS,
+                LIVE_DOMAIN, request.getDomain());
+        if (request.getStartDate() != null) {
+            internalRequest.addParameter("startDate", request.getStartDate());
+        }
+        if (request.getEndDate() != null) {
+            internalRequest.addParameter("endDate", request.getEndDate());
+        }
+        if (request.getAggregate() != null) {
+            internalRequest.addParameter("aggregate", request.getAggregate().toString());
+        }
+        return invokeHttpClient(internalRequest, GetDomainStatisticsResponse.class);
+    }
+
+    /**
+     * Get domain's statistics in the live stream service.
+     *
+     * @param domain The requested domain
+     */
+    public GetDomainStatisticsResponse getDomainStatistics(String domain) {
+        GetDomainStatisticsRequest request = new GetDomainStatisticsRequest();
+        request.setDomain(domain);
+        return getDomainStatistics(request);
+    }
+
+
+    /**
+     * get all domains' summary statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting all domains' summary statistics
+     */
+    public GetDomainSummaryStatisticsResponse getDomainSummaryStatistics(GetDomainSummaryStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be empty.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, "summary");
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        return invokeHttpClient(internalRequest, GetDomainSummaryStatisticsResponse.class);
+    }
+
+    /**
+     * get all domains' summary statistics in the live stream service.
+     *
+     * @param startTime start time
+     * @param endTime start time
+     */
+    public GetDomainSummaryStatisticsResponse getDomainSummaryStatistics(String startTime, String endTime) {
+        GetDomainSummaryStatisticsRequest request = new GetDomainSummaryStatisticsRequest();
+        request.withStartTime(startTime).withEndTime(endTime);
+        return getDomainSummaryStatistics(request);
+    }
+
+
+    /**
+     * get all domains' total play count statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting all domains' play count statistics
+     */
+    public GetAllDomainsPlayCountResponse getAllDomainsPlayCount(GetAllDomainsStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, "playcount");
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        return invokeHttpClient(internalRequest, GetAllDomainsPlayCountResponse.class);
+    }
+
+    /**
+     * get one domain's play count statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting one domain's play count statistics
+     */
+    public GetOneDomainPlayCountResponse getOneDomainPlayCount(GetOneDomainStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkNotNull(request.getDomain(), "The domain parameter can not be null");
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, request.getDomain(), "playcount");
+
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        return invokeHttpClient(internalRequest, GetOneDomainPlayCountResponse.class);
+    }
+
+    /**
+     * get all domains' bandwidth statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting all domains' total bandwidth statistics
+     */
+    public GetAllDomainsBandwidthResponse getAllDomainsBandwidth(GetAllDomainsStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, "bandwidth");
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        return invokeHttpClient(internalRequest, GetAllDomainsBandwidthResponse.class);
+    }
+
+    /**
+     * get one domain's bandwidth statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting one domain's bandwidth statistics
+     */
+    public GetOneDomainBandwidthResponse getOneDomainBandwidth(GetOneDomainStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "The domain parameter can not be null");
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, request.getDomain(), "bandwidth");
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        return invokeHttpClient(internalRequest, GetOneDomainBandwidthResponse.class);
+    }
+
+    /**
+     * get all domains' traffic statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting all domains' total traffic statistics
+     */
+    public GetAllDomainsTrafficResponse getAllDomainsTraffic(GetAllDomainsStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, "traffic");
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        return invokeHttpClient(internalRequest, GetAllDomainsTrafficResponse.class);
+    }
+
+    /**
+     * get one domain's traffic statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting one domain's traffic statistics
+     */
+    public GetOneDomainTrafficResponse getOneDomainTraffic(GetOneDomainStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "The domain parameter can not be null");
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, request.getDomain(), "traffic");
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        return invokeHttpClient(internalRequest, GetOneDomainTrafficResponse.class);
+    }
+
+    /**
+     * list domain's statistics in the live stream service.
+     *
+     * @param request The request object containing all options for listing domain's traffic statistics
+     */
+    public ListDomainStatisticsResponse listDomainStatistics(ListDomainStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be empty");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, "list");
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        if (request.getKeyword() != null) {
+            internalRequest.addParameter("keyword", request.getKeyword());
+        }
+        if (request.getKeywordType() != null) {
+            internalRequest.addParameter("keywordType", request.getKeywordType());
+        }
+        if (request.getOrderBy() != null) {
+            internalRequest.addParameter("orderBy", request.getOrderBy());
+        }
+        return invokeHttpClient(internalRequest, ListDomainStatisticsResponse.class);
+    }
+
+    /**
+     * list domain's all streams statistics in the live stream service.
+     *
+     * @param request The request object containing all options for listing domain's all streams traffic statistics
+     */
+    public ListStreamStatisticsResponse listStreamStatistics(ListStreamStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be null");
+        checkStringNotEmpty(request.getApp(), "App should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "StartTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, request.getDomain(), LIVE_STREAM);
+
+        internalRequest.addParameter("app", request.getApp());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        if (request.getKeyword() != null) {
+            internalRequest.addParameter("keyword", request.getKeyword());
+        }
+        if (request.getKeywordType() != null) {
+            internalRequest.addParameter("keywordType", request.getKeywordType());
+        }
+        if (request.getOrderBy() != null) {
+            internalRequest.addParameter("orderBy", request.getOrderBy());
+        }
+        if (request.getPageNo() != null) {
+            internalRequest.addParameter("pageNo", request.getPageNo().toString());
+        }
+        if (request.getPageSize() != null) {
+            internalRequest.addParameter("pageSize", request.getPageSize().toString());
+        }
+        return invokeHttpClient(internalRequest, ListStreamStatisticsResponse.class);
+    }
+
+    /**
+     * get a domain's all streams statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting a domain's all streams
+     */
+    public GetStreamStatisticsResponse getStreamStatistics(GetStreamStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be null");
+        checkStringNotEmpty(request.getApp(), "App should NOT be null");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, LIVE_DOMAIN, request.getDomain(), LIVE_APP, request.getApp(),
+                LIVE_STREAM, request.getStream());
+        if (request.getStartDate() != null) {
+            internalRequest.addParameter("startDate", request.getStartDate());
+        }
+        if (request.getEndDate() != null) {
+            internalRequest.addParameter("endDate", request.getEndDate());
+        }
+        if (request.getAggregate() != null) {
+            internalRequest.addParameter("aggregate", request.getAggregate().toString());
+        }
+        return invokeHttpClient(internalRequest, GetStreamStatisticsResponse.class);
+    }
+
 
 
     /**

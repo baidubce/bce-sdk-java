@@ -101,7 +101,7 @@ public final class IdleConnectionReaper extends Thread {
 
     @Override
     public void run() {
-        while (this.isInterrupted()) {
+        while (!this.isInterrupted()) {
             try {
                 Thread.sleep(PERIOD_IN_MILLIS);
 
