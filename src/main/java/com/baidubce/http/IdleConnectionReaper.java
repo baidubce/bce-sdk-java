@@ -44,7 +44,7 @@ public final class IdleConnectionReaper extends Thread {
     /**
      * The period between invocations of the idle connection reaper.
      */
-    private static final int PERIOD_IN_MILLIS = 60 * 1000;
+    private static final int PERIOD_IN_MILLIS = 20 * 1000;
 
     /**
      * The list of registered connection managers, whose connections will be periodically checked and idle connections
@@ -111,7 +111,7 @@ public final class IdleConnectionReaper extends Thread {
                 // than block/lock while this loop executes).
                 List<HttpClientConnectionManager> connectionManagers = null;
                 synchronized (IdleConnectionReaper.class) {
-                    connectionManagers = Lists.newArrayList(connectionManagers);
+                    connectionManagers = Lists.newArrayList(this.connectionManagers);
                 }
                 for (HttpClientConnectionManager connectionManager : connectionManagers) {
                     // When we release connections, the connection manager leaves them
