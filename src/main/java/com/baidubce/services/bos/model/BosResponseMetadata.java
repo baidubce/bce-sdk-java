@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -18,6 +18,8 @@ public class BosResponseMetadata extends BceResponseMetadata {
 
     private String debugId;
 
+    private Long nextAppendOffset;
+
     public String getBosDebugId() {
         return this.debugId;
     }
@@ -25,5 +27,14 @@ public class BosResponseMetadata extends BceResponseMetadata {
     public void setBosDebugId(String debugId) {
         this.debugId = debugId;
     }
+
+    public Long getNextAppendOffset() {
+        return nextAppendOffset;
+    }
+
+    public void setNextAppendOffset(Long nextAppendOffset) {
+        this.nextAppendOffset = nextAppendOffset;
+    }
+
 
 }

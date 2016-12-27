@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -17,7 +17,9 @@ public class Attributes {
     private String title;
     
     private String description;
-    
+
+    private String sourceExtension;
+
     public String getTitle() {
         return title;
     }
@@ -33,12 +35,21 @@ public class Attributes {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
+    public String getSourceExtension() {
+        return sourceExtension;
+    }
+
+    public void setSourceExtension(String sourceExtension) {
+        this.sourceExtension = sourceExtension;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Attributes { \n");
         sb.append("      title = ").append(title).append("\n");
         sb.append("      description = ").append(description).append("\n");
+        sb.append("      sourceExtension = ").append(sourceExtension).append("\n");
         sb.append("    }");
         return sb.toString();
     }

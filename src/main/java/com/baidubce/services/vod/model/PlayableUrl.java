@@ -1,52 +1,45 @@
-package com.baidubce.services.vod.model;
+/*
+ * Copyright 2016 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.baidubce.services.vod.model;
 
 public class PlayableUrl {
 
-    /*
-     * The unique ID of media resource managed by VOD service.
-     */
-    @JsonProperty(value = "media_id")
-    private String mediaId;
+    private String transcodingPresetName;
 
-    /*
-     * Media resource's playable URL address.
-     */
-    private String file;
+    private String url;
 
-    private String cover;
-
-    public String getMediaId() {
-        return mediaId;
+    public String getTranscodingPresetName() {
+        return transcodingPresetName;
     }
 
-    public void setMediaId(String mediaId) {
-        this.mediaId = mediaId;
+    public void setTranscodingPresetName(String transcodingPresetName) {
+        this.transcodingPresetName = transcodingPresetName;
     }
 
-    public String getFile() {
-        return file;
+    public String getUrl() {
+        return url;
     }
 
-    public void setFile(String file) {
-        this.file = file;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("PlayableUrl { \n");
-        sb.append("   mediaId = ").append(mediaId).append("\n");
-        sb.append("   file = ").append(file).append("\n");
-        sb.append("   cover = ").append(cover).append("\n");
+        sb.append("   transcodingPresetName = ").append(transcodingPresetName).append("\n");
+        sb.append("   url = ").append(url).append("\n");
         sb.append("  }\n");
         return sb.toString();
     }

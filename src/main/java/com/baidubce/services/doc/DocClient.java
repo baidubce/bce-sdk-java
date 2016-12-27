@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2015 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -212,6 +212,30 @@ public class DocClient extends AbstractBceClient {
     /**
      * Create a Document.
      *
+     * @param file  The document .
+     * @param title  The document title.
+     * @param format  The document format.
+     * @param notification  The document notification name.
+     * @param access  The document access privilege(PUBLIC/PRIVATE).
+     * @param targetType  The document converts type(h5/image).
+     *
+     * @return A CreateDocumentResponse object containing the information returned by Document.
+     */
+    public CreateDocumentResponse createDocument(File file, String title, String format,
+                                                 String notification, String access, String targetType) {
+        CreateDocumentRequest request = new CreateDocumentRequest();
+        request.setFile(file);
+        request.setTitle(title);
+        request.setFormat(format);
+        request.setNotification(notification);
+        request.setAccess(access);
+        request.setTargetType(targetType);
+        return this.createDocument(request);
+    }
+
+    /**
+     * Create a Document.
+     *
      * @param request  The request object containing all the parameters to upload a new doc.
      *
      * @return A CreateDocumentResponse object containing the information returned by Document.
@@ -289,6 +313,33 @@ public class DocClient extends AbstractBceClient {
         request.setFormat(format);
         request.setNotification(notification);
         request.setAccess(access);
+        return this.createDocumentFromBos(request);
+    }
+
+    /**
+     * Create a Document.
+     *
+     * @param bucket  The document bucket.
+     * @param object  The document object.
+     * @param title  The document title.
+     * @param format  The document format.
+     * @param notification  The document notification name.
+     * @param access  The document access privilege(PUBLIC/PRIVATE).
+     * @param targetType  The document converts type(h5/image).
+     *
+     * @return A CreateDocumentFromBosResponse object containing the information returned by Document.
+     */
+    public CreateDocumentFromBosResponse createDocumentFromBos(String bucket, String object,
+                                                               String title, String format,
+                                                               String notification, String access, String targetType) {
+        CreateDocumentFromBosRequest request = new CreateDocumentFromBosRequest();
+        request.setBucket(bucket);
+        request.setObject(object);
+        request.setTitle(title);
+        request.setFormat(format);
+        request.setNotification(notification);
+        request.setAccess(access);
+        request.setTargetType(targetType);
         return this.createDocumentFromBos(request);
     }
 
@@ -499,6 +550,38 @@ public class DocClient extends AbstractBceClient {
 
         return response;
     }
+
+    /**
+     * list all Document by status, marker.
+     *@param status document status
+     *@param marker the marker, can be ""
+     *@param maxSize the maxSize, should be (0, 200]
+     *
+     * @return A ListDocumentsResponse object containing the information returned by Document.
+     */
+    public ListDocumentsResponse listDocuments(String status, String marker, int maxSize) {
+        ListDocumentsRequest request = new ListDocumentsRequest();
+        InternalRequest internalRequest = this.createRequest(HttpMethodName.GET, request, DOC);
+        internalRequest.addParameter("status", status);
+        if (marker != null) {
+            internalRequest.addParameter("marker", marker);
+        }
+        internalRequest.addParameter("maxSize", String.valueOf(maxSize));
+
+        ListDocumentsResponse response;
+        try {
+            response = this.invokeHttpClient(internalRequest, ListDocumentsResponse.class);
+        } finally {
+            try {
+                internalRequest.getContent().close();
+            } catch (Exception e) {
+                // ignore exception
+            }
+        }
+
+        return response;
+    }
+
 
     /**
      * delete a Document.
@@ -842,8 +925,5 @@ public class DocClient extends AbstractBceClient {
 
         return internalRequest;
     }
-
-
-
 
 }

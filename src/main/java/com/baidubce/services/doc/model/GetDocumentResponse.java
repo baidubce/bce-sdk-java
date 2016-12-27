@@ -1,12 +1,22 @@
+/*
+ * Copyright 2015 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
 package com.baidubce.services.doc.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
 import java.util.Date;
 
-/**
- * Created by baidu on 15/12/31.
- */
 public class GetDocumentResponse extends AbstractBceResponse {
     private String documentId = null;
     private String status = null;
@@ -14,6 +24,7 @@ public class GetDocumentResponse extends AbstractBceResponse {
     private String format = null;
     private String notification = null;
     private String access = null;
+    private String targetType = null;
     private Date createTime = null;
     private DocumentUploadInfo uploadInfo = null;
     private DocumentPublishInfo publishInfo = null;
@@ -67,6 +78,14 @@ public class GetDocumentResponse extends AbstractBceResponse {
         this.access = access;
     }
 
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -110,6 +129,7 @@ public class GetDocumentResponse extends AbstractBceResponse {
         sb.append("    format: ").append(format).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    access: ").append(access).append("\n");
+        sb.append("    targetType: ").append(targetType).append("\n");
         sb.append("    createTime: ").append(createTime).append("\n");
         if (this.status.equals("PUBLISHED")) {
             sb.append("    publishInfo:").append(publishInfo.toString()).append("\n");

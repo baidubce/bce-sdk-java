@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -40,10 +40,28 @@ public class CopyObjectRequest extends GenericObjectRequest {
     private ObjectMetadata newObjectMetadata = null;
 
     /**
-     * Optional ETag value that constrain the copy request to only be executed
-     * if the source object's ETag matches the specified ETag values.
+     * Optional ETag value that constrain the copy request to only be executed if the source
+     * object's ETag matches the specified ETag value.
      */
     private String eTag;
+
+    /**
+     * Optional ETag value that constrain the copy request to only be executed if the source
+     * object's ETag does not match the specified ETag value.
+     */
+    private String noneMatchETagConstraint;
+
+    /**
+     * If the value of the unmodifiedSinceConstraint is equal to or later than the actual file
+     * modification time, then take the normal file transfer process.
+     */
+    private String unmodifiedSinceConstraint;
+
+    /**
+     * If the value of the modifiedSinceConstraint is less than the actual file modification 
+     * time, then take the normal file transfer process.
+     */
+    private String modifiedSinceConstraint;
 
     /**
      * The storage class is an identification that distinguish between infrequent access bos
@@ -258,13 +276,105 @@ public class CopyObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets the storageClass of the input file which is to be copyed to Baidu Bos.
-     * 
+     *
      * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
      * and standard bos.
      * @return This CopyObjectRequest, so that additional method calls can be chained together.
      */
     public CopyObjectRequest withStorageClass(String storageClass) {
         this.setStorageClass(storageClass);
+        return this;
+    }
+
+    /**
+     * Gets the the value of the unmodifiedSinceConstraint,if the value is equal to or later than the actual
+     * file modification time, then take the normal file transfer process.
+     *
+     * @return unmodifiedSinceConstraint
+     */
+    public String getUnmodifiedSinceConstraint() {
+        return unmodifiedSinceConstraint;
+    }
+
+    /**
+     * Sets the the value of the unmodifiedSinceConstraint,if the value is equal to or later than the actual
+     * file modification time, then take the normal file transfer process.
+     *
+     * @param unmodifiedSinceConstraint
+     */
+    public void setUnmodifiedSinceConstraint(String unmodifiedSinceConstraint) {
+        this.unmodifiedSinceConstraint = unmodifiedSinceConstraint;
+    }
+
+    /**
+     * Sets the the value of the unmodifiedSinceConstraint,if the value is equal to or later than the actual
+     * file modification time, then take the normal file transfer process.
+     *
+     * @param unmodifiedSinceConstraint
+     * @return This <code>CopyObjectRequest</code>, enabling additional method calls to be chained together.
+     */
+    public CopyObjectRequest withUnmodifiedSinceConstraint(String unmodifiedSinceConstraint) {
+        this.setUnmodifiedSinceConstraint(unmodifiedSinceConstraint);
+        return this;
+    }
+
+    /**
+     * Gets the the value of the modifiedSinceConstraint,if the value is less than the actual file modification
+     * time, then take the normal file transfer process.
+     * @return modifiedSinceConstraint
+     */
+    public String getModifiedSinceConstraint() {
+        return modifiedSinceConstraint;
+    }
+
+    /**
+     * Sets the the value of the modifiedSinceConstraint,if the value is less than the actual file modification
+     * time, then take the normal file transfer process.
+     * @param modifiedSinceConstraint
+     */
+    public void setModifiedSinceConstraint(String modifiedSinceConstraint) {
+        this.modifiedSinceConstraint = modifiedSinceConstraint;
+    }
+
+    /**
+     * Sets the the value of the modifiedSinceConstraint,if the value is less than the actual file modification
+     * time, then take the normal file transfer process.
+     *
+     * @param modifiedSinceConstraint
+     * @return This <code>CopyObjectRequest</code>, enabling additional method calls to be chained together.
+     */
+    public CopyObjectRequest withModifiedSinceConstraint(String modifiedSinceConstraint) {
+        this.setModifiedSinceConstraint(modifiedSinceConstraint);
+        return this;
+    }
+
+    /**
+     * Gets the optional ETag that, when present, <b>must</b> be not a match for the source object's current 
+     * ETag in order for the copy object request to be executed.
+     * @return noneMatchETagConstraint
+     */
+    public String getNoneMatchETagConstraint() {
+        return noneMatchETagConstraint;
+    }
+
+    /**
+     * Sets the optional ETag that, when present, <b>must</b> be not a match for the source object's current 
+     * ETag in order for the copy object request to be executed.
+     * @param noneMatchETagConstraint
+     */
+    public void setNoneMatchETagConstraint(String noneMatchETagConstraint) {
+        this.noneMatchETagConstraint = noneMatchETagConstraint;
+    }
+
+    /**
+     * Sets the optional ETag that, when present, <b>must</b> be not a match for the source object's current 
+     * ETag in order for the copy object request to be executed.
+     *
+     * @param noneMatchETagConstraint
+     * @return This <code>CopyObjectRequest</code>, enabling additional method calls to be chained together.
+     */
+    public CopyObjectRequest withNoMatchingETagConstraint(String noneMatchETagConstraint) {
+        this.setNoneMatchETagConstraint(noneMatchETagConstraint);
         return this;
     }
 }

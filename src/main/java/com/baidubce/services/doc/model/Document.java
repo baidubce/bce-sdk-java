@@ -1,10 +1,20 @@
+/*
+ * Copyright 2016 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
 package com.baidubce.services.doc.model;
 
 import java.util.Date;
 
-/**
- * Created by baidu on 16/1/4.
- */
 public class Document {
     private String documentId = null;
     private String status = null;
@@ -12,6 +22,7 @@ public class Document {
     private String format = null;
     private String notification = null;
     private String access = null;
+    private String targetType = null;
     private DocumentError error = null;
     private Date createTime = null;
 
@@ -63,6 +74,14 @@ public class Document {
         this.access = access;
     }
 
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
     public DocumentError getError() {
         return error;
     }
@@ -89,6 +108,7 @@ public class Document {
         sb.append("    format: ").append(format).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    access: ").append(access).append("\n");
+        sb.append("    targetType: ").append(targetType).append("\n");
         sb.append("    createTime: ").append(createTime).append("\n");
         if (error != null) {
             sb.append("    error: ").append(error.toString()).append("\n");

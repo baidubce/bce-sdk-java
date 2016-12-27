@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -51,14 +51,12 @@ import com.baidubce.services.vod.model.GenerateMediaIdRequest;
 import com.baidubce.services.vod.model.GenerateMediaIdResponse;
 import com.baidubce.services.vod.model.GetMediaResourceRequest;
 import com.baidubce.services.vod.model.GetMediaResourceResponse;
-import com.baidubce.services.vod.model.GetPlayableUrlRequest;
-import com.baidubce.services.vod.model.GetPlayableUrlResponse;
-import com.baidubce.services.vod.model.GetPlayerCodeRequest;
-import com.baidubce.services.vod.model.GetPlayerCodeResponse;
 import com.baidubce.services.vod.model.InternalCreateMediaRequest;
 import com.baidubce.services.vod.model.InternalCreateMediaResponse;
 import com.baidubce.services.vod.model.ListMediaResourceRequest;
 import com.baidubce.services.vod.model.ListMediaResourceResponse;
+import com.baidubce.services.vod.model.ListMediaResourceByMarkerRequest;
+import com.baidubce.services.vod.model.ListMediaResourceByMarkerResponse;
 import com.baidubce.services.vod.model.PublishMediaResourceRequest;
 import com.baidubce.services.vod.model.PublishMediaResourceResponse;
 import com.baidubce.services.vod.model.StopMediaResourceRequest;
@@ -75,6 +73,14 @@ import com.baidubce.services.vod.model.ReTranscodeRequest;
 import com.baidubce.services.vod.model.ReTranscodeResponse;
 import com.baidubce.services.vod.model.GetMediaSourceDownloadRequest;
 import com.baidubce.services.vod.model.GetMediaSourceDownloadResponse;
+import com.baidubce.services.vod.model.CreateNotificationRequest;
+import com.baidubce.services.vod.model.CreateNotificationResponse;
+import com.baidubce.services.vod.model.GetNotificationRequest;
+import com.baidubce.services.vod.model.GetNotificationResponse;
+import com.baidubce.services.vod.model.ListNotificationsRequest;
+import com.baidubce.services.vod.model.ListNotificationsResponse;
+import com.baidubce.services.vod.model.DeleteNotificationRequest;
+import com.baidubce.services.vod.model.DeleteNotificationResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 
@@ -91,6 +97,8 @@ public class VodClient extends AbstractBceClient {
      * The URI path for player code service.
      */
     private static final String PATH_MEDIA = "media";
+
+    private static final String PATH_NOTIFICATION = "notification";
 
     private static final String PATH_INTERNAL_MEDIA = "media/internal";
 
@@ -130,10 +138,14 @@ public class VodClient extends AbstractBceClient {
     private static final String PARA_TITLE = "title";
     private static final String START_TIME = "startTime";
     private static final String END_TIME = "endTime";
+    private static final String PARAM_MAX_SIZE = "maxSize";
+    private static final String PARAM_MARKER = "marker";
+    private static final String PARAM_TRANSCODING_PRESET_NAME = "transcodingPresetName";
     private static final String AGGREGATE = "aggregate";
     private static final String PARA_RERUN = "rerun";
     private static final String PARA_DOWNLOAD = "sourcedownload";
     private static final String PARA_EXPIREDINSECONDS = "expiredInSeconds";
+    private static final String VALID_EXTENSION_PATTERN = "[0-9a-zA-Z]{0,10}";
     private static final int LIST_MAX_PAGESIZE = 1000;
     private static final int LIST_MIN_PAGESIZE = 1;
     private static final int MAX_SOURCE_EXTENSION_LENGTH = 10;
@@ -182,11 +194,18 @@ public class VodClient extends AbstractBceClient {
     /**
      * Uploads the specified file to Bos under the specified bucket and key name.
      *
-     * @param file The file containing the data to be uploaded to VOD
+     * @param title media titile.
+     * @param description media description.
+     * @param file The file containing the data to be uploaded to VOD.
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      * @throws FileNotFoundException
      */
-    public CreateMediaResourceResponse createMediaResource(String title, String description, File file)
+    public CreateMediaResourceResponse createMediaResource(
+            String title,
+            String description,
+            File file,
+            String transcodingPresetGroupName)
             throws FileNotFoundException {
         if (!file.exists()) {
             throw new FileNotFoundException("The media file " + file.getAbsolutePath() + " doesn't exist!");
@@ -194,27 +213,28 @@ public class VodClient extends AbstractBceClient {
         // try get file extension
         String sourceExtension = null;
         String filename = file.getName();
-        if (filename.lastIndexOf(".") != -1) {
-            sourceExtension = filename.substring(filename.lastIndexOf(".") + 1);
-            if (sourceExtension.length() <= 0 || sourceExtension.length() > MAX_SOURCE_EXTENSION_LENGTH) {
-                sourceExtension = null;
-            }
-        }
+        sourceExtension = getFileExtension(filename);
         // get a BOS bucket and extract mediaId from it
         GenerateMediaIdResponse generateMediaIdresponse = applyMedia();
         String bosKey = generateMediaIdresponse.getSourceKey();
         String mediaId = generateMediaIdresponse.getMediaId();
         String bucket = generateMediaIdresponse.getSourceBucket();
 
-        logger.info("[bucket] = " + bucket + ", [bosKey] = " + bosKey + ", [mediaId] = " + mediaId);
+        logger.info("[bucket] = " + bucket
+                + ", [bosKey] = " + bosKey
+                + ", [mediaId] = " + mediaId);
         // upload the file
         FileUploadSession session = new FileUploadSession(bosClient);
         CreateMediaResourceResponse response = new CreateMediaResourceResponse();
 
         if (session.upload(file, bucket, bosKey)) {
             InternalCreateMediaRequest request =
-                    new InternalCreateMediaRequest().withMediaId(mediaId).withTitle(title)
-                            .withDescription(description).withSourceExtension(sourceExtension);
+                    new InternalCreateMediaRequest()
+                            .withMediaId(mediaId)
+                            .withTitle(title)
+                            .withDescription(description)
+                            .withSourceExtension(sourceExtension)
+                            .withTranscodingPresetGroupName(transcodingPresetGroupName);
             InternalCreateMediaResponse internalResponse = processMedia(request);
             response.setMediaId(internalResponse.getMediaId());
         }
@@ -230,28 +250,28 @@ public class VodClient extends AbstractBceClient {
      * @param sourceKey The key name of the media resource in BOS
      * @param title The title string of the media resource
      * @param description The description string of the media resource
-     * 
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      * @throws FileNotFoundException
      */
     public CreateMediaResourceResponse createMediaResource(
-            String sourceBucket, String sourceKey, String title, String description) {
+            String sourceBucket,
+            String sourceKey,
+            String title,
+            String description,
+            String transcodingPresetGroupName) {
         checkStringNotEmpty(sourceBucket, "sourceBucket should not be null or empty!");
         checkStringNotEmpty(sourceKey, "key should not be null or empty!");
 
         // check if the key exist
         ObjectMetadata metaData = bosClient.getObjectMetadata(sourceBucket, sourceKey);
         checkIsTrue(metaData != null && metaData.getContentLength() > 0,
-               "The object corresponding to [bucket] = " + sourceBucket + ", [key] = " + sourceKey + " doesn't exist.");
+                "The object corresponding to [bucket] = " 
+                + sourceBucket + ", [key] = " + sourceKey + " doesn't exist.");
 
         // try get file extension
         String sourceExtension = null;
-        if (sourceKey.lastIndexOf(".") != -1) {
-            sourceExtension = sourceKey.substring(sourceKey.lastIndexOf(".") + 1);
-            if (sourceExtension.length() <= 0 || sourceExtension.length() > MAX_SOURCE_EXTENSION_LENGTH) {
-                sourceExtension = null;
-            }
-        }
+        sourceExtension = getFileExtension(sourceKey);
         // generate media Id
         GenerateMediaIdResponse generateMediaIdresponse = applyMedia();
         String mediaId = generateMediaIdresponse.getMediaId();
@@ -263,8 +283,12 @@ public class VodClient extends AbstractBceClient {
 
         // create mediaId
         InternalCreateMediaRequest request =
-                new InternalCreateMediaRequest().withMediaId(mediaId).withTitle(title)
-                        .withDescription(description).withSourceExtension(sourceExtension);
+                new InternalCreateMediaRequest()
+                        .withMediaId(mediaId)
+                        .withTitle(title)
+                        .withDescription(description)
+                        .withSourceExtension(sourceExtension)
+                        .withTranscodingPresetGroupName(transcodingPresetGroupName);
         InternalCreateMediaResponse internalResponse = processMedia(request);
 
         CreateMediaResourceResponse response = new CreateMediaResourceResponse();
@@ -323,23 +347,7 @@ public class VodClient extends AbstractBceClient {
 
     /**
      * List the properties of all media resource managed by VOD service.
-     *
-     * <p>
-     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
-     *
-     * @return The properties of all specific media resources
-     */
-    @Deprecated
-    public ListMediaResourceResponse listMediaResources() {
-        ListMediaResourceRequest request = new ListMediaResourceRequest();
-        InternalRequest internalRequest =
-                createRequest(HttpMethodName.GET, request, PATH_MEDIA);
-
-        return invokeHttpClient(internalRequest, ListMediaResourceResponse.class);
-    }
-
-    /**
-     * List the properties of all media resource managed by VOD service.
+     * recommend use marker mode to get high performance
      *
      * <p>
      * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
@@ -352,11 +360,21 @@ public class VodClient extends AbstractBceClient {
      * @param title The media title, use prefix search
      * @return The properties of all specific media resources
      */
-    public ListMediaResourceResponse listMediaResources(int pageNo, int pageSize, String status,
-                                                        Date begin, Date end, String title) {
+    public ListMediaResourceResponse listMediaResources(
+            int pageNo,
+            int pageSize,
+            String status,
+            Date begin,
+            Date end,
+            String title) {
         ListMediaResourceRequest request =
-                new ListMediaResourceRequest().withPageNo(pageNo).withPageSize(pageSize)
-                .withStatus(status).withBegin(begin).withEnd(end).withTitle(title);
+                new ListMediaResourceRequest()
+                        .withPageNo(pageNo)
+                        .withPageSize(pageSize)
+                        .withStatus(status)
+                        .withBegin(begin)
+                        .withEnd(end)
+                        .withTitle(title);
 
         return listMediaResources(request);
     }
@@ -372,8 +390,6 @@ public class VodClient extends AbstractBceClient {
      */
     public ListMediaResourceResponse listMediaResources(ListMediaResourceRequest request) {
         checkIsTrue(request.getPageNo() > 0, "pageNo should greater than 0!");
-        checkIsTrue(request.getPageSize() >= LIST_MIN_PAGESIZE
-                && request.getPageSize() <= LIST_MAX_PAGESIZE, "pageSize is not Valid!");
 
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.GET, request, PATH_MEDIA);
@@ -394,6 +410,68 @@ public class VodClient extends AbstractBceClient {
 
         return invokeHttpClient(internalRequest, ListMediaResourceResponse.class);
     }
+
+    /**
+     * Use marker mode to List the properties of all media resource managed by VOD service.
+     * If media size beyond 1000, strongly recommend to use marker mode
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param marker The marker labels the query begining; first query use NULL.
+     * @param maxSize The maxSize returned ,must in range [LIST_MIN_PAGESIZE,LIST_MAX_PAGESIZE]
+     * @pagam status The media status, can be null
+     * @param begin The media create date after begin
+     * @param end The media create date before end
+     * @param title The media title, use prefix search
+     * @return The properties of all specific media resources
+     */
+    public ListMediaResourceByMarkerResponse listMediaResourcesByMarker(
+            String marker,
+            int maxSize,
+            String status,
+            Date begin,
+            Date end,
+            String title) {
+        ListMediaResourceByMarkerRequest request =
+                new ListMediaResourceByMarkerRequest().withMarker(marker).withMaxSize(maxSize)
+                        .withStatus(status).withBegin(begin).withEnd(end).withTitle(title);
+
+        return listMediaResourcesByMarker(request);
+    }
+
+    /**
+     * List the properties of all media resource managed by VOD service.
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param request The request wrapper object containing all options.
+     * @return The properties of all specific media resources
+     */
+    public ListMediaResourceByMarkerResponse listMediaResourcesByMarker(ListMediaResourceByMarkerRequest request) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, PATH_MEDIA);
+        internalRequest.addParameter(PARAM_MAX_SIZE, String.valueOf(request.getMaxSize()));
+        if (request.getMarker() != null) {
+            internalRequest.addParameter(PARAM_MARKER, String.valueOf(request.getMarker()));
+        }
+        if (request.getStatus() != null) {
+            internalRequest.addParameter(PARA_STATUS, request.getStatus());
+        }
+        if (request.getBegin() != null) {
+            internalRequest.addParameter(PARA_BEGIN, DateUtils.formatAlternateIso8601Date(request.getBegin()));
+        }
+        if (request.getEnd() != null) {
+            internalRequest.addParameter(PARA_END, DateUtils.formatAlternateIso8601Date(request.getEnd()));
+        }
+        if (request.getTitle() != null) {
+            internalRequest.addParameter(PARA_TITLE, request.getTitle());
+        }
+
+        return invokeHttpClient(internalRequest, ListMediaResourceByMarkerResponse.class);
+    }
+
 
     /**
      * Update the title and description for the specific media resource managed by VOD service.
@@ -521,71 +599,6 @@ public class VodClient extends AbstractBceClient {
     }
 
     /**
-     * Get the playable URL address of specific media resource managed by VOD service.
-     *
-     * @param mediaId The unique ID for each media resource
-     * @return the playable URL address
-     */
-    @Deprecated
-    public GetPlayableUrlResponse getPlayableUrl(String mediaId) {
-        GetPlayableUrlRequest request = new GetPlayableUrlRequest().withMediaId(mediaId);
-        return getPlayableUrl(request);
-    }
-
-    /**
-     * Get the playable URL address of specific media resource managed by VOD service.
-     *
-     * @param request The request object containing all the options on how to
-     * @return the playable URL address
-     */
-    @Deprecated
-    public GetPlayableUrlResponse getPlayableUrl(GetPlayableUrlRequest request) {
-        checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
-        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PATH_SERVICE_FILE);
-        internalRequest.addParameter(PARA_MEDIA_ID, request.getMediaId());
-
-        return invokeHttpClient(internalRequest, GetPlayableUrlResponse.class);
-    }
-
-    /**
-     * Get the Flash and HTML5 code snippet (encoded in Base64) to play the specific media resource.
-     *
-     * @param mediaId The unique ID for each media resource
-     * @param width The width of player view
-     * @param height The height of player view
-     * @param autoStart Indicate whether or not play the media resource automatically when web page is loaded.
-     * @return The Flash and HTML5 code snippet
-     */
-    @Deprecated
-    public GetPlayerCodeResponse getPlayerCode(String mediaId, int width, int height, boolean autoStart) {
-        GetPlayerCodeRequest request = new GetPlayerCodeRequest()
-                .withMediaId(mediaId).withWidth(width).withHeight(height).withAutoStart(autoStart);
-        return getPlayerCode(request);
-    }
-
-    /**
-     * Get the Flash and HTML5 codes snippet (encoded in Base64) to play the specific media resource.
-     * 
-     * @param request The request object containing all the options on how to
-     * @return The Flash and HTML5 code snippet
-     */
-    @Deprecated
-    public GetPlayerCodeResponse getPlayerCode(GetPlayerCodeRequest request) {
-
-        checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
-        checkIsTrue(request.getHeight() > 0, "Height of playback view should be positive!");
-        checkIsTrue(request.getWidth() > 0, "Width of playback view should be positive!");
-
-        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PATH_SERVICE_CODE);
-        internalRequest.addParameter(PARA_MEDIA_ID, request.getMediaId());
-        internalRequest.addParameter(PARA_WIDTH, Integer.toString(request.getWidth()));
-        internalRequest.addParameter(PARA_HEIGHT, Integer.toString(request.getHeight()));
-        internalRequest.addParameter(PARA_AUTO_START, Boolean.toString(request.isAutoStart()));
-
-        return invokeHttpClient(internalRequest, GetPlayerCodeResponse.class);
-    }
-
-    /**
      * Generate media delivery info by media ID.
      * <p>
      * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
@@ -593,8 +606,10 @@ public class VodClient extends AbstractBceClient {
      * @param mediaId The unique ID for each media resource
      * @return media delivery info
      */
-    public GenerateMediaDeliveryInfoResponse generateMediaDeliveryInfo(String mediaId) {
-        GenerateMediaDeliveryInfoRequest request = new GenerateMediaDeliveryInfoRequest().withMediaId(mediaId);
+    public GenerateMediaDeliveryInfoResponse generateMediaDeliveryInfo(String mediaId, String transcodingPresetName) {
+        GenerateMediaDeliveryInfoRequest request = new GenerateMediaDeliveryInfoRequest()
+                .withMediaId(mediaId)
+                .withTranscodingPresetName(transcodingPresetName);
         return generateMediaDeliveryInfo(request);
     }
 
@@ -610,6 +625,7 @@ public class VodClient extends AbstractBceClient {
         checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.GET, request, PATH_MEDIA, request.getMediaId(), PARA_GENDELIVERY);
+        internalRequest.addParameter(PARAM_TRANSCODING_PRESET_NAME, request.getTranscodingPresetName());
         return invokeHttpClient(internalRequest, GenerateMediaDeliveryInfoResponse.class);
     }
 
@@ -623,9 +639,12 @@ public class VodClient extends AbstractBceClient {
      * @return The Flash and HTML5 code snippet
      */
     public GenerateMediaPlayerCodeResponse generateMediaPlayerCode(String mediaId, int width,
-                                                                   int height, boolean autoStart) {
+        int height, boolean autoStart,
+        String transcodingPresetName) {
         GenerateMediaPlayerCodeRequest request = new GenerateMediaPlayerCodeRequest()
-                .withMediaId(mediaId).withWidth(width).withHeight(height).withAutoStart(autoStart);
+                .withMediaId(mediaId).withWidth(width)
+                .withHeight(height).withAutoStart(autoStart)
+                .withTranscodingPresetName(transcodingPresetName);
         return generateMediaPlayerCode(request);
     }
 
@@ -647,6 +666,7 @@ public class VodClient extends AbstractBceClient {
         internalRequest.addParameter(PARA_HEIGHT, Integer.toString(request.getHeight()));
         internalRequest.addParameter(PARA_AUTO_START_NEW, Boolean.toString(request.isAutoStart()));
         internalRequest.addParameter(PARA_AK, config.getCredentials().getAccessKeyId());
+        internalRequest.addParameter(PARAM_TRANSCODING_PRESET_NAME, request.getTranscodingPresetName());
 
         return invokeHttpClient(internalRequest, GenerateMediaPlayerCodeResponse.class);
     }
@@ -662,12 +682,15 @@ public class VodClient extends AbstractBceClient {
      * @pagam aggregate, if need aggregate, default: true
      * @return The media statistic info
      */
-    public GetMediaStatisticResponse getMediaStatistic(String mediaId,
-                                                       Date startTime, Date endTime, boolean aggregate) {
+    public GetMediaStatisticResponse getMediaStatistic(
+            String mediaId,
+            Date startTime,
+            Date endTime,
+            boolean aggregate) {
         GetMediaStatisticRequest request =
                 new GetMediaStatisticRequest().withMediaId(mediaId)
-                                              .withStartTime(startTime).withEndTime(endTime)
-                                                .withAggregate(aggregate);
+                        .withStartTime(startTime).withEndTime(endTime)
+                        .withAggregate(aggregate);
 
         return getMediaStatistic(request);
     }
@@ -735,8 +758,8 @@ public class VodClient extends AbstractBceClient {
      */
     public GetMediaSourceDownloadResponse getMediaSourceDownload(String mediaId, long expiredInSeconds) {
         GetMediaSourceDownloadRequest request = new GetMediaSourceDownloadRequest()
-                                                        .withMediaId(mediaId)
-                                                        .withExpiredInSeconds(expiredInSeconds);
+                .withMediaId(mediaId)
+                .withExpiredInSeconds(expiredInSeconds);
         return getMediaSourceDownload(request);
     }
 
@@ -759,12 +782,115 @@ public class VodClient extends AbstractBceClient {
     }
 
     /**
+     * List all your doc notifications.
+     *
+     * @return The list of all your doc notifications
+     */
+    public ListNotificationsResponse listNotifications() {
+        ListNotificationsRequest request = new ListNotificationsRequest();
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PATH_NOTIFICATION);
+        return invokeHttpClient(internalRequest, ListNotificationsResponse.class);
+    }
+
+    /**
+     * Delete your doc notification by doc notification name.
+     *
+     * @param name  doc notification name.
+     *
+     */
+    public DeleteNotificationResponse deleteNotification(String name) {
+        DeleteNotificationRequest request = new DeleteNotificationRequest();
+        request.setName(name);
+        return deleteNotification(request);
+    }
+
+    /**
+     * Delete your doc notification by doc notification name.
+     *
+     * @param request The request object containing all parameters for deleting dco notification.
+     *
+     */
+    public DeleteNotificationResponse deleteNotification(DeleteNotificationRequest request) {
+        checkStringNotEmpty(request.getName(), "The parameter name should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.DELETE, request, PATH_NOTIFICATION, request
+                .getName());
+        return invokeHttpClient(internalRequest, DeleteNotificationResponse.class);
+    }
+
+    /**
+     * Get your doc notification by doc notification name.
+     *
+     * @param name  doc notification name.
+     *
+     * @return Your doc notification.
+     */
+    public GetNotificationResponse getNotification(String name) {
+        GetNotificationRequest request = new GetNotificationRequest();
+        request.setName(name);
+        return getNotification(request);
+    }
+
+    /**
+     * Get your doc notification by doc notification name.
+     *
+     * @param request The request object containing all parameters for getting doc notification.
+     *
+     * @return Your doc notification.
+     */
+    public GetNotificationResponse getNotification(GetNotificationRequest request) {
+        checkStringNotEmpty(request.getName(), "The parameter name should NOT be null or empty string.");
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PATH_NOTIFICATION,
+                request.getName());
+        return invokeHttpClient(internalRequest, GetNotificationResponse.class);
+    }
+
+    /**
+     * Create a doc notification in the doc stream service.
+     *
+     * @param name  The name of notification.
+     * @param endpoint The address to receive notification message.
+     *
+     */
+    public CreateNotificationResponse createNotification(String name, String endpoint) {
+        CreateNotificationRequest request = new CreateNotificationRequest();
+        request.withName(name).withEndpoint(endpoint);
+        return createNotification(request);
+    }
+
+    /**
+     * Create a doc notification in the doc stream service.
+     *
+     * @param request The request object containing all options for creating doc notification.
+     */
+    public CreateNotificationResponse createNotification(CreateNotificationRequest request) {
+
+        checkStringNotEmpty(request.getName(),
+                "The parameter name should NOT be null or empty string.");
+        checkStringNotEmpty(request.getEndpoint(),
+                "The parameter endpoint should NOT be null or empty string.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, PATH_NOTIFICATION);
+        String strJson = JsonUtils.toJsonString(request);
+        byte[] requestJson = null;
+        try {
+            requestJson = strJson.getBytes(DEFAULT_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Unsupported encode.", e);
+        }
+
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(requestJson.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+        internalRequest.setContent(RestartableInputStream.wrap(requestJson));
+        return invokeHttpClient(internalRequest, CreateNotificationResponse.class);
+    }
+
+    /**
      * Creates and initializes a new request object for the specified resource. This method is responsible for
      * determining HTTP method, URI path, credentials and request body for POST method.
      * <p>
      * <b>Note: </b> The Query parameters in URL should be specified by caller method.
      * </p>
-     * 
+     *
      * @param httpMethod The HTTP method to use when sending the request.
      * @param request The original request, as created by the user.
      * @param pathVariables The optional variables in URI path.
@@ -813,6 +939,21 @@ public class VodClient extends AbstractBceClient {
         internalRequest.setContent(RestartableInputStream.wrap(requestJson));
 
         return internalRequest;
+    }
+
+
+    private String getFileExtension(String filename) {
+        if (filename != null && filename.lastIndexOf(".") != -1) {
+            String extension = filename.substring(filename.lastIndexOf(".") + 1);
+            if (extension.length() <= 0 || extension.length() > MAX_SOURCE_EXTENSION_LENGTH) {
+                return null;
+            }
+            if (!extension.matches(VALID_EXTENSION_PATTERN)) {
+                return null;
+            }
+            return extension;
+        }
+        return null;
     }
 
     /*

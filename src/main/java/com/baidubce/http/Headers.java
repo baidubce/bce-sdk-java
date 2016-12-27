@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -47,6 +47,8 @@ public interface Headers {
 
     public static final String LAST_MODIFIED = "Last-Modified";
 
+    public static final String LOCATION = "Location";
+
     public static final String RANGE = "Range";
 
     public static final String SERVER = "Server";
@@ -54,7 +56,7 @@ public interface Headers {
     public static final String TRANSFER_ENCODING = "Transfer-Encoding";
 
     public static final String USER_AGENT = "User-Agent";
-    
+
 
     /*
      * BCE Common HTTP Headers
@@ -66,13 +68,9 @@ public interface Headers {
 
     public static final String BCE_COPY_METADATA_DIRECTIVE = "x-bce-metadata-directive";
 
-    public static final String BCE_COPY_SOURCE = "x-bce-copy-source";
-
     public static final String BCE_COPY_SOURCE_IF_MATCH = "x-bce-copy-source-if-match";
 
     public static final String BCE_DATE = "x-bce-date";
-
-    public static final String BCE_DEBUG_ID = "x-bce-debug-id";
 
     public static final String BCE_PREFIX = "x-bce-";
 
@@ -80,8 +78,26 @@ public interface Headers {
 
     public static final String BCE_SECURITY_TOKEN = "x-bce-security-token";
 
-    public static final String BCE_STORAGE_CLASS = "x-bce-storage-class";
-    
     public static final String BCE_USER_METADATA_PREFIX = "x-bce-meta-";
+
+    /*
+     * BOS HTTP Headers
+     */
+
+    public static final String BCE_COPY_SOURCE = "x-bce-copy-source";
+
+    public static final String BCE_COPY_SOURCE_IF_MODIFIED_SINCE = "x-bce-copy-source-if-modified-since";
+
+    public static final String BCE_COPY_SOURCE_IF_NONE_MATCH = "x-bce-copy-source-if-none-match";
+
+    public static final String BCE_COPY_SOURCE_IF_UNMODIFIED_SINCE = "x-bce-copy-source-if-unmodified-since";
+
+    public static final String BCE_DEBUG_ID = "x-bce-debug-id";
+
+    public static final String BCE_NEXT_APPEND_OFFSET = "x-bce-next-append-offset";
+
+    public static final String BCE_OBJECT_TYPE = "x-bce-object-type";
+
+    public static final String BCE_STORAGE_CLASS = "x-bce-storage-class";
 
 }

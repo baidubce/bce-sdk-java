@@ -41,4 +41,8 @@ public class TsdbConstants {
     public static String TYPE_LONG = "Long";
     public static String TYPE_DOUBLE = "Double";
     public static String TYPE_STRING = "String";
+
+    // Query order.
+    public static String ORDER_ASC = "Asc";
+    public static String ORDER_DESC = "Desc";
 }

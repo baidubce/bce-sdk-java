@@ -40,6 +40,12 @@ public class Query {
      */
     private List<Aggregator> aggregators;
 
+    /**
+     * Optional.
+     * The order: Asc or Desc, default is Asc.
+     */
+    private String order;
+
     public String getMetric() {
         return metric;
     }
@@ -79,7 +85,15 @@ public class Query {
     public void setAggregators(List<Aggregator> aggregators) {
         this.aggregators = aggregators;
     }
-    
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
     public Query withMetric(String metric) {
         this.metric = metric;
         return this;
@@ -104,13 +118,18 @@ public class Query {
         this.aggregators = aggregators;
         return this;
     }
-    
+
+    public Query withOrder(String order) {
+        this.order = order;
+        return this;
+    }
+
     public Query addAggregator(Aggregator aggregator) {
         initialAggregators();
         this.aggregators.add(aggregator);
         return this;
     }
-    
+
     private void initialAggregators() {
         if (aggregators == null) {
             aggregators = Lists.newArrayList();

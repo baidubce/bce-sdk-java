@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -898,83 +898,9 @@ public class BosClient extends AbstractBceClient {
         checkNotNull(request, "request should not be null.");
         assertStringNotNullOrEmpty(request.getKey(), "object key should not be null or empty");
 
-        ObjectMetadata metadata = request.getObjectMetadata();
-        InputStream input = request.getInputStream();
-
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
 
-        // If a file is specified for upload, we need to pull some additional information from it to auto-configure a
-        // few options
-        if (request.getFile() != null) {
-            File file = request.getFile();
-
-            if (file.length() > 5 * 1024 * 1024 * 1024L) {
-                BceServiceException bse = new BceServiceException("Your proposed upload exceeds the maximum allowed "
-                                                                  + "object size.");
-                bse.setStatusCode(400);
-                bse.setErrorCode("EntityTooLarge");
-                bse.setErrorType(BceServiceException.ErrorType.Client);
-                throw bse;
-            }
-
-            // Always set the content length, even if it's already set
-            metadata.setContentLength(file.length());
-
-            if (metadata.getContentType() == null) {
-                metadata.setContentType(Mimetypes.getInstance().getMimetype(file));
-            }
-
-            FileInputStream fileInputStream = null;
-            try {
-                fileInputStream = new FileInputStream(file);
-                metadata.setBceContentSha256(new String(Hex.encodeHex(HashUtils.computeSha256Hash(fileInputStream))));
-            } catch (Exception e) {
-                throw new BceClientException("Unable to calculate SHA-256 hash", e);
-            } finally {
-                try {
-                    if (fileInputStream != null) {
-                        fileInputStream.close();
-                    }
-                } catch (Exception e) {
-                    // ignore
-                }
-            }
-
-            try {
-                internalRequest.setContent(new RestartableFileInputStream(file));
-            } catch (FileNotFoundException e) {
-                throw new BceClientException("Unable to find file to upload", e);
-            }
-        } else {
-            checkNotNull(input, "Either file or inputStream should be set for PutObjectRequest.");
-            if (metadata.getContentLength() < 0) {
-                logger.warn("No content length specified for stream data. Trying to read them all into memory.");
-                List<byte[]> data = this.readAll(input, metadata);
-                internalRequest.setContent(new RestartableMultiByteArrayInputStream(data, metadata.getContentLength()));
-            } else if (input instanceof RestartableInputStream) {
-                internalRequest.setContent((RestartableInputStream) input);
-            } else {
-                internalRequest.setContent(this.wrapRestartableInputStream(input));
-            }
-        }
-        if (request.getStorageClass() != null) {
-            metadata.setStorageClass(request.getStorageClass());
-        }
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(metadata.getContentLength()));
-
-        populateRequestMetadata(internalRequest, metadata);
-
-        BosResponse response;
-        try {
-            response = this.invokeHttpClient(internalRequest, BosResponse.class);
-        } finally {
-            try {
-                internalRequest.getContent().close();
-            } catch (Exception e) {
-                logger.warn("Fail to close input stream", e);
-            }
-        }
-
+        BosResponse response = uploadObject(request, internalRequest);
         PutObjectResponse result = new PutObjectResponse();
         result.setETag(response.getMetadata().getETag());
 
@@ -1013,7 +939,20 @@ public class BosClient extends AbstractBceClient {
         copySourceHeader = HttpUtils.normalizePath(copySourceHeader);
         internalRequest.addHeader(Headers.BCE_COPY_SOURCE, copySourceHeader);
         if (request.getETag() != null) {
-            internalRequest.addHeader(Headers.BCE_COPY_SOURCE_IF_MATCH, "\"" + request.getETag() + "\"");
+            internalRequest.addHeader(Headers.BCE_COPY_SOURCE_IF_MATCH,
+                    "\"" + request.getETag() + "\"");
+        }
+        if (request.getNoneMatchETagConstraint() != null) {
+            internalRequest.addHeader(
+                    Headers.BCE_COPY_SOURCE_IF_NONE_MATCH, "\"" + request.getNoneMatchETagConstraint() + "\"");
+        }
+        if (request.getUnmodifiedSinceConstraint() != null) {
+            internalRequest.addHeader(
+                    Headers.BCE_COPY_SOURCE_IF_UNMODIFIED_SINCE, request.getUnmodifiedSinceConstraint());
+        }
+        if (request.getModifiedSinceConstraint() != null) {
+            internalRequest.addHeader(
+                    Headers.BCE_COPY_SOURCE_IF_MODIFIED_SINCE, request.getModifiedSinceConstraint());
         }
         if (request.getStorageClass() != null) {
             internalRequest.addHeader(Headers.BCE_STORAGE_CLASS, request.getStorageClass());
@@ -1407,6 +1346,9 @@ public class BosClient extends AbstractBceClient {
         if (metadata.getETag() != null) {
             request.addHeader(Headers.ETAG, metadata.getETag());
         }
+        if (metadata.getExpires() != null) {
+            request.addHeader(Headers.EXPIRES, metadata.getExpires());
+        }
         if (metadata.getCacheControl() != null) {
             request.addHeader(Headers.CACHE_CONTROL, metadata.getCacheControl());
         }
@@ -1659,5 +1601,241 @@ public class BosClient extends AbstractBceClient {
         } catch (MalformedURLException e) {
             throw new BceClientException("Unable to convert request to well formed URL: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Uploads the specified appendable file to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param file The appendable file containing the data to be uploaded to Bos.
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(String bucketName, String key, File file) {
+        return this.appendObject(new AppendObjectRequest(bucketName, key, file));
+    }
+
+    /**
+     * Uploads the specified appendable file to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param file The file containing the data to be uploaded to Bos.
+     * @param metadata Additional metadata instructing Bos how to handle the uploaded data
+     *     (e.g. custom user metadata, hooks for specifying content type, etc.).
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(String bucketName, String key, File file, ObjectMetadata metadata) {
+        return this.appendObject(new AppendObjectRequest(bucketName, key, file, metadata));
+    }
+
+    /**
+     * Uploads the specified string to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param value The string containing the value to be uploaded to Bos.
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(String bucketName, String key, String value) {
+        try {
+            return this.appendObject(bucketName, key, value.getBytes(DEFAULT_ENCODING), new ObjectMetadata());
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get bytes.", e);
+        }
+    }
+
+    /**
+     * Uploads the specified string and object metadata to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param value The string containing the value to be uploaded to Bos.
+     * @param metadata Additional metadata instructing Bos how to handle the uploaded data
+     *     (e.g. custom user metadata, hooks for specifying content type, etc.).
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(String bucketName, String key, String value, ObjectMetadata metadata) {
+        try {
+            return this.appendObject(bucketName, key, value.getBytes(DEFAULT_ENCODING), metadata);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get bytes.", e);
+        }
+    }
+
+    /**
+     * Uploads the specified bytes to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param value The bytes containing the value to be uploaded to Bos.
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(String bucketName, String key, byte[] value) {
+        return this.appendObject(bucketName, key, value, new ObjectMetadata());
+    }
+
+    /**
+     * Uploads the appendable bytes and object metadata to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param value The bytes containing the value to be uploaded to Bos.
+     * @param metadata Additional metadata instructing Bos how to handle the uploaded data
+     *     (e.g. custom user metadata, hooks for specifying content type, etc.).
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(
+            String bucketName, String key, byte[] value, ObjectMetadata metadata) {
+        checkNotNull(metadata, "metadata should not be null.");
+        if (metadata.getContentLength() == -1) {
+            metadata.setContentLength(value.length);
+        }
+        return this.appendObject(
+                new AppendObjectRequest(bucketName, key, RestartableInputStream.wrap(value), metadata));
+    }
+
+    /**
+     * Uploads the appendable input stream to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param input The input stream containing the value to be uploaded to Bos.
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(String bucketName, String key, InputStream input) {
+        return this.appendObject(new AppendObjectRequest(bucketName, key, input));
+    }
+
+    /**
+     * Uploads the appendable input stream and object metadata to Bos under the specified bucket and key name.
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param key The key under which to store the specified file.
+     * @param input The input stream containing the value to be uploaded to Bos.
+     * @param metadata Additional metadata instructing Bos how to handle the uploaded data
+     *     (e.g. custom user metadata, hooks for specifying content type, etc.).
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(
+            String bucketName, String key, InputStream input, ObjectMetadata metadata) {
+        return this.appendObject(new AppendObjectRequest(bucketName, key, input, metadata));
+    }
+
+    /**
+     * Uploads a new object to the specified Bos bucket. The <code>AppendObjectRequest</code> contains all the
+     * details of the request, including the bucket to upload to, the key the object will be uploaded under,
+     * and the file or input stream containing the data to upload.
+     *
+     * @param request The request object containing all the parameters to upload a new appendable object to Bos.
+     * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public AppendObjectResponse appendObject(AppendObjectRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getKey(), "object key should not be null or empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter("append", null);
+        if (request.getOffset() != null) {
+            internalRequest.addParameter("offset", request.getOffset().toString());
+        }
+        BosResponse response = uploadObject(request, internalRequest);
+        AppendObjectResponse result = new AppendObjectResponse();
+        result.setNextAppendOffset(response.getMetadata().getNextAppendOffset());
+        result.setContentMd5(response.getMetadata().getContentMd5());
+        result.setETag(response.getMetadata().getETag());
+        return result;
+    }
+
+    /**
+     * Uploads a object to Bos bucket. The PutObjcetRequest contains all the details of the request.The internalRequest
+     * represents a request being send to a BCE Service.
+     *
+     * @param request The request object containing all the parameters to upload a new appendable object to Bos.
+     * @param internalRequest Represents a request being sent to a BCE Service, including the parameters being 
+     *     sent as part of the request, the endpoint to which the request should be sent, etc. 
+     * @return A BosResponse object containing the bos-metadata information returned by Bos for the newly created
+     *     object
+     */
+    private BosResponse uploadObject(PutObjectRequest request, InternalRequest internalRequest) {
+        ObjectMetadata metadata = request.getObjectMetadata();
+        InputStream input = request.getInputStream();
+        if (request.getFile() != null) {
+            File file = request.getFile();
+
+            if (file.length() > 5 * 1024 * 1024 * 1024L) {
+                BceServiceException bse = new BceServiceException("Your proposed upload exceeds the maximum allowed "
+                                                                  + "object size.");
+                bse.setStatusCode(400);
+                bse.setErrorCode("EntityTooLarge");
+                bse.setErrorType(BceServiceException.ErrorType.Client);
+                throw bse;
+            }
+
+            // Always set the content length, even if it's already set
+            if (metadata.getContentLength() < 0) {
+                metadata.setContentLength(file.length());
+            }
+
+            if (metadata.getContentType() == null) {
+                metadata.setContentType(Mimetypes.getInstance().getMimetype(file));
+            }
+
+            if (metadata.getContentLength() == file.length()) {
+                FileInputStream fileInputStream = null;
+                try {
+                    fileInputStream = new FileInputStream(file);
+                    metadata.setBceContentSha256(
+                            new String(Hex.encodeHex(HashUtils.computeSha256Hash(fileInputStream))));
+                } catch (Exception e) {
+                    throw new BceClientException("Unable to calculate SHA-256 hash", e);
+                } finally {
+                    try {
+                        if (fileInputStream != null) {
+                            fileInputStream.close();
+                        }
+                    } catch (Exception e) {
+                        logger.warn("The inputStream accured error");
+                    }
+                }
+            }
+            try {
+                internalRequest.setContent(new RestartableFileInputStream(file));
+            } catch (FileNotFoundException e) {
+                throw new BceClientException("Unable to find file to upload", e);
+            }
+        } else {
+            checkNotNull(input, "Either file or inputStream should be set.");
+            if (metadata.getContentLength() < 0) {
+                logger.warn("No content length specified for stream data. Trying to read them all into memory.");
+                List<byte[]> data = this.readAll(input, metadata);
+                internalRequest.setContent(new RestartableMultiByteArrayInputStream(data, metadata.getContentLength()));
+            } else if (input instanceof RestartableInputStream) {
+                internalRequest.setContent((RestartableInputStream) input);
+            } else {
+                internalRequest.setContent(this.wrapRestartableInputStream(input));
+            }
+            if (metadata.getContentType() == null) {
+                metadata.setContentType(Mimetypes.getInstance().getMimetype(request.getKey()));
+            }
+        }
+        if (request.getStorageClass() != null) {
+            metadata.setStorageClass(request.getStorageClass());
+        }
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(metadata.getContentLength()));
+
+        populateRequestMetadata(internalRequest, metadata);
+
+        BosResponse response;
+        try {
+            response = this.invokeHttpClient(internalRequest, BosResponse.class);
+        } finally {
+            try {
+                internalRequest.getContent().close();
+            } catch (Exception e) {
+                logger.warn("Fail to close input stream", e);
+            }
+        }
+        return response;
     }
 }

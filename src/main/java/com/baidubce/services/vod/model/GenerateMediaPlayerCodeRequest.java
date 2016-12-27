@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -42,7 +42,24 @@ public class GenerateMediaPlayerCodeRequest extends AbstractBceRequest {
      */
     private String ak;
 
+    private String transcodingPresetName;
 
+    public Boolean getAutoStart() {
+        return autoStart;
+    }
+
+    public String getTranscodingPresetName() {
+        return transcodingPresetName;
+    }
+
+    public void setTranscodingPresetName(String transcodingPresetName) {
+        this.transcodingPresetName = transcodingPresetName;
+    }
+
+    public GenerateMediaPlayerCodeRequest withTranscodingPresetName(String transcodingPresetName) {
+        this.transcodingPresetName = transcodingPresetName;
+        return this;
+    }
 
     @Override
     public String toString() {
@@ -52,6 +69,7 @@ public class GenerateMediaPlayerCodeRequest extends AbstractBceRequest {
         sb.append("  height = ").append(height).append("\n");
         sb.append("  autoStart = ").append(autoStart).append("\n");
         sb.append("  ak = ").append(ak).append("\n");
+        sb.append("  transcodingPresetName = ").append(transcodingPresetName).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

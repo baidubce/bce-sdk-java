@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,7 +12,6 @@
  */
 package com.baidubce.services.bos;
 
-import com.baidubce.BceResponseMetadata;
 import com.baidubce.http.BceHttpResponse;
 import com.baidubce.http.Headers;
 import com.baidubce.http.handler.HttpResponseHandler;
@@ -23,9 +22,17 @@ public class BosMetadataResponseHandler implements HttpResponseHandler {
 
     @Override
     public boolean handle(BceHttpResponse httpResponse, AbstractBceResponse response) throws Exception {
-        BceResponseMetadata metadata = response.getMetadata();
-        if (metadata instanceof BosResponseMetadata) {
-            ((BosResponseMetadata) metadata).setBosDebugId(httpResponse.getHeader(Headers.BCE_DEBUG_ID));
+        if (response.getMetadata() instanceof BosResponseMetadata) {
+            BosResponseMetadata metadata = (BosResponseMetadata) response.getMetadata();
+            metadata.setBosDebugId(httpResponse.getHeader(Headers.BCE_DEBUG_ID));
+            if (httpResponse.getHeader(Headers.BCE_NEXT_APPEND_OFFSET) != null) {
+                metadata.setNextAppendOffset(
+                        Long.parseLong(httpResponse.getHeader(Headers.BCE_NEXT_APPEND_OFFSET)));
+            }
+            if (httpResponse.getHeader(Headers.LOCATION) != null) {
+                metadata.setLocation(httpResponse.getHeader(Headers.LOCATION));
+            }
+
         }
         return false;
     }

@@ -1,3 +1,16 @@
+/*
+ * Copyright 2015 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
 package com.baidubce.services.doc.model;
 
 import com.baidubce.auth.BceCredentials;
@@ -5,15 +18,13 @@ import com.baidubce.model.AbstractBceRequest;
 
 import java.io.File;
 
-/**
- * Created by baidu on 15/12/30.
- */
 public class CreateDocumentRequest extends AbstractBceRequest {
     private File file = null;
     private String title = null;
     private String format = null;
     private String notification = null;
     private String access = null;
+    private String targetType = null;
 
     public CreateDocumentRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
@@ -50,5 +61,13 @@ public class CreateDocumentRequest extends AbstractBceRequest {
 
     public void setAccess(String access) {
         this.access = access;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 }

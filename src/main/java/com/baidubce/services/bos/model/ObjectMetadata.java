@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -34,25 +34,68 @@ public class ObjectMetadata {
 
     private String bceContentSha256;
 
+    /**
+     * It provide a default file name when customers download file from bos.
+     */
     private String contentDisposition;
 
+    /**
+     * The contentEnding entity header is used compress the media-type.
+     */
     private String contentEncoding;
 
+    /**
+     * The length of the request body.
+     */
     private long contentLength = -1;
 
+    /**
+     * A Base64-encoded binary MD5 sum of the content of the request body.
+     */
     private String contentMd5;
 
+    /**
+     * The MIME type of the body of the request.
+     */
     private String contentType;
 
+    /**
+     * The entity tag of the URL.
+     */
     private String eTag;
 
     private long instanceLength = -1;
 
+    /**
+     * The lastModified time of the object.
+     */
     private Date lastModified;
 
+    /**
+     * Where in a full body message this partial message belongs.
+     */
     private String contentRange;
 
+    /**
+     * The cacheControl is used for controlling HTTP caching.
+     */
     private String cacheControl;
+
+    /**
+     * The expiration of optional object.
+     */
+    private String expires;
+
+    /**
+     * The offset of the append object.
+     */
+    private String appendOffset;
+
+    /**
+     * The objectType identifies whether the object is an appendable object
+     * or a normal object.
+     */
+    private String objectType;
 
     private String storageClass;
 
@@ -72,6 +115,9 @@ public class ObjectMetadata {
         this.setETag(other.getETag());
         this.setInstanceLength(other.getInstanceLength());
         this.setLastModified(other.getLastModified());
+        this.setExpires(other.getExpires());
+        this.setAppendOffset(other.getAppendOffset());
+        this.setObjectType(other.getObjectType());
         this.setCacheControl(other.getCacheControl());
         this.setStorageClass(other.getStorageClass());
     }
@@ -389,6 +435,30 @@ public class ObjectMetadata {
         }
         builder.append(']');
         return builder.toString();
+    }
+
+    public String getExpires() {
+        return expires;
+    }
+
+    public void setExpires(String expires) {
+        this.expires = expires;
+    }
+
+    public String getAppendOffset() {
+        return appendOffset;
+    }
+
+    public void setAppendOffset(String appendOffset) {
+        this.appendOffset = appendOffset;
+    }
+
+    public String getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
     }
 
     public String getCacheControl() {

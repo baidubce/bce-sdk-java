@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2014 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -138,11 +138,15 @@ public class DefaultRetryPolicy implements RetryPolicy {
             BceServiceException e = (BceServiceException) exception;
 
             /*
-             * For 500 internal server errors and 503 service unavailable errors, we want to retry, but we need to use
+             * For 500 internal server errors and 503 service unavailable errors and 502 service bad gateway, we want to retry, but we need to use
              * an exponential back-off strategy so that we don't overload a server with a flood of retries.
              */
             if (e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 logger.debug("Retry for internal server error.");
+                return true;
+            }
+            if (e.getStatusCode() == HttpStatus.SC_BAD_GATEWAY) {
+                logger.debug("Retry for bad gateway.");
                 return true;
             }
             if (e.getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE) {

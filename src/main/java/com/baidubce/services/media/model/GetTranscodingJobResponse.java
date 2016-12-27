@@ -12,6 +12,7 @@ public class GetTranscodingJobResponse extends AbstractBceResponse {
     private String    jobStatus    = null;
     private Date      startTime    = null;
     private Date      endTime      = null;
+    private MediaError     error        = null;
 
     /**
      * 任务的唯一标识
@@ -91,6 +92,14 @@ public class GetTranscodingJobResponse extends AbstractBceResponse {
         this.endTime = endTime;
     }
 
+    public MediaError getError() {
+        return error;
+    }
+
+    public void setError(MediaError error) {
+        this.error = error;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -103,6 +112,9 @@ public class GetTranscodingJobResponse extends AbstractBceResponse {
         sb.append("    jobStatus: ").append(jobStatus).append("\n");
         sb.append("    startTime: ").append(startTime).append("\n");
         sb.append("    endTime: ").append(endTime).append("\n");
+        if (error != null) {
+            sb.append(error).append("\n");
+        }
         sb.append("}\n");
         return sb.toString();
     }

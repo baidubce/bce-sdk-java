@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Baidu.com, Inc. All Rights Reserved
+ * Copyright 2015 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -23,6 +23,7 @@ public class Job {
     private String    jobStatus    = null;
     private Date      startTime    = null;
     private Date      endTime      = null;
+    private MediaError error       = null;
 
     /**
      * 任务的唯一标识
@@ -102,6 +103,14 @@ public class Job {
         this.endTime = endTime;
     }
 
+    public MediaError getError() {
+        return error;
+    }
+
+    public void setError(MediaError error) {
+        this.error = error;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -114,6 +123,9 @@ public class Job {
         sb.append("    jobStatus: ").append(jobStatus).append("\n");
         sb.append("    startTime: ").append(startTime).append("\n");
         sb.append("    endTime: ").append(endTime).append("\n");
+        if (error != null) {
+            sb.append(error).append("\n");
+        }
         sb.append("}\n");
         return sb.toString();
     }
