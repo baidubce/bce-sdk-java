@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2016 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -10,11 +10,21 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.baidubce;
 
-/**
- * Common constants used by the whole SDK.
- */
-public class BceConstants {
-    public static final String VERSION = "0.10.17";
+package com.baidubce.services.cdn.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GetStatFlowResponse extends CdnResponse {
+
+    private List<StatFlowDetails> details = new ArrayList<StatFlowDetails>();
+    
+    public void setDetails(List<StatFlowDetails> details) {
+        this.details = details;
+    }
+    
+    public List<StatFlowDetails> getDetails() {
+        return details;
+    }
 }

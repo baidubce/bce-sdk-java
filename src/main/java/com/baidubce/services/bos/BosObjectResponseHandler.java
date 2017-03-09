@@ -47,7 +47,7 @@ public class BosObjectResponseHandler implements HttpResponseHandler {
         objectMetadata.setContentMd5(httpResponse.getHeader(Headers.CONTENT_MD5));
         objectMetadata.setExpires(httpResponse.getHeader(Headers.EXPIRES));
         objectMetadata.setObjectType(httpResponse.getHeader(Headers.BCE_OBJECT_TYPE));
-        objectMetadata.setAppendOffset(httpResponse.getHeader(Headers.BCE_NEXT_APPEND_OFFSET));
+        objectMetadata.setAppendOffset(httpResponse.getHeaderAsLong(Headers.BCE_NEXT_APPEND_OFFSET));
         objectMetadata.setContentDisposition(httpResponse.getHeader(Headers.CONTENT_DISPOSITION));
         objectMetadata.setCacheControl(httpResponse.getHeader(Headers.CACHE_CONTROL));
         // set whatever the BOS server returns if not null

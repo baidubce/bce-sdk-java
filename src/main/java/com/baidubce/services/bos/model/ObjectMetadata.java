@@ -89,7 +89,7 @@ public class ObjectMetadata {
     /**
      * The offset of the append object.
      */
-    private String appendOffset;
+    private long appendOffset;
 
     /**
      * The objectType identifies whether the object is an appendable object
@@ -445,11 +445,11 @@ public class ObjectMetadata {
         this.expires = expires;
     }
 
-    public String getAppendOffset() {
+    public long getAppendOffset() {
         return appendOffset;
     }
 
-    public void setAppendOffset(String appendOffset) {
+    public void setAppendOffset(long appendOffset) {
         this.appendOffset = appendOffset;
     }
 

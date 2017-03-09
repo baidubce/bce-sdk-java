@@ -37,12 +37,15 @@ public class TsdbConstants {
     public static final String GROUP_BY_NAME_VALUE = "Value";
 
     // Datapoint value type.
-    public static String TYPE_BYTES = "Bytes";
-    public static String TYPE_LONG = "Long";
-    public static String TYPE_DOUBLE = "Double";
-    public static String TYPE_STRING = "String";
+    public static final String TYPE_BYTES = "Bytes";
+    public static final String TYPE_LONG = "Long";
+    public static final String TYPE_DOUBLE = "Double";
+    public static final String TYPE_STRING = "String";
 
     // Query order.
-    public static String ORDER_ASC = "Asc";
-    public static String ORDER_DESC = "Desc";
+    public static final String ORDER_ASC = "Asc";
+    public static final String ORDER_DESC = "Desc";
+
+    // Date format.
+    public static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 }
