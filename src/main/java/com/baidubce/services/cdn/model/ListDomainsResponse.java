@@ -16,41 +16,68 @@ package com.baidubce.services.cdn.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author yixing
+ *
+ */
 public class ListDomainsResponse extends CdnResponse {
     private List<Domain> domains = new ArrayList<Domain>();
-
     private String marker;
-
     private boolean isTruncated;
-
     private String nextMarker;
-
+    
+    /**
+     * @return domains
+     */
+    public List<Domain> getDomains() {
+        return domains;
+    }
+    
+    /**
+     * @param domains
+     */
     public void setDomains(List<Domain> domains) {
         this.domains = domains;
     }
-
-    public List<Domain> getDomains() { return this.domains; }
-
+    
+    /**
+     * @return marker
+     */
     public String getMarker() {
         return marker;
     }
-
+    
+    /**
+     * @param marker
+     */
     public void setMarker(String marker) {
         this.marker = marker;
     }
-
-    public boolean getIsTruncated() {
-        return this.isTruncated;
+    
+    /**
+     * @return isTruncated
+     */
+    public boolean isTruncated() {
+        return isTruncated;
     }
-
-    public void setIsTruncated(boolean truncated) {
-        this.isTruncated = truncated;
+    
+    /**
+     * @param isTruncated
+     */
+    public void setTruncated(boolean isTruncated) {
+        this.isTruncated = isTruncated;
     }
-
+    
+    /**
+     * @return nextMarker
+     */
     public String getNextMarker() {
         return nextMarker;
     }
-
+    
+    /**
+     * @param nextMarker
+     */
     public void setNextMarker(String nextMarker) {
         this.nextMarker = nextMarker;
     }

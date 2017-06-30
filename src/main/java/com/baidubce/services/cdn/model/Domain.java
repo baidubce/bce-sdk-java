@@ -13,14 +13,24 @@
 
 package com.baidubce.services.cdn.model;
 
+/**
+ * @author yixing
+ *
+ */
 public class Domain extends JsonObject {
     private String name = null;
 
 
+    /**
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }

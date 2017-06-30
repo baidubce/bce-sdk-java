@@ -25,6 +25,7 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.lss.model.AntiLeech;
 import com.baidubce.services.lss.model.Audio;
 import com.baidubce.services.lss.model.Auth;
@@ -42,6 +43,7 @@ import com.baidubce.services.lss.model.DeletePresetRequest;
 import com.baidubce.services.lss.model.DeletePresetResponse;
 import com.baidubce.services.lss.model.DeleteSessionRequest;
 import com.baidubce.services.lss.model.DeleteSessionResponse;
+import com.baidubce.services.lss.model.DeleteStreamRequest;
 import com.baidubce.services.lss.model.Encryption;
 import com.baidubce.services.lss.model.GetAllDomainsBandwidthResponse;
 import com.baidubce.services.lss.model.GetAllDomainsPlayCountResponse;
@@ -118,6 +120,11 @@ import com.baidubce.services.lss.model.StopRecordingResponse;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyInnerRequest;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyRequest;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyResponse;
+import com.baidubce.services.lss.model.UpdateStreamDestinationPushUrlRequest;
+import com.baidubce.services.lss.model.UpdateStreamPresetsRequest;
+import com.baidubce.services.lss.model.UpdateStreamPullUrlRequest;
+import com.baidubce.services.lss.model.UpdateStreamRecordingRequest;
+import com.baidubce.services.lss.model.UpdateStreamWatermarkRequest;
 import com.baidubce.services.lss.model.Video;
 import com.baidubce.services.lss.model.Watermarks;
 import com.baidubce.services.lss.model.GetAppResponse;
@@ -259,7 +266,7 @@ public class LssClient extends AbstractBceClient {
      * Constructs a new client using the client configuration.
      *
      * @param clientConfiguration The client configuration options controlling how this client
-     *                            connects to Lss services (e.g. proxy settings, retry counts, etc).
+     * connects to Lss services (e.g. proxy settings, retry counts, etc).
      */
     public LssClient(BceClientConfiguration clientConfiguration) {
         super(clientConfiguration, lssHandlers);
@@ -269,6 +276,7 @@ public class LssClient extends AbstractBceClient {
      * Create a live preset which contains parameters needed in the live stream service.
      *
      * @param request The request object containing all options for creating presets.
+     * @return the response
      */
     public CreatePresetResponse createPreset(CreatePresetRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -314,18 +322,18 @@ public class LssClient extends AbstractBceClient {
      * Create a live preset which contains parameters needed in the live stream service, and not in forward only
      * mode, so that the input stream will be transcoded according to audio and video parameters.
      *
-     * @param name  The name of the new live preset.
+     * @param name The name of the new live preset.
      * @param description The description of the new live preset
-     * @param audio        Specify the audio parameters of live stream.
-     * @param video        Specify the video parameters of live stream.
-     * @param hls          Specify the hls parameters of live stream.
-     * @param rtmp         Specify the rtmp parameters of live stream.
-     * @param thumbnail   Specify the thumbnail parameters of live stream.
-     * @param watermarks  Specify the watermarks parameters of live stream.
-     *
+     * @param audio Specify the audio parameters of live stream.
+     * @param video Specify the video parameters of live stream.
+     * @param hls Specify the hls parameters of live stream.
+     * @param rtmp Specify the rtmp parameters of live stream.
+     * @param thumbnail Specify the thumbnail parameters of live stream.
+     * @param watermarks Specify the watermarks parameters of live stream.
+     * @return the response
      */
     public CreatePresetResponse createPreset(String name, String description, Audio audio, Video video,
-                                             Hls hls, Rtmp rtmp, LiveThumbnail thumbnail, Watermarks watermarks) {
+            Hls hls, Rtmp rtmp, LiveThumbnail thumbnail, Watermarks watermarks) {
         CreatePresetRequest request = new CreatePresetRequest();
         request.setForwardOnly(false);
         request.setName(name);
@@ -345,16 +353,16 @@ public class LssClient extends AbstractBceClient {
      * Create a live preset which contains parameters needed in the live stream service, and in forward only mode, in
      * which the input stream's  resolution ratio and code rate will be kept unchanged.
      *
-     * @param name  The name of the new live preset.
+     * @param name The name of the new live preset.
      * @param description The description of the new live preset
-     * @param hls          Specify the hls parameters of live stream.
-     * @param rtmp         Specify the rtmp parameters of live stream.
-     * @param thumbnail   Specify the thumbnail parameters of live stream.
-     * @param watermarks  Specify the watermarks parameters of live stream.
-     *
+     * @param hls Specify the hls parameters of live stream.
+     * @param rtmp Specify the rtmp parameters of live stream.
+     * @param thumbnail Specify the thumbnail parameters of live stream.
+     * @param watermarks Specify the watermarks parameters of live stream.
+     * @return the response
      */
     public CreatePresetResponse createForwardOnlyPreset(String name, String description, Hls hls, Rtmp rtmp,
-                                                        LiveThumbnail thumbnail, Watermarks watermarks) {
+            LiveThumbnail thumbnail, Watermarks watermarks) {
         CreatePresetRequest request = new CreatePresetRequest();
         request.setForwardOnly(true);
         request.setName(name);
@@ -382,8 +390,7 @@ public class LssClient extends AbstractBceClient {
     /**
      * Get your live preset by live preset name.
      *
-     * @param name  Live preset name.
-     *
+     * @param name Live preset name.
      * @return Your live preset
      */
     public GetPresetResponse getPreset(String name) {
@@ -396,7 +403,6 @@ public class LssClient extends AbstractBceClient {
      * Get your live preset by live preset name.
      *
      * @param request The request object containing all parameters for getting live preset.
-     *
      * @return Your live preset
      */
     public GetPresetResponse getPreset(GetPresetRequest request) {
@@ -410,8 +416,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Delete your live presets by live preset name.
      *
-     * @param name  Live preset name.
-     *
+     * @param name Live preset name.
+     * @return the response
      */
     public DeletePresetResponse deletePreset(String name) {
         DeletePresetRequest request = new DeletePresetRequest();
@@ -424,7 +430,7 @@ public class LssClient extends AbstractBceClient {
      * Delete your live presets by live preset name.
      *
      * @param request The request object containing all parameters for deleting live preset.
-     *
+     * @return the response
      */
     public DeletePresetResponse deletePreset(DeletePresetRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -435,20 +441,19 @@ public class LssClient extends AbstractBceClient {
     }
 
 
-
     /**
      * Create a live session in the live stream service.
      *
      * @param description The description of the new live session.
-     * @param preset  The name of the new live session.
+     * @param preset The name of the new live session.
      * @param notification The notification of the new live session.
      * @param securityPolicy The security policy of the new live session.
      * @param recording The recording preset of the new live session.
-     * @param publish       Specify the LivePublishInfo of live session.
-     *
+     * @param publish Specify the LivePublishInfo of live session.
+     * @return the response
      */
     public CreateSessionResponse createSession(String description, String preset, String notification,
-                                               String securityPolicy, String recording, LivePublishInfo publish) {
+            String securityPolicy, String recording, LivePublishInfo publish) {
         CreateSessionRequest request = new CreateSessionRequest();
         request.withPreset(preset).withDescription(description).withNotification(notification);
         request.withSecurityPolicy(securityPolicy).withPublish(publish).withRecording(recording);
@@ -459,15 +464,15 @@ public class LssClient extends AbstractBceClient {
      * Create a live session in the live stream service.
      *
      * @param description The description of the new live session.
-     * @param presets  The name of the new live session.
+     * @param presets The name of the new live session.
      * @param notification The notification of the new live session.
      * @param securityPolicy The security policy of the new live session.
      * @param recording The recording preset of the new live session.
-     * @param publish       Specify the LivePublishInfo of live session.
-     *
+     * @param publish Specify the LivePublishInfo of live session.
+     * @return the response
      */
     public CreateSessionResponse createSession(String description, List<String> presets, String notification,
-                                               String securityPolicy, String recording, LivePublishInfo publish) {
+            String securityPolicy, String recording, LivePublishInfo publish) {
         CreateSessionRequest request = new CreateSessionRequest();
         Map<String, String> presetMap = new HashMap<String, String>();
         for (int i = 0; i < presets.size(); i++) {
@@ -482,18 +487,18 @@ public class LssClient extends AbstractBceClient {
      * Create a live session in the live stream service.
      *
      * @param description The description of the new live session.
-     * @param presets  The name of the new live session.
+     * @param presets The name of the new live session.
      * @param notification The notification of the new live session.
      * @param securityPolicy The security policy of the new live session.
      * @param recording The recording preset of the new live session.
-     * @param publish       Specify the LivePublishInfo of live session.
+     * @param publish Specify the LivePublishInfo of live session.
      * @param thumbnail The thumbnail of new live session
      * @param watermarks The watermarks of new live session
-     *
+     * @return the response
      */
     public CreateSessionResponse createSession(String description, List<String> presets, String notification,
-                                               String securityPolicy, String recording, LivePublishInfo publish,
-                                               String thumbnail, Watermarks watermarks) {
+            String securityPolicy, String recording, LivePublishInfo publish,
+            String thumbnail, Watermarks watermarks) {
         CreateSessionRequest request = new CreateSessionRequest();
         Map<String, String> presetMap = new HashMap<String, String>();
         for (int i = 0; i < presets.size(); i++) {
@@ -509,6 +514,7 @@ public class LssClient extends AbstractBceClient {
      * Create a live session in the live stream service.
      *
      * @param request The request object containing all options for creating live session.
+     * @return the response
      */
     public CreateSessionResponse createSession(CreateSessionRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -535,8 +541,7 @@ public class LssClient extends AbstractBceClient {
     /**
      * List all your live sessions with given status.
      *
-     * @param status  Live session status.
-     *
+     * @param status Live session status.
      * @return The list of all your live sessions.
      */
     public ListSessionsResponse listSessions(String status) {
@@ -548,7 +553,6 @@ public class LssClient extends AbstractBceClient {
      * List all your live sessions.
      *
      * @param request The request object containing all parameters for listing live sessions.
-     *
      * @return The list of all your live sessions.
      */
     public ListSessionsResponse listSessions(ListSessionsRequest request) {
@@ -565,8 +569,7 @@ public class LssClient extends AbstractBceClient {
     /**
      * Get your live session by live session id.
      *
-     * @param sessionId  Live session id.
-     *
+     * @param sessionId Live session id.
      * @return Your live session.
      */
     public GetSessionResponse getSession(String sessionId) {
@@ -578,9 +581,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Get your live session with token by live session id.
      *
-     * @param sessionId  Live session id.
-     * @param timeoutInMinute  Timeout of token.
-     *
+     * @param sessionId Live session id.
+     * @param timeoutInMinute Timeout of token.
      * @return Your live session with token.
      */
     public GetSessionResponse getSessionWithToken(String sessionId, Integer timeoutInMinute) {
@@ -703,7 +705,6 @@ public class LssClient extends AbstractBceClient {
      * Get your live session by live session id.
      *
      * @param request The request object containing all parameters for getting live session.
-     *
      * @return Your live session.
      */
     public GetSessionResponse getSession(GetSessionRequest request) {
@@ -717,8 +718,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Delete your live session by live session id.
      *
-     * @param sessionId  Live session id.
-     *
+     * @param sessionId Live session id.
+     * @return the response
      */
     public DeleteSessionResponse deleteSession(String sessionId) {
         DeleteSessionRequest request = new DeleteSessionRequest();
@@ -730,7 +731,7 @@ public class LssClient extends AbstractBceClient {
      * Delete your live session by live session id.
      *
      * @param request The request object containing all parameters for deleting live session.
-     *
+     * @return the response
      */
     public DeleteSessionResponse deleteSession(DeleteSessionRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -743,8 +744,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Pause your live session by live session id.
      *
-     * @param sessionId  Live session id.
-     *
+     * @param sessionId Live session id.
+     * @return the response
      */
     public PauseSessionResponse pauseSession(String sessionId) {
         PauseSessionRequest request = new PauseSessionRequest();
@@ -756,7 +757,7 @@ public class LssClient extends AbstractBceClient {
      * Pause your live session by live session id.
      *
      * @param request The request object containing all parameters for pausing live session.
-     *
+     * @return the response
      */
     public PauseSessionResponse pauseSession(PauseSessionRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -770,8 +771,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * get detail of your app by name
      *
-     * @param app  app name
-     *
+     * @param app app name
+     * @return the response
      */
     public GetAppResponse queryApp(String app) {
         GetAppRequest request = new GetAppRequest();
@@ -782,8 +783,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * get detail of your app by name
      *
-     * @param request  The request object containing all parameters for querying app.
-     *
+     * @param request The request object containing all parameters for querying app.
+     * @return the response
      */
     public GetAppResponse queryApp(GetAppRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -795,7 +796,7 @@ public class LssClient extends AbstractBceClient {
 
     /**
      * list all your apps
-     *
+     * @return this object
      */
     public ListAppResponse listApp() {
         ListAppRequest request = new ListAppRequest();
@@ -805,8 +806,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * list all your apps
      *
-     * @param request  The request object containing all parameters for list all apps.
-     *
+     * @param request The request object containing all parameters for list all apps.
+     * @return the response
      */
     public ListAppResponse listApp(ListAppRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -817,9 +818,9 @@ public class LssClient extends AbstractBceClient {
     /**
      * get detail of your stream by app name and stream name
      *
-     * @param app  app name
-     * @param stream  stream name
-     *
+     * @param app app name
+     * @param stream stream name
+     * @return the response
      */
     public GetAppStreamResponse queryAppStream(String app, String stream) {
         GetAppStreamRequest request = new GetAppStreamRequest();
@@ -831,8 +832,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * get detail of your stream by app name and stream name
      *
-     *  @param request The request object containing all parameters for query app stream.
-     *
+     * @param request The request object containing all parameters for query app stream.
+     * @return the response
      */
     public GetAppStreamResponse queryAppStream(GetAppStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -846,9 +847,9 @@ public class LssClient extends AbstractBceClient {
     /**
      * list your streams by app name and stream status
      *
-     * @param app  app name
+     * @param app app name
      * @param status stream status
-     *
+     * @return the response
      */
     public ListAppStreamsResponse listAppStreams(String app, String status) {
         ListAppStreamsRequest request = new ListAppStreamsRequest();
@@ -861,8 +862,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * list your streams by app name
      *
-     * @param app  app name
-     *
+     * @param app app name
+     * @return the response
      */
     public ListAppStreamsResponse listAppStreams(String app) {
         ListAppStreamsRequest request = new ListAppStreamsRequest();
@@ -874,7 +875,7 @@ public class LssClient extends AbstractBceClient {
      * list your streams by app name and stream status
      *
      * @param request The request object containing all parameters for list app streams.
-     *
+     * @return this object
      */
     public ListAppStreamsResponse listAppStreams(ListAppStreamsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -890,9 +891,9 @@ public class LssClient extends AbstractBceClient {
     /**
      * Pause your app stream by app name and stream name
      *
-     * @param app  app name
-     * @param stream  stream name
-     *
+     * @param app app name
+     * @param stream stream name
+     * @return the response
      */
     public PauseAppStreamResponse pauseAppStream(String app, String stream) {
         PauseAppStreamRequest pauseAppStreamRequest = new PauseAppStreamRequest();
@@ -904,8 +905,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Pause your app stream by app name and stream name
      *
-     *  @param request The request object containing all parameters for pausing app session.
-     *
+     * @param request The request object containing all parameters for pausing app session.
+     * @return the response
      */
     public PauseAppStreamResponse pauseAppStream(PauseAppStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -920,8 +921,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Resume your live session by live session id.
      *
-     * @param sessionId  Live session id.
-     *
+     * @param sessionId Live session id.
+     * @return the response
      */
     public ResumeSessionResponse resumeSession(String sessionId) {
         ResumeSessionRequest request = new ResumeSessionRequest();
@@ -933,7 +934,7 @@ public class LssClient extends AbstractBceClient {
      * Resume your live session by live session id.
      *
      * @param request The request object containing all parameters for resuming live session.
-     *
+     * @return the response
      */
     public ResumeSessionResponse resumeSession(ResumeSessionRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -947,9 +948,9 @@ public class LssClient extends AbstractBceClient {
     /**
      * Resume your app stream by app name and stream name
      *
-     * @param app  app name
-     * @param stream  stream name
-     *
+     * @param app app name
+     * @param stream stream name
+     * @return the response
      */
     public ResumeAppStreamResponse resumeAppStream(String app, String stream) {
         ResumeAppStreamRequest request = new ResumeAppStreamRequest();
@@ -961,8 +962,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Resume your app stream by app name and stream name
      *
-     *  @param request The request object containing all parameters for resuming app session.
-     *
+     * @param request The request object containing all parameters for resuming app session.
+     * @return the response
      */
     public ResumeAppStreamResponse resumeAppStream(ResumeAppStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -977,8 +978,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Refresh your live session by live session id.
      *
-     * @param sessionId  Live session id.
-     *
+     * @param sessionId Live session id.
+     * @return the response
      */
     public RefreshSessionResponse refreshSession(String sessionId) {
         RefreshSessionRequest request = new RefreshSessionRequest();
@@ -990,7 +991,7 @@ public class LssClient extends AbstractBceClient {
      * Refresh your live session by live session id.
      *
      * @param request The request object containing all parameters for refreshing live session.
-     *
+     * @return the response
      */
     public RefreshSessionResponse refreshSession(RefreshSessionRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1004,8 +1005,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Start your pulling live session by live session id.
      *
-     * @param sessionId  Live session id.
-     *
+     * @param sessionId Live session id.
+     * @return the response
      */
     public StartPullSessionResponse startPullSession(String sessionId) {
         StartPullSessionRequest request = new StartPullSessionRequest().withSessionId(sessionId);
@@ -1016,7 +1017,7 @@ public class LssClient extends AbstractBceClient {
      * Start your pulling live session by live session id.
      *
      * @param request The request object containing all parameters for starting pulling live session.
-     *
+     * @return the response
      */
     public StartPullSessionResponse startPullSession(StartPullSessionRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1032,6 +1033,7 @@ public class LssClient extends AbstractBceClient {
      *
      * @param sessionId Live session id.
      * @param recording Live recording preset name.
+     * @return the response
      */
     public StartRecordingResponse startRecording(String sessionId, String recording) {
         checkStringNotEmpty(sessionId, "The parameter sessionId should NOT be null or empty string.");
@@ -1046,6 +1048,7 @@ public class LssClient extends AbstractBceClient {
      * Stop live session recording.
      *
      * @param sessionId Live session id.
+     * @return the response
      */
     public StopRecordingResponse stopRecording(String sessionId) {
         checkStringNotEmpty(sessionId, "The parameter sessionId should NOT be null or empty string.");
@@ -1059,7 +1062,6 @@ public class LssClient extends AbstractBceClient {
      * Get your live session source info by live session id.
      *
      * @param sessionId Live session id.
-     *
      * @return Your live session source info
      */
     public GetSessionSourceInfoResponse getSessionSourceInfo(String sessionId) {
@@ -1073,10 +1075,10 @@ public class LssClient extends AbstractBceClient {
     /**
      * Insert a cue point into your live session by live session id.
      *
-     * @param sessionId  Live session id.
-     * @param callback  Call back method name.
-     * @param arguments  Call back method arguments.
-     *
+     * @param sessionId Live session id.
+     * @param callback Call back method name.
+     * @param arguments Call back method arguments.
+     * @return the response
      */
     public InsertCuePointResponse insertCuePoint(String sessionId, String callback, Map<String, String> arguments) {
         InsertCuePointRequest request = new InsertCuePointRequest()
@@ -1088,7 +1090,7 @@ public class LssClient extends AbstractBceClient {
      * Insert a cue point into your live session by live session id.
      *
      * @param request The request object containing all parameters for inserting a cue point into session.
-     *
+     * @return the response
      */
     public InsertCuePointResponse insertCuePoint(InsertCuePointRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1105,12 +1107,10 @@ public class LssClient extends AbstractBceClient {
     }
 
 
-
     /**
      * Get your live recording preset by live recording preset name.
      *
      * @param recording Live recording preset name.
-     *
      * @return Your live recording preset
      */
     public GetRecordingResponse getRecording(String recording) {
@@ -1146,8 +1146,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Delete your live notification by live notification name.
      *
-     * @param name  Live notification name.
-     *
+     * @param name Live notification name.
+     * @return the response
      */
     public DeleteNotificationResponse deleteNotification(String name) {
         DeleteNotificationRequest request = new DeleteNotificationRequest();
@@ -1159,7 +1159,7 @@ public class LssClient extends AbstractBceClient {
      * Delete your live notification by live notification name.
      *
      * @param request The request object containing all parameters for deleting live notification.
-     *
+     * @return the response
      */
     public DeleteNotificationResponse deleteNotification(DeleteNotificationRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1172,8 +1172,7 @@ public class LssClient extends AbstractBceClient {
     /**
      * Get your live notification by live notification name.
      *
-     * @param name  Live notification name.
-     *
+     * @param name Live notification name.
      * @return Your live notification.
      */
     public GetNotificationResponse getNotification(String name) {
@@ -1186,7 +1185,6 @@ public class LssClient extends AbstractBceClient {
      * Get your live notification by live notification name.
      *
      * @param request The request object containing all parameters for getting live notification.
-     *
      * @return Your live notification.
      */
     public GetNotificationResponse getNotification(GetNotificationRequest request) {
@@ -1200,9 +1198,9 @@ public class LssClient extends AbstractBceClient {
     /**
      * Create a live notification in the live stream service.
      *
-     * @param name  The name of notification.
+     * @param name The name of notification.
      * @param endpoint The address to receive notification message.
-     *
+     * @return the response
      */
     public CreateNotificationResponse createNotification(String name, String endpoint) {
         CreateNotificationRequest request = new CreateNotificationRequest();
@@ -1214,6 +1212,7 @@ public class LssClient extends AbstractBceClient {
      * Create a live notification in the live stream service.
      *
      * @param request The request object containing all options for creating live notification.
+     * @return the response
      */
     public CreateNotificationResponse createNotification(CreateNotificationRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1241,8 +1240,7 @@ public class LssClient extends AbstractBceClient {
     /**
      * Get your live security policy by live security policy name.
      *
-     * @param name  Live security policy name.
-     *
+     * @param name Live security policy name.
      * @return Your live security policy.
      */
     public GetSecurityPolicyResponse getSecurityPolicy(String name) {
@@ -1255,7 +1253,6 @@ public class LssClient extends AbstractBceClient {
      * Get your live security policy by live security policy name.
      *
      * @param request The request object containing all parameters for getting live security policy.
-     *
      * @return Your live security policy.
      */
     public GetSecurityPolicyResponse getSecurityPolicy(GetSecurityPolicyRequest request) {
@@ -1271,13 +1268,14 @@ public class LssClient extends AbstractBceClient {
     /**
      * Update your live security policy by live security policy name.
      *
-     * @param name  Live security policy name.
-     * @param auth  Configuration for authentication.
-     * @param antiLeech  Configuration for anti-leech.
-     * @param encryption  Configuration for encryption.
+     * @param name Live security policy name.
+     * @param auth Configuration for authentication.
+     * @param antiLeech Configuration for anti-leech.
+     * @param encryption Configuration for encryption.
+     * @return the response
      */
     public UpdateSecurityPolicyResponse updateSecurityPolicy(String name, Auth auth, AntiLeech antiLeech,
-                                                             Encryption encryption) {
+            Encryption encryption) {
         UpdateSecurityPolicyRequest request = new UpdateSecurityPolicyRequest();
         request.withName(name).withAuth(auth).withAntiLeech(antiLeech).withEncryption(encryption);
         return updateSecurityPolicy(request);
@@ -1287,7 +1285,8 @@ public class LssClient extends AbstractBceClient {
     /**
      * Update your live security policy by live security policy name.
      *
-     * @param request  The request object containing all parameters for updating live security policy.
+     * @param request The request object containing all parameters for updating live security policy.
+     * @return the response
      */
     public UpdateSecurityPolicyResponse updateSecurityPolicy(UpdateSecurityPolicyRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1301,14 +1300,29 @@ public class LssClient extends AbstractBceClient {
 
     }
 
+    /**
+     * Returns the session statistics.
+     *
+     * @param sessionId the session id
+     * @param startDate the start date
+     * @param endDate the end date
+     * @param aggregate true if the result should be aggregated
+     * @return the response
+     */
     public GetSessionStatisticsResponse getSessionStatistics(String sessionId, String startDate,
-                                                             String endDate, Boolean aggregate) {
+            String endDate, Boolean aggregate) {
 
         GetSessionStatisticsRequest request = new GetSessionStatisticsRequest();
         request.withSessionId(sessionId).withStartDate(startDate).withEndDate(endDate).withAggregate(aggregate);
         return getSessionStatistics(request);
     }
 
+    /**
+     * Returns the session statistics.
+     *
+     * @param request the request
+     * @return the response
+     */
     public GetSessionStatisticsResponse getSessionStatistics(GetSessionStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
         checkStringNotEmpty(request.getSessionId(), "The parameter sessionId should NOT be null or empty string.");
@@ -1330,6 +1344,7 @@ public class LssClient extends AbstractBceClient {
      * Create a domain stream in the live stream service.
      *
      * @param request The request object containing all options for creating domain stream
+     * @return the response
      */
     public CreateStreamResponse createStream(CreateStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1350,6 +1365,7 @@ public class LssClient extends AbstractBceClient {
      * @param playDomain The domain which this stream belongs to
      * @param app The app which this stream belongs to, may not exist when create stream
      * @param pushStream, name of this stream
+     * @return the response
      */
     public CreateStreamResponse createStream(String playDomain, String app, String pushStream) {
         CreateStreamRequest request = new CreateStreamRequest();
@@ -1363,6 +1379,7 @@ public class LssClient extends AbstractBceClient {
      * List a domain's streams in the live stream service.
      *
      * @param request The request object containing all options for listing domain's streams
+     * @return the response
      */
     public ListStreamResponse listStream(ListStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1391,6 +1408,7 @@ public class LssClient extends AbstractBceClient {
      * List a domain's streams in the live stream service.
      *
      * @param playDomain The requested domain
+     * @return the response
      */
     public ListStreamResponse listStream(String playDomain) {
         ListStreamRequest request = new ListStreamRequest();
@@ -1403,6 +1421,7 @@ public class LssClient extends AbstractBceClient {
      * List a domain's app in the live stream service.
      *
      * @param request The request object containing all options for listing domain's app
+     * @return the response
      */
     public ListDomainAppResponse listDomainApp(ListDomainAppRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1418,6 +1437,7 @@ public class LssClient extends AbstractBceClient {
      * List a domain's streams in the live stream service.
      *
      * @param playDomain The requested domain name
+     * @return the response
      */
     public ListDomainAppResponse listDomainApp(String playDomain) {
         ListDomainAppRequest request = new ListDomainAppRequest();
@@ -1429,6 +1449,7 @@ public class LssClient extends AbstractBceClient {
      * Get detail of stream in the live stream service.
      *
      * @param request The request object containing all options for querying detail of stream
+     * @return the response
      */
     public GetStreamResponse getStream(GetStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1450,6 +1471,7 @@ public class LssClient extends AbstractBceClient {
      * @param domain The requested domain
      * @param app The requested app
      * @param stream The requested stream
+     * @return the response
      */
     public GetStreamResponse getStream(String domain, String app, String stream) {
         GetStreamRequest request = new GetStreamRequest();
@@ -1462,6 +1484,7 @@ public class LssClient extends AbstractBceClient {
      * pause domain's stream in the live stream service.
      *
      * @param request The request object containing all options for pause a domain's stream
+     * @return the response
      */
     public PauseDomainStreamResponse pauseDomainStream(PauseDomainStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1484,6 +1507,7 @@ public class LssClient extends AbstractBceClient {
      * @param domain The requested domain which the specific stream belongs to
      * @param app The requested app which the specific stream belongs to
      * @param stream The requested stream to pause
+     * @return the response
      */
     public PauseDomainStreamResponse pauseDomainStream(String domain, String app, String stream) {
         PauseDomainStreamRequest request = new PauseDomainStreamRequest();
@@ -1495,6 +1519,7 @@ public class LssClient extends AbstractBceClient {
      * pause domain's stream in the live stream service.
      *
      * @param request The request object containing all options for pause a domain's stream
+     * @return the response
      */
     public ResumeDomainStreamResponse resumeDomainStream(ResumeDomainStreamRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1517,6 +1542,7 @@ public class LssClient extends AbstractBceClient {
      * @param domain The requested domain which the specific stream belongs to
      * @param app The requested app which the specific stream belongs to
      * @param stream The requested stream to resume
+     * @return the response
      */
     public ResumeDomainStreamResponse resumeDomainStream(String domain, String app, String stream) {
         ResumeDomainStreamRequest request = new ResumeDomainStreamRequest();
@@ -1524,11 +1550,226 @@ public class LssClient extends AbstractBceClient {
         return resumeDomainStream(request);
     }
 
+    /**
+     * Delete stream in live stream service
+     *
+     * @param request The request object contains all info to decide which stream to delete
+     */
+    public void deleteStream(DeleteStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty.");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.DELETE, request,
+                LIVE_DOMAIN, request.getDomain(), LIVE_APP, request.getApp(),
+                LIVE_STREAM, request.getStream());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * Delete stream in live stream service
+     *
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream to delete
+     */
+    public void deleteStream(String domain, String app, String stream) {
+        DeleteStreamRequest request = new DeleteStreamRequest()
+                .withDomain(domain)
+                .withApp(app)
+                .withStream(stream);
+        deleteStream(request);
+    }
+
+    /**
+     *  Update stream's presets in the live stream service
+     *  @param request THe request object containing all options for updating presets
+     */
+    public void updateStreamPresets(UpdateStreamPresetsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+        // presets can be null for letting stream to use domain's presets,
+        // so no need to check if presets is null
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, LIVE_DOMAIN,
+                request.getDomain(), LIVE_APP, request.getApp(), LIVE_STREAM, request.getStream());
+        internalRequest.addParameter("presets", null);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * Update stream's presets
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream which need to update the presets
+     * @param presets The new presets is setting to the specific stream;
+     *                it's a map, and key is line number, and value is preset name
+     */
+    public void updateStreamPresets(String domain, String app, String stream, Map<String, String> presets) {
+        UpdateStreamPresetsRequest request = new UpdateStreamPresetsRequest()
+                .withDomain(domain)
+                .withApp(app)
+                .withStream(stream)
+                .withPresets(presets);
+        updateStreamPresets(request);
+    }
+
+    /**
+     * Update stream recording in the live stream service
+     *
+     * @param request The request object containing all options for updating recording
+     *
+     */
+    public void updateStreamRecording(UpdateStreamRecordingRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+        // recording can be null for letting stream to use domain's recording,
+        // so no need to check if recording is null
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request,
+                LIVE_DOMAIN, request.getDomain(), LIVE_APP, request.getApp(),
+                LIVE_STREAM, request.getStream());
+        internalRequest.addParameter("recording", request.getRecording());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Update stream recording in live stream service
+     *
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream which need to update the recording
+     * @param recording The new recording's name
+     *
+     */
+    public void updateStreamRecording(String domain, String app, String stream, String recording) {
+        UpdateStreamRecordingRequest request = new UpdateStreamRecordingRequest()
+                .withDomain(domain)
+                .withApp(app)
+                .withStream(stream)
+                .withRecording(recording);
+        updateStreamRecording(request);
+    }
+
+    /**
+     * Update stream watermarks in live stream service
+     * @param request The request object containing all options for updating watermark
+     *
+     */
+    public void updateStreamWatermark(UpdateStreamWatermarkRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, LIVE_DOMAIN,
+                request.getDomain(), LIVE_APP, request.getApp(), LIVE_STREAM, request.getStream());
+        internalRequest.addParameter("watermark", null);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Update stream watermark in live stream service
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream which need to update the watermark
+     * @param watermarks object of the new watermark, contains image watermark and timestamp watermark
+     *
+     */
+    public void updateStreamWatermark(String domain, String app, String stream, Watermarks watermarks) {
+        UpdateStreamWatermarkRequest request = new UpdateStreamWatermarkRequest()
+                .withDomain(domain)
+                .withApp(app)
+                .withStream(stream)
+                .withWatermarks(watermarks);
+        updateStreamWatermark(request);
+    }
+
+
+    /**
+     * Update stream pullUrl in live stream service
+     * @param request The request object containing all options for updating pull url
+     */
+    public void updateStreamPullUrl(UpdateStreamPullUrlRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+        checkStringNotEmpty(request.getPullUrl(), "PullUrl should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, LIVE_DOMAIN,
+                request.getDomain(), LIVE_APP, request.getApp(), LIVE_STREAM, request.getStream());
+        internalRequest.addParameter("pullUrl", request.getPullUrl());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * Update stream's destination push url
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream which need to update pull url
+     * @param pullUrl The new pull url is setting to this specific stream
+     */
+    public void updateStreamPullUrl(String domain, String app, String stream, String pullUrl) {
+        UpdateStreamPullUrlRequest request = new UpdateStreamPullUrlRequest()
+                .withDomain(domain)
+                .withApp(app)
+                .withStream(stream)
+                .withPullUrl(pullUrl);
+        updateStreamPullUrl(request);
+    }
+
+    /**
+     * Update stream destination push url in live stream service
+     * @param request The request object containing all options for updating destination push url
+     */
+    public void updateStreamDestinationPushUrl(UpdateStreamDestinationPushUrlRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, LIVE_DOMAIN,
+                request.getDomain(), LIVE_APP, request.getApp(), LIVE_STREAM, request.getStream());
+        internalRequest.addParameter("destinationPushUrl", request.getDestinationPushUrl());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     *
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream which need to update destination push url
+     * @param destinationPushUrl The new destination push url
+     */
+    public void updateStreamDestinationPushUrl(String domain, String app, String stream, String destinationPushUrl) {
+        UpdateStreamDestinationPushUrlRequest request = new UpdateStreamDestinationPushUrlRequest()
+                .withDomain(domain)
+                .withApp(app)
+                .withStream(stream)
+                .withDestinationPushUrl(destinationPushUrl);
+        updateStreamDestinationPushUrl(request);
+    }
 
     /**
      * get domain's statistics in the live stream service.
      *
      * @param request The request object containing all options for getting domain's statistics
+     * @return the response
      */
     public GetDomainStatisticsResponse getDomainStatistics(GetDomainStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1552,6 +1793,7 @@ public class LssClient extends AbstractBceClient {
      * Get domain's statistics in the live stream service.
      *
      * @param domain The requested domain
+     * @return the response
      */
     public GetDomainStatisticsResponse getDomainStatistics(String domain) {
         GetDomainStatisticsRequest request = new GetDomainStatisticsRequest();
@@ -1564,6 +1806,7 @@ public class LssClient extends AbstractBceClient {
      * get all domains' summary statistics in the live stream service.
      *
      * @param request The request object containing all options for getting all domains' summary statistics
+     * @return the response
      */
     public GetDomainSummaryStatisticsResponse getDomainSummaryStatistics(GetDomainSummaryStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1583,6 +1826,7 @@ public class LssClient extends AbstractBceClient {
      *
      * @param startTime start time
      * @param endTime start time
+     * @return the response
      */
     public GetDomainSummaryStatisticsResponse getDomainSummaryStatistics(String startTime, String endTime) {
         GetDomainSummaryStatisticsRequest request = new GetDomainSummaryStatisticsRequest();
@@ -1595,6 +1839,7 @@ public class LssClient extends AbstractBceClient {
      * get all domains' total play count statistics in the live stream service.
      *
      * @param request The request object containing all options for getting all domains' play count statistics
+     * @return the response
      */
     public GetAllDomainsPlayCountResponse getAllDomainsPlayCount(GetAllDomainsStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1616,6 +1861,7 @@ public class LssClient extends AbstractBceClient {
      * get one domain's play count statistics in the live stream service.
      *
      * @param request The request object containing all options for getting one domain's play count statistics
+     * @return the response
      */
     public GetOneDomainPlayCountResponse getOneDomainPlayCount(GetOneDomainStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1639,6 +1885,7 @@ public class LssClient extends AbstractBceClient {
      * get all domains' bandwidth statistics in the live stream service.
      *
      * @param request The request object containing all options for getting all domains' total bandwidth statistics
+     * @return the response
      */
     public GetAllDomainsBandwidthResponse getAllDomainsBandwidth(GetAllDomainsStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1660,6 +1907,7 @@ public class LssClient extends AbstractBceClient {
      * get one domain's bandwidth statistics in the live stream service.
      *
      * @param request The request object containing all options for getting one domain's bandwidth statistics
+     * @return the response
      */
     public GetOneDomainBandwidthResponse getOneDomainBandwidth(GetOneDomainStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1682,6 +1930,7 @@ public class LssClient extends AbstractBceClient {
      * get all domains' traffic statistics in the live stream service.
      *
      * @param request The request object containing all options for getting all domains' total traffic statistics
+     * @return the response
      */
     public GetAllDomainsTrafficResponse getAllDomainsTraffic(GetAllDomainsStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1703,6 +1952,7 @@ public class LssClient extends AbstractBceClient {
      * get one domain's traffic statistics in the live stream service.
      *
      * @param request The request object containing all options for getting one domain's traffic statistics
+     * @return the response
      */
     public GetOneDomainTrafficResponse getOneDomainTraffic(GetOneDomainStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1725,6 +1975,7 @@ public class LssClient extends AbstractBceClient {
      * list domain's statistics in the live stream service.
      *
      * @param request The request object containing all options for listing domain's traffic statistics
+     * @return the response
      */
     public ListDomainStatisticsResponse listDomainStatistics(ListDomainStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1753,6 +2004,7 @@ public class LssClient extends AbstractBceClient {
      * list domain's all streams statistics in the live stream service.
      *
      * @param request The request object containing all options for listing domain's all streams traffic statistics
+     * @return the response
      */
     public ListStreamStatisticsResponse listStreamStatistics(ListStreamStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1791,6 +2043,7 @@ public class LssClient extends AbstractBceClient {
      * get a domain's all streams statistics in the live stream service.
      *
      * @param request The request object containing all options for getting a domain's all streams
+     * @return the response
      */
     public GetStreamStatisticsResponse getStreamStatistics(GetStreamStatisticsRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -1815,7 +2068,6 @@ public class LssClient extends AbstractBceClient {
     }
 
 
-
     /**
      * Creates and initializes a new request object for the specified resource.
      * This method is responsible for determining HTTP method, URI path,
@@ -1823,18 +2075,16 @@ public class LssClient extends AbstractBceClient {
      * <p>
      * <b>Note: </b> The Query parameters in URL should be specified by caller method.
      * </p>
-     * @param httpMethod
-     *            The HTTP method to use when sending the request.
-     * @param request
-     *            The original request, as created by the user.
-     * @param pathVariables
-     *            The optional variables in URI path.
+     *
+     * @param httpMethod The HTTP method to use when sending the request.
+     * @param request The original request, as created by the user.
+     * @param pathVariables The optional variables in URI path.
      * @return A new request object, populated with endpoint, resource path,
-     *         ready for callers to populate any additional headers or
-     *         parameters, and execute.
+     * ready for callers to populate any additional headers or
+     * parameters, and execute.
      */
     private InternalRequest createRequest(
-            HttpMethodName httpMethod, AbstractBceRequest request, String...pathVariables) {
+            HttpMethodName httpMethod, AbstractBceRequest request, String... pathVariables) {
 
         // build URL paths
         List<String> pathComponents = new ArrayList<String>();

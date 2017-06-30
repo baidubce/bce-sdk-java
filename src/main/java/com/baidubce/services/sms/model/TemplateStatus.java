@@ -15,7 +15,7 @@ package com.baidubce.services.sms.model;
 /**
  * The status of message template
  * <p>
- * This class is a <code>ENUM<code> class
+ * This class is a <code>Enum</code> class
  */
 public enum TemplateStatus {
 

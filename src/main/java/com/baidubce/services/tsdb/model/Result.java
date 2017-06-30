@@ -8,7 +8,9 @@ import java.util.List;
 public class Result {
     
     private String metric;
-    
+
+    private String field;
+
     private long rawCount;
     
     private List<Group> groups;
@@ -19,6 +21,14 @@ public class Result {
 
     public void setMetric(String metric) {
         this.metric = metric;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
     }
 
     public long getRawCount() {

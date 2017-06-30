@@ -56,6 +56,8 @@ import com.baidubce.services.doc.model.PublishDocumentResponse;
 import com.baidubce.services.doc.model.PublishDocumentRequest;
 import com.baidubce.services.doc.model.DisableReadTokenResponse;
 import com.baidubce.services.doc.model.DisableReadTokenRequest;
+import com.baidubce.services.doc.model.GetDocumentImagesRequest;
+import com.baidubce.services.doc.model.GetDocumentImagesResponse;
 
 
 import com.baidubce.util.HttpUtils;
@@ -251,6 +253,7 @@ public class DocClient extends AbstractBceClient {
         regRequest.setTitle(request.getTitle());
         regRequest.setNotification(request.getNotification());
         regRequest.setAccess(request.getAccess());
+        regRequest.setTargetType(request.getTargetType());
 
         RegisterDocumentResponse regResponse = registerDocument(regRequest);
 
@@ -503,6 +506,34 @@ public class DocClient extends AbstractBceClient {
         return response;
     }
 
+    /**
+     * get a Document Image list if Converted to image.
+     * Make Sure the Document convert type is image, otherwise will throw BceServiceException
+     *
+     * @param documentId the documentId need to get.
+     *
+     * @return A GetDocumentImageResponse object containing the information returned by Document.
+     */
+    public GetDocumentImagesResponse getDocumentImages(String documentId) {
+        checkNotNull(documentId, "documentId should not be null.");
+        GetDocumentImagesRequest request = new GetDocumentImagesRequest();
+        request.setDocumentId(documentId);
+        InternalRequest internalRequest = this.createRequest(HttpMethodName.GET, request, DOC, request.getDocumentId());
+        internalRequest.addParameter("getImages", null);
+        GetDocumentImagesResponse response;
+        try {
+            response = this.invokeHttpClient(internalRequest, GetDocumentImagesResponse.class);
+        } finally {
+            try {
+                internalRequest.getContent().close();
+            } catch (Exception e) {
+                // ignore exception
+            }
+        }
+
+        return response;
+    }
+
 
     /**
      * list all Document.
@@ -530,7 +561,7 @@ public class DocClient extends AbstractBceClient {
     /**
      * list all Document by status.
      *
-     *
+     * @param status the status
      * @return A ListDocumentsResponse object containing the information returned by Document.
      */
     public ListDocumentsResponse listDocuments(String status) {
@@ -793,7 +824,7 @@ public class DocClient extends AbstractBceClient {
      * Delete your doc notification by doc notification name.
      *
      * @param name  doc notification name.
-     *
+     * @return the response
      */
     public DeleteNotificationResponse deleteNotification(String name) {
         DeleteNotificationRequest request = new DeleteNotificationRequest();
@@ -805,7 +836,7 @@ public class DocClient extends AbstractBceClient {
      * Delete your doc notification by doc notification name.
      *
      * @param request The request object containing all parameters for deleting dco notification.
-     *
+     * @return the response
      */
     public DeleteNotificationResponse deleteNotification(DeleteNotificationRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
@@ -848,7 +879,7 @@ public class DocClient extends AbstractBceClient {
      *
      * @param name  The name of notification.
      * @param endpoint The address to receive notification message.
-     *
+     * @return the response
      */
     public CreateNotificationResponse createNotification(String name, String endpoint) {
         CreateNotificationRequest request = new CreateNotificationRequest();
@@ -860,6 +891,7 @@ public class DocClient extends AbstractBceClient {
      * Create a doc notification in the doc stream service.
      *
      * @param request The request object containing all options for creating doc notification.
+     * @return the response
      */
     public CreateNotificationResponse createNotification(CreateNotificationRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");

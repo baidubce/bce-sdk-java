@@ -44,7 +44,7 @@ public class ListClustersRequest extends AbstractBceRequest {
      * Configure the marker for the query request.
      * The marker marks the starting point for the query.
      *
-     * @param marker
+     * @param marker the marker
      * @return ListClustersRequest
      */
     public ListClustersRequest withMarker(String marker) {

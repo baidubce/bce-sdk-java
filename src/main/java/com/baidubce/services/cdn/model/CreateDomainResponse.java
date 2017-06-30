@@ -12,14 +12,24 @@
  */
 package com.baidubce.services.cdn.model;
 
-import com.baidubce.model.AbstractBceResponse;
-
-public class CreateDomainResponse extends AbstractBceResponse {
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("class CreateDomainResponse {\n");
-        sb.append("}\n");
-        return sb.toString();
+/**
+ * @author yixing
+ *
+ */
+public class CreateDomainResponse extends CdnResponse {
+    private String cname;
+    
+    /**
+     * @return cname
+     */
+    public String getCname() {
+        return cname;
+    }
+    
+    /**
+     * @param cname
+     */
+    public void setCname(String cname) {
+        this.cname = cname;
     }
 }

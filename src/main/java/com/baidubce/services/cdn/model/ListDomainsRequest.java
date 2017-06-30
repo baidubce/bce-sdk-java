@@ -24,32 +24,46 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class ListDomainsRequest extends AbstractBceRequest {
     private String marker;
     
+    /**
+     * @return marker
+     */
     public String getMarker() {
         return marker;
     }
     
+    /**
+     * @param marker
+     */
     public void setMarker(String marker) {
         this.marker = marker;
     }
     
-    /*
+    /**
      * Configure the marker for the query request.
      * The marker marks the starting point for the query.
      * 
      * @param marker
-     * @return ListDomainsRequest
+     * @return returns this object
      */
     public ListDomainsRequest withMarker(String marker) {
         this.setMarker(marker);
         return this;
     }
     
+    /**
+     * (non-Javadoc)
+     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
+     */
     @Override
     public ListDomainsRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
 
+    /**
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         try {

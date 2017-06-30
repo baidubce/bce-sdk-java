@@ -13,6 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
+/**
+ * Represents the authentication settings.
+ */
 public class AuthInfo {
     private Boolean push = null;
 
@@ -20,40 +23,88 @@ public class AuthInfo {
 
     private String key = null;
 
+    /**
+     * Returns true if authentication is required before push.
+     *
+     * @return true if authentication is required before push
+     */
     public Boolean getPush() {
         return push;
     }
 
+    /**
+     * Sets to true if authentication is required before push
+     *
+     * @param push true if authentication is required before push
+     */
     public void setPush(Boolean push) {
         this.push = push;
     }
 
+    /**
+     * Sets to true if authentication is required before push
+     *
+     * @param push true if authentication is required before push
+     * @return this object
+     */
     public AuthInfo withPush(Boolean push) {
         this.push = push;
         return this;
     }
 
+    /**
+     * Returns true if authentication is required before play
+     *
+     * @return true if authentication is required before play
+     */
     public Boolean getPlay() {
         return play;
     }
 
+    /**
+     * Sets to true if authentication is required before play
+     *
+     * @param play true if authentication is required before play
+     */
     public void setPlay(Boolean play) {
         this.play = play;
     }
 
+    /**
+     * Sets to true if authentication is required before play
+     *
+     * @param play true if authentication is required before play
+     * @return this object
+     */
     public AuthInfo withPlay(Boolean play) {
         this.play = play;
         return this;
     }
 
+    /**
+     * Returns the authentication key.
+     *
+     * @return the authentication key
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * Sets the authentication key.
+     *
+     * @param key the authentication key
+     */
     public void setKey(String key) {
         this.key = key;
     }
 
+    /**
+     * Sets the authentication key.
+     *
+     * @param key the authentication key
+     * @return this object
+     */
     public AuthInfo withKey(String key) {
         this.key = key;
         return this;

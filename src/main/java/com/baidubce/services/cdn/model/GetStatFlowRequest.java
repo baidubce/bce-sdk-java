@@ -19,73 +19,133 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+/**
+ * @author yixing
+ *
+ */
 public class GetStatFlowRequest extends AbstractBceRequest {
-    
     private String domain;
-    
     private Date endTime;  
     private Date startTime;
     private Integer period;
+    private boolean withRegion;
 
+    /**
+     * @return domain
+     */
     public String getDomain() {
         return domain;
     }
-    
+
+    /**
+     * @param domain the domain name
+     */
     public void setDomain(String domain) {
         this.domain = domain;
     }
     
+    /**
+     * @param domain the domain name
+     * @return returns this object
+     */
     public GetStatFlowRequest withDomain(String domain) {
         setDomain(domain);
         return this;
     }
-    
-    public void setEndTime(Date t) {
-        this.endTime = t;
-    }
-    
+
+    /**
+     * @return endTime
+     */
     public Date getEndTime() {
         return endTime;
     }
-    
-    public void setStartTime(Date t) {
-        this.startTime = t;
-    }
-    
-    public Date getStartTime() {
-        return startTime;
-    }
-    
-    public GetStatFlowRequest withStartTime(Date startTime) {
-        this.setStartTime(startTime);
-        return this;
+
+    /**
+     * @param endTime
+     */
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
     
     public GetStatFlowRequest withEndTime(Date endTime) {
-        this.setEndTime(endTime);
-        System.out.println(this.endTime);
+        setEndTime(endTime);
+        return this;
+    }
+
+    /**
+     * @return startTime
+     */
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * @param startTime
+     */
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+    
+    /**
+     * @param startTime
+     * @return returns this object
+     */
+    public GetStatFlowRequest withStartTime(Date startTime) {
+        setStartTime(startTime);
         return this;
     }
     
+    /**
+     * @return withRegion
+     */
+    public boolean isWithRegion() {
+        return withRegion;
+    }
+
+    /**
+     * @param withRegion
+     */
+    public void setWithRegion(boolean withRegion) {
+        this.withRegion = withRegion;
+    }
+
+    /**
+     * @return period
+     */
     public Integer getPeriod() {
         return period;
     }
     
-    public void setPeriod(int period) {
+    /**
+     * @param period
+     */
+    public void setPeriod(Integer period) {
         this.period = period;
     }
-    
-    public GetStatFlowRequest withPeriod(int period) {
-        this.setPeriod(period);
+
+    /**
+     * @param period
+     * @return returns this object
+     */
+    public GetStatFlowRequest withPeriod(Integer period) {
+        setPeriod(period);
         return this;
     }
     
+    /**
+     * (non-Javadoc)
+     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
+     */
     @Override
     public GetStatFlowRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
 
+    /**
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         try {

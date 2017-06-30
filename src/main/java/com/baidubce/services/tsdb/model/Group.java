@@ -98,12 +98,12 @@ public class Group {
 
         @JsonIgnore
         public boolean isLong() {
-            return value.isLong();
+            return value.isIntegralNumber();
         }
 
         @JsonIgnore
         public boolean isDouble() {
-            return value.isDouble();
+            return value.isFloatingPointNumber();
         }
 
         @JsonIgnore

@@ -13,6 +13,10 @@
 
 package com.baidubce.services.cdn.model;
 
+/**
+ * @author yixing
+ *
+ */
 public class PurgeTask extends JsonObject {
     public static final String TYPE_FILE = "file";
     public static final String TYPE_DIRECTORY = "directory";
@@ -20,28 +24,48 @@ public class PurgeTask extends JsonObject {
     private String url;
     private String type;
 
+    /**
+     * @param url
+     */
     public void setUrl(String url) {
         this.url = url;
     }
     
+    /**
+     * @return url
+     */
     public String getUrl() {
         return url;
     }
     
+    /**
+     * @param type
+     */
     public void setType(String type) {
         this.type = type;
     }
     
+    /**
+     * @return type
+     */
     public String getType() {
         return type;
     }
     
+    /**
+     * @param url
+     * @return returns this object
+     */
     public PurgeTask withUrl(String url) {
         setUrl(url);
         setType(TYPE_FILE);
         return this;
     }
     
+    /**
+     * @param url
+     * @return returns this object
+     */
     public PurgeTask withDirectory(String url) {
         setUrl(url);
         setType(TYPE_DIRECTORY);

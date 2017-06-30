@@ -13,32 +13,67 @@
 
 package com.baidubce.services.lss.model;
 
+/**
+ * Represents the BOS information
+ */
 public class Bos {
     private String bucket = null;
 
     private String region = null;
 
+    /**
+     * Returns the bucket name.
+     *
+     * @return the bucket name
+     */
     public String getBucket() {
         return bucket;
     }
 
+    /**
+     * Sets the bucket name.
+     *
+     * @param bucket the bucket name
+     */
     public void setBucket(String bucket) {
         this.bucket = bucket;
     }
 
+    /**
+     * Sets the bucket name.
+     *
+     * @param bucket the bucket name
+     * @return this object
+     */
     public Bos withBucket(String bucket) {
         this.bucket = bucket;
         return this;
     }
 
+    /**
+     * Returns the region ID.
+     *
+     * @return the region ID
+     */
     public String getRegion() {
         return region;
     }
 
+    /**
+     * Sets the region ID.
+     *
+     * @param region the region ID
+     */
     public void setRegion(String region) {
         this.region = region;
     }
 
+    /**
+     * Sets the region ID
+     *
+     * @param region the region ID
+     * @return this object
+     */
     public Bos withRegion(String region) {
         this.region = region;
         return this;

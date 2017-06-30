@@ -18,6 +18,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * @author yixing
+ *
+ */
 public class GetPrefetchStatusResponse extends CdnResponse {
     private String marker;
     private String nextMarker;
@@ -25,30 +29,51 @@ public class GetPrefetchStatusResponse extends CdnResponse {
     private boolean isTruncated;
     private List<PrefetchStatus> details = new ArrayList<PrefetchStatus>();
 
+    /**
+     * @return marker
+     */
     public String getMarker() {
         return marker;
     }
 
+    /**
+     * @param marker
+     */
     public void setMarker(String marker) {
         this.marker = marker;
     }
 
+    /**
+     * @return nextMarker
+     */
     public String getNextMarker() {
         return nextMarker;
     }
 
+    /**
+     * @param nextMarker
+     */
     public void setNextMarker(String nextMarker) {
         this.nextMarker = nextMarker;
     }
 
+    /**
+     * @return isTruncated
+     */
     public boolean isTruncated() {
         return this.isTruncated;
     }
 
+    /**
+     * @return details
+     */
     public List<PrefetchStatus> getDetails() {
         return details;
     }
 
+    /**
+     * @param details
+     */
     public void setDetails(List<PrefetchStatus> details) {
         this.details = details;
     }

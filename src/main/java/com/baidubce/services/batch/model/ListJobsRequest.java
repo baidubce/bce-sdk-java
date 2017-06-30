@@ -44,7 +44,7 @@ public class ListJobsRequest extends AbstractBceRequest {
      * Configure the marker for the query request.
      * The marker marks the starting point for the query.
      *
-     * @param marker
+     * @param marker the marker
      * @return ListJobsRequest
      */
     public ListJobsRequest withMarker(String marker) {

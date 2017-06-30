@@ -18,7 +18,6 @@ import com.baidubce.auth.BceCredentials;
 
 /**
  * Provides options for copying an Baidu Bos object from a source location to a new destination.
- *
  * <p>
  * All <code>CopyObjectRequests</code> must specify a source bucket and key, along with a destination bucket and key.
  */
@@ -58,7 +57,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
     private String unmodifiedSinceConstraint;
 
     /**
-     * If the value of the modifiedSinceConstraint is less than the actual file modification 
+     * If the value of the modifiedSinceConstraint is less than the actual file modification
      * time, then take the normal file transfer process.
      */
     private String modifiedSinceConstraint;
@@ -73,9 +72,9 @@ public class CopyObjectRequest extends GenericObjectRequest {
      * Constructs a new CopyObjectRequest with only basic options.
      *
      * @param sourceBucketName The name of the Bos bucket containing the object to copy.
-     * @param sourceKey        The source bucket key under which the object to copy is stored.
-     * @param bucketName       The name of the Bos bucket to which the new object will be copied.
-     * @param key              The destination bucket key under which the new object will be copied.
+     * @param sourceKey The source bucket key under which the object to copy is stored.
+     * @param bucketName The name of the Bos bucket to which the new object will be copied.
+     * @param key The destination bucket key under which the new object will be copied.
      */
     public CopyObjectRequest(String sourceBucketName, String sourceKey, String bucketName, String key) {
         super(bucketName, key);
@@ -108,7 +107,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
      *
      * @param sourceBucketName The name of the bucket containing the source object to be copied.
      * @return This <code>CopyObjectRequest</code> instance,
-     *     enabling additional method calls to be chained together.
+     * enabling additional method calls to be chained together.
      */
     public CopyObjectRequest withSourceBucketName(String sourceBucketName) {
         this.setSourceBucketName(sourceBucketName);
@@ -235,7 +234,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
      * in order for the copy object request to be executed.
      *
      * @param eTag The optional ETag that when present must be a match for the source object's current ETag
-     *     in order for this request to be executed.
+     * in order for this request to be executed.
      */
     public void setETag(String eTag) {
         this.eTag = eTag;
@@ -246,7 +245,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
      * in order for the copy object request to be executed.
      *
      * @param eTag The optional ETag that when present must be a match for the source object's current ETag
-     *     in order for this request to be executed.
+     * in order for this request to be executed.
      * @return This <code>CopyObjectRequest</code>, enabling additional method calls to be chained together.
      */
     public CopyObjectRequest withETag(String eTag) {
@@ -256,8 +255,8 @@ public class CopyObjectRequest extends GenericObjectRequest {
 
     /**
      * Gets the storageClass of the input file which is to be copyed to Baidu Bos.
-     * 
-     * @return storageClass  The storageClass is an identification that distinguish between infrequent access bos 
+     *
+     * @return storageClass  The storageClass is an identification that distinguish between infrequent access bos
      * and standard bos.
      */
     public String getStorageClass() {
@@ -266,8 +265,8 @@ public class CopyObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets the storageClass of the input file which is to be copyed to Baidu Bos.
-     * 
-     * @param storageClass  The storageClass is an identification that distinguish between infrequent access bos 
+     *
+     * @param storageClass The storageClass is an identification that distinguish between infrequent access bos
      * and standard bos.
      */
     public void setStorageClass(String storageClass) {
@@ -277,7 +276,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
     /**
      * Sets the storageClass of the input file which is to be copyed to Baidu Bos.
      *
-     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
+     * @param storageClass The StorageClass is an identification that distinguish between infrequent access bos
      * and standard bos.
      * @return This CopyObjectRequest, so that additional method calls can be chained together.
      */
@@ -297,10 +296,10 @@ public class CopyObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     * Sets the the value of the unmodifiedSinceConstraint,if the value is equal to or later than the actual
+     * Sets the value of the unmodifiedSinceConstraint,if the value is equal to or later than the actual
      * file modification time, then take the normal file transfer process.
      *
-     * @param unmodifiedSinceConstraint
+     * @param unmodifiedSinceConstraint the value of the unmodifiedSinceConstraint
      */
     public void setUnmodifiedSinceConstraint(String unmodifiedSinceConstraint) {
         this.unmodifiedSinceConstraint = unmodifiedSinceConstraint;
@@ -310,7 +309,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
      * Sets the the value of the unmodifiedSinceConstraint,if the value is equal to or later than the actual
      * file modification time, then take the normal file transfer process.
      *
-     * @param unmodifiedSinceConstraint
+     * @param unmodifiedSinceConstraint the value of the unmodifiedSinceConstraint
      * @return This <code>CopyObjectRequest</code>, enabling additional method calls to be chained together.
      */
     public CopyObjectRequest withUnmodifiedSinceConstraint(String unmodifiedSinceConstraint) {
@@ -321,6 +320,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
     /**
      * Gets the the value of the modifiedSinceConstraint,if the value is less than the actual file modification
      * time, then take the normal file transfer process.
+     *
      * @return modifiedSinceConstraint
      */
     public String getModifiedSinceConstraint() {
@@ -328,9 +328,10 @@ public class CopyObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     * Sets the the value of the modifiedSinceConstraint,if the value is less than the actual file modification
+     * Sets the value of the modifiedSinceConstraint,if the value is less than the actual file modification
      * time, then take the normal file transfer process.
-     * @param modifiedSinceConstraint
+     *
+     * @param modifiedSinceConstraint the value of the modifiedSinceConstraint
      */
     public void setModifiedSinceConstraint(String modifiedSinceConstraint) {
         this.modifiedSinceConstraint = modifiedSinceConstraint;
@@ -340,7 +341,7 @@ public class CopyObjectRequest extends GenericObjectRequest {
      * Sets the the value of the modifiedSinceConstraint,if the value is less than the actual file modification
      * time, then take the normal file transfer process.
      *
-     * @param modifiedSinceConstraint
+     * @param modifiedSinceConstraint the value of the modifiedSinceConstraint
      * @return This <code>CopyObjectRequest</code>, enabling additional method calls to be chained together.
      */
     public CopyObjectRequest withModifiedSinceConstraint(String modifiedSinceConstraint) {
@@ -349,8 +350,9 @@ public class CopyObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     * Gets the optional ETag that, when present, <b>must</b> be not a match for the source object's current 
+     * Gets the optional ETag that, when present, <b>must</b> be not a match for the source object's current
      * ETag in order for the copy object request to be executed.
+     *
      * @return noneMatchETagConstraint
      */
     public String getNoneMatchETagConstraint() {
@@ -358,19 +360,20 @@ public class CopyObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     * Sets the optional ETag that, when present, <b>must</b> be not a match for the source object's current 
+     * Sets the optional ETag that, when present, <b>must</b> be not a match for the source object's current
      * ETag in order for the copy object request to be executed.
-     * @param noneMatchETagConstraint
+     *
+     * @param noneMatchETagConstraint the constraint value
      */
     public void setNoneMatchETagConstraint(String noneMatchETagConstraint) {
         this.noneMatchETagConstraint = noneMatchETagConstraint;
     }
 
     /**
-     * Sets the optional ETag that, when present, <b>must</b> be not a match for the source object's current 
+     * Sets the optional ETag that, when present, <b>must</b> be not a match for the source object's current
      * ETag in order for the copy object request to be executed.
      *
-     * @param noneMatchETagConstraint
+     * @param noneMatchETagConstraint the constraint value
      * @return This <code>CopyObjectRequest</code>, enabling additional method calls to be chained together.
      */
     public CopyObjectRequest withNoMatchingETagConstraint(String noneMatchETagConstraint) {

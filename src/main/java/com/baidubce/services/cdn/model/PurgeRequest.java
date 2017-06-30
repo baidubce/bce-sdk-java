@@ -13,39 +13,69 @@
 
 package com.baidubce.services.cdn.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+/**
+ * @author yixing
+ *
+ */
 public class PurgeRequest extends AbstractBceRequest {
     private List<PurgeTask> tasks;
     
+    /**
+     * @return tasks
+     */
     public List<PurgeTask> getTasks() {
         return tasks;
     }
     
+    /**
+     * @param tasks
+     */
     public void setTasks(List<PurgeTask> tasks) {
         this.tasks = tasks;
     }
 
+    /**
+     * @param tasks
+     * @return returns this object
+     */
     public PurgeRequest withTasks(List<PurgeTask> tasks) {
         setTasks(tasks);
         return this;
     }
     
+    /**
+     * @param task
+     * @return returns this object
+     */
     public PurgeRequest addTask(PurgeTask task) {
-        this.tasks.add(task);
+        if (tasks == null) {
+            tasks = new ArrayList<PurgeTask>();
+        }
+        tasks.add(task);
         return this;
     }
     
+    /**
+     * (non-Javadoc)
+     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
+     */
     @Override
     public PurgeRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
 
+    /**
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         try {

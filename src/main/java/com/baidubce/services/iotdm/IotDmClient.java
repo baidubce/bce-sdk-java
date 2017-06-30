@@ -40,6 +40,7 @@ import com.google.common.base.Preconditions;
  */
 public class IotDmClient extends AbstractBceClient {
 
+    private static final String ENDPOINT_HOST = "iotdm.gz.baidubce.com";
     private static final String DEVICE = "device";
     private static final String GROUP = "group";
     private static final String CHILDREN = "children";
@@ -56,7 +57,9 @@ public class IotDmClient extends AbstractBceClient {
     private static final String UPDATE_REGISTRY = "updateRegistry";
 
     public IotDmClient(BceClientConfiguration config) {
-        super(config, IotDmClientHelper.IOT_DM_HANDLERS);
+        super(config.getEndpoint() == null ? config.withEndpoint(ENDPOINT_HOST) : config,
+                IotDmClientHelper.IOT_DM_HANDLERS);
+
     }
 
     public CreateDevicesResponse createDevices(CreateDevicesRequest createDevicesRequest, String clientToken) {
@@ -179,7 +182,7 @@ public class IotDmClient extends AbstractBceClient {
 
     private InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
             String... pathVariables) {
-        return IotDmClientHelper.createRequest(bceRequest, httpMethod, this.getEndpoint(), null, pathVariables);
+        return IotDmClientHelper.createRequestForV1(bceRequest, httpMethod, this.getEndpoint(), null, pathVariables);
     }
 
 }

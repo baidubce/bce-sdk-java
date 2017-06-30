@@ -16,7 +16,15 @@ package com.baidubce.services.cdn.model;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+/**
+ * @author yixing
+ *
+ */
 public class JsonObject {
+    /**
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         try {
             return JsonUtils.toJsonPrettyString(this);

@@ -29,7 +29,7 @@ public class KeySchemaElement {
      * initialize any additional object members.
      *
      * @param attributeName The attribute name for a key.
-     * @param KeyType The type of the key, it is hashKey or rangeKey.
+     * @param keyType The type of the key, it is hashKey or rangeKey.
      */
     public KeySchemaElement(String attributeName, String keyType) {
         this.attributeName = attributeName;

@@ -135,7 +135,7 @@ public class ObjectMetadata {
      * Sets the custom user-metadata for the associated object.
      *
      * @param userMetadata The custom user-metadata for the associated object. Note that
-     *     the key should not include the internal Bos HTTP header prefix.
+     * the key should not include the internal Bos HTTP header prefix.
      */
     public void setUserMetadata(Map<String, String> userMetadata) {
         checkNotNull(userMetadata, "userMetadata should not be null.");
@@ -147,8 +147,8 @@ public class ObjectMetadata {
      * object. If the entry in the custom user-metadata map already contains the
      * specified key, it will be replaced with these new contents.
      *
-     * @param key   The key for the custom user metadata entry. Note that the key
-     *     should not include the internal Bos HTTP header prefix.
+     * @param key The key for the custom user metadata entry. Note that the key
+     * should not include the internal Bos HTTP header prefix.
      * @param value The value for the custom user-metadata entry.
      */
     public void addUserMetadata(String key, String value) {
@@ -157,6 +157,9 @@ public class ObjectMetadata {
 
     /**
      * For internal use only. Returns the value of the userMetadata for the specified key.
+     *
+     * @param key the key of the userMetadata
+     * @return the value of the userMetadata
      */
     public String getUserMetaDataOf(String key) {
         return this.userMetadata == null ? null : this.userMetadata.get(key);
@@ -204,7 +207,7 @@ public class ObjectMetadata {
      * for the object to be saved as.
      *
      * @return The value of the Content-Disposition header.
-     *     Returns <code>null</code> if the Content-Disposition header hasn't been set.
+     * Returns <code>null</code> if the Content-Disposition header hasn't been set.
      */
     public String getContentDisposition() {
         return this.contentDisposition;
@@ -250,7 +253,7 @@ public class ObjectMetadata {
      * associated object in bytes.
      *
      * @return The Content-Length HTTP header indicating the size of the
-     *     associated object in bytes. Returns <code>null</code> if it hasn't been set yet.
+     * associated object in bytes. Returns <code>null</code> if it hasn't been set yet.
      */
     public long getContentLength() {
         return this.contentLength;
@@ -261,7 +264,7 @@ public class ObjectMetadata {
      * associated object in bytes.
      *
      * @param contentLength The Content-Length HTTP header indicating the size of the
-     *     associated object in bytes.
+     * associated object in bytes.
      */
     public void setContentLength(long contentLength) {
         this.contentLength = contentLength;
@@ -274,7 +277,7 @@ public class ObjectMetadata {
      * Baidu Bos is the same data that the caller sent.
      *
      * @return The base64 encoded MD5 hash of the content for the associated
-     *     object.  Returns <code>null</code> if the MD5 hash of the content hasn't been set.
+     * object.  Returns <code>null</code> if the MD5 hash of the content hasn't been set.
      */
     public String getContentMd5() {
         return this.contentMd5;
@@ -288,7 +291,7 @@ public class ObjectMetadata {
      * MD5 digest is removed from the metadata.
      *
      * @param contentMd5 The base64 encoded MD5 hash of the content for the object
-     *     associated with this metadata.
+     * associated with this metadata.
      */
     public void setContentMd5(String contentMd5) {
         this.contentMd5 = contentMd5;
@@ -300,7 +303,7 @@ public class ObjectMetadata {
      * MIME type.
      *
      * @return The HTTP Content-Type header, indicating the type of content
-     *     stored in the associated Bos object. Returns <code>null</code> if it hasn't been set.
+     * stored in the associated Bos object. Returns <code>null</code> if it hasn't been set.
      */
     public String getContentType() {
         return this.contentType;
@@ -312,7 +315,7 @@ public class ObjectMetadata {
      * MIME type.
      *
      * @param contentType The HTTP Content-Type header indicating the type of content
-     *     stored in the associated Bos object.
+     * stored in the associated Bos object.
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
@@ -323,14 +326,13 @@ public class ObjectMetadata {
      * according to RFC 1864. This data is used as an integrity check to verify
      * that the data received by the caller is the same data that was sent by
      * Baidu Bos.
-     *
      * <p>
      * This field represents the hex encoded 128-bit MD5 digest of an object's
      * content as calculated by Baidu Bos. The ContentMD5 field represents the
      * base64 encoded 128-bit MD5 digest as calculated on the caller's side.
      *
      * @return The hex encoded MD5 hash of the content for the associated object
-     *     as calculated by Baidu Bos. Returns <code>null</code> if it hasn't been set yet.
+     * as calculated by Baidu Bos. Returns <code>null</code> if it hasn't been set yet.
      */
     public String getETag() {
         return this.eTag;
@@ -341,14 +343,13 @@ public class ObjectMetadata {
      * according to RFC 1864. This data is used as an integrity check to verify
      * that the data received by the caller is the same data that was sent by
      * Baidu Bos.
-     *
      * <p>
      * This field represents the hex encoded 128-bit MD5 digest of an object's
      * content as calculated by Baidu Bos. The ContentMD5 field represents the
      * base64 encoded 128-bit MD5 digest as calculated on the caller's side.
      *
      * @param eTag The hex encoded MD5 hash of the content for the associated object
-     *     as calculated by Baidu Bos.
+     * as calculated by Baidu Bos.
      */
     public void setETag(String eTag) {
         this.eTag = eTag;
@@ -357,6 +358,8 @@ public class ObjectMetadata {
     /**
      * Returns the physical length of the entire object stored in Bos.
      * This is useful during, for example, a range get operation.
+     *
+     * @return the physical length of the entire object
      */
     public long getInstanceLength() {
         return this.instanceLength;
@@ -365,7 +368,7 @@ public class ObjectMetadata {
     /**
      * Sets the physical length of the entire object stored in Bos.
      *
-     * @param instanceLength
+     * @param instanceLength the physical length of the entire object
      */
     public void setInstanceLength(long instanceLength) {
         this.instanceLength = instanceLength;
@@ -377,8 +380,8 @@ public class ObjectMetadata {
      * associated object.
      *
      * @return The date and time at which Baidu Bos last recorded a modification
-     *     to the associated object. Returns <code>null</code> if
-     *     the Last-Modified header hasn't been set.
+     * to the associated object. Returns <code>null</code> if
+     * the Last-Modified header hasn't been set.
      */
     public Date getLastModified() {
         return this.lastModified;
@@ -390,7 +393,7 @@ public class ObjectMetadata {
      * modification to the associated object.
      *
      * @param lastModified The date and time at which Baidu Bos last recorded a
-     *     modification to the associated object.
+     * modification to the associated object.
      */
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;

@@ -24,6 +24,12 @@ public class Datapoint {
     private String metric;
 
     /**
+     * Optional.
+     * Represent the field of the datapoint(s).
+     */
+    private String field;
+
+    /**
      * Required.
      * Represent the tags which the datapoint(s) has/have.
      */
@@ -51,6 +57,14 @@ public class Datapoint {
         this.metric = metric;
     }
 
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
     public Map<String, String> getTags() {
         return tags;
     }
@@ -73,6 +87,11 @@ public class Datapoint {
 
     public Datapoint withMetric(String metric) {
         this.metric = metric;
+        return this;
+    }
+
+    public Datapoint withField(String field) {
+        this.field = field;
         return this;
     }
 

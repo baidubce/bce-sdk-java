@@ -17,16 +17,29 @@ public class CodecOptions {
     private String profile = null;
 
     /**
-     * baseline, main, high
+     * Returns the profile.
+     *
+     * @return the profile
      **/
     public String getProfile() {
         return profile;
     }
 
+    /**
+     * Sets the profile
+     *
+     * @param profile the profile
+     */
     public void setProfile(String profile) {
         this.profile = profile;
     }
 
+    /**
+     * Sets the profile and returns this object.
+     *
+     * @param profile the profile
+     * @return this object
+     */
     public CodecOptions withProfile(String profile) {
         this.profile = profile;
         return this;

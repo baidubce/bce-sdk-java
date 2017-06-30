@@ -14,55 +14,94 @@
 package com.baidubce.services.lss.model;
 
 public class Audio {
-    private Integer bitRateInBps   = null;
+    private Integer bitRateInBps = null;
 
     private Integer sampleRateInHz = null;
 
-    private Integer channels       = null;
+    private Integer channels = null;
 
     /**
-     * 音频目标码率
+     * Returns the audio bit rate
+     *
+     * @return the audio bit rate
      **/
     public Integer getBitRateInBps() {
         return bitRateInBps;
     }
 
+    /**
+     * Sets the audio bit rate.
+     *
+     * @param bitRateInBps the audio bit rate
+     */
     public void setBitRateInBps(Integer bitRateInBps) {
         this.bitRateInBps = bitRateInBps;
     }
 
+    /**
+     * Sets the audio bit rate and returns this object.
+     *
+     * @param bitRateInBps the audio bit rate
+     * @return this object
+     */
     public Audio withBitRateInBps(Integer bitRateInBps) {
         this.bitRateInBps = bitRateInBps;
         return this;
     }
 
     /**
-     * 音频采样率
+     * Returns the audio sample rate.
+     *
+     * @return the audio sample rate
      **/
     public Integer getSampleRateInHz() {
         return sampleRateInHz;
     }
 
+    /**
+     * Sets the audio sample rate
+     *
+     * @param sampleRateInHz the audio sample rate
+     */
     public void setSampleRateInHz(Integer sampleRateInHz) {
         this.sampleRateInHz = sampleRateInHz;
     }
 
+    /**
+     * Sets the audio sample rate and returns this object
+     *
+     * @param sampleRateInHz the audio sample rate
+     * @return this object
+     */
     public Audio withSampleRateInHz(Integer sampleRateInHz) {
         this.sampleRateInHz = sampleRateInHz;
         return this;
     }
 
     /**
-     * 音频声道数目
+     * Returns the number of audio channels.
+     *
+     * @return the number of audio channels
      **/
     public Integer getChannels() {
         return channels;
     }
 
+    /**
+     * Sets the number of audio channels.
+     *
+     * @param channels the number of audio channels
+     */
     public void setChannels(Integer channels) {
         this.channels = channels;
     }
 
+    /**
+     * Sets the number of audio channels and returns this object.
+     *
+     * @param channels the number of audio channels
+     * @return this object
+     */
     public Audio withChannels(Integer channels) {
         this.channels = channels;
         return this;

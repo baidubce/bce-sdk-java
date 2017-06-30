@@ -14,6 +14,7 @@ package com.baidubce.services.moladb.model;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.moladb.MolaDbConstants;
@@ -39,7 +40,7 @@ public class PutItemRequest extends AbstractBceRequest {
      * Constructs a new PutItemRequest object.
      * Callers should use the setter or fluent setter (with...) methods to
      * initialize any additional object members.
-     * 
+     *
      * @param name The name of the table to contain the item.
      */
     public PutItemRequest(String name) {
@@ -49,35 +50,35 @@ public class PutItemRequest extends AbstractBceRequest {
     /**
      * Get the name of the table to contain the item.
      * <p>
-     * <b>Constraints:</b><br/>
-     * <b>Length: </b>3 - 32<br/>
-     * <b>Pattern: </b>[a-zA-Z0-9_.-]+<br/>
+     * <b>Constraints:</b><br>
+     * <b>Length: </b>3 - 32<br>
+     * <b>Pattern: </b>[a-zA-Z0-9_.-]+<br>
      *
      * @return The name of the table to contain the item.
      */
     public String getTableName() {
         return this.tableName;
     }
-    
+
     /**
      * Set the name of the table to contain the item.
      * <p>
-     * <b>Constraints:</b><br/>
-     * <b>Length: </b>3 - 32<br/>
-     * <b>Pattern: </b>[a-zA-Z0-9_.-]+<br/>
+     * <b>Constraints:</b><br>
+     * <b>Length: </b>3 - 32<br>
+     * <b>Pattern: </b>[a-zA-Z0-9_.-]+<br>
      *
      * @param tableName The name of the table to contain the item.
      */
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-    
+
     /**
      * Set the name of the table to contain the item.
      * <p>
-     * <b>Constraints:</b><br/>
-     * <b>Length: </b>3 - 32<br/>
-     * <b>Pattern: </b>[a-zA-Z0-9_.-]+<br/>
+     * <b>Constraints:</b><br>
+     * <b>Length: </b>3 - 32<br>
+     * <b>Pattern: </b>[a-zA-Z0-9_.-]+<br>
      *
      * @param tableName The name of the table to contain the item.
      * @return Returns a reference to the object so that method calls can be chained together.
@@ -92,43 +93,41 @@ public class PutItemRequest extends AbstractBceRequest {
      * Returns a reference to this object so that method calls can be chained together.
      *
      * @param item An container of attribute name/value pairs. Only the
-     *         primary key attributes are required; you can optionally provide other
-     *         attribute name-value pairs for the item. <p>You must provide all of
-     *         the attributes for the primary key. For example, with a hash type
-     *         primary key, you only need to provide the hash attribute. For a
-     *         hash-and-range type primary key, you must provide both the hash
-     *         attribute and the range attribute. <p>If you specify any attributes
-     *         that are part of an key, then the data types for those
-     *         attributes must match those of the schema in the table's attribute
-     *         definition. <p>
-     *
+     * primary key attributes are required; you can optionally provide other
+     * attribute name-value pairs for the item. <p>You must provide all of
+     * the attributes for the primary key. For example, with a hash type
+     * primary key, you only need to provide the hash attribute. For a
+     * hash-and-range type primary key, you must provide both the hash
+     * attribute and the range attribute. <p>If you specify any attributes
+     * that are part of an key, then the data types for those
+     * attributes must match those of the schema in the table's attribute
+     * definition. <p>
      * @return A reference to this updated object so that method calls can be chained
-     *         together.
+     * together.
      */
     public PutItemRequest withItem(Map<String, AttributeValue> item) {
         this.setItem(item);
         return this;
     }
-    
+
     /**
      * Set the Item object to be put in in table.
      *
      * @param item An container of attribute name/value pairs. Only the
-     *         primary key attributes are required; you can optionally provide other
-     *         attribute name-value pairs for the item. <p>You must provide all of
-     *         the attributes for the primary key. For example, with a hash type
-     *         primary key, you only need to provide the hash attribute. For a
-     *         hash-and-range type primary key, you must provide both the hash
-     *         attribute and the range attribute. <p>If you specify any attributes
-     *         that are part of an key, then the data types for those
-     *         attributes must match those of the schema in the table's attribute
-     *         definition. <p>
-     *
+     * primary key attributes are required; you can optionally provide other
+     * attribute name-value pairs for the item. <p>You must provide all of
+     * the attributes for the primary key. For example, with a hash type
+     * primary key, you only need to provide the hash attribute. For a
+     * hash-and-range type primary key, you must provide both the hash
+     * attribute and the range attribute. <p>If you specify any attributes
+     * that are part of an key, then the data types for those
+     * attributes must match those of the schema in the table's attribute
+     * definition. <p>
      */
     public void setItem(Map<String, AttributeValue> item) {
         this.item = item;
     }
-    
+
     /**
      * Get the Item objects to be put in in table.
      *
@@ -149,7 +148,7 @@ public class PutItemRequest extends AbstractBceRequest {
         jsonObj.put(MolaDbConstants.JSON_ITEM, itemObj);
         return JsonUtils.toJsonString(jsonObj);
     }
-    
+
     protected Map<String, Object> marshallerItem(Map<String, AttributeValue> item) {
         Map<String, Object> obj = new HashMap<String, Object>();
         for (Map.Entry<String, AttributeValue> entry : item.entrySet()) {

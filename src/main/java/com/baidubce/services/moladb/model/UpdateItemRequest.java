@@ -112,7 +112,7 @@ public class UpdateItemRequest extends AbstractBceRequest {
     /**
      * Set new attribute value with corresponding attribute name which will be updated.
      *
-     * @param attributes A map of attributes to update in an item, the type is Map<String, AttributeValueUpdate>.
+     * @param attributes A map of attributes to update in an item.
      */
     public void setAttributeUpdates(Map<String, AttributeValueUpdate> attributes) {
         this.attributeUpdates = attributes;
@@ -121,7 +121,7 @@ public class UpdateItemRequest extends AbstractBceRequest {
     /**
      * Set new attribute value with corresponding attribute name which will be updated.
      *
-     * @param attributes A map of attributes to update in an item, the type is Map<String, AttributeValueUpdate>.
+     * @param attributes A map of attributes to update in an item.
      * @return A reference to this object so that method calls can be chained together.
      */
     public UpdateItemRequest withAttributeUpdates(Map<String, AttributeValueUpdate> attributes) {
@@ -132,7 +132,7 @@ public class UpdateItemRequest extends AbstractBceRequest {
     /**
      * Get new attribute value with corresponding attribute name which will be updated.
      *
-     * @return A map of attributes to update in an item, the type is Map<String, AttributeValueUpdate>.
+     * @return A map of attributes to update in an item.
      */
     public Map<String, AttributeValueUpdate> getAttributeUpdates() {
         return this.attributeUpdates;

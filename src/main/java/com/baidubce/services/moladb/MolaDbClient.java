@@ -239,7 +239,7 @@ public class MolaDbClient extends AbstractBceClient {
      *
      * <b>NOTE:</b> There MUST be no table within the instance to be deleted.
      * 
-     * @param Instance name to be deleted.
+     * @param instanceName the name of instance to be deleted.
      * 
      * @return The responseContent from the Delete instance service method, as returned by
      *         Moladb.

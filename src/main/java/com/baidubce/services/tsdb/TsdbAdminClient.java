@@ -19,11 +19,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class TsdbAdminClient extends AbstractTsdbBceClient {
 
+    private static final String ENDPOINT_HOST = "tsdb.iot.gz.baidubce.com";
     private static final String DATABASE = "database";
     private static final String CLIENT_TOKEN = "clientToken";
 
     public TsdbAdminClient(BceClientConfiguration config) {
-        super(config, TSDB_HANDLERS);
+        super(config.getEndpoint() == null ? config.withEndpoint(ENDPOINT_HOST) : config, TSDB_HANDLERS);
     }
 
     public CreateDatabaseResponse createDatabase(CreateDatabaseRequest createDatabaseRequest, String clientToken) {

@@ -14,33 +14,64 @@
 package com.baidubce.services.cdn.model;
 
 import java.util.Date;
+import java.util.List;
 
+/**
+ * @author yixing
+ *
+ */
 public class StatFlowDetails extends JsonObject {
     private Date timestamp;
-    private Integer flow;
-    private Integer bps;
-    
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-    
+    private Long flow;
+    private Long bps;
+    private List<FlowRegionData> regions;
+   
+    /**
+     * @return timestamp
+     */
     public Date getTimestamp() {
         return timestamp;
     }
-    
-    public void setFlow(Integer flow) {
-        this.flow = flow;
+    /**
+     * @param timestamp
+     */
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
-    
-    public Integer getFlow() {
+    /**
+     * @return flow
+     */
+    public Long getFlow() {
         return flow;
     }
-    
-    public void setBps(Integer bps) {
+    /**
+     * @param flow
+     */
+    public void setFlow(Long flow) {
+        this.flow = flow;
+    }
+    /**
+     * @return bps
+     */
+    public Long getBps() {
+        return bps;
+    }
+    /**
+     * @param bps
+     */
+    public void setBps(Long bps) {
         this.bps = bps;
     }
-    
-    public Integer getBps() {
-        return bps;
+    /**
+     * @return regions
+     */
+    public List<FlowRegionData> getRegions() {
+        return regions;
+    }
+    /**
+     * @param regions
+     */
+    public void setRegions(List<FlowRegionData> regions) {
+        this.regions = regions;
     }
 }

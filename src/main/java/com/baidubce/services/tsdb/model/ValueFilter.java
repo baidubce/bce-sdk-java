@@ -72,7 +72,7 @@ public class ValueFilter {
     /**
      * Create value filter for Double type.
      *
-     * @param operation Operation for comparing which support =, !=, >, <, >= and <=.
+     * @param operation Operation for comparing which support =, !=, &gt;, &lt;, &gt;= and &lt;=.
      * @param value Value for comparing with.
      * @return ValueFilter
      */
@@ -86,7 +86,7 @@ public class ValueFilter {
     /**
      * Create value filter for Long type.
      *
-     * @param operation Operation for comparing which support =, !=, >, <, >= and <=.
+     * @param operation Operation for comparing which support =, !=, &gt;, &lt;, &gt;= and &lt;=.
      * @param value Value for comparing with.
      * @return ValueFilter
      */

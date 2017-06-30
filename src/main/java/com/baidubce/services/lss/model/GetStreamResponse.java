@@ -1,3 +1,15 @@
+/*
+ * Copyright 2017 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.baidubce.services.lss.model;
 
 import com.baidubce.model.AbstractBceResponse;
@@ -6,9 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by wuyafei on 16/10/14.
+ * Represents response of querying a stream
  */
 public class GetStreamResponse extends AbstractBceResponse {
+
     private String sessionId = null;
 
     private String playDomain = null;
@@ -49,183 +62,380 @@ public class GetStreamResponse extends AbstractBceResponse {
 
     private String audit = null;
 
+    private String destinationPushUrl = null;
+
+    /**
+     * Returns sessionId
+     * @return sessionId
+     */
     public String getSessionId() {
         return sessionId;
     }
 
+    /**
+     * Sets sessionId
+     * @param sessionId
+     */
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 
+    /**
+     * Returns playDomain
+     * @return playDomain
+     */
     public String getPlayDomain() {
         return playDomain;
     }
 
+    /**
+     * Sets playDomain
+     * @param playDomain
+     */
     public void setPlayDomain(String playDomain) {
         this.playDomain = playDomain;
     }
 
+    /**
+     * Returns app
+     * @return app
+     */
     public String getApp() {
         return app;
     }
 
+    /**
+     * Sets app
+     * @param app
+     */
     public void setApp(String app) {
         this.app = app;
     }
 
+    /**
+     * Returns scent
+     * @return scent
+     */
     public String getScene() {
         return scene;
     }
 
+    /**
+     * Sets scene
+     * @param scene
+     */
     public void setScene(String scene) {
         this.scene = scene;
     }
 
+    /**
+     * Returns description
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Returns preset
+     * @return preset
+     */
     public String getPreset() {
         return preset;
     }
 
+    /**
+     * Sets preset
+     * @param preset
+     */
     public void setPreset(String preset) {
         this.preset = preset;
     }
 
+    /**
+     * Returns createTime
+     * @return createTime
+     */
     public String getCreateTime() {
         return createTime;
     }
 
+    /**
+     * Sets createTime
+     * @param createTime
+     */
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
+    /**
+     * Returns status
+     * @return status
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Sets status
+     * @param status
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * Returns notification
+     * @return notification
+     */
     public String getNotification() {
         return notification;
     }
 
+    /**
+     * Sets notification
+     * @param notification
+     */
     public void setNotification(String notification) {
         this.notification = notification;
     }
 
+    /**
+     * Returns securityPolicy
+     * @return securityPolicy
+     */
     public String getSecurityPolicy() {
         return securityPolicy;
     }
 
+    /**
+     * Sets securityPolicy
+     * @param securityPolicy
+     */
     public void setSecurityPolicy(String securityPolicy) {
         this.securityPolicy = securityPolicy;
     }
 
+    /**
+     * Returns recording
+     * @return recording
+     */
     public String getRecording() {
         return recording;
     }
 
+    /**
+     * Sets recording
+     * @param recording
+     */
     public void setRecording(String recording) {
         this.recording = recording;
     }
 
+    /**
+     * Returns thumbnail
+     * @return thumbnail
+     */
     public String getThumbnail() {
         return thumbnail;
     }
 
+    /**
+     * Sets thumbnail
+     * @param thumbnail
+     */
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 
+    /**
+     * Returns thumbnails
+     * @return thumbnails
+     */
     public List<String> getThumbnails() {
         return thumbnails;
     }
 
+    /**
+     * Sets thumbnails
+     * @param thumbnails
+     */
     public void setThumbnails(List<String> thumbnails) {
         this.thumbnails = thumbnails;
     }
 
+    /**
+     * Returns watermarks
+     * @return watermarks
+     */
     public Watermarks getWatermarks() {
         return watermarks;
     }
 
+    /**
+     * Sets watermarks
+     * @param watermarks
+     */
     public void setWatermarks(Watermarks watermarks) {
         this.watermarks = watermarks;
     }
 
+    /**
+     * Returns publish
+     * @return publish
+     */
     public LivePublish getPublish() {
         return publish;
     }
 
+    /**
+     * Sets publish
+     * @param publish
+     */
     public void setPublish(LivePublish publish) {
         this.publish = publish;
     }
 
+    /**
+     * Returns play
+     * @return play
+     */
     public LivePlay getPlay() {
         return play;
     }
 
+    /**
+     * Sets play
+     * @param play
+     */
     public void setPlay(LivePlay play) {
         this.play = play;
     }
 
+    /**
+     * Returns presets
+     * @return presets
+     */
     public Map<String, String> getPresets() {
         return presets;
     }
 
+    /**
+     * Sets presets
+     * @param presets
+     */
     public void setPresets(Map<String, String> presets) {
         this.presets = presets;
     }
 
+    /**
+     * Returns streamStatus
+     * @return streamStatus
+     */
     public String getStreamStatus() {
         return streamStatus;
     }
 
+    /**
+     * Sets streamStatus
+     * @param streamStatus
+     */
     public void setStreamStatus(String streamStatus) {
         this.streamStatus = streamStatus;
     }
 
+    /**
+     * Returns statistics
+     * @return statistics
+     */
     public StreamingStatistics getStatistics() {
         return statistics;
     }
 
+    /**
+     * Sets statistics
+     * @param statistics
+     */
     public void setStatistics(StreamingStatistics statistics) {
         this.statistics = statistics;
     }
 
+    /**
+     * Returns audit
+     * @return audit
+     */
     public String getAudit() {
         return audit;
     }
 
+    /**
+     * Sets audit
+     * @param audit
+     */
     public void setAudit(String audit) {
         this.audit = audit;
     }
 
+    /**
+     * Returns destinationPushUrl
+     * @return destinationPushUrl
+     */
+    public String getDestinationPushUrl() {
+        return destinationPushUrl;
+    }
+
+    /**
+     * Sets destinationPushUrl
+     * @param destinationPushUrl
+     */
+    public void setDestinationPushUrl(String destinationPushUrl) {
+        this.destinationPushUrl = destinationPushUrl;
+    }
+
+    /**
+     * Represents statistics of a streaming stream
+     */
     public static class StreamingStatistics {
         private Long bandwidthInBps = null;
 
         private Long playCount = null;
 
+        /**
+         * Returns bandwidthInBps
+         * @return bandwidthInBps
+         */
         public Long getBandwidthInBps() {
             return bandwidthInBps;
         }
 
+        /**
+         * Sets bandwidthInBps
+         * @param bandwidthInBps
+         */
         public void setBandwidthInBps(Long bandwidthInBps) {
             this.bandwidthInBps = bandwidthInBps;
         }
 
+        /**
+         * Returns playCount
+         * @return playCount
+         */
         public Long getPlayCount() {
             return playCount;
         }
 
+        /**
+         * Sets playCount
+         * @param playCount
+         */
         public void setPlayCount(Long playCount) {
             this.playCount = playCount;
         }
@@ -264,6 +474,7 @@ public class GetStreamResponse extends AbstractBceResponse {
         sb.append("    publish: ").append(publish).append("\n");
         sb.append("    play: ").append(play).append("\n");
         sb.append("    StreamingStatistics ").append(statistics).append("\n");
+        sb.append("    destinationPushUrl").append(destinationPushUrl).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

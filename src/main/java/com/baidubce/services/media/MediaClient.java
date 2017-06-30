@@ -197,7 +197,7 @@ public class MediaClient extends AbstractBceClient {
      * @param request The request object containing all options for creating a job.
      *     
      * @return The newly created job ID.
-     * @deprecated As of release 0.8.5, replaced by {@link #createTranscodingJob(CreateJobRequest)}}
+     * @deprecated As of release 0.8.5, replaced by {@link #createTranscodingJob(CreateTranscodingJobRequest)}}
      */
     @Deprecated
     public CreateJobResponse createJob(CreateJobRequest request) {
@@ -240,7 +240,7 @@ public class MediaClient extends AbstractBceClient {
      * @param request The request object containing all options for list jobs.
      *     
      * @return The list of job IDs.
-     * @deprecated As of release 0.8.5, replaced by {@link #listTranscodingJobs(ListJobsRequest)}
+     * @deprecated As of release 0.8.5, replaced by {@link #listTranscodingJobs(ListTranscodingJobsRequest)}
      */
     @Deprecated
     public ListJobsResponse listJobs(ListJobsRequest request) {
@@ -273,7 +273,7 @@ public class MediaClient extends AbstractBceClient {
      * @param request The request object containing all options for retrieving job status.
      *     
      * @return The status of a job.
-     * @deprecated As of release 0.8.5, replaced by {@link #getTranscodingJob(GetJobRequest)}
+     * @deprecated As of release 0.8.5, replaced by {@link #getTranscodingJob(GetTranscodingJobRequest)}
      */
     @Deprecated
     public GetJobResponse getJob(GetJobRequest request) {

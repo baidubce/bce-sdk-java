@@ -87,7 +87,7 @@ public class Key {
     /**
      * Get this object's attribute map with name and value.
      *
-     * @return A map of attributes with name and value, the type is Map<String, AttributeValue>.
+     * @return A map of attributes with name and value.
      */
     public Map<String, AttributeValue> getAttributes() {
         return attributes;

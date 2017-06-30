@@ -11,7 +11,7 @@ public class Destination extends GenericAccountRequest {
     private String uuid;
     private String ruleUuid;
     private String value;
-    private DestinationKind kind;
+    private String kind;
     private String status;
 
     public String getUuid() {
@@ -38,11 +38,11 @@ public class Destination extends GenericAccountRequest {
         this.value = value;
     }
 
-    public DestinationKind getKind() {
+    public String getKind() {
         return kind;
     }
 
-    public void setKind(DestinationKind kind) {
+    public void setKind(String kind) {
         this.kind = kind;
     }
 

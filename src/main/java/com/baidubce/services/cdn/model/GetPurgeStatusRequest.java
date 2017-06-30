@@ -19,6 +19,10 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+/**
+ * @author yixing
+ *
+ */
 public class GetPurgeStatusRequest extends AbstractBceRequest {
     private String marker;
     private String id;
@@ -27,30 +31,51 @@ public class GetPurgeStatusRequest extends AbstractBceRequest {
     private Date endTime;
     private Date startTime;
     
+    /**
+     * @return marker
+     */
     public String getMarker() {
         return marker;
     }
 
+    /**
+     * @param marker
+     */
     public void setMarker(String marker) {
         this.marker = marker;
     }
     
+    /**
+     * @return id
+     */
     public String getId() {
         return id;
     }
     
+    /**
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
     
+    /**
+     * @return url
+     */
     public String getUrl() {
         return url;
     }
     
+    /**
+     * @param url
+     */
     public void setUrl(String url) {
         this.url = url;
     }
     
+    /**
+     * @param t
+     */
     public void setEndTime(Date t) {
         this.endTime = t;
     }
@@ -59,45 +84,79 @@ public class GetPurgeStatusRequest extends AbstractBceRequest {
         return endTime;
     }
     
+    /**
+     * @param t
+     */
     public void setStartTime(Date t) {
         this.startTime = t;
     }
     
+    /**
+     * @return startTime
+     */
     public Date getStartTime() {
         return startTime;
     }
     
+    /**
+     * @param id
+     * @return returns this object
+     */
     public GetPurgeStatusRequest withId(String id) {
         this.setId(id);
         return this;
     }
 
+    /**
+     * @param url
+     * @return returns this object
+     */
     public GetPurgeStatusRequest withUrl(String url) {
         this.setUrl(url);
         return this;
     }
     
+    /**
+     * @param marker
+     * @return returns this object
+     */
     public GetPurgeStatusRequest withMarker(String marker) {
         this.setMarker(marker);
         return this;
     }
     
+    /**
+     * @param startTime
+     * @return returns this object
+     */
     public GetPurgeStatusRequest withStartTime(Date startTime) {
         this.setStartTime(startTime);
         return this;
     }
     
+    /**
+     * @param endTime
+     * @return returns this object
+     */
     public GetPurgeStatusRequest withEndTime(Date endTime) {
         this.setEndTime(endTime);
         return this;
     }
     
+    /**
+     * (non-Javadoc)
+     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
+     */
     @Override
     public GetPurgeStatusRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
 
+    /**
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         try {

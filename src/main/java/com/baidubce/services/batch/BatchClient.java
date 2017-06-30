@@ -86,12 +86,12 @@ public class BatchClient extends AbstractBceClient {
     /**
      * List Batch-Compute jobs owned by the authenticated user.
      * <p>
-     * <p>
      * Users must authenticate with a valid BCE Access Key ID, and the response
      * contains all the Batch-Compute jobs owned by the user.
      *
      * @param request The request containing valid query parameters.
-     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the request.
+     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the
+     * request.
      */
     public ListJobsResponse listJobs(ListJobsRequest request) {
         checkNotNull(request, "request should not be null.");
@@ -110,7 +110,8 @@ public class BatchClient extends AbstractBceClient {
     /**
      * List Batch-Compute jobs owned by the authenticated user.
      *
-     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the request.
+     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the
+     * request.
      */
     public ListJobsResponse listJobs() {
         return listJobs(new ListJobsRequest());
@@ -120,7 +121,8 @@ public class BatchClient extends AbstractBceClient {
      * List Batch-Compute jobs owned by the authenticated user.
      *
      * @param maxKeys The maximum number of jobs returned.
-     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the request.
+     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the
+     * request.
      * And the size of list is limited below maxKeys.
      */
     public ListJobsResponse listJobs(int maxKeys) {
@@ -130,9 +132,10 @@ public class BatchClient extends AbstractBceClient {
     /**
      * List Batch-Compute jobs owned by the authenticated user.
      *
-     * @param marker  The start record of jobs.
+     * @param marker The start record of jobs.
      * @param maxKeys The maximum number of jobs returned.
-     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the request.
+     * @return The response containing a list of the Batch-Compute jobs owned by the authenticated sender of the
+     * request.
      * The jobs' records start from the marker and the size of list is limited below maxKeys.
      */
     public ListJobsResponse listJobs(String marker, int maxKeys) {
@@ -246,8 +249,8 @@ public class BatchClient extends AbstractBceClient {
     /**
      * Creates and initializes a new request object for the specified resource.
      *
-     * @param bceRequest    The original BCE request created by the user.
-     * @param httpMethod    The HTTP method to use when sending the request.
+     * @param bceRequest The original BCE request created by the user.
+     * @param httpMethod The HTTP method to use when sending the request.
      * @param pathVariables The optional variables used in the URI path.
      * @return A new request object populated with endpoint, resource path and specific
      * parameters to send.

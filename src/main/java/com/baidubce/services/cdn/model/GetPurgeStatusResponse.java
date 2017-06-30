@@ -18,28 +18,47 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * @author yixing
+ *
+ */
 public class GetPurgeStatusResponse extends CdnResponse {
     private String nextMarker;
     @JsonProperty
     private boolean isTruncated;
     private List<PurgeStatus> details = new ArrayList<PurgeStatus>();
 
+    /**
+     * @return nextMarker
+     */
     public String getNextMarker() {
         return nextMarker;
     }
 
+    /**
+     * @param nextMarker
+     */
     public void setNextMarker(String nextMarker) {
         this.nextMarker = nextMarker;
     }
 
+    /**
+     * @return isTruncated
+     */
     public boolean isTruncated() {
         return this.isTruncated;
     }
 
+    /**
+     * @return details
+     */
     public List<PurgeStatus> getDetails() {
         return details;
     }
 
+    /**
+     * @param details
+     */
     public void setDetails(List<PurgeStatus> details) {
         this.details = details;
     }

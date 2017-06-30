@@ -20,6 +20,7 @@ public class TsdbConstants {
     public static final String AGGREGATOR_NAME_DIFF = "Diff";
     public static final String AGGREGATOR_NAME_DIV = "Div";
     public static final String AGGREGATOR_NAME_SCALE = "Scale";
+    public static final String AGGREGATOR_NAME_RATE = "Rate";
 
     // GroupInfo name.
     public static final String GROUP_INFO_NAME_TYPE = "Type";
@@ -48,4 +49,15 @@ public class TsdbConstants {
 
     // Date format.
     public static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    // Time unit.
+    public static final String TIME_UNIT_MILLISECOND = "millisecond";
+    public static final String TIME_UNIT_SECOND = "second";
+    public static final String TIME_UNIT_MINUTE = "minute";
+    public static final String TIME_UNIT_HOUR = "hour";
+    public static final String TIME_UNIT_DAY = "day";
+    public static final String TIME_UNIT_WEEK = "week";
+    public static final String TIME_UNIT_MONTH = "month";
+    public static final String TIME_UNIT_YEAR = "year";
+
 }

@@ -13,17 +13,31 @@
 
 package com.baidubce.services.cdn.model;
 
+/**
+ * @author yixing
+ *
+ */
 public class PrefetchTask extends JsonObject {
     private String url;
     
+    /**
+     * @param url
+     */
     public void setUrl(String url) {
         this.url = url;
     }
     
+    /**
+     * @return url
+     */
     public String getUrl() {
         return url;
     }
     
+    /**
+     * @param url
+     * @return returns this object
+     */
     public PrefetchTask withUrl(String url) {
         setUrl(url);
         return this;

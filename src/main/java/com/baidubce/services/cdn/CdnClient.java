@@ -39,17 +39,63 @@ import com.baidubce.model.AbstractBceRequest;
 
 import com.baidubce.services.cdn.model.ListDomainsRequest;
 import com.baidubce.services.cdn.model.ListDomainsResponse;
+import com.baidubce.services.cdn.model.OriginPeer;
 import com.baidubce.services.cdn.model.PrefetchRequest;
 import com.baidubce.services.cdn.model.PrefetchResponse;
+import com.baidubce.services.cdn.model.PrefetchTask;
 import com.baidubce.services.cdn.model.PurgeRequest;
 import com.baidubce.services.cdn.model.PurgeResponse;
+import com.baidubce.services.cdn.model.PurgeTask;
+import com.baidubce.services.cdn.model.SetDomainCacheFullUrlRequest;
+import com.baidubce.services.cdn.model.SetDomainCacheFullUrlResponse;
+import com.baidubce.services.cdn.model.SetDomainCacheTTLRequest;
+import com.baidubce.services.cdn.model.SetDomainCacheTTLResponse;
+import com.baidubce.services.cdn.model.SetDomainIpACLRequest;
+import com.baidubce.services.cdn.model.SetDomainIpACLResponse;
+import com.baidubce.services.cdn.model.SetDomainLimitRateRequest;
+import com.baidubce.services.cdn.model.SetDomainLimitRateResponse;
+import com.baidubce.services.cdn.model.SetDomainOriginRequest;
+import com.baidubce.services.cdn.model.SetDomainOriginResponse;
+import com.baidubce.services.cdn.model.SetDomainRefererACLRequest;
+import com.baidubce.services.cdn.model.SetDomainRefererACLResponse;
 import com.baidubce.services.cdn.model.GetPurgeStatusRequest;
 import com.baidubce.services.cdn.model.GetPurgeStatusResponse;
+import com.baidubce.services.cdn.model.GetStatAvgSpeedRequest;
+import com.baidubce.services.cdn.model.GetStatAvgSpeedResponse;
+import com.baidubce.services.cdn.model.CreateDomainRequest;
+import com.baidubce.services.cdn.model.CreateDomainResponse;
+import com.baidubce.services.cdn.model.DeleteDomainRequest;
+import com.baidubce.services.cdn.model.DeleteDomainResponse;
+import com.baidubce.services.cdn.model.EnableDomainRequest;
+import com.baidubce.services.cdn.model.EnableDomainResponse;
+import com.baidubce.services.cdn.model.GetCacheQuotaRequest;
+import com.baidubce.services.cdn.model.GetCacheQuotaResponse;
+import com.baidubce.services.cdn.model.GetDomainCacheTTLRequest;
+import com.baidubce.services.cdn.model.GetDomainCacheTTLResponse;
 import com.baidubce.services.cdn.model.GetPrefetchStatusRequest;
 import com.baidubce.services.cdn.model.GetPrefetchStatusResponse;
 import com.baidubce.services.cdn.model.GetStatFlowRequest;
 import com.baidubce.services.cdn.model.GetStatFlowResponse;
-
+import com.baidubce.services.cdn.model.GetStatHitRateRequest;
+import com.baidubce.services.cdn.model.GetStatHitRateResponse;
+import com.baidubce.services.cdn.model.GetStatHttpCodeRequest;
+import com.baidubce.services.cdn.model.GetStatHttpCodeResponse;
+import com.baidubce.services.cdn.model.GetStatPvRequest;
+import com.baidubce.services.cdn.model.GetStatPvResponse;
+import com.baidubce.services.cdn.model.GetStatSrcFlowRequest;
+import com.baidubce.services.cdn.model.GetStatSrcFlowResponse;
+import com.baidubce.services.cdn.model.GetStatTopRefererRequest;
+import com.baidubce.services.cdn.model.GetStatTopRefererResponse;
+import com.baidubce.services.cdn.model.GetStatTopUrlRequest;
+import com.baidubce.services.cdn.model.GetStatTopUrlResponse;
+import com.baidubce.services.cdn.model.GetStatUvRequest;
+import com.baidubce.services.cdn.model.GetStatUvResponse;
+import com.baidubce.services.cdn.model.DisableDomainRequest;
+import com.baidubce.services.cdn.model.DisableDomainResponse;
+import com.baidubce.services.cdn.model.GetDomainConfigRequest;
+import com.baidubce.services.cdn.model.GetDomainConfigResponse;
+import com.baidubce.services.cdn.model.GetDomainLogRequest;
+import com.baidubce.services.cdn.model.GetDomainLogResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.baidubce.util.DateUtils;
@@ -82,6 +128,11 @@ public class CdnClient extends AbstractBceClient {
     private static final String CACHE = "cache";
     
     /**
+     * The common URI prefix for log operation.
+     */
+    private static final String LOG = "log";
+    
+    /**
      * Generate signature with specified headers.
      */
     private static final String[] HEADERS_TO_SIGN = {"host", "x-bce-date"};
@@ -110,6 +161,84 @@ public class CdnClient extends AbstractBceClient {
     }
     
     /**
+     * Create a new domain acceleration.
+     * 
+     * @param request The request containing user-defined domain information.
+     * @return Result of the createDomain operation returned by the service.
+     */
+    public CreateDomainResponse createDomain(CreateDomainRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain());
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CreateDomainResponse.class);
+    }
+    
+    /**
+     * Enable an existing domain acceleration.
+     * 
+     * @param domain The specified domain name.
+     */
+    public void enableDomain(String domain) {
+        enableDomain(new EnableDomainRequest().withDomain(domain));
+    }
+    
+    /**
+     * Enable an existing domain acceleration.
+     * 
+     * @param request The request containing user-defined domain information.
+     * @return Result of the enableDomain operation returned by the service.
+     */
+    public EnableDomainResponse enableDomain(EnableDomainRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, DOMAIN, request.getDomain());
+        internalRequest.addParameter("enable", "");
+        return invokeHttpClient(internalRequest, EnableDomainResponse.class);
+    }
+    
+    /**
+     * Disable an existing domain acceleration.
+     * 
+     * @param domain Name of the domain.
+     */
+    public void disableDomain(String domain) {
+        disableDomain(new DisableDomainRequest().withDomain(domain));
+    }
+    
+    /**
+     * Disable an existing domain acceleration.
+     * 
+     * @param request The request containing user-defined domain information.
+     * @return Result of the disableDomain operation returned by the service.
+     */
+    public DisableDomainResponse disableDomain(DisableDomainRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, DOMAIN, request.getDomain());
+        internalRequest.addParameter("disable", "");
+        return invokeHttpClient(internalRequest, DisableDomainResponse.class);
+    }
+    
+    /**
+     * Delete an existing domain acceleration.
+     * 
+     * @param domain Name of the domain.
+     */
+    public void deleteDomain(String domain) {
+        deleteDomain(new DeleteDomainRequest().withDomain(domain));
+    }
+    
+    /**
+     * Delete an existing domain acceleration
+     * 
+     * @param request The request containing user-defined domain information.
+     * @return Result of the deleteDomain operation returned by the service.
+     */
+    public DeleteDomainResponse deleteDomain(DeleteDomainRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.DELETE, DOMAIN, request.getDomain());
+        return invokeHttpClient(internalRequest, DeleteDomainResponse.class);
+    }
+    
+    /**
      * Returns a list of all CDN domains that the authenticated sender of the request owns.
      *
      * @return All of the CDN domains owned by the authenticated sender of the request.
@@ -129,23 +258,225 @@ public class CdnClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, DOMAIN);
         return invokeHttpClient(internalRequest, ListDomainsResponse.class);
     }
+
+    /**
+     * Get detailed information of a domain.
+     * 
+     * @param domain Name of the domain.
+     * @return getDomainConfig of the getDomainConfig operation returned by the service.
+     */
+    public GetDomainConfigResponse getDomainConfig(String domain) {
+        return getDomainConfig(new GetDomainConfigRequest().withDomain(domain));
+    }
+    
+    /**
+     * Get detailed information of a domain.
+     * 
+     * @param request The request containing all of the options related to the domain.
+     * @return getDomainConfig of the getDomainConfig operation returned by the service.
+     */
+    public GetDomainConfigResponse getDomainConfig(GetDomainConfigRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, DOMAIN, request.getDomain(), "config");
+        return invokeHttpClient(internalRequest, GetDomainConfigResponse.class);
+    }
+    
+    /**
+     * Update origin of specified domain acceleration.
+     * 
+     * @param domain Name of the domain.
+     * @param peer The peer address of new origin.
+     */
+    public void setDomainOrigin(String domain, String peer) {
+        List<OriginPeer> origin = new ArrayList<OriginPeer>();
+        origin.add(new OriginPeer().withPeer(peer));
+        SetDomainOriginRequest request = new SetDomainOriginRequest()
+                .withDomain(domain)
+                .withOrigin(origin);
+        setDomainOrigin(request);
+    } 
+    
+    /**
+     * Update origin of specified domain acceleration.
+     * 
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the setDomainOrigin operation returned by the service.
+     */
+    public SetDomainOriginResponse setDomainOrigin(SetDomainOriginRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("origin","");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetDomainOriginResponse.class);
+    } 
+    
+    /**
+     * Get cache policies of specified domain acceleration.
+     * 
+     * @param domain Name of the domain.
+     * @return Detailed information about cache policies.
+     */
+    public GetDomainCacheTTLResponse getDomainCacheTTL(String domain) {
+        GetDomainCacheTTLRequest request = new GetDomainCacheTTLRequest().withDomain(domain);
+        return getDomainCacheTTL(request);
+    }
+    
+    /**
+     * Get cache policies of specified domain acceleration.
+     * 
+     * @param request The request containing all of the options related to the domain.
+     * @return Detailed information about cache policies.
+     */
+    public GetDomainCacheTTLResponse getDomainCacheTTL(GetDomainCacheTTLRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("cacheTTL","");
+        return invokeHttpClient(internalRequest, GetDomainCacheTTLResponse.class);
+    }
+    
+    /**
+     * Update cache policies of specified domain acceleration.
+     * 
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setDomainCacheTTL operation returned by the service.
+     */
+    public SetDomainCacheTTLResponse setDomainCacheTTL(SetDomainCacheTTLRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("cacheTTL","");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetDomainCacheTTLResponse.class);
+    } 
+    
+    /**
+     * Update cache policy of specified domain acceleration.
+     * 
+     * @param domain Name of the domain.
+     * @param setting For true, treat the full URL as unique cache id, otherwise
+     *                ignore query string parameters.
+     */
+    public void setDomainCacheFullUrl(String domain, boolean setting) {
+        SetDomainCacheFullUrlRequest request = new SetDomainCacheFullUrlRequest()
+                .withDomain(domain);
+        request.setCacheFullUrl(setting);
+        setDomainCacheFullUrl(request);
+    }
+    
+    /**
+     * Update cache policy of specified domain acceleration.
+     * 
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setDomainCacheFullUrl operation returned by the service.
+     */
+    public SetDomainCacheFullUrlResponse setDomainCacheFullUrl(SetDomainCacheFullUrlRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("cacheFullUrl","");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetDomainCacheFullUrlResponse.class);
+    }
+    
+    /**
+     * Update RefererACL rules of specified domain acceleration.
+     * 
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setDomainRefererACL operation returned by the service.
+     */
+    public SetDomainRefererACLResponse setDomainRefererACL(SetDomainRefererACLRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("refererACL","");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetDomainRefererACLResponse.class);
+    }
+    
+    /**
+     * Update IpACL rules of specified domain acceleration.
+     * 
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setDomainIpACL operation returned by the service.
+     */
+    public SetDomainIpACLResponse setDomainIpACL(SetDomainIpACLRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("ipACL","");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetDomainIpACLResponse.class);
+    }
+
+    /**
+     * Set the rate limit of specified domain acceleration.
+     * 
+     * @param domain Name of the domain.
+     * @param limitRate The limit of downloading rate, in Bytes/s.
+     */
+    public void setDomainLimitRate(String domain, int limitRate) {
+        SetDomainLimitRateRequest request = new SetDomainLimitRateRequest()
+                .withDomain(domain)
+                .withLimitRate(limitRate);
+        setDomainLimitRate(request);
+    }
+    
+    /**
+     * Set the rate limit of specified domain acceleration.
+     * 
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setDomainLimitRate operation returned by the service.
+     */
+    public SetDomainLimitRateResponse setDomainLimitRate(SetDomainLimitRateRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("limitRate","");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetDomainLimitRateResponse.class);
+    }
     
     /**
      * Post prefetch request
      *
-     * @param request The request containing all of the urls to be prefetched.
-     * @return The task id
+     * @param url The URL to be prefetched.
+     * @return Result of the prefetch operation returned by the service.
+     */
+    public PrefetchResponse prefetch(String url) {
+        return prefetch(new PrefetchRequest().addTask(new PrefetchTask().withUrl(url)));
+    }
+    
+    /**
+     * Post prefetch request
+     *
+     * @param request The request containing all of the URLs to be prefetched.
+     * @return Result of the prefetch operation returned by the service.
      */
     public PrefetchResponse prefetch(PrefetchRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, CACHE, "prefetch");
         this.attachRequestToBody(request, internalRequest);
         return this.invokeHttpClient(internalRequest, PrefetchResponse.class);
     }
+    
+    /**
+     * Post purge request
+     *
+     * @param url The URL to be purged.
+     * @return Result of the purge operation returned by the service.
+     */
+    public PurgeResponse purge(String url) {
+        return purge(new PurgeRequest().addTask(new PurgeTask().withUrl(url)));
+    }
+    
+    /**
+     * Post purge request
+     *
+     * @param directory The directory to be purged.
+     * @return Result of the purge operation returned by the service.
+     */
+    public PurgeResponse purgeDirectory(String directory) {
+        return purge(new PurgeRequest().addTask(new PurgeTask().withDirectory(directory)));
+    }
 
     /**
      * Post purge request
-     * @param request The request containing all of the urls to be purged.
-     * @return The task id
+     * @param request The request containing all of the URLs to be purged.
+     * @return Result of the purge operation returned by the service.
      */
     public PurgeResponse purge(PurgeRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, CACHE, "purge");
@@ -216,6 +547,37 @@ public class CdnClient extends AbstractBceClient {
     }
     
     /**
+     * Get pv statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatPvResponse getStatPv(GetStatPvRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "pv");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        if (request.isWithRegion()) {
+            internalRequest.addParameter("withRegion", "");
+        }
+        return this.invokeHttpClient(internalRequest, GetStatPvResponse.class);
+    }
+    
+    /**
      * Get flow statistics with specified attributes.
      *
      * @param request The request containing all the options related to the statistics.
@@ -239,7 +601,241 @@ public class CdnClient extends AbstractBceClient {
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
+        
+        if (request.isWithRegion()) {
+            internalRequest.addParameter("withRegion", "");
+        }
         return this.invokeHttpClient(internalRequest, GetStatFlowResponse.class);
+    }
+    
+    /**
+     * Get origin flow statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatSrcFlowResponse getStatSrcFlow(GetStatSrcFlowRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "srcflow");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        return this.invokeHttpClient(internalRequest, GetStatSrcFlowResponse.class);
+    }
+    /**
+     * Get hit rate statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatHitRateResponse getStatHitRate(GetStatHitRateRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "hitrate");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        return this.invokeHttpClient(internalRequest, GetStatHitRateResponse.class);
+    }
+    
+    /**
+     * Get http code statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatHttpCodeResponse getStatHttpCode(GetStatHttpCodeRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "httpcode");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        if (request.isWithRegion()) {
+            internalRequest.addParameter("withRegion", "");
+        }
+        
+        return this.invokeHttpClient(internalRequest, GetStatHttpCodeResponse.class);
+    }
+    
+    /**
+     * Get top url statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatTopUrlResponse getStatTopUrl(GetStatTopUrlRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "topn", "url");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        return this.invokeHttpClient(internalRequest, GetStatTopUrlResponse.class);
+    }
+    
+    /**
+     * Get top http referer statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatTopRefererResponse getStatTopReferer(GetStatTopRefererRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "topn", "referer");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        return this.invokeHttpClient(internalRequest, GetStatTopRefererResponse.class);
+    }
+    
+    /**
+     * Get uv statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatUvResponse getStatUv(GetStatUvRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "uv");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        return this.invokeHttpClient(internalRequest, GetStatUvResponse.class);
+    }
+    
+    /**
+     * Get average speed statistics with specified attributes.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatAvgSpeedResponse getStatAvgSpeed(GetStatAvgSpeedRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "avgspeed");
+        
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
+        
+        if (request.getDomain() != null) {
+            internalRequest.addParameter("domain", request.getDomain());
+        }
+        
+        if (request.getPeriod() != null) {
+            internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
+        }
+        
+        return this.invokeHttpClient(internalRequest, GetStatAvgSpeedResponse.class);
+    }
+    
+    /**
+     * Get cache operation quota.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetCacheQuotaResponse getCacheQuota() {
+        GetCacheQuotaRequest request = new GetCacheQuotaRequest();
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, CACHE, "quota");
+        return this.invokeHttpClient(internalRequest, GetCacheQuotaResponse.class);
+    }
+    
+    /**
+     * Get URLs of log files
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetCacheQuotaResponse getCacheQuota(GetCacheQuotaRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, CACHE, "quota");
+        return this.invokeHttpClient(internalRequest, GetCacheQuotaResponse.class);
+    }
+    
+    /**
+     * 
+     */
+    public GetDomainLogResponse getDomainLog(GetDomainLogRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, LOG, request.getDomain(), "log");
+        return this.invokeHttpClient(internalRequest, GetDomainLogResponse.class);
     }
     
     /**

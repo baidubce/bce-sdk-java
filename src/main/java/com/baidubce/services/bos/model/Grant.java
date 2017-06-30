@@ -29,7 +29,7 @@ public class Grant {
     /**
      * Constructs a new Grant object using the specified grantee and permission objects.
      *
-     * @param grantee    The grantee being granted a permission by this grant.
+     * @param grantee The grantee being granted a permission by this grant.
      * @param permission The permission being granted to the grantee by this grant.
      */
     public Grant(List<Grantee> grantee, List<Permission> permission) {
@@ -59,6 +59,7 @@ public class Grant {
      * Sets the grantee being granted a permission by this grant.
      *
      * @param grantee The grantee being granted a permission by this grant.
+     * @return this object
      */
     public Grant withGrantee(List<Grantee> grantee) {
         this.setGrantee(grantee);
@@ -87,6 +88,7 @@ public class Grant {
      * Sets the permission being granted to the grantee by this grant.
      *
      * @param permission The permission being granted to the grantee by this grant.
+     * @return this object
      */
     public Grant withPermission(List<Permission> permission) {
         this.setPermission(permission);

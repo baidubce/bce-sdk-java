@@ -19,10 +19,9 @@ import java.util.Set;
 
 /**
  * Options for signing the request.
- *
  * <p>
  * There are 3 options available:
- * <table>
+ * <table summary="All options">
  * <tr>
  * <th>Option</th>
  * <th>Description</th>
@@ -49,7 +48,6 @@ import java.util.Set;
  * <td>The time until the signature will expire, which starts from the timestamp. By default, it is set to 1800 (half an
  * hour). </td>
  * </tr>
- * *
  * </table>
  */
 public class SignOptions {
@@ -130,7 +128,6 @@ public class SignOptions {
      * Sets the time until the signature will expire.
      *
      * @param expirationInSeconds The time until the signature will expire.
-     *
      */
     public void setExpirationInSeconds(int expirationInSeconds) {
         this.expirationInSeconds = expirationInSeconds;
@@ -142,5 +139,5 @@ public class SignOptions {
                 + timestamp + ",\n  expirationInSeconds=" + expirationInSeconds
                 + "]";
     }
-    
+
 }

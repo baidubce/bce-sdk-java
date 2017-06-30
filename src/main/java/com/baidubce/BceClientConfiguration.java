@@ -213,6 +213,7 @@ public class BceClientConfiguration {
      * In this case endpoint should be changed while other attributes keep same.
      *
      * @param other the configuration to copy settings from.
+     * @param endpoint the endpoint
      */
     public BceClientConfiguration(BceClientConfiguration other, String endpoint) {
         this.endpoint = endpoint;
@@ -308,7 +309,6 @@ public class BceClientConfiguration {
 
     /**
      * Sets the User-Agent header value to use when sending requests to BCE services.
-     *
      * <p>
      * If the specified value is null, DEFAULT_USER_AGENT is used. If the specified value does not end with
      * DEFAULT_USER_AGENT, DEFAULT_USER_AGENT is appended.
@@ -328,7 +328,6 @@ public class BceClientConfiguration {
     /**
      * Sets the User-Agent header value to use when sending requests to BCE services, and returns the updated
      * configuration instance.
-     *
      * <p>
      * If the specified value is null, DEFAULT_USER_AGENT is used. If the specified value does not end with
      * DEFAULT_USER_AGENT, DEFAULT_USER_AGENT is appended.
@@ -382,7 +381,6 @@ public class BceClientConfiguration {
 
     /**
      * Sets the optional proxy host the client will connect through.
-     *
      * <p>
      * The client will connect through the proxy only if the host is not null and the port is positive.
      *
@@ -394,7 +392,6 @@ public class BceClientConfiguration {
 
     /**
      * Sets the optional proxy host the client will connect through, and returns the updated configuration instance.
-     *
      * <p>
      * The client will connect through the proxy only if the host is not null and the port is positive.
      *
@@ -417,7 +414,6 @@ public class BceClientConfiguration {
 
     /**
      * Sets the optional proxy port the client will connect through.
-     *
      * <p>
      * The client will connect through the proxy only if the host is not null and the port is positive.
      *
@@ -429,7 +425,6 @@ public class BceClientConfiguration {
 
     /**
      * Sets the optional proxy port the client will connect through, and returns the updated configuration instance.
-     *
      * <p>
      * The client will connect through the proxy only if the host is not null and the port is positive.
      *
@@ -748,7 +743,7 @@ public class BceClientConfiguration {
      *
      * @param endpoint the service endpoint URL to which the client will connect.
      * @throws IllegalArgumentException if endpoint is not a valid URL.
-     * @throws NullPointerException     if endpoint is null.
+     * @throws NullPointerException if endpoint is null.
      */
     public void setEndpoint(String endpoint) {
         checkNotNull(endpoint, "endpoint should not be null.");
@@ -762,7 +757,7 @@ public class BceClientConfiguration {
      * @param endpoint the service endpoint URL to which the client will connect.
      * @return the updated configuration instance.
      * @throws IllegalArgumentException if endpoint is not a valid URL.
-     * @throws NullPointerException     if endpoint is null.
+     * @throws NullPointerException if endpoint is null.
      */
     public BceClientConfiguration withEndpoint(String endpoint) {
         this.setEndpoint(endpoint);
@@ -782,7 +777,6 @@ public class BceClientConfiguration {
     /**
      * Sets the region of service. This value is used by the client to construct the endpoint URL automatically, and is
      * ignored if endpoint is not null.
-     *
      * <p>
      * If the specified region is null, sets to DEFAULT_REGION.
      *
@@ -795,7 +789,6 @@ public class BceClientConfiguration {
     /**
      * Sets the region of service, and returns the updated configuration instance. This value is used by the client to
      * construct the endpoint URL automatically, and is ignored if endpoint is not null.
-     *
      * <p>
      * If the specified region is null, sets to DEFAULT_REGION.
      *
@@ -856,5 +849,5 @@ public class BceClientConfiguration {
                 + socketBufferSizeInBytes + ", \n  endpoint=" + endpoint
                 + ", \n  region=" + region + ", \n  credentials=" + credentials + "]\n";
     }
-    
+
 }

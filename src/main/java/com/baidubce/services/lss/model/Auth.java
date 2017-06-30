@@ -13,32 +13,67 @@
 
 package com.baidubce.services.lss.model;
 
+/**
+ * Represents the authentication settings.
+ */
 public class Auth {
     private Boolean push = null;
 
     private Boolean play = null;
 
+    /**
+     * Returns true if authentication is required before push.
+     *
+     * @return true if authentication is required before push
+     */
     public Boolean getPush() {
         return push;
     }
 
+    /**
+     * Sets to true if authentication is required before push
+     *
+     * @param push true if authentication is required before push
+     */
     public void setPush(Boolean push) {
         this.push = push;
     }
 
+    /**
+     * Sets to true if authentication is required before push
+     *
+     * @param push true if authentication is required before push
+     * @return this object
+     */
     public Auth withPush(Boolean push) {
         this.push = push;
         return this;
     }
 
+    /**
+     * Returns true if authentication is required before play
+     *
+     * @return true if authentication is required before play
+     */
     public Boolean getPlay() {
         return play;
     }
 
+    /**
+     * Sets to true if authentication is required before play
+     *
+     * @param play true if authentication is required before play
+     */
     public void setPlay(Boolean play) {
         this.play = play;
     }
 
+    /**
+     * Sets to true if authentication is required before play
+     *
+     * @param play true if authentication is required before play
+     * @return this object
+     */
     public Auth withPlay(Boolean play) {
         this.play = play;
         return this;

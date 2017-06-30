@@ -60,7 +60,7 @@ public class BatchGetItemRequest extends AbstractBceRequest {
     /**
      * Get the request Items set in this BatchGetItem operation.
      * 
-     * @return Returns the map of attributes with name and key, the type is in Map<String, KeysAndAttributes>.
+     * @return Returns the map of attributes with name and key.
      */
     public Map<String, KeysAndAttributes> getRequestItems() {
         return this.requestItems;

@@ -112,7 +112,6 @@ public class HttpUtils {
      *
      * @param value the string to normalize.
      * @return the normalized string.
-     * @throws UnsupportedEncodingException
      */
     public static String normalize(String value) {
         try {

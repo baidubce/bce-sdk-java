@@ -17,6 +17,10 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * InternalCreateMediaRequest class used to construct a internal createMedia request,
+ * and send to API server.
+ */
 public class InternalCreateMediaRequest extends AbstractBceRequest {
 
     /*
@@ -40,7 +44,15 @@ public class InternalCreateMediaRequest extends AbstractBceRequest {
      */
     private String sourceExtension;
 
+    /*
+     * The media transcoding preset group name
+     */
     private String transcodingPresetGroupName;
+
+    /*
+     * The transcoding priority
+     */
+    private int priority;
 
     @Override
     public String toString() {
@@ -53,69 +65,177 @@ public class InternalCreateMediaRequest extends AbstractBceRequest {
         return sb.toString();
     }
 
+    /**
+     * get media id
+     *
+     * @return the media id
+     */
     public String getMediaId() {
         return mediaId;
     }
 
+    /**
+     * set media id
+     *
+     * @param mediaId the media id
+     */
     public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
     }
 
+    /**
+     * set the media id
+     *
+     * @param mediaId the media id
+     * @return InternalCreateMediaRequest after set mediaId
+     */
     public InternalCreateMediaRequest withMediaId(String mediaId) {
         this.mediaId = mediaId;
         return this;
     }
 
+    /**
+     * get media title
+     *
+     * @return the media title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * set media title
+     *
+     * @param title the media title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-
+    /**
+     * set the media title
+     *
+     * @param title the media title
+     * @return InternalCreateMediaRequest after set title
+     */
     public InternalCreateMediaRequest withTitle(String title) {
         this.title = title;
         return this;
     }
 
+    /**
+     * get media transcoding preset group name
+     *
+     * @return the media transcoding preset group name
+     */
     public String getTranscodingPresetGroupName() {
         return transcodingPresetGroupName;
     }
 
+    /**
+     * set media transcoding preset group name
+     *
+     * @param transcodingPresetGroupName the media transcoding preset group name
+     */
     public void setTranscodingPresetGroupName(String transcodingPresetGroupName) {
         this.transcodingPresetGroupName = transcodingPresetGroupName;
     }
 
+    /**
+     * set media transcoding preset group name
+     *
+     * @param transcodingPresetGroupName the media transcoding preset group name
+     * @return InternalCreateMediaRequest with media transcoding preset group name
+     */
     public InternalCreateMediaRequest withTranscodingPresetGroupName(String transcodingPresetGroupName) {
         this.transcodingPresetGroupName = transcodingPresetGroupName;
         return this;
     }
 
+    /**
+     * get media description
+     *
+     * @return the media description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * set media description
+     *
+     * @param description the media description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * set media description
+     *
+     * @param description the media description
+     * @return InternalCreateMediaRequest with media description
+     */
     public InternalCreateMediaRequest withDescription(String description) {
         this.description = description;
         return this;
     }
 
+    /**
+     * get media source extension
+     *
+     * @return the media source extension
+     */
     public String getSourceExtension() {
         return sourceExtension;
     }
 
+    /**
+     * set media source extension
+     *
+     * @param sourceExtension the media source extension
+     */
     public void setSourceExtension(String sourceExtension) {
         this.sourceExtension = sourceExtension;
     }
 
+    /**
+     * set media source extension
+     *
+     * @param sourceExtension the media source extension
+     * @return InternalCreateMediaRequest with media source extension
+     */
     public InternalCreateMediaRequest withSourceExtension(String sourceExtension) {
         this.sourceExtension = sourceExtension;
+        return this;
+    }
+
+    /**
+     * get media transcoding priority
+     *
+     * @return the media transcoding priority
+     */
+    public int getPriority() {
+        return priority;
+    }
+
+    /**
+     * set media transcoding priority
+     *
+     * @param priority the media transcoding priority
+     */
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    /**
+     * set media transcoding priority
+     *
+     * @param priority the media transcoding priority
+     * @return InternalCreateMediaRequest with media transcoding priority
+     */
+    public InternalCreateMediaRequest withPriority(int priority) {
+        this.priority = priority;
         return this;
     }
 

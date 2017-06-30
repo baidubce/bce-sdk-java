@@ -13,13 +13,23 @@
 
 package com.baidubce.services.cdn.model;
 
+/**
+ * @author yixing
+ *
+ */
 public class PurgeResponse extends CdnResponse {
     private String id;
 
+    /**
+     * @return id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }

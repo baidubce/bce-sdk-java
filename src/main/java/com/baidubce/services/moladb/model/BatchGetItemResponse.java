@@ -14,6 +14,7 @@ package com.baidubce.services.moladb.model;
 
 import java.util.List;
 import java.util.Map;
+
 import com.baidubce.model.AbstractBceResponse;
 
 /**
@@ -33,8 +34,8 @@ public class BatchGetItemResponse extends AbstractBceResponse {
 
     /**
      * Get all of the unprocessed items in this BatchGetItem request.
-     * 
-     * @return All of the unprocessed items in this BatchGetItem request, the type is in Map<String,KeysAndAttributes> type.
+     *
+     * @return All of the unprocessed items in this BatchGetItem request.
      */
     public Map<String, KeysAndAttributes> getUnprocessedItems() {
         return this.unprocessedItems;
@@ -42,13 +43,13 @@ public class BatchGetItemResponse extends AbstractBceResponse {
 
     /**
      * Set all of the unprocessed items in this BatchGetItem request.
-     * 
-     * @param items All of the unprocessed items in this BatchGetItem request, the type is in Map<String,KeysAndAttributes> type.
+     *
+     * @param items All of the unprocessed items in this BatchGetItem request.
      */
     public void setUnprocessedItems(Map<String, KeysAndAttributes> items) {
         this.unprocessedItems = items;
     }
-    
+
     /**
      * Return a string representation of the response information.
      *
@@ -68,16 +69,16 @@ public class BatchGetItemResponse extends AbstractBceResponse {
 
     /**
      * Set the processed items' content for this BatchGetItem request.
-     * 
+     *
      * @param responses The processed items' content for this BatchGetItem request.
      */
     public void setResponses(Map<String, List<Map<String, AttributeValue>>> responses) {
         this.responses = responses;
     }
-    
+
     /**
      * Get the processed items' content for this BatchGetItem request.
-     * 
+     *
      * @return The processed items' content for this BatchGetItem request.
      */
     public Map<String, List<Map<String, AttributeValue>>> getResponses() {

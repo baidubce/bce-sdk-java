@@ -13,6 +13,8 @@ import com.baidubce.auth.Signer;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.services.tsdb.model.Datapoint;
+import com.baidubce.services.tsdb.model.GetFieldsRequest;
+import com.baidubce.services.tsdb.model.GetFieldsResponse;
 import com.baidubce.services.tsdb.model.GetMetricsRequest;
 import com.baidubce.services.tsdb.model.GetMetricsResponse;
 import com.baidubce.services.tsdb.model.GetTagsRequest;
@@ -31,13 +33,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class TsdbClient extends AbstractTsdbBceClient {
 
+    private static final String ENDPOINT_HOST = ".tsdb.iot.gz.baidubce.com";
     private static final String DATAPOINT = "datapoint";
     private static final String METRIC = "metric";
     private static final String TAG = "tag";
+    private static final String FIELD = "field";
     private static final String QUERY = "query";
 
     public TsdbClient(BceClientConfiguration config) {
         super(config, TSDB_HANDLERS);
+    }
+
+    public TsdbClient(BceClientConfiguration config, String database) {
+        super(config.getEndpoint() == null ? config.withEndpoint(database + ENDPOINT_HOST) : config,
+                TSDB_HANDLERS);
     }
 
     public WriteDatapointsResponse writeDatapoints(List<Datapoint> datapoints) {
@@ -95,6 +104,17 @@ public class TsdbClient extends AbstractTsdbBceClient {
         InternalRequest internalRequest =
                 createRequest(getTagsRequest, HttpMethodName.GET, METRIC, getTagsRequest.getMetric(), TAG);
         return this.invokeHttpClient(internalRequest, GetTagsResponse.class);
+    }
+
+    public GetFieldsResponse getFields(String metric) {
+        return getFields(new GetFieldsRequest().withMetric(metric));
+    }
+
+    public GetFieldsResponse getFields(GetFieldsRequest getFieldsRequest) {
+        checkNotNull(getFieldsRequest, "request should not be null.");
+        InternalRequest internalRequest =
+                createRequest(getFieldsRequest, HttpMethodName.GET, METRIC, getFieldsRequest.getMetric(), FIELD);
+        return this.invokeHttpClient(internalRequest, GetFieldsResponse.class);
     }
 
     public QueryDatapointsResponse queryDatapoints(List<Query> queries) {

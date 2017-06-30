@@ -77,6 +77,11 @@ public class BosClient extends AbstractBceClient {
     public static final String STORAGE_CLASS_STANDARD_IA = "STANDARD_IA"; 
 
     /**
+     * Cold access BOS storage class
+     */
+    public static final String STORAGE_CLASS_COLD = "COLD"; 
+
+    /**
      * Constructs a new client to invoke service methods on Bos.
      */
     public BosClient() {

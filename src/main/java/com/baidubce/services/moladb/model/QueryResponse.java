@@ -45,7 +45,7 @@ public class QueryResponse extends AbstractBceResponse {
     /**
      * Set the list of result items from this query operation.
      * 
-     * @param item A list of result items from this query operation.
+     * @param items A list of result items from this query operation.
      */
     public void setItems(List<Map<String, AttributeValue>> items) {
         this.items = items;

@@ -169,7 +169,6 @@ public class GetItemRequest extends AbstractBceRequest {
      * together.
      *
      * @param attributeNames The attribute name list which are expected to be returned from the table.
-     * @return A reference to this object so that method calls can be chained together
      */
     public void setAttributesToGet(List<String> attributeNames) {
         this.attributesToGet = attributeNames;

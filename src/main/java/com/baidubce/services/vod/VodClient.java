@@ -198,6 +198,7 @@ public class VodClient extends AbstractBceClient {
      * @param description media description.
      * @param file The file containing the data to be uploaded to VOD.
      * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own task
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      * @throws FileNotFoundException
      */
@@ -205,7 +206,8 @@ public class VodClient extends AbstractBceClient {
             String title,
             String description,
             File file,
-            String transcodingPresetGroupName)
+            String transcodingPresetGroupName,
+            int priority)
             throws FileNotFoundException {
         if (!file.exists()) {
             throw new FileNotFoundException("The media file " + file.getAbsolutePath() + " doesn't exist!");
@@ -234,7 +236,8 @@ public class VodClient extends AbstractBceClient {
                             .withTitle(title)
                             .withDescription(description)
                             .withSourceExtension(sourceExtension)
-                            .withTranscodingPresetGroupName(transcodingPresetGroupName);
+                            .withTranscodingPresetGroupName(transcodingPresetGroupName)
+                            .withPriority(priority);
             InternalCreateMediaResponse internalResponse = processMedia(request);
             response.setMediaId(internalResponse.getMediaId());
         }
@@ -251,15 +254,16 @@ public class VodClient extends AbstractBceClient {
      * @param title The title string of the media resource
      * @param description The description string of the media resource
      * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own jobs
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
-     * @throws FileNotFoundException
      */
     public CreateMediaResourceResponse createMediaResource(
             String sourceBucket,
             String sourceKey,
             String title,
             String description,
-            String transcodingPresetGroupName) {
+            String transcodingPresetGroupName,
+            int priority) {
         checkStringNotEmpty(sourceBucket, "sourceBucket should not be null or empty!");
         checkStringNotEmpty(sourceKey, "key should not be null or empty!");
 
@@ -288,7 +292,8 @@ public class VodClient extends AbstractBceClient {
                         .withTitle(title)
                         .withDescription(description)
                         .withSourceExtension(sourceExtension)
-                        .withTranscodingPresetGroupName(transcodingPresetGroupName);
+                        .withTranscodingPresetGroupName(transcodingPresetGroupName)
+                        .withPriority(priority);
         InternalCreateMediaResponse internalResponse = processMedia(request);
 
         CreateMediaResourceResponse response = new CreateMediaResourceResponse();
@@ -352,9 +357,9 @@ public class VodClient extends AbstractBceClient {
      * <p>
      * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
      *
-     * @param pageNo The pageNo need to list, must >0
+     * @param pageNo The pageNo need to list, must be greater than 0
      * @param pageSize The pageSize ,must in range [LIST_MIN_PAGESIZE,LIST_MAX_PAGESIZE]
-     * @pagam status The media status, can be null
+     * @param status The media status, can be null
      * @param begin The media create date after begin
      * @param end The media create date before end
      * @param title The media title, use prefix search
@@ -420,7 +425,7 @@ public class VodClient extends AbstractBceClient {
      *
      * @param marker The marker labels the query begining; first query use NULL.
      * @param maxSize The maxSize returned ,must in range [LIST_MIN_PAGESIZE,LIST_MAX_PAGESIZE]
-     * @pagam status The media status, can be null
+     * @param status The media status, can be null
      * @param begin The media create date after begin
      * @param end The media create date before end
      * @param title The media title, use prefix search
@@ -679,7 +684,7 @@ public class VodClient extends AbstractBceClient {
      *
      * @param startTime, query media start time, default:2016-04-30T16:00:00Z
      * @param endTime, query media end time, default:now
-     * @pagam aggregate, if need aggregate, default: true
+     * @param aggregate, if need aggregate, default: true
      * @return The media statistic info
      */
     public GetMediaStatisticResponse getMediaStatistic(

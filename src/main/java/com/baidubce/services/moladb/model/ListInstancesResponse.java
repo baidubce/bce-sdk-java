@@ -20,7 +20,7 @@ public class ListInstancesResponse extends AbstractBceResponse {
     /**
      * Get the names of all instances got from server side.
      * 
-     * @return The names of all instances got from server side, the type is in List<String>.
+     * @return The names of all instances got from server side.
      */
     public List<String> getInstanceNames() {
         return this.instanceNames;
@@ -29,7 +29,7 @@ public class ListInstancesResponse extends AbstractBceResponse {
     /**
      * Set the names of all instances got from server side.
      * 
-     * @param names The names of all instances got from server side, the type is in List<String>.
+     * @param names The names of all instances got from server side.
      */
     public void setInstanceNames(List<String> names) {
         this.instanceNames = names; 

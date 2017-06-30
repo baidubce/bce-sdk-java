@@ -13,32 +13,67 @@
 
 package com.baidubce.services.lss.model;
 
+/**
+ * Reprsents the anti-leech settings. Currently only refer & single ip restriction are supported.
+ */
 public class AntiLeech {
     private Refer refer = null;
 
     private IP ip = null;
 
+    /**
+     * Returns the refer
+     *
+     * @return the refer
+     */
     public Refer getRefer() {
         return refer;
     }
 
+    /**
+     * Sets the refer
+     *
+     * @param refer the refer
+     */
     public void setRefer(Refer refer) {
         this.refer = refer;
     }
 
+    /**
+     * Sets the refer and returns this object.
+     *
+     * @param refer the refer
+     * @return this object
+     */
     public AntiLeech withRefer(Refer refer) {
         this.refer = refer;
         return this;
     }
 
+    /**
+     * Returns the IP
+     *
+     * @return the IP
+     */
     public IP getIp() {
         return ip;
     }
 
+    /**
+     * Sets the IP.
+     *
+     * @param ip the IP
+     */
     public void setIp(IP ip) {
         this.ip = ip;
     }
 
+    /**
+     * Sets the IP and returns this object
+     *
+     * @param ip the IP
+     * @return this object
+     */
     public AntiLeech withIp(IP ip) {
         this.ip = ip;
         return this;

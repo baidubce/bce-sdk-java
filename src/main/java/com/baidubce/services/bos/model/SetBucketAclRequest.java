@@ -41,8 +41,8 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * canned ACL on the specified bucket when this request is executed.
      *
      * @param bucketName The name of the bucket whose ACL will be set by this request.
-     * @param cannedAcl  The Canned Access Control List to apply to the specified
-     *                   bucket when this request is executed.
+     * @param cannedAcl The Canned Access Control List to apply to the specified
+     * bucket when this request is executed.
      */
     public SetBucketAclRequest(String bucketName, CannedAccessControlList cannedAcl) {
         super(bucketName);
@@ -54,8 +54,8 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * canned ACL on the specified bucket when this request is executed.
      *
      * @param bucketName The name of the bucket whose ACL will be set by this request.
-     * @param jsonAcl  The json style of acl to apply to the specified
-     *                   bucket when this request is executed.
+     * @param jsonAcl The json style of acl to apply to the specified
+     * bucket when this request is executed.
      */
     public SetBucketAclRequest(String bucketName, String jsonAcl) {
         super(bucketName);
@@ -68,7 +68,7 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      *
      * @param bucketName The name of the bucket whose ACL will be set by this request.
      * @param accessControlList The custom Access Control List containing the access rules to
-     *            apply to the specified bucket when this request is executed.
+     * apply to the specified bucket when this request is executed.
      */
     public SetBucketAclRequest(String bucketName, List<Grant> accessControlList) {
         super(bucketName);
@@ -103,7 +103,7 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * request is executed.
      *
      * @param cannedAcl The canned ACL to be applied to the specified bucket when this
-     *                  request is executed.
+     * request is executed.
      */
     public void setCannedAcl(CannedAccessControlList cannedAcl) {
         this.cannedAcl = cannedAcl;
@@ -114,7 +114,8 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * request is executed.
      *
      * @param cannedAcl The canned ACL to be applied to the specified bucket when this
-     *                  request is executed.
+     * request is executed.
+     * @return this object
      */
     public SetBucketAclRequest withCannedAcl(CannedAccessControlList cannedAcl) {
         this.setCannedAcl(cannedAcl);
@@ -127,7 +128,7 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * ACL, but not both.
      *
      * @return The custom ACL to be applied to the specified bucket when this
-     *         request is executed.
+     * request is executed.
      */
     public List<Grant> getAccessControlList() {
         return accessControlList;
@@ -138,7 +139,7 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * apply to the specified bucket when this request is executed.
      *
      * @param accessControlList The custom Access Control List containing the access rules to
-     *            apply to the specified bucket when this request is executed.
+     * apply to the specified bucket when this request is executed.
      */
     public void setAccessControlList(List<Grant> accessControlList) {
         this.accessControlList = accessControlList;
@@ -149,7 +150,8 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * apply to the specified bucket when this request is executed.
      *
      * @param accessControlList The custom Access Control List containing the access rules to
-     *            apply to the specified bucket when this request is executed.
+     * apply to the specified bucket when this request is executed.
+     * @return this object
      */
     public SetBucketAclRequest withAccessControlList(List<Grant> accessControlList) {
         this.setAccessControlList(accessControlList);
@@ -163,7 +165,7 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * ACL, but not both.
      *
      * @return The custom json style of ACL to be applied to the specified bucket when this
-     *         request is executed.
+     * request is executed.
      */
     public String getJsonAcl() {
         return this.jsonAcl;
@@ -174,7 +176,7 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * apply to the specified bucket when this request is executed.
      *
      * @param jsonAcl The custom json style of acl containing the access rules to
-     *            apply to the specified bucket when this request is executed.
+     * apply to the specified bucket when this request is executed.
      */
     public void setJsonAcl(String jsonAcl) {
         this.jsonAcl = jsonAcl;
@@ -185,7 +187,8 @@ public class SetBucketAclRequest extends GenericBucketRequest {
      * apply to the specified bucket when this request is executed.
      *
      * @param jsonAcl The custom json style of acl containing the access rules to
-     *            apply to the specified bucket when this request is executed.
+     * apply to the specified bucket when this request is executed.
+     * @return this object
      */
     public SetBucketAclRequest withJsonAcl(String jsonAcl) {
         this.setJsonAcl(jsonAcl);

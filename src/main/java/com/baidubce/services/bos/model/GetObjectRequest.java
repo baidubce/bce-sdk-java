@@ -18,13 +18,11 @@ import com.baidubce.auth.BceCredentials;
 
 /**
  * Provides options for downloading an Baidu Bos object.
- *
  * <p>
  * All <code>GetObjectRequests</code> must specify a bucket name and key.
- * Beyond that, requests can also specify: * <p>
- *  <p>
+ * Beyond that, requests can also specify:
  * <ul>
- *   <li>The range of bytes within the object to download,
+ * <li>The range of bytes within the object to download,
  * </ul>
  */
 public class GetObjectRequest extends GenericObjectRequest {
@@ -42,7 +40,7 @@ public class GetObjectRequest extends GenericObjectRequest {
      * Constructs a new GetObjectRequest with all the required parameters.
      *
      * @param bucketName The name of the bucket containing the desired object.
-     * @param key        The key in the specified bucket under which the object is stored.
+     * @param key The key in the specified bucket under which the object is stored.
      */
     public GetObjectRequest(String bucketName, String key) {
         super(bucketName, key);
@@ -86,14 +84,13 @@ public class GetObjectRequest extends GenericObjectRequest {
 
     /**
      * Gets the optional inclusive byte range within the desired object that will be downloaded by this request.
-     *
      * <p>
      * The range is returned as a two element array, containing the start and end index of the byte range.
      * If no byte range has been specified, the entire object is downloaded and this method returns <code>null</code>.
      *
      * @return A two element array indicating the inclusive start index and end index
-     *     within the object being downloaded by this request.
-     *     Returns <code>null</code> if no range has been specified, and the whole object is to be downloaded.
+     * within the object being downloaded by this request.
+     * Returns <code>null</code> if no range has been specified, and the whole object is to be downloaded.
      */
     public long[] getRange() {
         return this.range == null ? null : this.range.clone();
@@ -101,11 +98,9 @@ public class GetObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets the optional inclusive byte range within the desired object that will be downloaded by this request.
-     *
      * <p>
      * The first byte in an object has  position 0; as an example, the first ten bytes of an object can be
      * downloaded by specifying a range of 0 to 9.
-     *
      * <p>
      * If no byte range is specified, this request downloads the entire object from Baidu Bos.
      *
@@ -121,11 +116,9 @@ public class GetObjectRequest extends GenericObjectRequest {
     /**
      * Sets the optional inclusive byte range within the desired object that will be downloaded by this request.
      * Returns this GetObjectRequest, enabling additional method calls to be chained together.
-     *
      * <p>
      * The first byte in an object has position 0; as an example, the first ten bytes of an object can be
      * downloaded by specifying a range of 0 to 9.
-     *
      * <p>
      * If no byte range is specified, this request downloads the entire object from Baidu Bos.
      *

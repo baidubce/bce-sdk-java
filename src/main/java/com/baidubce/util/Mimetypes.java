@@ -22,15 +22,14 @@ import java.util.StringTokenizer;
 /**
  * Utility class that maintains a listing of known Mimetypes, and determines the
  * mimetype of files based on file extensions.
- *
  * <p>
  * This class is obtained with the {#link {@link #getInstance()} method that
  * recognizes loaded mime types from the file <code>mime.types</code> if this
  * file is available at the root of the classpath. The mime.types file format,
  * and most of the content, is taken from the Apache HTTP server's mime.types
- * file. * <p>
- *  <p>The format for mime type setting documents is:
- * <code>mimetype <Space | Tab>+ extension (<Space|Tab>+ extension)*</code>. Any
+ * file.
+ * <p>The format for mime type setting documents is:
+ * <code>mimetype &lt;Space | Tab&gt;+ extension (&lt;Space|Tab&gt;+ extension)*</code>. Any
  * blank lines in the file are ignored, as are lines starting with
  * <code>#</code> which are considered comments. Lines that have a mimetype but
  * no associated extensions are also ignored.
@@ -132,7 +131,6 @@ public class Mimetypes {
      * no extension, or the extension is not available in the listing contained
      * in this class, the default mimetype <code>application/octet-stream</code>
      * is returned.
-     *
      * <p>
      * A file extension is one or more characters that occur after the last
      * period (.) in the file's name. If a file has no extension, Guesses the
@@ -171,7 +169,6 @@ public class Mimetypes {
      * to find the corresponding mime type. If the file has no extension, or the extension is not
      * available in the listing contained in this class, the default mimetype
      * <code>application/octet-stream</code> is returned.
-     *
      * <p>
      * A file extension is one or more characters that occur after the last period (.) in the file's name.
      * If a file has no extension,
@@ -179,7 +176,7 @@ public class Mimetypes {
      *
      * @param file the file whose extension may match a known mimetype.
      * @return the file's mimetype based on its extension, or a default value of
-     *     <code>application/octet-stream</code> if a mime type value cannot be found.
+     * <code>application/octet-stream</code> if a mime type value cannot be found.
      */
     public String getMimetype(File file) {
         return getMimetype(file.getName());

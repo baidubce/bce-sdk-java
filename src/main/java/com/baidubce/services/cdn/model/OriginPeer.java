@@ -13,28 +13,57 @@
 
 package com.baidubce.services.cdn.model;
 
-public class OriginPeer {
-    private String peer = null;
+/**
+ * @author yixing
+ *
+ */
+public class OriginPeer extends JsonObject {
+    private String peer;
+    private String host;
     
+    /**
+     * @param peer
+     * @return returns this object
+     */
     public OriginPeer withPeer(String peer) {
         this.peer = peer;
         return this;
     }
+    
+    /**
+     * @param host
+     * @return returns this object
+     */
+    public OriginPeer withHost(String host) {
+        this.host = host;
+        return this;
+    }
 
+    /**
+     * @return peer
+     */
     public String getPeer() {
         return peer;
     }
 
+    /**
+     * @param peer
+     */
     public void setPeer(String peer) {
         this.peer = peer;
     }
+    
+    /**
+     * @return host
+     */
+    public String getHost() {
+        return host;
+    }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Domain {\n");
-        sb.append("    peer: ").append(peer).append("\n");
-        sb.append("}\n");
-        return sb.toString();
+    /**
+     * @param host
+     */
+    public void setHost(String host) {
+        this.host = host;
     }
 }

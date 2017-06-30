@@ -16,6 +16,12 @@ public class Query {
     private String metric;
 
     /**
+     * Optional.
+     * The field name.
+     */
+    private String field;
+
+    /**
      * Required.
      * The filters.
      */
@@ -52,6 +58,14 @@ public class Query {
 
     public void setMetric(String metric) {
         this.metric = metric;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
     }
 
     public Filters getFilters() {
@@ -98,7 +112,12 @@ public class Query {
         this.metric = metric;
         return this;
     }
-    
+
+    public Query withField(String field) {
+        this.field = field;
+        return this;
+    }
+
     public Query withFilters(Filters filters) {
         this.filters = filters;
         return this;

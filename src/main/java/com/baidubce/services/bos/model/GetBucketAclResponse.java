@@ -33,6 +33,8 @@ public class GetBucketAclResponse extends BosResponse {
 
     /**
      * Gets the acl version.
+     *
+     * @return the acl version.
      */
     public int getVersion() {
         return version;
@@ -40,6 +42,8 @@ public class GetBucketAclResponse extends BosResponse {
 
     /**
      * Sets the acl version.
+     *
+     * @param version the acl version
      */
     public void setVersion(int version) {
         this.version = version;

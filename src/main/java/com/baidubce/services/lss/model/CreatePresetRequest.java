@@ -18,7 +18,7 @@ import com.baidubce.model.AbstractBceRequest;
 
 public class CreatePresetRequest extends AbstractBceRequest {
 
-    private  String name = null;
+    private String name = null;
 
     private String description = null;
 
@@ -37,119 +37,212 @@ public class CreatePresetRequest extends AbstractBceRequest {
     private Watermarks watermarks = null;
 
     /**
-     * 直播模板名称
+     * Returns the name of the preset.
+     *
+     * @return the name of the preset
      **/
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the preset.
+     *
+     * @param name the name of the preset
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Sets the name of the preset and returns this object.
+     *
+     * @param name the name of the preset.
+     * @return this object
+     */
     public CreatePresetRequest withName(String name) {
         this.name = name;
         return this;
     }
 
     /**
-     * 模板的描述
+     * Returns the description of the preset.
+     *
+     * @return the description of the preset
      **/
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description of the preset.
+     *
+     * @param description the description of the preset
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Sets the description of the preset and returns this object.
+     *
+     * @param description the description of the preset.
+     * @return this object
+     */
     public CreatePresetRequest withDescription(String description) {
         this.description = description;
         return this;
     }
 
     /**
-     * 是否仅进行直播转发，保持输入流分辨率与码率不变
+     * Returns true if forward only.
+     *
+     * @return true if forward only.
      **/
     public Boolean getForwardOnly() {
         return forwardOnly;
     }
 
+    /**
+     * Sets the forward option
+     *
+     * @param forwardOnly true if forward only
+     */
     public void setForwardOnly(Boolean forwardOnly) {
         this.forwardOnly = forwardOnly;
     }
 
+    /**
+     * Sets the forward option and returns this object.
+     *
+     * @param forwardOnly true if forward only
+     * @return this object
+     */
     public CreatePresetRequest withForwardOnly(Boolean forwardOnly) {
         this.forwardOnly = forwardOnly;
         return this;
     }
 
     /**
-     * 音频输出信息的集合
+     * Returns the audio settings.
+     *
+     * @return the audio settings
      **/
     public Audio getAudio() {
         return audio;
     }
 
+    /**
+     * Sets the audio settings.
+     *
+     * @param audio the audio settings
+     */
     public void setAudio(Audio audio) {
         this.audio = audio;
     }
 
+    /**
+     * Sets the audio settings and returns this object.
+     *
+     * @param audio the audio settings
+     * @return this object
+     */
     public CreatePresetRequest withAudio(Audio audio) {
         this.audio = audio;
         return this;
     }
 
     /**
-     * 视频输出信息的集合
+     * Returns the video settings.
+     *
+     * @return the video settings
      **/
     public Video getVideo() {
         return video;
     }
 
+    /**
+     * Sets the video settings.
+     *
+     * @param video the video settings
+     */
     public void setVideo(Video video) {
         this.video = video;
     }
 
+    /**
+     * Sets the video settings and returns this object.
+     *
+     * @param video the video settings
+     * @return this object
+     */
     public CreatePresetRequest withVideo(Video video) {
         this.video = video;
         return this;
     }
 
     /**
-     * hls输出参数
+     * Returns the HLS settings.
+     *
+     * @return the HLS settings
      **/
     public Hls getHls() {
         return hls;
     }
 
+    /**
+     * Sets the HLS settings.
+     *
+     * @param hls the HLS setting
+     */
     public void setHls(Hls hls) {
         this.hls = hls;
     }
 
+    /**
+     * Sets the HLS settings and returns this object.
+     *
+     * @param hls the HLS settings
+     * @return this object
+     */
     public CreatePresetRequest withHls(Hls hls) {
         this.hls = hls;
         return this;
     }
 
     /**
-     * rtmp参数
+     * Returns the RTMP settings.
+     *
+     * @return the RTMP settings
      **/
     public Rtmp getRtmp() {
         return rtmp;
     }
 
+    /**
+     * Sets the RTMP settings.
+     *
+     * @param rtmp the RTMP settings
+     */
     public void setRtmp(Rtmp rtmp) {
         this.rtmp = rtmp;
     }
 
+    /**
+     * Sets the RTMP settings and returns this object.
+     *
+     * @param rtmp the RTMP settings
+     * @return this object
+     */
     public CreatePresetRequest withRtmp(Rtmp rtmp) {
         this.rtmp = rtmp;
         return this;
     }
 
     /**
-     * 直播水印相关参数
+     * Returns the watermark settings.
+     *
+     * @return the watermark settings
      **/
     public Watermarks getWatermarks() {
         return watermarks;

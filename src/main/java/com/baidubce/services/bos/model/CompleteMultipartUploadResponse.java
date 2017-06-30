@@ -78,6 +78,8 @@ public class CompleteMultipartUploadResponse extends BosResponse {
 
     /**
      * Gets the key by which the newly created object is stored.
+     *
+     * @return the key value
      */
     public String getKey() {
         return this.key;
@@ -85,6 +87,8 @@ public class CompleteMultipartUploadResponse extends BosResponse {
 
     /**
      * Sets the key of the newly created object.
+     *
+     * @param key the key of the newly created object.
      */
     public void setKey(String key) {
         this.key = key;

@@ -15,6 +15,7 @@ package com.baidubce.services.moladb.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.moladb.MolaDbConstants;
@@ -33,7 +34,7 @@ public class QueryRequest extends AbstractBceRequest {
     private String keyConditionExpression;
     private Map<String, AttributeValue> expressionAttributeValues;
     private String order = MolaDbConstants.JSON_ASC;
-    
+
     /**
      * Constructs a new QueryRequest object.
      * Callers should use the setter or fluent setter (with...) methods to
@@ -46,7 +47,7 @@ public class QueryRequest extends AbstractBceRequest {
      * Constructs a new QueryRequest object.
      * Callers should use the setter or fluent setter (with...) methods to
      * initialize any additional object members.
-     * 
+     *
      * @param tableName The name of the table to query.
      */
     public QueryRequest(String tableName) {
@@ -61,7 +62,7 @@ public class QueryRequest extends AbstractBceRequest {
     public String getKeyConditionExpression() {
         return this.keyConditionExpression;
     }
-    
+
     /**
      * Set the query condition expression for this query request.
      *
@@ -70,7 +71,7 @@ public class QueryRequest extends AbstractBceRequest {
     public void setKeyConditionExpression(String expression) {
         this.keyConditionExpression = expression;
     }
-    
+
     /**
      * Set the query condition expression for this query request.
      *
@@ -81,7 +82,7 @@ public class QueryRequest extends AbstractBceRequest {
         this.setKeyConditionExpression(expression);
         return this;
     }
-    
+
     /**
      * Get the values for the parameters in the the query condition expression for this query request.
      *
@@ -90,7 +91,7 @@ public class QueryRequest extends AbstractBceRequest {
     public Map<String, AttributeValue> getExpressionAttributeValues() {
         return this.expressionAttributeValues;
     }
-    
+
     /**
      * Set the values for the parameters in the the query condition expression for this query request.
      *
@@ -99,7 +100,7 @@ public class QueryRequest extends AbstractBceRequest {
     public void setExpressionAttributeValues(Map<String, AttributeValue> attributes) {
         this.expressionAttributeValues = attributes;
     }
-    
+
     /**
      * Set the values for the parameters in the the query condition expression for this query request.
      *
@@ -119,7 +120,7 @@ public class QueryRequest extends AbstractBceRequest {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-    
+
     /**
      * Set the name of table for this query items.
      *
@@ -134,7 +135,7 @@ public class QueryRequest extends AbstractBceRequest {
     /**
      * Get the name of table for this query items.
      *
-     * @param tableName The name of table for query items.
+     * @return The name of table for query items.
      */
     public String getTableName() {
         return this.tableName;
@@ -143,7 +144,7 @@ public class QueryRequest extends AbstractBceRequest {
     /**
      * Set the type of the consistency of a read operation.The default value is false, representing that it is
      * eventually consistent read. If the value is true, it is a strongly consistent read.
-     *                       
+     *
      * @param consistent The consistency of a read operation. The default value is false, representing that it is
      * eventually consistent read. If the value is true, it is a strongly consistent read.
      */
@@ -154,7 +155,7 @@ public class QueryRequest extends AbstractBceRequest {
     /**
      * Set the type of the consistency of a read operation.The default value is false, representing that it is
      * eventually consistent read. If the value is true, it is a strongly consistent read.
-     *                       
+     *
      * @param consistent The consistency of a read operation. The default value is false, representing that it is
      * eventually consistent read. If the value is true, it is a strongly consistent read.
      * @return A reference to this object so that method calls can be chained together.
@@ -163,6 +164,7 @@ public class QueryRequest extends AbstractBceRequest {
         this.setConsistentRead(consistent);
         return this;
     }
+
     /**
      * Return true if the consistency is a strongly consistent read; else return false.
      *
@@ -172,7 +174,7 @@ public class QueryRequest extends AbstractBceRequest {
     public boolean isConsistentRead() {
         return this.consistentRead;
     }
-    
+
     /**
      * Set the order by rangekey for the query items result, in descedning order or in ascending order.
      *
@@ -181,7 +183,7 @@ public class QueryRequest extends AbstractBceRequest {
     public void setOrder(String order) {
         this.order = order;
     }
-    
+
     /**
      * Set the order by rangekey for the query items result, in descedning order or in ascending order.
      *
@@ -191,7 +193,7 @@ public class QueryRequest extends AbstractBceRequest {
         this.setOrder(order);
         return this;
     }
-    
+
     /**
      * Get the order by rangekey for the query items result, in descedning order or in ascending order.
      *
@@ -200,10 +202,10 @@ public class QueryRequest extends AbstractBceRequest {
     public String getOrder() {
         return this.order;
     }
-    
+
     /**
      * Set the query items result in descending order by rangekey.
-     * 
+     *
      * @return A reference to this object so that method calls can be chained together.
      */
     public QueryRequest orderByDesc() {
@@ -213,17 +215,17 @@ public class QueryRequest extends AbstractBceRequest {
 
     /**
      * Set the query items result in ascending order by rangekey.
-     * 
+     *
      * @return A reference to this object so that method calls can be chained together.
      */
     public QueryRequest orderByAsc() {
         this.order = MolaDbConstants.JSON_ASC;
         return this;
     }
-    
+
     /**
      * Set the maximum number of return query items in one time.
-     * 
+     *
      * @param limit The maximum number of return query items in one time.
      */
     public void setLimit(int limit) {
@@ -232,7 +234,7 @@ public class QueryRequest extends AbstractBceRequest {
 
     /**
      * Set the maximum number of return query items in one time.
-     * 
+     *
      * @param limit The maximum number of return query items in one time.
      * @return A reference to this object so that method calls can be chained together.
      */
@@ -240,10 +242,10 @@ public class QueryRequest extends AbstractBceRequest {
         this.setLimit(limit);
         return this;
     }
-    
+
     /**
      * Get the maximum number of return query items in one time.
-     * 
+     *
      * @return The maximum number of return query items in one time.
      */
     public int getLimit() {
@@ -252,16 +254,16 @@ public class QueryRequest extends AbstractBceRequest {
 
     /**
      * Get the attributes to retrieve from the QueryRequest.
-     * 
-     * @return The attributes to retrieve from the QueryRequest, the type is List<String>.
+     *
+     * @return The attributes to retrieve from the QueryRequest.
      */
     public List<String> getAttributesToGet() {
         return this.attributesToGet;
     }
-    
+
     /**
      * Set the names of attributes to retrieve from the result items.
-     * 
+     *
      * @param attributes The names of attributes to retrieve from the result items.
      */
     public void setAttributesToGet(List<String> attributes) {
@@ -270,21 +272,21 @@ public class QueryRequest extends AbstractBceRequest {
 
     /**
      * Set the names of attributes to retrieve from the result items.
-     * 
-     * @param attributes  The names of attributes to retrieve from the result items, the type is List<String>.
+     *
+     * @param attributes The names of attributes to retrieve from the result items.
      * @return A reference to this object so that method calls can be chained together.
      */
     public QueryRequest withAttributesToGet(List<String> attributes) {
         this.setAttributesToGet(attributes);
         return this;
     }
-    
+
     /**
-     * Set the primary key(hashkey or hashkey and rangekey) of the first item that this 
+     * Set the primary key(hashkey or hashkey and rangekey) of the first item that this
      * operation will evaluate. Use the value that was returned for LastEvaluatedKey
      * in the previous operation.
-     * 
-     * @param exclusiveStartKey  The primary key(hashkey or hashkey and rangekey) of the first item that this 
+     *
+     * @param exclusiveStartKey The primary key(hashkey or hashkey and rangekey) of the first item that this
      * operation will evaluate. Use the value that was returned for LastEvaluatedKey in the previous operation.
      */
     public void setExclusiveStartKey(Key exclusiveStartKey) {
@@ -292,12 +294,12 @@ public class QueryRequest extends AbstractBceRequest {
     }
 
     /**
-     * Set the primary key(hashkey or hashkey and rangekey) of the first item that this 
+     * Set the primary key(hashkey or hashkey and rangekey) of the first item that this
      * operation will evaluate. Use the value that was returned for LastEvaluatedKey
      * in the previous operation.
-     * 
-     * @param exclusiveStartKey The primary key(hashkey or hashkey and rangekey) of the first item that this 
-     * operation will evaluate. Use the value that was returned for LastEvaluatedKey 
+     *
+     * @param exclusiveStartKey The primary key(hashkey or hashkey and rangekey) of the first item that this
+     * operation will evaluate. Use the value that was returned for LastEvaluatedKey
      * in the previous operation.
      * @return A reference to this object so that method calls can be chained together.
      */
@@ -305,31 +307,31 @@ public class QueryRequest extends AbstractBceRequest {
         this.setExclusiveStartKey(exclusiveStartKey);
         return this;
     }
-    
+
     /**
-     * Get the primary key(hashkey or hashkey and rangekey) of the first item that this 
+     * Get the primary key(hashkey or hashkey and rangekey) of the first item that this
      * operation will evaluate. Use the value that was returned for LastEvaluatedKey
      * in the previous operation.
-     * 
-     * @return The primary key(hashkey or hashkey and rangekey) of the first item that this 
+     *
+     * @return The primary key(hashkey or hashkey and rangekey) of the first item that this
      * operation will evaluate. Use the value that was returned for LastEvaluatedKey in the previous operation.
      */
     public Key getExclusiveStartKey() {
         return this.exclusiveStartKey;
     }
-    
+
     /**
      * Return a string representation of the object.
-     * 
+     *
      * @return A string representation of the object.
      */
     public String toString() {
         HashMap<String, Object> jsonObj = new HashMap<String, Object>();
         jsonObj.put(MolaDbConstants.JSON_TABLENAME, this.tableName);
-        
+
         if (!this.attributesToGet.isEmpty()) {
             jsonObj.put(MolaDbConstants.JSON_ATTRIBUTES_TO_GET,
-                        this.attributesToGet);
+                    this.attributesToGet);
         }
         if (null != this.exclusiveStartKey) {
             jsonObj.put(MolaDbConstants.JSON_EXCLUSIVE_START_KEY, this.exclusiveStartKey.toJsonObj());
@@ -341,10 +343,10 @@ public class QueryRequest extends AbstractBceRequest {
         if (this.limit > 0) {
             jsonObj.put(MolaDbConstants.JSON_LIMIT, Integer.toString(this.limit));
         }
-        
+
         jsonObj.put(MolaDbConstants.JSON_KEY_CONDITION_EXPRESSION, this.keyConditionExpression);
-        jsonObj.put(MolaDbConstants.JSON_EXPRESSION_ATTRIBUTEVALUES, 
-                    this.attributeValueToJson(this.expressionAttributeValues));
+        jsonObj.put(MolaDbConstants.JSON_EXPRESSION_ATTRIBUTEVALUES,
+                this.attributeValueToJson(this.expressionAttributeValues));
         jsonObj.put(MolaDbConstants.JSON_ORDER, this.order);
         return JsonUtils.toJsonString(jsonObj);
     }
@@ -353,7 +355,7 @@ public class QueryRequest extends AbstractBceRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
-    
+
     private Map<String, Object> attributeValueToJson(Map<String, AttributeValue> attributes) {
         Map<String, Object> obj = new HashMap<String, Object>();
         for (Map.Entry<String, AttributeValue> entry : attributes.entrySet()) {

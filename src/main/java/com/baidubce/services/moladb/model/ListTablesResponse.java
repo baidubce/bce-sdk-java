@@ -20,7 +20,7 @@ public class ListTablesResponse extends AbstractBceResponse {
     /**
      * Get the names of all tables got from server side.
      * 
-     * @return The names of all tables got from server side, the type is in List<String>.
+     * @return The names of all tables got from server side.
      */
     public List<String> getTableNames() {
         return this.tableNames;
@@ -30,7 +30,7 @@ public class ListTablesResponse extends AbstractBceResponse {
     /**
      * Set the names of all tables got from server side.
      * 
-     * @param names The names of all tables got from server side, the type is in ArrayList<String>.
+     * @param names The names of all tables got from server side.
      */
     public void setTableNames(List<String> names) {
         this.tableNames = names;

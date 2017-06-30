@@ -28,11 +28,9 @@ import java.util.Date;
 
 /**
  * Abstract base class for BCE service clients.
- *
  * <p>
  * Responsible for basic client capabilities that are the same across all BCE SDK Java clients
  * (ex: setting the client endpoint).
- *
  * <p>
  * Subclass names should be in the form of "com.baidubce.services.xxx.XxxClient", while "xxx" is the service ID and
  * "Xxx" is the capitalized service ID.
@@ -88,20 +86,19 @@ public abstract class AbstractBceClient {
 
     /**
      * Constructs a new AbstractBceClient with the specified client configuration and handlers.
-     *
      * <p>
      * The constructor will extract serviceId from the class name automatically.
      * And if there is no endpoint specified in the client configuration, the constructor will create a default one.
      *
      * @param config the client configuration. The constructor makes a copy of this parameter so that it is
-     *     safe to change the configuration after then.
+     * safe to change the configuration after then.
      * @param responseHandlers a list of handlers for processing HTTP responses from services. See
-     *     {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
+     * {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
      * @param isHttpAsyncPutEnabled whether or not PUT method use Async manner.
      * @throws IllegalStateException if the class name does not follow the naming convention for BCE clients.
      * @throws IllegalArgumentException if the endpoint specified in the client configuration is not a valid URI.
      */
-    public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers, 
+    public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers,
             boolean isHttpAsyncPutEnabled) {
         this.serviceId = this.computeServiceId();
         this.config = config;
@@ -111,7 +108,14 @@ public abstract class AbstractBceClient {
     }
 
     /**
-     * constructor with isHttpAsyncPutEnabled default value : false
+     * Equivalent to AbstractBceClient(config, responseHandlers, false)
+     *
+     * @param config the client configuration. The constructor makes a copy of this parameter so that it is
+     * safe to change the configuration after then.
+     * @param responseHandlers a list of handlers for processing HTTP responses from services. See
+     * {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
+     * @throws IllegalStateException if the class name does not follow the naming convention for BCE clients.
+     * @throws IllegalArgumentException if the endpoint specified in the client configuration is not a valid URI.
      */
     public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers) {
         this(config, responseHandlers, false);
@@ -119,7 +123,6 @@ public abstract class AbstractBceClient {
 
     /**
      * Returns true if the target service supports regions.
-     *
      * <p>
      * The result will impact the construction of default service endpoint.
      *
@@ -157,7 +160,6 @@ public abstract class AbstractBceClient {
 
     /**
      * Shuts down the client and releases all underlying resources.
-     *
      * <p>
      * Invoking this method is NOT a must. Once it is called, no subsequent requests should be made.
      */
@@ -167,12 +169,12 @@ public abstract class AbstractBceClient {
 
     /**
      * Subclasses should invoke this method for sending request to the target service.
-     *
      * <p>
      * This method will add "Content-Type" and "Date" to headers with default values if not present.
      *
      * @param request the request to build up the HTTP request.
      * @param responseClass the response class.
+     * @param <T> the type of response
      * @return the final response object.
      */
     protected <T extends AbstractBceResponse> T invokeHttpClient(InternalRequest request, Class<T> responseClass) {
@@ -189,7 +191,6 @@ public abstract class AbstractBceClient {
 
     /**
      * Returns the service ID based on the actual class name.
-     *
      * <p>
      * The class name should be in the form of "com.baidubce.services.xxx.XxxClient",
      * while "xxx" is the service ID and
@@ -215,7 +216,7 @@ public abstract class AbstractBceClient {
         /**
          * Comment out this verification for media services, since media service is a suit of 
          * services, the media package contains multiple Client classes.
-         * 
+         *
          */
 //        if (!className.equals(expectedClassName)) {
 //            throw new IllegalStateException("Invalid class name "
@@ -226,7 +227,6 @@ public abstract class AbstractBceClient {
 
     /**
      * Returns the default target service endpoint.
-     *
      * <p>
      * The endpoint will be in the form of "http(s)://<Service ID>[.<Region>].baidubce.com".
      *

@@ -30,7 +30,7 @@ public class User {
     /**
      * Constructs a new user with the specified ID and display name.
      *
-     * @param id          The ID for the user.
+     * @param id The ID for the user.
      * @param displayName The display name for the user.
      */
     public User(String id, String displayName) {
@@ -60,6 +60,7 @@ public class User {
      * Sets the ID of the user.
      *
      * @param id The ID of the user.
+     * @return this object
      */
     public User withId(String id) {
         this.setId(id);
@@ -88,6 +89,7 @@ public class User {
      * Sets the display name of the user.
      *
      * @param displayName The display name of the user.
+     * @return this object
      */
     public User withDisplayName(String displayName) {
         this.setDisplayName(displayName);

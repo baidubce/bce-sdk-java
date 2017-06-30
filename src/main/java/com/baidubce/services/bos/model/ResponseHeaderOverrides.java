@@ -21,7 +21,6 @@ import com.baidubce.model.AbstractBceRequest;
  * a GetObjectRequest or a GeneratePresignedUrlRequest in order
  * to control particular HTTP headers in the service response from those service
  * interfaces.
- *
  * <p>
  * For example, a client could dynamically change the apparent
  * Content-Disposition header of a single object, so that it appears to have a
@@ -72,7 +71,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
      * specified, or null otherwise.
      *
      * @return Returns the content type response header override if it has been
-     *     specified, or null otherwise.
+     * specified, or null otherwise.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_TYPE
      */
     public String getContentType() {
@@ -82,6 +81,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content type response header override.
      *
+     * @param contentType the content type response header
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_TYPE
      */
     public void setContentType(String contentType) {
@@ -91,6 +91,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content type response header override.
      *
+     * @param contentType the content type response header
      * @return This {@link ResponseHeaderOverrides} object for method chaining.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_TYPE
      */
@@ -104,7 +105,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
      * specified, or null otherwise.
      *
      * @return Returns the content language response header override if it has
-     *     been specified, or null otherwise.
+     * been specified, or null otherwise.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_LANGUAGE
      */
     public String getContentLanguage() {
@@ -114,6 +115,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content language response header override
      *
+     * @param contentLanguage the content language response
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_LANGUAGE
      */
     public void setContentLanguage(String contentLanguage) {
@@ -123,6 +125,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content language response header override
      *
+     * @param contentLanguage the content language response
      * @return This {@link ResponseHeaderOverrides} object for method chaining.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_LANGUAGE
      */
@@ -136,7 +139,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
      * null otherwise.
      *
      * @return Returns the expires response header override if it has been
-     *     specified, or null otherwise.
+     * specified, or null otherwise.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_EXPIRES
      */
     public String getExpires() {
@@ -146,6 +149,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the expires response header override.
      *
+     * @param expires the expires response header
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_EXPIRES
      */
     public void setExpires(String expires) {
@@ -155,6 +159,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the expires response header override.
      *
+     * @param expires the expires response header
      * @return This {@link ResponseHeaderOverrides} object for method chaining.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_EXPIRES
      */
@@ -168,7 +173,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
      * specified, or null otherwise.
      *
      * @return Returns the cache control response header override if it has been
-     *     specified, or null otherwise.
+     * specified, or null otherwise.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CACHE_CONTROL
      */
     public String getCacheControl() {
@@ -178,6 +183,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the cache control response header.
      *
+     * @param cacheControl the cache control response header
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CACHE_CONTROL
      */
     public void setCacheControl(String cacheControl) {
@@ -187,6 +193,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the cache control response header.
      *
+     * @param cacheControl the cache control response header
      * @return This {@link ResponseHeaderOverrides} object for method chaining.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CACHE_CONTROL
      */
@@ -210,6 +217,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content disposition response header override.
      *
+     * @param contentDisposition the content disposition response header
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_DISPOSITION
      */
     public void setContentDisposition(String contentDisposition) {
@@ -219,6 +227,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content disposition response header override.
      *
+     * @param contentDisposition the content disposition response header
      * @return This {@link ResponseHeaderOverrides} object for method chaining.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_DISPOSITION
      */
@@ -232,7 +241,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
      * specified, or null otherwise.
      *
      * @return Returns the content encoding response header override if it has
-     *     been specified, or null otherwise.
+     * been specified, or null otherwise.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_ENCODING
      */
     public String getContentEncoding() {
@@ -242,6 +251,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content encoding response header override.
      *
+     * @param contentEncoding the content encoding response header
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_ENCODING
      */
     public void setContentEncoding(String contentEncoding) {
@@ -251,6 +261,7 @@ public class ResponseHeaderOverrides extends AbstractBceRequest {
     /**
      * Sets the content encoding response header override.
      *
+     * @param contentEncoding the content encoding response header
      * @return This {@link ResponseHeaderOverrides} object for method chaining.
      * @see ResponseHeaderOverrides#RESPONSE_HEADER_CONTENT_ENCODING
      */

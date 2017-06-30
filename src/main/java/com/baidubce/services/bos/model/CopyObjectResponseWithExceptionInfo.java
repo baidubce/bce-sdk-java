@@ -30,7 +30,8 @@ public class CopyObjectResponseWithExceptionInfo extends CopyObjectResponse {
 
     /**
      * Gets the detail error message.
-     * 
+     *
+     * @return the detail error message.
      */
     public String getMessage() {
         return message;
@@ -38,44 +39,44 @@ public class CopyObjectResponseWithExceptionInfo extends CopyObjectResponse {
 
     /**
      * Sets the error message.
-     * 
+     *
      * @param message the detail error message.
      */
     public void setMessage(String message) {
         this.message = message;
     }
-    
+
     /**
      * Returns the error code which represents the error type.
-     * 
+     *
      * @return the bos error code which represents the error type.
      */
     public String getCode() {
         return code;
     }
-    
+
     /**
      * Sets the error code which represents the error type;
-     * 
+     *
      * @param code the bos error code which represents the error type.
      */
     public void setCode(String code) {
         this.code = code;
     }
-    
+
     /**
      * Returns the requestID.
-     * 
+     *
      * @return the bos requestID.
      */
     public String getRequestId() {
         return requestId;
     }
-    
+
     /**
-     * Sets the requestID.
-     * 
-     * @param requestId
+     * Sets the request ID.
+     *
+     * @param requestId the request ID
      */
     public void setRequestId(String requestId) {
         this.requestId = requestId;

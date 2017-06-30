@@ -44,8 +44,8 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.util.HttpUtils;
 
 /**
- * <B>This class is abstract. It contains all common methods which the {@link com.baidubce.services.ses.SesClient} class
- * should need<B>
+ * This class is abstract. It contains all common methods which the {@link com.baidubce.services.ses.SesClient} class
+ * should need.
  */
 public abstract class SesClientSupport extends AbstractBceClient {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());

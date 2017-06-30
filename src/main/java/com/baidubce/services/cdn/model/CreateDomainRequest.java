@@ -27,49 +27,85 @@ public class CreateDomainRequest extends AbstractBceRequest {
     private List<OriginPeer> origin;
     private String domain;
     
+    /**
+     * @return domain
+     */
     public String getDomain() {
         return domain;
     }
     
+    /**
+     * @param domain the domain name
+     */
     public void setDomain(String domain) {
         this.domain = domain;
     }
     
+    /**
+     * @param domain the domain name
+     * @return returns this object
+     */
     public CreateDomainRequest withDomain(String domain) {
         this.domain = domain;
         return this;
     }
 
+    /**
+     * @return origin list
+     */
     public List<OriginPeer> getOrigin() {
         return origin;
     }
     
+    /**
+     * @param origin origin list
+     */
     public void setOrigin(List<OriginPeer> origin) {
         this.origin = origin;
     }
     
+    /**
+     * @param origin 
+     * @return returns this object
+     */
     public CreateDomainRequest withOrigin(List<OriginPeer> origin) {
         this.origin = origin;
         return this;
     }
     
+    /**
+     * @param peer
+     * @return returns this object
+     */
     public CreateDomainRequest addPeer(OriginPeer peer) {
         origin.add(peer);
         return this;
     }
     
+    /**
+     * @param peer
+     * @return returns this object
+     */
     public CreateDomainRequest addPeer(String peer) {
         OriginPeer op = new OriginPeer().withPeer(peer);
         origin.add(op);
         return this;
     }
     
+    /**
+     *  (non-Javadoc)
+     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
+     */
     @Override
     public CreateDomainRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
     
+    /**
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         try {

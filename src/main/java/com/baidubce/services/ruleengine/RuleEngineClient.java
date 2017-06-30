@@ -47,7 +47,7 @@ public class RuleEngineClient extends AbstractBceClient {
     private static final String BATCH = "batch";
     private static final String DELETE = "delete";
     private static final String DESTINATIONS = "destinations";
-    private static final String ENDPOINT = "http://re.iot.gz.baidubce.com";
+    private static final String ENDPOINT = "re.iot.gz.baidubce.com";
 
     /**
      * Responsible for handling HttpResponse from all Tsdb service calls.
@@ -56,6 +56,7 @@ public class RuleEngineClient extends AbstractBceClient {
             new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler() };
 
     public RuleEngineClient(BceClientConfiguration config) {
+
         super(config.getEndpoint() == null ? config.withEndpoint(ENDPOINT) : config, HANDLERS);
     }
 

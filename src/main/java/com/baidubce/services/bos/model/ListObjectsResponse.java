@@ -99,7 +99,6 @@ public class ListObjectsResponse extends BosResponse {
     /**
      * Gets the common prefixes included in this object listing. Common
      * prefixes are only present if a delimiter was specified in the original request.
-     *
      * <p>
      * Each common prefix represents a set of keys in the Bos bucket that have
      * been condensed and omitted from the object summary results. This allows
@@ -107,7 +106,7 @@ public class ListObjectsResponse extends BosResponse {
      * similar to how a file system organizes files into directories.
      *
      * @return The list of common prefixes included in this object listing,
-     *     which might be an empty list if no common prefixes were found.
+     * which might be an empty list if no common prefixes were found.
      */
     public List<String> getCommonPrefixes() {
         return this.commonPrefixes;
@@ -126,15 +125,14 @@ public class ListObjectsResponse extends BosResponse {
     /**
      * Gets the marker to use in the next <code>listObjects</code> request in order to see
      * the next page of results.
-     *
      * <p>
      * If an object listing is not truncated, this method will return <code>null</code>. For
      * truncated requests, this value is equal to the greatest lexicographical value of the
      * object keys and common prefixes included in this listing.
      *
      * @return The marker to use in the next <code>listObjects</code> request in order to see
-     *     the next page of results if this object listing is truncated.
-     *     Returns <code>null</code> if this object listing isn't truncated.
+     * the next page of results if this object listing is truncated.
+     * Returns <code>null</code> if this object listing isn't truncated.
      */
     public String getNextMarker() {
         return this.nextMarker;
@@ -145,7 +143,7 @@ public class ListObjectsResponse extends BosResponse {
      * in order to see the next page of results for a truncated object listing.
      *
      * @param nextMarker The marker to use in the next listObjects request in order to
-     *     see the next page of results for a truncated object listing.
+     * see the next page of results for a truncated object listing.
      */
     public void setNextMarker(String nextMarker) {
         this.nextMarker = nextMarker;
@@ -174,12 +172,11 @@ public class ListObjectsResponse extends BosResponse {
     /**
      * Gets the prefix parameter originally used to request this object listing, or
      * <code>null</code> if no prefix was specified.
-     *
      * <p>
      * All objects and common prefixes included in this object listing start with the specified prefix.
      *
      * @return The prefix parameter originally used to request this object
-     *     listing. Returns <code>null</code> if no prefix was specified.
+     * listing. Returns <code>null</code> if no prefix was specified.
      */
     public String getPrefix() {
         return this.prefix;
@@ -202,7 +199,7 @@ public class ListObjectsResponse extends BosResponse {
      * alphabetically after the specified marker.
      *
      * @return The marker parameter originally used to request this object
-     *     listing. Returns <code>null</code> if no marker was specified.
+     * listing. Returns <code>null</code> if no marker was specified.
      */
     public String getMarker() {
         return this.marker;
@@ -226,9 +223,9 @@ public class ListObjectsResponse extends BosResponse {
      * listing. An object listing will never contain more objects plus common
      * prefixes than indicated by the <code>maxKeys</code>, but can of course contain less.
      *
-     * @return The <code>maxKeys</code parameter originally used to request this object
-     *     listing. Returns the default <code>maxKeys</code> value applied by Baidu Bos if
-     *     no value was specified.
+     * @return The <code>maxKeys</code> parameter originally used to request this object
+     * listing. Returns the default <code>maxKeys</code> value applied by Baidu Bos if
+     * no value was specified.
      */
     public int getMaxKeys() {
         return this.maxKeys;
@@ -241,8 +238,8 @@ public class ListObjectsResponse extends BosResponse {
      * applied by Baidu Bos if the requester didn't specify a value.
      *
      * @param maxKeys The <code>maxKeys</code> parameter originally used to request this object
-     *     listing, or the default <code>maxKeys</code> value applied by Baidu Bos if
-     *     the requester didn't specify a value.
+     * listing, or the default <code>maxKeys</code> value applied by Baidu Bos if
+     * the requester didn't specify a value.
      */
     public void setMaxKeys(int maxKeys) {
         this.maxKeys = maxKeys;
@@ -251,7 +248,6 @@ public class ListObjectsResponse extends BosResponse {
     /**
      * Gets the delimiter parameter originally used to request this object
      * listing, or <code>null</code> if no delimiter specified.
-     *
      * <p>
      * The delimiter value allows
      * callers to condense Bos keys into common prefix listings. For example, if
@@ -262,7 +258,7 @@ public class ListObjectsResponse extends BosResponse {
      * one entry for the common prefix.
      *
      * @return The delimiter parameter originally used to request this object
-     *     listing. Returns <code>null</code> if no delimiter was specified.
+     * listing. Returns <code>null</code> if no delimiter was specified.
      */
     public String getDelimiter() {
         return this.delimiter;
@@ -282,9 +278,9 @@ public class ListObjectsResponse extends BosResponse {
      * Gets whether or not this object listing is complete.
      *
      * @return The value <code>true</code> if the object listing is <b>not complete</b>.
-     *     Returns the value <code>false</code> if otherwise.
-     *     When returning <code>true</code>, additional calls to Baidu Bos may be needed in order to
-     *     obtain more results.
+     * Returns the value <code>false</code> if otherwise.
+     * When returning <code>true</code>, additional calls to Baidu Bos may be needed in order to
+     * obtain more results.
      */
     public boolean isTruncated() {
         return this.isTruncated;
@@ -297,7 +293,7 @@ public class ListObjectsResponse extends BosResponse {
      * object summaries.
      *
      * @param isTruncated The value <code>true</code> if the object listing is <b>not complete</b>.
-     *     The value <code>false</code> if otherwise.
+     * The value <code>false</code> if otherwise.
      */
     @JsonProperty("isTruncated")
     public void setTruncated(boolean isTruncated) {

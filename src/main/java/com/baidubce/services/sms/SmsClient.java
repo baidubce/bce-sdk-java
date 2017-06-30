@@ -38,9 +38,9 @@ import com.baidubce.util.JsonUtils;
 
 /**
  * <B>The entrance class for all client access to the API of SMS(Baidu message Service).</B>
- * <p/>
+ * <p>
  * <B>All of the API method of SMS is included in this class.</B>
- * <p/>
+ * <p>
  */
 public class SmsClient extends SmsClientSupport {
     /**
@@ -54,8 +54,7 @@ public class SmsClient extends SmsClientSupport {
      * Constructs a new <code>SmsClient</code> instance with the specified configuration.
      *
      * @param config the specified configuration, default inherit super class
-     *               <code>com.baidubce.BceClientConfiguration</code>
-     *
+     * <code>com.baidubce.BceClientConfiguration</code>
      * @see com.baidubce.services.sms.SmsClientConfiguration
      */
     public SmsClient(SmsClientConfiguration config) {
@@ -64,17 +63,15 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Send message
-     * <p/>
+     * <p>
      * To send message, you have to specify a template which is built by system, or created by yourself which is audited
      * by BCE administrator.
-     * <p/>
+     * <p>
      * One or more receiver can be specified while sending message.
-     * <p/>
+     * <p>
      *
      * @param request The request object which includes the content to send and one or more receiver
-     *
      * @return The response object which includes the id of message and the statistics of sending result
-     *
      * @see com.baidubce.services.sms.model.SendMessageRequest
      * @see com.baidubce.services.sms.model.SendMessageResponse
      */
@@ -122,10 +119,8 @@ public class SmsClient extends SmsClientSupport {
      * Query message detail
      *
      * @param request The request object which includes the id of message to query
-     *
      * @return The response object which includes all the detail result, for example <code>id</code>,
      * <code>content</code>, <code>receiver</code>, <code>sendTime</code> etc
-     *
      * @see com.baidubce.services.sms.model.QueryMessageDetailRequest
      * @see com.baidubce.services.sms.model.QueryMessageDetailResponse
      */
@@ -140,14 +135,12 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Create message template
-     * <p/>
+     * <p>
      * The template which is created will have a unique id. after audited by BCE administrator, it can be used normally.
-     * <p/>
+     * <p>
      *
      * @param request The request object which includes the name and content of template which is ready to be created
-     *
      * @return The response object which includes the id of template which is created
-     *
      * @see com.baidubce.services.sms.model.CreateTemplateRequest
      * @see com.baidubce.services.sms.model.CreateTemplateResponse
      */
@@ -178,7 +171,6 @@ public class SmsClient extends SmsClientSupport {
      * Delete message template
      *
      * @param request The request object which includes the id of template which is ready to be deleted
-     *
      * @see com.baidubce.services.sms.model.DeleteTemplateRequest
      */
     public void deleteTemplate(DeleteTemplateRequest request) {
@@ -194,10 +186,8 @@ public class SmsClient extends SmsClientSupport {
      * Get the detail of message template
      *
      * @param request The request object which includes the id of template which is ready to be get
-     *
      * @return The response object which includes all of the detail of message template, refer to
      * <code>com.baidubce.services.sms.model.GetTemplateDetailResponse</code>
-     *
      * @see com.baidubce.services.sms.model.GetTemplateDetailRequest
      * @see com.baidubce.services.sms.model.GetTemplateDetailResponse
      */
@@ -214,10 +204,8 @@ public class SmsClient extends SmsClientSupport {
      * Get the list of message template
      *
      * @param request The request object which is empty
-     *
      * @return The response object which includes all of the detail of message template,refer to
      * <code>com.baidubce.services.sms.model.ListTemplateResponse</code>
-     *
      * @see com.baidubce.services.sms.model.ListTemplateResponse
      */
     public ListTemplateResponse listTemplate(SmsRequest request) {
@@ -231,10 +219,8 @@ public class SmsClient extends SmsClientSupport {
      * Query the sending quota
      *
      * @param request The request object which is empty
-     *
      * @return The response object which includes the detail of sending quota, refer to
      * <code>com.baidubce.services.sms.model.QueryQuotaResponse</code>
-     *
      * @see com.baidubce.services.sms.model.QueryQuotaResponse
      */
     public QueryQuotaResponse queryQuota(SmsRequest request) {
@@ -248,9 +234,7 @@ public class SmsClient extends SmsClientSupport {
      * Get the statistics about receiving message
      *
      * @param request refer to <code>com.baidubce.services.sms.model.StatReceiverRequest</code>
-     *
      * @return refer to <code>com.baidubce.services.sms.model.StatReceiverResponse</code>
-     *
      * @see com.baidubce.services.sms.model.StatReceiverRequest
      * @see com.baidubce.services.sms.model.StatReceiverResponse
      */

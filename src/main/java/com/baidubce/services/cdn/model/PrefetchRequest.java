@@ -22,32 +22,62 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.ArrayList;
 
+/**
+ * @author yixing
+ *
+ */
 public class PrefetchRequest extends AbstractBceRequest {
     private List<PrefetchTask> tasks;
     
-    public PrefetchRequest() {
-        tasks = new ArrayList<PrefetchTask>();
-    }
-    
+    /**
+     * @return tasks
+     */
     public List<PrefetchTask> getTasks() {
         return tasks;
     }
     
+    /**
+     * @param tasks
+     */
     public void setTasks(List<PrefetchTask> tasks) {
         this.tasks = tasks;
     }
     
+    /**
+     * @param tasks
+     * @return returns this object
+     */
     public PrefetchRequest withTasks(List<PrefetchTask> tasks) {
         setTasks(tasks);
         return this;
     }
     
+    /**
+     * @param task
+     * @return returns this object
+     */
+    public PrefetchRequest addTask(PrefetchTask task) {
+        if (tasks == null) {
+            tasks = new ArrayList<PrefetchTask>();
+        }
+        tasks.add(task);
+        return this;
+    }
+    
+    /**
+     * (non-Javadoc)
+     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
+     */
     @Override
     public PrefetchRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
 
+    /**
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         try {

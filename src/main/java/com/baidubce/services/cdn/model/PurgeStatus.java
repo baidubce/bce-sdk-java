@@ -15,6 +15,10 @@ package com.baidubce.services.cdn.model;
 
 import java.util.Date;
 
+/**
+ * @author yixing
+ *
+ */
 public class PurgeStatus extends JsonObject {
     private String status;
     private PurgeTask task;
@@ -22,42 +26,72 @@ public class PurgeStatus extends JsonObject {
     private Date finishedAt;
     private int progress;
     
+    /**
+     * @param status
+     */
     public void setStatus(String status) {
         this.status = status;
     }
     
+    /**
+     * @return status
+     */
     public String getStatus() {
         return status;
     }
     
+    /**
+     * @param task
+     */
     public void setTask(PurgeTask task) {
         this.task = task;
     }
     
+    /**
+     * @return task
+     */
     public PurgeTask getTask() {
         return task;
     }
     
+    /**
+     * @param createdAt
+     */
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
     
+    /**
+     * @return createdAt
+     */
     public Date getCreatedAt() {
         return createdAt;
     }
 
+    /**
+     * @param finishedAt
+     */
     public void setFinishedAt(Date finishedAt) {
         this.finishedAt = finishedAt;
     }
     
+    /**
+     * @return finishedAt
+     */
     public Date getFinishedAt() {
         return finishedAt;
     }
     
+    /**
+     * @param progress
+     */
     public void setProgress(int progress) {
         this.progress = progress;
     }
     
+    /**
+     * @return progress
+     */
     public int getProgress() {
         return progress;
     }

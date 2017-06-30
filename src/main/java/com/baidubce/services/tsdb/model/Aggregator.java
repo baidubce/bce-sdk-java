@@ -1,5 +1,7 @@
 package com.baidubce.services.tsdb.model;
 
+import com.baidubce.services.tsdb.TsdbConstants;
+
 /**
  * Represent the Aggregator for querying datapoints from Tsdb.
  */
@@ -7,13 +9,12 @@ public class Aggregator {
     
     /**
      * Required.
-     * Represent the name of the aggregator.
+     * Represent the name of the aggregator. eg: "Avg" or "Sum", see aggregator name in {@link TsdbConstants}.
      */
     private String name;
     
     /**
-     * Required when name is Avg, Dev, Count, First, Gaps, Last, LeastSquares, Max, Min, Percentile, Sum,
-     * Rate, or Sampler.
+     * Required when name is Avg, Dev, Count, First, Last, LeastSquares, Max, Min, Percentile or Sum.
      * Represent the length of sampling time. eg: "1 minutes" or "2 hours".
      */
     private String sampling;
@@ -36,6 +37,12 @@ public class Aggregator {
      */
     private Double factor;
 
+    /**
+     * Required when name is Rate.
+     * Represent the time unit of the Scale. eg: "minute" or "hour", see time unit in {@link TsdbConstants}.
+     */
+    private String timeUnit;
+
     public String getName() {
         return name;
     }
@@ -44,7 +51,8 @@ public class Aggregator {
      * Set the name of this aggregator.
      * The available aggregator names are in {@code TsdbConstants}
      * 
-     * @param name should be one of the Avg, Dev, Count, First, Last, LeastSquares, Max, Min, Percentile, Sum, Diff, Div and Scale.
+     * @param name should be one of the Avg, Dev, Count, First, Last, LeastSquares, Max, Min,
+     *             Percentile, Sum, Diff, Div, Scale and Rate.
      */
     public void setName(String name) {
         this.name = name;
@@ -82,6 +90,14 @@ public class Aggregator {
         this.factor = factor;
     }
 
+    public String getTimeUnit() {
+        return timeUnit;
+    }
+
+    public void setTimeUnit(String timeUnit) {
+        this.timeUnit = timeUnit;
+    }
+
     public Aggregator withName(String name) {
         this.name = name;
         return this;
@@ -104,6 +120,11 @@ public class Aggregator {
     
     public Aggregator withFactor(double factor) {
         this.factor = factor;
+        return this;
+    }
+
+    public Aggregator withTimeUnit(String timeUnit) {
+        this.timeUnit = timeUnit;
         return this;
     }
 }

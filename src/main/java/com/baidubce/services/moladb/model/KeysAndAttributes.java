@@ -39,7 +39,7 @@ public class KeysAndAttributes {
     /**
      * Set the list of Keys to get associated items.
      *
-     * @param keys The key attributes and values to get items from a table, the type is List<Key>.
+     * @param keys The key attributes and values to get items from a table.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
     public KeysAndAttributes withKeys(List<Key> keys) {
@@ -50,7 +50,7 @@ public class KeysAndAttributes {
     /**
      * Set the list of Keys to get associated items.
      *
-     * @param keys The key attributes and values to get items from a table, the type is List<Key>.
+     * @param keys The key attributes and values to get items from a table.
      * @throws IllegalArgumentException
      *          if the list is empty.
      */
@@ -138,7 +138,7 @@ public class KeysAndAttributes {
     /**
      * Get all of the attributes to retrieve from a table.
      *
-     * @return All of the attributes to retrieve from a table, the type is List<String>.
+     * @return All of the attributes to retrieve from a table.
      */
     public List<String> getAttributesToGet() {
         return attributesToGet;

@@ -66,6 +66,7 @@ import java.util.List;
  */
 public class IotHubClient extends AbstractBceClient {
 
+    private static final String ENDPOINT_HOST = "iot.gz.baidubce.com";
     private static final String VERSION = "v1";
     private static final String ENDPOINT = "endpoint";
     private static final String THING = "thing";
@@ -90,7 +91,9 @@ public class IotHubClient extends AbstractBceClient {
             new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler() };
 
     public IotHubClient(BceClientConfiguration config) {
-        super(config, IOTHUB_HANDLERS);
+
+        super(config.getEndpoint() == null ? config.withEndpoint(ENDPOINT_HOST) : config,
+                IOTHUB_HANDLERS);
     }
 
     public ListResponse listEndpoints() {

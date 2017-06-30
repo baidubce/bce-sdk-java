@@ -23,16 +23,13 @@ import com.google.common.collect.Lists;
 
 /**
  * Daemon thread to periodically check connection pools for idle connections.
- *
  * <p>
  * Connections sitting around idle in the HTTP connection pool for too long will eventually be terminated by the BCE end
  * of the connection, and will go into CLOSE_WAIT. If this happens, sockets will sit around in CLOSE_WAIT, still using
  * resources on the client side to manage that socket. Many sockets stuck in CLOSE_WAIT can prevent the OS from creating
  * new connections.
- *
  * <p>
  * This class closes idle connections before they can move into the CLOSE_WAIT state.
- *
  * <p>
  * This thread is important because by default, we disable Apache HttpClient's stale connection checking, so without
  * this thread running in the background, cleaning up old/inactive HTTP connections, we'd see more IO exceptions when
@@ -77,6 +74,7 @@ public final class IdleConnectionReaper extends Thread {
     /**
      * Registers the given connection manager with this reaper;
      *
+     * @param connectionManager the connection manager to be registered.
      * @return true if the connection manager has been successfully registered; false otherwise.
      */
     public static synchronized boolean registerConnectionManager(HttpClientConnectionManager connectionManager) {
@@ -90,6 +88,7 @@ public final class IdleConnectionReaper extends Thread {
      * Removes the given connection manager from this reaper, and shutting down the reaper if there is zero connection
      * manager left.
      *
+     * @param connectionManager the connection manager to be registered.
      * @return true if the connection manager has been successfully removed; false otherwise.
      */
     public static synchronized boolean removeConnectionManager(HttpClientConnectionManager connectionManager) {
@@ -132,7 +131,6 @@ public final class IdleConnectionReaper extends Thread {
 
     /**
      * Shuts down the thread, allowing the class and instance to be collected.
-     *
      * <p>
      * Since this is a daemon thread, its running will not prevent JVM shutdown. It will, however, prevent this class
      * from being unloaded or garbage collected, in the context of a long-running application, until it is interrupted.

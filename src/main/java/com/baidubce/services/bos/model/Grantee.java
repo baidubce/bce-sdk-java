@@ -27,7 +27,7 @@ public class Grantee {
     /**
      * Constructs a new grantee with the specified ID.
      *
-     * @param id          The ID for the user.
+     * @param id The ID for the user.
      */
     public Grantee(String id) {
         this.setId(id);
@@ -55,6 +55,7 @@ public class Grantee {
      * Sets the ID of the grantee.
      *
      * @param id The ID of the grantee.
+     * @return this object
      */
     public Grantee withId(String id) {
         this.setId(id);

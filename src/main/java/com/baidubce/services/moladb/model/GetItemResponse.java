@@ -32,7 +32,7 @@ public class GetItemResponse extends AbstractBceResponse {
     /**
      * The method return the Item that got from table in Moladb.
      * 
-     * @return The Item got from the table in Moladb, the type is Map<String, AttributeValue>.
+     * @return The Item got from the table in Moladb.
      */
     public Map<String, AttributeValue> getItem() {
         return item;
@@ -50,7 +50,7 @@ public class GetItemResponse extends AbstractBceResponse {
     /**
      * The method set the Item that in GetItemResponse.
      * 
-     * @param other The Items got from the table in MolaDB, the type is Map<String, AttributeValue>.
+     * @param other The Items got from the table in MolaDB.
      */
     public void setItem(Map<String, AttributeValue> other) {
         item = other;

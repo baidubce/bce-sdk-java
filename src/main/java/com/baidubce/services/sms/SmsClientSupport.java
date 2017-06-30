@@ -36,8 +36,8 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.util.HttpUtils;
 
 /**
- * <B>This class is abstract. It contains all common methods which the {@link com.baidubce.services.sms.SmsClient} class
- * should need<B>
+ * This class is abstract. It contains all common methods which the {@link com.baidubce.services.sms.SmsClient} class
+ * should need
  */
 public abstract class SmsClientSupport extends AbstractBceClient {
     protected static final HttpResponseHandler[] SMS_HANDLERS = new HttpResponseHandler[] {

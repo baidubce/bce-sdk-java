@@ -16,14 +16,24 @@ package com.baidubce.services.cdn.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author yixing
+ *
+ */
 public class GetStatFlowResponse extends CdnResponse {
 
     private List<StatFlowDetails> details = new ArrayList<StatFlowDetails>();
     
+    /**
+     * @param details
+     */
     public void setDetails(List<StatFlowDetails> details) {
         this.details = details;
     }
     
+    /**
+     * @return details
+     */
     public List<StatFlowDetails> getDetails() {
         return details;
     }

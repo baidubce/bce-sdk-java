@@ -102,7 +102,7 @@ public class BceHttpClient {
      * Internal client for sending HTTP requests
      */
     protected CloseableHttpClient httpClient;
-    
+
     /**
      * Client configuration options, such as proxy settings, max retries, etc.
      */
@@ -123,8 +123,8 @@ public class BceHttpClient {
      * settings, etc), and request metric collector.
      *
      * @param config Configuration options specifying how this client will communicate with BCE (ex: proxy settings,
-     *               retry count, etc.).
-     *
+     * retry count, etc.).
+     * @param signer signer used to sign http requests
      * @throws java.lang.IllegalArgumentException If config or signer is null.
      */
     public BceHttpClient(BceClientConfiguration config, Signer signer) {
@@ -164,8 +164,10 @@ public class BceHttpClient {
 
     /**
      * Constructs a new BCE Http Client with httpAsyncPutEnabled.
+     *
      * @param config Configuration options specifying how this client will communicate with BCE (ex: proxy settings,
-     *               retry count, etc.).
+     * retry count, etc.).
+     * @param signer signer used to sign http requests
      * @param isHttpAsyncPutEnabled whether use Async for PUT method.
      */
     public BceHttpClient(BceClientConfiguration config, Signer signer, boolean isHttpAsyncPutEnabled) {
@@ -176,12 +178,13 @@ public class BceHttpClient {
     /**
      * Executes the request and returns the result.
      *
-     * @param request          The BCE request to send to the remote server
-     * @param responseClass    A response handler to accept a successful response from the remote server
+     * @param <T> The type of response
+     * @param request The BCE request to send to the remote server
+     * @param responseClass A response handler to accept a successful response from the remote server
      * @param responseHandlers A response handler to accept an unsuccessful response from the remote server
-     *
-     * @throws com.baidubce.BceClientException  If any errors are encountered on the client while making the
-     *             request or handling the response.
+     * @return The response from the remote server
+     * @throws com.baidubce.BceClientException If any errors are encountered on the client while making the
+     * request or handling the response.
      * @throws com.baidubce.BceServiceException If any errors occurred in BCE while processing the request.
      */
     public <T extends AbstractBceResponse> T execute(InternalRequest request, Class<T> responseClass,
@@ -193,7 +196,7 @@ public class BceHttpClient {
             credentials = request.getCredentials();
         }
         long delayForNextRetryInMillis = 0;
-        for (int attempt = 1;  ; ++attempt) {
+        for (int attempt = 1; ; ++attempt) {
             HttpRequestBase httpRequest = null;
             CloseableHttpResponse httpResponse = null;
             CloseableHttpAsyncClient httpAsyncClient = null;
@@ -202,7 +205,7 @@ public class BceHttpClient {
                 if (credentials != null) {
                     this.signer.sign(request, credentials);
                 }
-                
+
                 requestLogger.debug("Sending Request: {}", request);
 
                 httpRequest = this.createHttpRequest(request);
@@ -213,13 +216,13 @@ public class BceHttpClient {
                     httpAsyncClient = this.createHttpAsyncClient(this.createNHttpClientConnectionManager());
                     httpAsyncClient.start();
                     Future<HttpResponse> future = httpAsyncClient.execute(HttpAsyncMethods.create(httpRequest),
-                                                                               new BasicAsyncResponseConsumer(),
-                                                                               httpContext, null);
+                            new BasicAsyncResponseConsumer(),
+                            httpContext, null);
                     httpResponse = new BceCloseableHttpResponse(future.get());
                 } else {
                     httpResponse = this.httpClient.execute(httpRequest, httpContext);
                 }
-                HttpUtils.printRequest(httpRequest); 
+                HttpUtils.printRequest(httpRequest);
                 BceHttpResponse bceHttpResponse = new BceHttpResponse(httpResponse);
 
                 T response = responseClass.newInstance();
@@ -361,7 +364,7 @@ public class BceHttpClient {
      * Create connection manager for asynchronous http client.
      *
      * @return Connection manager for asynchronous http client.
-     * @throws IOReactorException
+     * @throws IOReactorException in case if a non-recoverable I/O error.
      */
     protected NHttpClientConnectionManager createNHttpClientConnectionManager() throws IOReactorException {
         ConnectingIOReactor ioReactor =
@@ -398,7 +401,7 @@ public class BceHttpClient {
      * @param connectionManager Asynchronous http client connection manager.
      * @return Asynchronous http client based on connection manager.
      */
-    protected CloseableHttpAsyncClient createHttpAsyncClient (NHttpClientConnectionManager connectionManager) {
+    protected CloseableHttpAsyncClient createHttpAsyncClient(NHttpClientConnectionManager connectionManager) {
         HttpAsyncClientBuilder builder = HttpAsyncClients.custom().setConnectionManager(connectionManager);
 
         int socketBufferSizeInBytes = this.config.getSocketBufferSizeInBytes();

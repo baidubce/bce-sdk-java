@@ -133,7 +133,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure auto-terminate property for the cluster. If set the autoTerminate as true, then
      * the cluster will be terminated when all the steps are done. And the autoTerminate is true by default.
      *
-     * @param autoTerminate
+     * @param autoTerminate true if the cluster should be auto terminated.
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withAutoTerminate(boolean autoTerminate) {
