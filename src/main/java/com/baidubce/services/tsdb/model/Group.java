@@ -1,13 +1,12 @@
 package com.baidubce.services.tsdb.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.baidubce.services.tsdb.TsdbConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.BinaryNode;
 import com.google.common.collect.Lists;
 
 /**
@@ -48,23 +47,14 @@ public class Group {
             return Collections.emptyList();
         }
 
-        boolean isBytes = false;
-        for (GroupInfo groupInfo : groupInfos) {
-            if (groupInfo.getName().equals(TsdbConstants.GROUP_INFO_NAME_TYPE)
-                    && groupInfo.getType().equals(TsdbConstants.TYPE_BYTES)) {
-                isBytes = true;
-                break;
-            }
-        }
-
         List<TimeAndValue> list = Lists.newArrayList();
         for (List<JsonNode> nodeList : values) {
-            if (isBytes && nodeList.get(1).isTextual()) {
-                list.add(new TimeAndValue(nodeList.get(0).asLong(),
-                        new BinaryNode(nodeList.get(1).binaryValue())));
-            } else {
-                list.add(new TimeAndValue(nodeList.get(0).asLong(), nodeList.get(1)));
+            long timestamp = nodeList.get(0).asLong();
+            List<JsonNode> values = new ArrayList<JsonNode>();
+            for (int index = 1; index < nodeList.size(); index++) {
+                values.add(nodeList.get(index));
             }
+            list.add(new TimeAndValue(timestamp, values));
         }
         return list;
     }
@@ -73,11 +63,20 @@ public class Group {
 
         private long time;
 
-        private JsonNode value;
+        private List<? extends JsonNode> value;
 
         public TimeAndValue(long time, JsonNode value) {
             this.time = time;
-            this.value = value;
+            this.value = Collections.singletonList(value);
+        }
+
+        public TimeAndValue(long time, List<? extends JsonNode> values) {
+            this.time = time;
+            this.value = values;
+        }
+
+        public int getValueLength() {
+            return value.size();
         }
 
         public long getTime() {
@@ -89,51 +88,93 @@ public class Group {
         }
 
         public JsonNode getValue() {
-            return value;
+            return value.get(0);
         }
 
         public void setValue(JsonNode value) {
-            this.value = value;
+            this.value = Collections.singletonList(value);
         }
 
         @JsonIgnore
         public boolean isLong() {
-            return value.isIntegralNumber();
+            return value.get(0).isIntegralNumber();
+        }
+
+        @JsonIgnore
+        public boolean isLong(int index) {
+            return value.get(index).isIntegralNumber();
         }
 
         @JsonIgnore
         public boolean isDouble() {
-            return value.isFloatingPointNumber();
+            return value.get(0).isFloatingPointNumber();
         }
 
+        @JsonIgnore
+        public boolean isDouble(int index) {
+            return value.get(index).isFloatingPointNumber();
+        }
+
+        @Deprecated
         @JsonIgnore
         public boolean isString() {
-            return value.isTextual();
+            throw new RuntimeException("Interface is deprecated");
         }
 
+        @Deprecated
         @JsonIgnore
         public boolean isBytes() {
-            return value.isBinary();
+            throw new RuntimeException("Interface is deprecated");
         }
 
         @JsonIgnore
         public long getLongValue() {
-            return value.asLong();
+            return value.get(0).asLong();
+        }
+
+        @JsonIgnore
+        public long getLongValue(int index) {
+            return value.get(index).asLong();
         }
 
         @JsonIgnore
         public double getDoubleValue() {
-            return value.asDouble();
+            return value.get(0).asDouble();
+        }
+
+        @JsonIgnore
+        public double getDoubleValue(int index) {
+            return value.get(index).asDouble();
         }
 
         @JsonIgnore
         public String getStringValue() {
-            return value.asText();
+            return value.get(0).asText();
+        }
+
+        @JsonIgnore
+        public String getStringValue(int index) {
+            return value.get(index).asText();
         }
 
         @JsonIgnore
         public byte[] getBytesValue() throws IOException {
-            return value.binaryValue();
+            return value.get(0).binaryValue();
+        }
+
+        @JsonIgnore
+        public byte[] getBytesValue(int index) throws IOException {
+            return value.get(index).binaryValue();
+        }
+
+        @JsonIgnore
+        public boolean isNull() {
+            return value.get(0).isNull();
+        }
+
+        @JsonIgnore
+        public boolean isNull(int index) {
+            return value.get(index).isNull();
         }
     }
 }

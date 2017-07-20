@@ -60,4 +60,7 @@ public class TsdbConstants {
     public static final String TIME_UNIT_MONTH = "month";
     public static final String TIME_UNIT_YEAR = "year";
 
+    // Fill type.
+    public static final String FILL_TYPE_LINEAR = "Linear";
+    public static final String FILL_TYPE_PREVIOUS = "Previous";
 }

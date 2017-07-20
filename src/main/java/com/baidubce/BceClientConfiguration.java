@@ -22,8 +22,6 @@ import com.google.common.base.Joiner;
 import org.apache.http.annotation.NotThreadSafe;
 
 import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Basic client configurations for BCE clients.

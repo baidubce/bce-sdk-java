@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Prepresent the model of device profile.
+ * Represent the model of device profile.
  */
 public class DeviceProfile {
 

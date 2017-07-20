@@ -11,6 +11,10 @@ public class Result {
 
     private String field;
 
+    private List<String> fields;
+
+    private List<String> tags;
+
     private long rawCount;
     
     private List<Group> groups;
@@ -29,6 +33,22 @@ public class Result {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    public List<String> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public long getRawCount() {

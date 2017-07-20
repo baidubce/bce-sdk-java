@@ -1,5 +1,6 @@
 package com.baidubce.services.tsdb.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,14 +37,24 @@ public class Filters {
 
     /**
      * Optional.
-     * The value filter. It contains two parts. The first part is a operation such as <, <=, =, !=, > and >=.
-     * The second part is a value which can be a long type number, a double type number or a string surronding by
+     * The value filter for single field or all multiple fields.
+     * It contains two parts. The first part is a operation such as <, <=, =, !=, > and >=.
+     * The second part is a value which can be a long type number, a double type number or a string surrounding by
      * single quotations.
      * Long or double value support <, <=, =, !=, > and >= operations.
      * String value only support =, !=.
      * Example: "= 111", "> 1.1", "!= 'abc'".
+     * Conflict with fields parameter.
+     *
      */
     private String value;
+
+    /**
+     * Optional.
+     * The value filter for each multiple fields.
+     * Conflict with value parameter.
+     */
+    private List<FieldFilter> fields;
 
     public JsonNode getStart() {
         return start;
@@ -77,6 +88,14 @@ public class Filters {
         this.value = value;
     }
 
+    public List<FieldFilter> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<FieldFilter> fields) {
+        this.fields = fields;
+    }
+
     /**
      * Set value for filter.
      *
@@ -96,6 +115,17 @@ public class Filters {
      */
     public Filters withValue(String value) {
         this.value = value;
+        return this;
+    }
+
+    /**
+     * Set field filters.
+     *
+     * @param fields  The field filters list.
+     * @return Filters
+     */
+    public Filters withFields(List<FieldFilter> fields) {
+        this.fields = fields;
         return this;
     }
 
@@ -149,6 +179,31 @@ public class Filters {
     }
 
     /**
+     * Add field filter to fields which just append not replace.
+     *
+     * @param field The field filter
+     * @return Filters
+     */
+    public Filters addField(FieldFilter field) {
+        initialFields();
+        fields.add(field);
+        return this;
+    }
+
+    /**
+     * Add field filter to fields which just append not replace.
+     *
+     * @param field The field name for filter
+     * @param value The value filter
+     * @return Filters
+     */
+    public Filters addField(String field, String value) {
+        initialFields();
+        fields.add(new FieldFilter(field, value));
+        return this;
+    }
+
+    /**
      * Add tag to tags which just append not replace.
      *
      * @param tagKey
@@ -195,6 +250,12 @@ public class Filters {
     private void initialTags() {
         if (tags == null) {
             tags = Maps.newHashMap();
+        }
+    }
+
+    private void initialFields() {
+        if (fields == null) {
+            fields = new ArrayList<FieldFilter>();
         }
     }
 }

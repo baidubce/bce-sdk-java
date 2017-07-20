@@ -38,6 +38,7 @@ class IotDmClientHelper {
 
     private static final String VERSION = "v1";
     private static final String VERSION_V2 = "v2";
+    private static final String VERSION_V3 = "v3";
     private static final String IOT = "iot";
     private static final String MANAGEMENT = "management";
     private static final String ENDPOINT = "endpoint";
@@ -56,33 +57,28 @@ class IotDmClientHelper {
             URI endpoint, SignOptions signOptions, String... pathVariables) {
         List<String> path = new ArrayList<String>();
         path.addAll(Arrays.asList(VERSION, IOT, MANAGEMENT));
-        if (pathVariables != null) {
-            for (String pathVariable : pathVariables) {
-                path.add(pathVariable);
-            }
-        }
 
-        if (signOptions == null) {
-            signOptions = SignOptions.DEFAULT;
-            signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
-        }
-
-        URI uri = HttpUtils.appendUri(endpoint, path.toArray(new String[path.size()]));
-        InternalRequest request = new InternalRequest(httpMethod, uri);
-        request.setSignOptions(signOptions);
-        request.setCredentials(bceRequest.getRequestCredentials());
-
-        if (httpMethod == HttpMethodName.PUT || httpMethod == HttpMethodName.POST) {
-            fillInHeaderAndBody(bceRequest, request);
-        }
-
-        return request;
+        return createRequest(bceRequest, httpMethod, endpoint, signOptions, path, pathVariables);
     }
 
     static InternalRequest createRequestForV2(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
-                                         URI endpoint, SignOptions signOptions, String... pathVariables) {
+            URI endpoint, SignOptions signOptions, String... pathVariables) {
         List<String> path = new ArrayList<String>();
         path.addAll(Arrays.asList(VERSION_V2, IOT, MANAGEMENT, ENDPOINT));
+
+        return createRequest(bceRequest, httpMethod, endpoint, signOptions, path, pathVariables);
+    }
+
+    static InternalRequest createRequestForV3(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
+            URI endpoint, SignOptions signOptions, String... pathVariables) {
+        List<String> path = new ArrayList<String>();
+        path.addAll(Arrays.asList(VERSION_V3, IOT, MANAGEMENT));
+
+        return createRequest(bceRequest, httpMethod, endpoint, signOptions, path, pathVariables);
+    }
+
+    private static InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
+            URI endpoint, SignOptions signOptions, List<String> path, String... pathVariables) {
         if (pathVariables != null) {
             for (String pathVariable : pathVariables) {
                 path.add(pathVariable);

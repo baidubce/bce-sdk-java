@@ -17,9 +17,21 @@ public class Query {
 
     /**
      * Optional.
-     * The field name.
+     * The field name, conflict with fields parameter.
      */
     private String field;
+
+    /**
+     * Optional.
+     * The field names, conflict with field parameter.
+     */
+    private List<String> fields;
+
+    /**
+     * Optional.
+     * The tag keys.
+     */
+    private List<String> tags;
 
     /**
      * Required.
@@ -52,6 +64,20 @@ public class Query {
      */
     private String order;
 
+    /**
+     * Optional.
+     * The fill for interpolation.
+     */
+    private Fill fill;
+
+    public Fill getFill() {
+        return fill;
+    }
+
+    public void setFill(Fill fill) {
+        this.fill = fill;
+    }
+
     public String getMetric() {
         return metric;
     }
@@ -66,6 +92,22 @@ public class Query {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    public List<String> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public Filters getFilters() {
@@ -108,6 +150,11 @@ public class Query {
         this.order = order;
     }
 
+    public Query withFill(Fill fill) {
+        this.fill = fill;
+        return this;
+    }
+
     public Query withMetric(String metric) {
         this.metric = metric;
         return this;
@@ -115,6 +162,16 @@ public class Query {
 
     public Query withField(String field) {
         this.field = field;
+        return this;
+    }
+
+    public Query withFields(List<String> fields) {
+        this.fields = fields;
+        return this;
+    }
+
+    public Query withTags(List<String> tags) {
+        this.tags = tags;
         return this;
     }
 
