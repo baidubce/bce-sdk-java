@@ -33,12 +33,22 @@ public class UpdateDeviceProfileRequest extends AbstractBceRequest {
         this.attributes = attributes;
     }
 
+    public UpdateDeviceProfileRequest withAttributes(JsonNode attributes) {
+        setAttributes(attributes);
+        return this;
+    }
+
     public DeviceAttributes getDevice() {
         return device;
     }
 
     public void setDevice(DeviceAttributes device) {
         this.device = device;
+    }
+
+    public UpdateDeviceProfileRequest withDevice(DeviceAttributes device) {
+        setDevice(device);
+        return this;
     }
 
     @Override

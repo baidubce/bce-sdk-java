@@ -29,7 +29,6 @@ import com.baidubce.services.iotdm.model.v3.device.DeviceViewResponse;
 import com.baidubce.services.iotdm.model.v3.device.UpdateDeviceProfileRequest;
 import com.baidubce.services.iotdm.model.v3.device.UpdateDeviceRegistryRequest;
 import com.baidubce.services.iotdm.model.v3.device.UpdateDeviceViewRequest;
-import com.baidubce.services.iotdm.model.v3.schema.SchemaBaseResponse;
 import com.baidubce.services.iotdm.model.v3.schema.SchemaCreateRequest;
 import com.baidubce.services.iotdm.model.v3.schema.SchemaCreateResponse;
 import com.baidubce.services.iotdm.model.v3.schema.SchemaListResponse;
@@ -143,16 +142,16 @@ public class IotDmV3Client extends AbstractBceClient {
         return this.invokeHttpClient(internalRequest, SchemaListResponse.class);
     }
 
-    public SchemaBaseResponse updateSchema(String schemaId,
+    public void updateSchema(String schemaId,
             SchemaUpdateRequest schemaUpdateRequest) {
-        return this.doOperation(schemaUpdateRequest, SchemaBaseResponse.class, null, SCHEMA, schemaId);
+        this.doOperation(schemaUpdateRequest, AbstractBceResponse.class, null, SCHEMA, schemaId);
     }
 
-    public SchemaBaseResponse deleteSchema(String schemaId) {
+    public void deleteSchema(String schemaId) {
         Preconditions.checkNotNull(schemaId, NULL_SCHEMA_ID);
         InternalRequest internalRequest = createRequest(new GenericAccountRequest(), HttpMethodName.DELETE,
                 SCHEMA, schemaId);
-        return this.invokeHttpClient(internalRequest, SchemaBaseResponse.class);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
 
     }
 

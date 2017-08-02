@@ -37,12 +37,22 @@ public class SchemaProperty {
         this.name = name;
     }
 
+    public SchemaProperty withName(String name) {
+        setName(name);
+        return this;
+    }
+
     public PropertyType getType() {
         return type;
     }
 
     public void setType(PropertyType type) {
         this.type = type;
+    }
+
+    public SchemaProperty withType(PropertyType type) {
+        setType(type);
+        return this;
     }
 
     public String getDisplayName() {
@@ -53,6 +63,11 @@ public class SchemaProperty {
         this.displayName = displayName;
     }
 
+    public SchemaProperty withDisplayName(String displayName) {
+        setDisplayName(displayName);
+        return this;
+    }
+
     public String getDefaultValue() {
         return defaultValue;
     }
@@ -61,12 +76,22 @@ public class SchemaProperty {
         this.defaultValue = defaultValue;
     }
 
+    public SchemaProperty withDefaultValue(String defaultValue) {
+        setDefaultValue(defaultValue);
+        return this;
+    }
+
     public String getUnit() {
         return unit;
     }
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public SchemaProperty withUnit(String unit) {
+        setUnit(unit);
+        return this;
     }
 
     public enum PropertyType {

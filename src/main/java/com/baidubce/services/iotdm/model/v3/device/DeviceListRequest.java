@@ -28,6 +28,11 @@ public class DeviceListRequest extends AbstractBceRequest {
         return devices;
     }
 
+    public DeviceListRequest withDevices(List<String> devices) {
+        setDevices(devices);
+        return this;
+    }
+
     public void setDevices(List<String> devices) {
         this.devices = devices;
     }

@@ -4,7 +4,7 @@ import com.baidubce.model.AbstractBceResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GatewayResponse extends AbstractBceResponse {
+public class GatewayResponse extends AbstractBceResponse implements Gateway {
 
     public String getUuid() {
         return uuid;
@@ -52,6 +52,14 @@ public class GatewayResponse extends AbstractBceResponse {
 
     public void setCommandTopic(String commandTopic) {
         this.commandTopic = commandTopic;
+    }
+
+    public String getBackControlTopic() {
+        return backControlTopic;
+    }
+
+    public void setBackControlTopic(String backControlTopic) {
+        this.backControlTopic = backControlTopic;
     }
 
     public String getState() {
@@ -113,6 +121,8 @@ public class GatewayResponse extends AbstractBceResponse {
     private String host;
 
     private String commandTopic;
+
+    private String backControlTopic;
 
     private String state;  // ENABLED, DISABLED
 

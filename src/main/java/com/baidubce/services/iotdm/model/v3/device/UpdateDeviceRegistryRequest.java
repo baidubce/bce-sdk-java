@@ -34,6 +34,11 @@ public class UpdateDeviceRegistryRequest extends AbstractBceRequest {
         this.description = description;
     }
 
+    public UpdateDeviceRegistryRequest withDescription(String description) {
+        setDescription(description);
+        return this;
+    }
+
     public String getSchemaId() {
         return schemaId;
     }
@@ -42,12 +47,22 @@ public class UpdateDeviceRegistryRequest extends AbstractBceRequest {
         this.schemaId = schemaId;
     }
 
+    public UpdateDeviceRegistryRequest withSchemaId(String schemaId) {
+        setSchemaId(schemaId);
+        return this;
+    }
+
     public Boolean getFavourite() {
         return favourite;
     }
 
     public void setFavourite(Boolean favourite) {
         this.favourite = favourite;
+    }
+
+    public UpdateDeviceRegistryRequest withFavourite(Boolean favourite) {
+        setFavourite(favourite);
+        return this;
     }
 
     @Override

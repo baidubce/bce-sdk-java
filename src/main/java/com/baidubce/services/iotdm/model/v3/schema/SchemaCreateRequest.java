@@ -36,6 +36,11 @@ public class SchemaCreateRequest extends AbstractBceRequest {
         this.name = name;
     }
 
+    public SchemaCreateRequest withName(String name) {
+        setName(name);
+        return this;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -44,12 +49,22 @@ public class SchemaCreateRequest extends AbstractBceRequest {
         this.description = description;
     }
 
+    public SchemaCreateRequest withDescription(String description) {
+        setDescription(description);
+        return this;
+    }
+
     public List<SchemaProperty> getProperties() {
         return properties;
     }
 
     public void setProperties(List<SchemaProperty> properties) {
         this.properties = properties;
+    }
+
+    public SchemaCreateRequest withProperties(List<SchemaProperty> properties) {
+        setProperties(properties);
+        return this;
     }
 
     @Override

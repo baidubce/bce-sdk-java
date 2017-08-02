@@ -18,6 +18,7 @@ public class CreateAlarmRequest extends GenericAccountRequest {
     private String smsReceiver;
     private String smsVars;
     private String smsMsgType;
+    private String mqttMsgType;
     private String destTopic;
 
     public String getName() {
@@ -114,6 +115,14 @@ public class CreateAlarmRequest extends GenericAccountRequest {
 
     public void setSmsMsgType(String smsMsgType) {
         this.smsMsgType = smsMsgType;
+    }
+
+    public String getMqttMsgType() {
+        return mqttMsgType;
+    }
+
+    public void setMqttMsgType(String mqttMsgType) {
+        this.mqttMsgType = mqttMsgType;
     }
 
     public String getDestTopic() {

@@ -35,12 +35,22 @@ public class UpdateDeviceViewRequest extends AbstractBceRequest {
         this.reported = reported;
     }
 
+    public UpdateDeviceViewRequest withReported(JsonNode reported) {
+        setReported(reported);
+        return this;
+    }
+
     public JsonNode getDesired() {
         return desired;
     }
 
     public void setDesired(JsonNode desired) {
         this.desired = desired;
+    }
+
+    public UpdateDeviceViewRequest withDesired(JsonNode desired) {
+        setDesired(desired);
+        return this;
     }
 
     public int getProfileVersion() {

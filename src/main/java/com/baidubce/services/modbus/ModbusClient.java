@@ -36,7 +36,6 @@ import com.baidubce.services.modbus.model.device.ListDeviceRequest;
 import com.baidubce.services.modbus.model.device.ListDeviceResponse;
 import com.baidubce.services.modbus.model.device.UpdateDeviceRequest;
 import com.baidubce.services.modbus.model.gateway.CreateGatewayRequest;
-import com.baidubce.services.modbus.model.gateway.Gateway;
 import com.baidubce.services.modbus.model.gateway.GatewayResponse;
 import com.baidubce.services.modbus.model.gateway.ListGatewayRequest;
 import com.baidubce.services.modbus.model.gateway.ListGatewayResponse;
@@ -100,7 +99,7 @@ public class ModbusClient extends AbstractBceClient {
                 request.getPageNo(),
                 request.getPageSize());
         ListGatewayResponse response = this.invokeHttpClient(internalRequest, ListGatewayResponse.class);
-        for (Gateway gateway : response.getResult()) {
+        for (GatewayResponse gateway : response.getResult()) {
             gateway.setDeviceNum(getDeviceNumByGatewayUuid(gateway.getUuid()));
         }
         return response;
@@ -348,6 +347,14 @@ public class ModbusClient extends AbstractBceClient {
                 abstractBceRequest,
                 HttpMethodName.POST,
                 ACTION);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void deployGateway(String gatewayUuid) {
+        InternalRequest internalRequest = createRequest(
+                abstractBceRequest,
+                HttpMethodName.POST,
+                ACTION, gatewayUuid);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 

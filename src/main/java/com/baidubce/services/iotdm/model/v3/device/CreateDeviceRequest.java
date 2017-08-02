@@ -34,6 +34,11 @@ public class CreateDeviceRequest extends AbstractBceRequest {
         this.deviceName = deviceName;
     }
 
+    public CreateDeviceRequest withDeviceName(String deviceName) {
+        setDeviceName(deviceName);
+        return this;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -42,12 +47,22 @@ public class CreateDeviceRequest extends AbstractBceRequest {
         this.description = description;
     }
 
+    public CreateDeviceRequest withDescription(String description) {
+        setDescription(description);
+        return this;
+    }
+
     public String getSchemaId() {
         return schemaId;
     }
 
     public void setSchemaId(String schemaId) {
         this.schemaId = schemaId;
+    }
+
+    public CreateDeviceRequest withSchemaId(String schemaId) {
+        setSchemaId(schemaId);
+        return this;
     }
 
     @Override

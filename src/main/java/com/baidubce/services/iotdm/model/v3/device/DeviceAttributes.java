@@ -35,6 +35,11 @@ public class DeviceAttributes {
         this.reported = reported;
     }
 
+    public DeviceAttributes withReported(JsonNode reported) {
+        setReported(reported);
+        return this;
+    }
+
     public JsonNode getDesired() {
         return desired;
     }
@@ -43,12 +48,22 @@ public class DeviceAttributes {
         this.desired = desired;
     }
 
+    public DeviceAttributes withDesired(JsonNode desired) {
+        setDesired(desired);
+        return this;
+    }
+
     public int getProfileVersion() {
         return profileVersion;
     }
 
     public void setProfileVersion(int profileVersion) {
         this.profileVersion = profileVersion;
+    }
+
+    public DeviceAttributes withProfileVersion(int profileVersion) {
+        setProfileVersion(profileVersion);
+        return this;
     }
 
     public TimeAttributes getLastUpdatedTime() {

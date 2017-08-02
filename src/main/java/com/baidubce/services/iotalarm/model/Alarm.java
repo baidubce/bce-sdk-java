@@ -28,6 +28,7 @@ public class Alarm extends AbstractBceResponse {
     private String smsReceiver;
     private String smsVars;
     private String smsMsgType;
+    private String mqttMsgType;
     private String destTopic;
     private String alarmState;
     private long startTime;
@@ -146,6 +147,14 @@ public class Alarm extends AbstractBceResponse {
 
     public void setSmsMsgType(String smsMsgType) {
         this.smsMsgType = smsMsgType;
+    }
+
+    public String getMqttMsgType() {
+        return mqttMsgType;
+    }
+
+    public void setMqttMsgType(String mqttMsgType) {
+        this.mqttMsgType = mqttMsgType;
     }
 
     public String getDestTopic() {

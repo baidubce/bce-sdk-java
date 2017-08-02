@@ -26,6 +26,12 @@ public class BosClientConfiguration extends BceClientConfiguration {
     public static final int DEFAULT_STREAM_BUFFER_SIZE = 5 * 1024 * 1024;
     private int streamBufferSize = DEFAULT_STREAM_BUFFER_SIZE;
 
+    /**
+     * whether to enable using cname to visit bos resource. If user use custom domain as the endpoint, the cnameEnabled
+     * should be true.
+     */
+    private boolean cnameEnabled;
+
     public int getStreamBufferSize() {
         return this.streamBufferSize;
     }
@@ -49,6 +55,30 @@ public class BosClientConfiguration extends BceClientConfiguration {
 
     public BosClientConfiguration withStreamBufferSize(int streamBufferSize) {
         this.setStreamBufferSize(streamBufferSize);
+        return this;
+    }
+
+
+    /**
+     * Returns whether to enable using cname to visit bos resource.
+     *
+     * @return whether to enable using cname to visit bos resource.
+     */
+    public boolean isCnameEnabled() {
+        return this.cnameEnabled;
+    }
+
+    /**
+     * Sets whether to enable using cname to visit bos resource.
+     *
+     * @param cnameEnabled whether to enable using cname to visit bos resource.
+     */
+    public void setCnameEnabled(boolean cnameEnabled) {
+        this.cnameEnabled = cnameEnabled;
+    }
+
+    public BosClientConfiguration withCnameEnabled(boolean cnameEnabled) {
+        this.setCnameEnabled(cnameEnabled);
         return this;
     }
 
@@ -160,4 +190,5 @@ public class BosClientConfiguration extends BceClientConfiguration {
         this.setCredentials(credentials);
         return this;
     }
+
 }

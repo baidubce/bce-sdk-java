@@ -9,7 +9,7 @@ import java.util.List;
 public class ListGatewayResponse extends AbstractBceResponse {
     private int totalCount;
 
-    private List<Gateway> result;
+    private List<GatewayResponse> result;
 
     private String order;
 
@@ -35,11 +35,11 @@ public class ListGatewayResponse extends AbstractBceResponse {
         this.totalCount = totalCount;
     }
 
-    public List<Gateway> getResult() {
+    public List<GatewayResponse> getResult() {
         return result;
     }
 
-    public void setResult(List<Gateway> result) {
+    public void setResult(List<GatewayResponse> result) {
         this.result = result;
     }
 

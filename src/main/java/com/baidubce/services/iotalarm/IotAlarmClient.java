@@ -15,6 +15,7 @@ import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.GenericAccountRequest;
 import com.baidubce.services.iotalarm.model.Alarm;
+import com.baidubce.services.iotalarm.model.BatchIds;
 import com.baidubce.services.iotalarm.model.CommonResponse;
 import com.baidubce.services.iotalarm.model.CreateAlarmRequest;
 import com.baidubce.services.iotalarm.model.ListAlarmRequest;
@@ -40,6 +41,8 @@ public class IotAlarmClient extends AbstractBceClient {
     private static final String DISABLE = "disable";
     private static final String ENABLE = "enable";
     private static final String RECOVER = "recover";
+    private static final String BATCH = "batch";
+    private static final String DELETE = "delete";
 
     private static final HttpResponseHandler[] HANDLERS = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler() };
@@ -79,6 +82,14 @@ public class IotAlarmClient extends AbstractBceClient {
         return this.invokeHttpClient(internalRequest, CommonResponse.class);
     }
 
+    public CommonResponse deleteAlarmBatch(List<String> alarmIds) {
+        BatchIds ids = new BatchIds();
+        ids.setIds(alarmIds);
+        InternalRequest internalRequest =
+                createRequest(ids, HttpMethodName.POST, ALARM, BATCH, DELETE);
+        return this.invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
     public CommonResponse updateAlarm(UpdateAlarmRequest req, String uuid) {
         InternalRequest internalRequest =
                 createRequest(req, HttpMethodName.PUT, ALARM, uuid);
@@ -100,6 +111,14 @@ public class IotAlarmClient extends AbstractBceClient {
     public CommonResponse recoverAlarm(String alarmId) {
         InternalRequest internalRequest =
                 createRequest(new GenericAccountRequest(), HttpMethodName.PUT, ALARM, alarmId, RECOVER);
+        return this.invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public CommonResponse recoverAlarmBatch(List<String> alarmIds) {
+        BatchIds ids = new BatchIds();
+        ids.setIds(alarmIds);
+        InternalRequest internalRequest =
+                createRequest(ids, HttpMethodName.POST, ALARM, BATCH, RECOVER);
         return this.invokeHttpClient(internalRequest, CommonResponse.class);
     }
 

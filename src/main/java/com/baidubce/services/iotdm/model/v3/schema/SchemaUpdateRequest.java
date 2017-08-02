@@ -34,12 +34,22 @@ public class SchemaUpdateRequest extends AbstractBceRequest {
         this.description = description;
     }
 
+    public SchemaUpdateRequest withDescription(String description) {
+        setDescription(description);
+        return this;
+    }
+
     public List<SchemaProperty> getProperties() {
         return properties;
     }
 
     public void setProperties(List<SchemaProperty> properties) {
         this.properties = properties;
+    }
+
+    public SchemaUpdateRequest withProperties(List<SchemaProperty> properties) {
+        setProperties(properties);
+        return this;
     }
 
     @Override

@@ -16,5 +16,5 @@ package com.baidubce;
  * Common constants used by the whole SDK.
  */
 public class BceConstants {
-    public static final String VERSION = "0.10.20";
+    public static final String VERSION = "0.10.21";
 }

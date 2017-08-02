@@ -497,8 +497,9 @@ public class BosClient extends AbstractBceClient {
         // the HttpClient mistakenly treating the slash as a path delimiter.
         // For presigned request, we need to remember to remove this extra slash
         // before generating the URL.
+        String bucketName = ((BosClientConfiguration) this.config).isCnameEnabled() ? null : request.getBucketName();
         InternalRequest internalRequest = new InternalRequest(httpMethod, HttpUtils
-                .appendUri(this.getEndpoint(), URL_PREFIX, request.getBucketName(), request.getKey()));
+                .appendUri(this.getEndpoint(), URL_PREFIX, bucketName, request.getKey()));
         internalRequest.setCredentials(request.getRequestCredentials());
         SignOptions options = new SignOptions();
         options.setExpirationInSeconds(request.getExpiration());
@@ -1393,7 +1394,8 @@ public class BosClient extends AbstractBceClient {
     private InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod) {
         String bucketName = null;
         String key = null;
-        if (bceRequest instanceof GenericBucketRequest) {
+        // when custom_endpoint, bucketName should be null when set up InternalRequest.
+        if (bceRequest instanceof GenericBucketRequest && !((BosClientConfiguration)this.config).isCnameEnabled()) {
             bucketName = ((GenericBucketRequest) bceRequest).getBucketName();
         }
         if (bceRequest instanceof GenericObjectRequest) {

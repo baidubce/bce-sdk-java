@@ -126,6 +126,7 @@ public class VodClient extends AbstractBceClient {
     private static final String PARA_AUTO_START_NEW = "autostart";
     private static final String PARA_ATTRIBUTES = "attributes";
     private static final String PARA_APPLY = "apply";
+    private static final String PARA_APPLY_MODE = "mode";
     private static final String PARA_PROCESS = "process";
     private static final String PARA_GENDELIVERY = "delivery";
     private static final String PARA_GENCODE = "code";
@@ -194,7 +195,7 @@ public class VodClient extends AbstractBceClient {
     /**
      * Uploads the specified file to Bos under the specified bucket and key name.
      *
-     * @param title media titile.
+     * @param title media title.
      * @param description media description.
      * @param file The file containing the data to be uploaded to VOD.
      * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
@@ -209,6 +210,30 @@ public class VodClient extends AbstractBceClient {
             String transcodingPresetGroupName,
             int priority)
             throws FileNotFoundException {
+        return createMediaResource(title, description, file, transcodingPresetGroupName, priority, null);
+    }
+
+
+    /**
+     * Uploads the specified file to Bos under the specified bucket and key name.
+     *
+     * @param title media title.
+     * @param description media description.
+     * @param file The file containing the data to be uploaded to VOD.
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own task
+     * @param mode the mode of the media resource
+     * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
+     * @throws FileNotFoundException
+     */
+    public CreateMediaResourceResponse createMediaResource(
+            String title,
+            String description,
+            File file,
+            String transcodingPresetGroupName,
+            int priority,
+            String mode)
+            throws FileNotFoundException {
         if (!file.exists()) {
             throw new FileNotFoundException("The media file " + file.getAbsolutePath() + " doesn't exist!");
         }
@@ -217,7 +242,12 @@ public class VodClient extends AbstractBceClient {
         String filename = file.getName();
         sourceExtension = getFileExtension(filename);
         // get a BOS bucket and extract mediaId from it
-        GenerateMediaIdResponse generateMediaIdresponse = applyMedia();
+        GenerateMediaIdResponse generateMediaIdresponse;
+        if (mode == null) {
+            generateMediaIdresponse = applyMedia();
+        } else {
+            generateMediaIdresponse = applyMedia(mode);
+        }
         String bosKey = generateMediaIdresponse.getSourceKey();
         String mediaId = generateMediaIdresponse.getMediaId();
         String bucket = generateMediaIdresponse.getSourceBucket();
@@ -264,6 +294,30 @@ public class VodClient extends AbstractBceClient {
             String description,
             String transcodingPresetGroupName,
             int priority) {
+        return createMediaResource(
+                sourceBucket, sourceKey, title, description, transcodingPresetGroupName, priority, null);
+    }
+
+    /**
+     * Load a media resource from BOS to VOD.
+     *
+     * @param sourceBucket The bucket name of the media resource in BOS
+     * @param sourceKey The key name of the media resource in BOS
+     * @param title The title string of the media resource
+     * @param description The description string of the media resource
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own jobs
+     * @param mode the mode of the media resource
+     * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public CreateMediaResourceResponse createMediaResource(
+            String sourceBucket,
+            String sourceKey,
+            String title,
+            String description,
+            String transcodingPresetGroupName,
+            int priority,
+            String mode) {
         checkStringNotEmpty(sourceBucket, "sourceBucket should not be null or empty!");
         checkStringNotEmpty(sourceKey, "key should not be null or empty!");
 
@@ -277,7 +331,12 @@ public class VodClient extends AbstractBceClient {
         String sourceExtension = null;
         sourceExtension = getFileExtension(sourceKey);
         // generate media Id
-        GenerateMediaIdResponse generateMediaIdresponse = applyMedia();
+        GenerateMediaIdResponse generateMediaIdresponse;
+        if (mode == null) {
+            generateMediaIdresponse = applyMedia();
+        } else {
+            generateMediaIdresponse = applyMedia(mode);
+        }
         String mediaId = generateMediaIdresponse.getMediaId();
         String targetBucket = generateMediaIdresponse.getSourceBucket();
         String targetKey = generateMediaIdresponse.getSourceKey();
@@ -318,6 +377,18 @@ public class VodClient extends AbstractBceClient {
 
         return invokeHttpClient(internalRequest, GenerateMediaIdResponse.class);
     }
+
+
+    public GenerateMediaIdResponse applyMedia(String mode) {
+        GenerateMediaIdRequest request = new GenerateMediaIdRequest();
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, request, PATH_MEDIA);
+        internalRequest.addParameter(PARA_APPLY, null);
+        internalRequest.addParameter(PARA_APPLY_MODE, mode);
+
+        return invokeHttpClient(internalRequest, GenerateMediaIdResponse.class);
+    }
+
 
     /**
      * Gets the properties of specific media resource managed by VOD service.

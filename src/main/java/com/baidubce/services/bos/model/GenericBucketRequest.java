@@ -35,7 +35,10 @@ public abstract class GenericBucketRequest extends AbstractBceRequest {
     }
 
     public void setBucketName(String bucketName) {
-        checkNotNull(bucketName, "bucketName should not be null.");
+        if (bucketName == null) {
+            this.bucketName = bucketName;
+            return;
+        }
         bucketName = bucketName.trim();
         if (bucketName.length() < MIN_BUCKET_NAME_LENGTH) {
             throw new IllegalArgumentException("Invalid bucketName:" + bucketName + ". " +

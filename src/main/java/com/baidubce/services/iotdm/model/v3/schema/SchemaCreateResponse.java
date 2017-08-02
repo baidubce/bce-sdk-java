@@ -12,10 +12,12 @@
  */
 package com.baidubce.services.iotdm.model.v3.schema;
 
+import com.baidubce.model.AbstractBceResponse;
+
 /**
  * Represent the response of creating a schema.
  */
-public class SchemaCreateResponse extends SchemaBaseResponse {
+public class SchemaCreateResponse extends AbstractBceResponse {
 
     private String schemaId;
 
