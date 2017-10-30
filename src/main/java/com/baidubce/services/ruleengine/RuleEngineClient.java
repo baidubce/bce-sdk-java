@@ -74,6 +74,12 @@ public class RuleEngineClient extends AbstractBceClient {
     public ListRuleResponse listRules(ListRuleRequest request) {
         InternalRequest internalRequest =
                 createRequest(request, HttpMethodName.GET, RULES);
+        if (request.getPageNo() > 0) {
+            internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        }
+        if (request.getPageSize() > 0) {
+            internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        }
         return this.invokeHttpClient(internalRequest, ListRuleResponse.class);
     }
 

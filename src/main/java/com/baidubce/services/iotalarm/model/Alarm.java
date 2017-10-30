@@ -13,6 +13,9 @@ public class Alarm extends AbstractBceResponse {
     public static final String WARN = "WARN";
     public static final String DISABLED = "DISABLED";
     public static final String ENABLED = "ENABLED";
+    public static final String HIGH = "HIGH";
+    public static final String MIDDLE = "MIDDLE";
+    public static final String LOW = "LOW";
 
     private String uuid;
     private String name;

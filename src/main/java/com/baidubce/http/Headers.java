@@ -92,6 +92,10 @@ public interface Headers {
 
     public static final String BCE_COPY_SOURCE_IF_UNMODIFIED_SINCE = "x-bce-copy-source-if-unmodified-since";
 
+    public static final String BCE_FETCH_SOURCE = "x-bce-fetch-source";
+
+    public static final String BCE_FETCH_MODE = "x-bce-fetch-mode";
+
     public static final String BCE_DEBUG_ID = "x-bce-debug-id";
 
     public static final String BCE_NEXT_APPEND_OFFSET = "x-bce-next-append-offset";

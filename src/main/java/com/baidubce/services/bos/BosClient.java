@@ -995,6 +995,58 @@ public class BosClient extends AbstractBceClient {
     }
 
     /**
+     * Fetches a source object to a new destination in Bos.
+     *
+     * @param bucketName The name of the bucket in which the new object will be created.
+     * @param key The key in the destination bucket under which the new object will be created.
+     * @param sourceUrl The url full path for fetching.
+     * @return A FetchObjectResponse object containing the information returned by Bos for the newly fetching.
+     */
+    public FetchObjectResponse fetchObject(String bucketName, String key, String sourceUrl) {
+        FetchObjectRequest request = new FetchObjectRequest(bucketName, key, sourceUrl);
+        return this.fetchObject(request);
+    }
+    /**
+     * Fetches a source object to a new destination in Bos.
+     *
+     * @param bucketName The name of the bucket in which the new object will be created.
+     * @param key The key in the destination bucket under which the new object will be created.
+     * @param sourceUrl The url full path for fetching.
+     * @param mode The mode path for fetching.
+     * @return A FetchObjectResponse object containing the information returned by Bos for the newly fetching.
+     */
+    public FetchObjectResponse fetchObject(String bucketName, String key, String sourceUrl, String mode) {
+        FetchObjectRequest request = new FetchObjectRequest(bucketName, key, sourceUrl).withMode(mode);
+        return this.fetchObject(request);
+    }
+
+    /**
+     * Fetches a source object to a new destination in Bos.
+     *
+     * @param request The request object containing all the options for fetching url to a Bos object.
+     * @return A FetchObjectResponse object containing the information returned by Bos for the newly fetching.
+     */
+    public FetchObjectResponse fetchObject(FetchObjectRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getSourceUrl(), "source should not be null or empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter("fetch", null);
+
+        internalRequest.addHeader(Headers.BCE_FETCH_SOURCE, request.getSourceUrl());
+        if (request.getMode() != null) {
+            internalRequest.addHeader(Headers.BCE_FETCH_MODE, request.getMode());
+        }
+        if (request.getStorageClass() != null) {
+            internalRequest.addHeader(Headers.BCE_STORAGE_CLASS, request.getStorageClass());
+        }
+        this.setZeroContentLength(internalRequest);
+
+        FetchObjectResponse response = this.invokeHttpClient(internalRequest, FetchObjectResponse.class);
+        return response;
+    }
+
+    /**
      * Deletes the specified object in the specified bucket.
      *
      * @param bucketName The name of the Bos bucket containing the object to delete.

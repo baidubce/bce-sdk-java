@@ -36,6 +36,7 @@ import com.baidubce.services.bmr.model.GetClusterResponse;
 import com.baidubce.services.bmr.model.GetStepRequest;
 import com.baidubce.services.bmr.model.GetStepResponse;
 import com.baidubce.services.bmr.model.InstanceGroupConfig;
+import com.baidubce.services.bmr.model.ModifyInstanceGroupConfig;
 import com.baidubce.services.bmr.model.ListClustersRequest;
 import com.baidubce.services.bmr.model.ListClustersResponse;
 import com.baidubce.services.bmr.model.ListInstanceGroupsRequest;
@@ -44,6 +45,7 @@ import com.baidubce.services.bmr.model.ListInstancesRequest;
 import com.baidubce.services.bmr.model.ListInstancesResponse;
 import com.baidubce.services.bmr.model.ListStepsRequest;
 import com.baidubce.services.bmr.model.ListStepsResponse;
+import com.baidubce.services.bmr.model.ModifyInstanceGroupsRequest;
 import com.baidubce.services.bmr.model.StepConfig;
 import com.baidubce.services.bmr.model.TerminateClusterRequest;
 import com.baidubce.util.HttpUtils;
@@ -279,6 +281,53 @@ public class BmrClient extends AbstractBceClient {
         }
 
         return this.invokeHttpClient(internalRequest, CreateClusterResponse.class);
+    }
+
+    /**
+     * Modify the instance groups of the target cluster.
+     *
+     * @param request The request containing the ID of BMR cluster and the instance groups to be modified.
+     */
+    public void modifyInstanceGroups(ModifyInstanceGroupsRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getClusterId(), "The clusterId should not be null or empty string.");
+        checkNotNull(request.getInstanceGroups(), "The instanceGroups should not be null.");
+        StringWriter writer = new StringWriter();
+        try {
+            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeArrayFieldStart("instanceGroups");
+            for (ModifyInstanceGroupConfig instanceGroup : request.getInstanceGroups()) {
+                checkStringNotEmpty(instanceGroup.getId(),
+                        "The instanceGroupId should not be null or empty string.");
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeStringField("id", instanceGroup.getId());
+                jsonGenerator.writeNumberField("instanceCount", instanceGroup.getInstanceCount());
+                jsonGenerator.writeEndObject();
+            }
+            jsonGenerator.writeEndArray();
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+        } catch (IOException e) {
+            throw new BceClientException("Fail to generate json", e);
+        }
+
+        byte[] json = null;
+        try {
+            json = writer.toString().getBytes(DEFAULT_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get UTF-8 bytes", e);
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, CLUSTER,
+                request.getClusterId(), INSTANCE_GROUP);
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+        internalRequest.setContent(RestartableInputStream.wrap(json));
+
+        if (request.getClientToken() != null) {
+            internalRequest.addParameter("clientToken", request.getClientToken());
+        }
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
     /**

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class GroupInfo {
 
     /**
-     * The name of GroupInfo which should be one of the Type, Tag, Time and Value.
+     * The name of GroupInfo which should be Tag.
      */
     private String name;
 
@@ -19,6 +19,7 @@ public class GroupInfo {
      * Available when the name is Type.
      * Represent the type of this group which is one of the Number, String and Bytes.
      */
+    @Deprecated
     private String type;
 
     /**
@@ -31,18 +32,21 @@ public class GroupInfo {
      * Available when name is Time.
      * Represent the group number of this group.
      */
+    @Deprecated
     private Integer groupNumber;
 
     /**
      * Available when name is Value.
      * Represent the beginning of this group. The type could be Long/Double.
      */
+    @Deprecated
     private JsonNode from;
 
     /**
      * Available when name is Value.
      * Represent the ending of this group. The type could be Long/Double.
      */
+    @Deprecated
     private JsonNode to;
 
     public String getName() {
@@ -53,10 +57,12 @@ public class GroupInfo {
         this.name = name;
     }
 
+    @Deprecated
     public String getType() {
         return type;
     }
 
+    @Deprecated
     public void setType(String type) {
         this.type = type;
     }
@@ -69,66 +75,80 @@ public class GroupInfo {
         this.tags = tags;
     }
 
+    @Deprecated
     public Integer getGroupNumber() {
         return groupNumber;
     }
 
+    @Deprecated
     public void setGroupNumber(Integer groupNumber) {
         this.groupNumber = groupNumber;
     }
 
+    @Deprecated
     public JsonNode getFrom() {
         return from;
     }
 
     @JsonIgnore
+    @Deprecated
     public long getLongFrom() {
         return from.asLong();
     }
 
     @JsonIgnore
+    @Deprecated
     public double getDoubleFrom() {
         return from.asDouble();
     }
 
     @JsonIgnore
+    @Deprecated
     public boolean isLongFrom() {
         return from.isLong();
     }
 
     @JsonIgnore
+    @Deprecated
     public boolean isDoubleFrom() {
         return from.isDouble();
     }
 
+    @Deprecated
     public void setFrom(JsonNode from) {
         this.from = from;
     }
 
+    @Deprecated
     public JsonNode getTo() {
         return to;
     }
 
     @JsonIgnore
+    @Deprecated
     public long getLongTo() {
         return to.asLong();
     }
 
     @JsonIgnore
+    @Deprecated
     public double getDoubleTo() {
         return to.asDouble();
     }
 
     @JsonIgnore
+    @Deprecated
     public boolean isLongTo() {
         return to.isLong();
     }
 
     @JsonIgnore
+    @Deprecated
     public boolean isDoubleTo() {
         return to.isDouble();
     }
 
+    @Deprecated
     public void setTo(JsonNode to) {
         this.to = to;
     }

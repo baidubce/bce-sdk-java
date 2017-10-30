@@ -21,21 +21,34 @@ public class TsdbConstants {
     public static final String AGGREGATOR_NAME_DIV = "Div";
     public static final String AGGREGATOR_NAME_SCALE = "Scale";
     public static final String AGGREGATOR_NAME_RATE = "Rate";
+    public static final String AGGREGATOR_NAME_ADJACENT_UNIQUE = "AdjacentUnique";
 
     // GroupInfo name.
+    @Deprecated
     public static final String GROUP_INFO_NAME_TYPE = "Type";
     public static final String GROUP_INFO_NAME_TAG = "Tag";
+    @Deprecated
     public static final String GROUP_INFO_NAME_TIME = "Time";
+    @Deprecated
     public static final String GROUP_INFO_NAME_VALUE = "Value";
 
     // GroupInfo type.
+    @Deprecated
     public static final String GROUP_INFO_TYPE_NUMBER = "Number";
+    @Deprecated
     public static final String GROUP_INFO_TYPE_STRING = "String";
 
     // GroupBy name.
     public static final String GROUP_BY_NAME_TAG = "Tag";
+    @Deprecated
     public static final String GROUP_BY_NAME_TIME = "Time";
+    @Deprecated
     public static final String GROUP_BY_NAME_VALUE = "Value";
+
+    // Field type.
+    public static final String FIELD_TYPE_NUMBER = "Number";
+    public static final String FIELD_TYPE_STRING = "String";
+    public static final String FIELD_TYPE_BYTES = "Bytes";
 
     // Datapoint value type.
     public static final String TYPE_BYTES = "Bytes";
@@ -63,4 +76,5 @@ public class TsdbConstants {
     // Fill type.
     public static final String FILL_TYPE_LINEAR = "Linear";
     public static final String FILL_TYPE_PREVIOUS = "Previous";
+    public static final String FILL_TYPE_FIXED = "Fixed";
 }

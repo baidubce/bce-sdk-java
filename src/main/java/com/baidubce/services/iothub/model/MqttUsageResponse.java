@@ -1,0 +1,30 @@
+package com.baidubce.services.iothub.model;
+
+import com.baidubce.model.AbstractBceResponse;
+
+public class MqttUsageResponse extends AbstractBceResponse {
+
+    private long publishReceived;
+
+    private long publishSent;
+
+    public long getPublishReceived() {
+        return publishReceived;
+    }
+
+    public void setPublishReceived(long value) {
+        publishReceived = value;
+    }
+
+    public long getPublishSent() {
+        return publishSent;
+    }
+
+    public void setPublishSent(long value) {
+        publishSent = value;
+    }
+
+    public long getTotal() {
+        return publishReceived + publishSent;
+    }
+}

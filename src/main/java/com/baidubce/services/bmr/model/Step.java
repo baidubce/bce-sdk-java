@@ -24,6 +24,7 @@ public class Step {
     private Map<String, String> properties;
     private String name;
     private StepStatus status;
+    private String logUri;
 
     public String getId() {
         return id;
@@ -71,5 +72,13 @@ public class Step {
 
     public void setStatus(StepStatus status) {
         this.status = status;
+    }
+
+    public String getLogUri() {
+        return this.logUri;
+    }
+
+    public void setLogUri(String logUri) {
+        this.logUri = logUri;
     }
 }

@@ -361,6 +361,76 @@ public class VodClient extends AbstractBceClient {
         return response;
     }
 
+    /**
+     * Load a media resource from URL to VOD.
+     *
+     * @param sourceUrl The source url of the media resource
+     * @param title The title string of the media resource
+     * @param description The description string of the media resource
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own jobs
+     * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public CreateMediaResourceResponse createMediaResource(
+            String sourceUrl,
+            String title,
+            String description,
+            String transcodingPresetGroupName,
+            int priority) {
+        return createMediaResource(
+                sourceUrl, title, description, transcodingPresetGroupName, priority, null);
+    }
+
+    /**
+     * Load a media resource from URL to VOD.
+     *
+     * @param sourceUrl The source url of the media resource
+     * @param title The title string of the media resource
+     * @param description The description string of the media resource
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own jobs
+     * @param mode the mode of the media resource
+     * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public CreateMediaResourceResponse createMediaResource(
+            String sourceUrl,
+            String title,
+            String description,
+            String transcodingPresetGroupName,
+            int priority,
+            String mode) {
+        checkStringNotEmpty(sourceUrl, "sourceUrl should not be null or empty!");
+
+        // generate media Id
+        GenerateMediaIdResponse generateMediaIdresponse;
+        if (mode == null) {
+            generateMediaIdresponse = applyMedia();
+        } else {
+            generateMediaIdresponse = applyMedia(mode);
+        }
+        String mediaId = generateMediaIdresponse.getMediaId();
+        String targetBucket = generateMediaIdresponse.getSourceBucket();
+        String targetKey = generateMediaIdresponse.getSourceKey();
+
+        // fetch to temp bucket
+        bosClient.fetchObject(targetBucket, targetKey, sourceUrl);
+
+        // create mediaId
+        InternalCreateMediaRequest request =
+                new InternalCreateMediaRequest()
+                        .withMediaId(mediaId)
+                        .withTitle(title)
+                        .withDescription(description)
+                        .withTranscodingPresetGroupName(transcodingPresetGroupName)
+                        .withPriority(priority);
+        InternalCreateMediaResponse internalResponse = processMedia(request);
+
+        CreateMediaResourceResponse response = new CreateMediaResourceResponse();
+        response.setMediaId(internalResponse.getMediaId());
+
+        return response;
+    }
+
     public InternalCreateMediaResponse processMedia(InternalCreateMediaRequest request) {
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.PUT, request, PATH_MEDIA, request.getMediaId());

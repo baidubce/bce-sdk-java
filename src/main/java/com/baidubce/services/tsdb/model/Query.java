@@ -70,6 +70,21 @@ public class Query {
      */
     private Fill fill;
 
+    /**
+     * Optional.
+     * The marker which is used to get data started from.
+     * It should be the value of nextMarker of previous query request's result or null for the first query request.
+     */
+    private String marker;
+
+    public String getMarker() {
+        return marker;
+    }
+
+    public void setMarker(String marker) {
+        this.marker = marker;
+    }
+
     public Fill getFill() {
         return fill;
     }
@@ -148,6 +163,11 @@ public class Query {
 
     public void setOrder(String order) {
         this.order = order;
+    }
+
+    public Query withMarker(String marker) {
+        this.marker = marker;
+        return this;
     }
 
     public Query withFill(Fill fill) {

@@ -25,10 +25,15 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.iothub.model.AccountMqttUsageRequest;
 import com.baidubce.services.iothub.model.AttachPrincipalToPolicyRequest;
 import com.baidubce.services.iothub.model.AttachThingToPrincipalRequest;
 import com.baidubce.services.iothub.model.BaseRequest;
 import com.baidubce.services.iothub.model.BaseResponse;
+import com.baidubce.services.iothub.model.BatchGetMqttClientStatusRequest;
+import com.baidubce.services.iothub.model.BatchGetMqttClientStatusResponse;
+import com.baidubce.services.iothub.model.MqttClientStatusRequest;
+import com.baidubce.services.iothub.model.MqttClientStatusResponse;
 import com.baidubce.services.iothub.model.CreatePermissionRequest;
 import com.baidubce.services.iothub.model.CreatePrincipalResponse;
 import com.baidubce.services.iothub.model.DeleteThingRequest;
@@ -37,7 +42,10 @@ import com.baidubce.services.iothub.model.ListPermissionResponse;
 import com.baidubce.services.iothub.model.ListPolicyRequest;
 import com.baidubce.services.iothub.model.ListPrincipalsRequest;
 import com.baidubce.services.iothub.model.ListResponse;
+import com.baidubce.services.iothub.model.MqttUsageResponse;
 import com.baidubce.services.iothub.model.Operation;
+import com.baidubce.services.iothub.model.QueryEndpointDailyMqttUsageRequest;
+import com.baidubce.services.iothub.model.QueryEndpointDailyMqttUsageResponse;
 import com.baidubce.services.iothub.model.QueryEndpointRequest;
 import com.baidubce.services.iothub.model.QueryEndpointResponse;
 import com.baidubce.services.iothub.model.QueryPermissionRequest;
@@ -52,7 +60,10 @@ import com.baidubce.services.iothub.model.RegenerateCertRequest;
 import com.baidubce.services.iothub.model.UpdatePermissionRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+import org.joda.time.format.ISODateTimeFormat;
+
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -78,6 +89,13 @@ public class IotHubClient extends AbstractBceClient {
     private static final String REMOVETHINGPRINCIPAL = "remove-thing-principal";
     private static final String ATTACHPRINCIPALPOLICY = "attach-principal-policy";
     private static final String REMOVEPRINCIPALPOLICY = "remove-principal-policy";
+    private static final String CLIENT = "client";
+    private static final String BATCH_CLIENT = "batch-client";
+    private static final String STATUS = "status";
+    private static final String USAGE = "usage";
+    private static final String USAGE_QUERY = "usage-query";
+    private static final String START = "start";
+    private static final String END = "end";
 
     private static final String[] HEADERS_TO_SIGN = { Headers.HOST, Headers.BCE_DATE };
     private static final String DEFAULT_ENCODING = "UTF-8";
@@ -657,6 +675,49 @@ public class IotHubClient extends AbstractBceClient {
         return this.invokeHttpClient(internalRequest, BaseResponse.class);
     }
 
+    public MqttClientStatusResponse getClientStatus(MqttClientStatusRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getEndpointName(), "endpointName should not be null.");
+        checkNotNull(request.getClientId(), "clientId should not be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, ENDPOINT,
+                request.getEndpointName(), CLIENT, request.getClientId(), STATUS);
+        return this.invokeHttpClient(internalRequest, MqttClientStatusResponse.class);
+    }
+
+    public BatchGetMqttClientStatusResponse batchGetClientStatus(BatchGetMqttClientStatusRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getEndpointName(), "endpointName should not be null.");
+        checkNotNull(request.getClientIdList(), "clientIdList should not be null.");
+        checkArgument(!request.getClientIdList().isEmpty(), "clientIdList should not be empty.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, ENDPOINT,
+                request.getEndpointName(), BATCH_CLIENT, STATUS);
+        fillInHeadAndBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, BatchGetMqttClientStatusResponse.class);
+    }
+
+    public MqttUsageResponse getAccountMqttUsageOfCurrentBillingMonth(AccountMqttUsageRequest request) {
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, USAGE);
+        return this.invokeHttpClient(internalRequest, MqttUsageResponse.class);
+    }
+
+    public MqttUsageResponse getEndpointMqttUsageOfCurrentBillingMonth(BaseRequest request) {
+        checkNotNull(request.getEndpointName(), "endpointName should not be null");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, ENDPOINT,
+                request.getEndpointName(), USAGE);
+        return this.invokeHttpClient(internalRequest, MqttUsageResponse.class);
+    }
+
+    public QueryEndpointDailyMqttUsageResponse queryEndpointDailyMqttUsage(QueryEndpointDailyMqttUsageRequest request) {
+        checkNotNull(request.getEndpointName(), "endpointName should not be null");
+        checkNotNull(request.getStart(), "start should not be null");
+        checkNotNull(request.getEnd(), "end should not be null");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, ENDPOINT,
+                request.getEndpointName(), USAGE_QUERY);
+        internalRequest.addParameter(START, ISODateTimeFormat.date().print(request.getStart()));
+        internalRequest.addParameter(END, ISODateTimeFormat.date().print(request.getEnd()));
+        return this.invokeHttpClient(internalRequest, QueryEndpointDailyMqttUsageResponse.class);
+    }
+
     private InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
                                           String... pathVariables) {
         return createRequest(bceRequest, httpMethod, null, pathVariables);
@@ -694,12 +755,14 @@ public class IotHubClient extends AbstractBceClient {
 
         return request;
     }
+
     private void fillInHeadAndBody(AbstractBceRequest bceRequest, InternalRequest request) {
         byte[] content = toJson(bceRequest);
         request.addHeader(Headers.CONTENT_LENGTH, Integer.toString(content.length));
         request.addHeader(Headers.CONTENT_TYPE, CONTENT_TYPE);
         request.setContent(RestartableInputStream.wrap(content));
     }
+
     private byte[] toJson(AbstractBceRequest bceRequest) {
         String jsonStr = JsonUtils.toJsonString(bceRequest);
         try {

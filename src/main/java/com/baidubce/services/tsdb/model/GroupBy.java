@@ -9,7 +9,7 @@ public class GroupBy {
     
     /**
      * Required.
-     * Represent the name of GroupBy which should be one of Tag, Time and Value.
+     * Represent the name of GroupBy which should be Tag.
      */
     private String name;
     
@@ -23,18 +23,21 @@ public class GroupBy {
      * Required when name is Time.
      * Represent range size of time for grouping by time.
      */
+    @Deprecated
     private String timeRangeSize;
     
     /**
      * Required when name is Time.
      * Represent the count of group for grouping by time.
      */
+    @Deprecated
     private Integer groupCount;
     
     /**
      * Required when name is Value.
      * Represent the range size of value for grouping by value.
      */
+    @Deprecated
     private Integer valueRangeSize;
 
     public String getName() {
@@ -53,26 +56,32 @@ public class GroupBy {
         this.tags = tags;
     }
 
+    @Deprecated
     public String getTimeRangeSize() {
         return timeRangeSize;
     }
 
+    @Deprecated
     public void setTimeRangeSize(String timeRangeSize) {
         this.timeRangeSize = timeRangeSize;
     }
 
+    @Deprecated
     public Integer getGroupCount() {
         return groupCount;
     }
 
+    @Deprecated
     public void setGroupCount(Integer groupCount) {
         this.groupCount = groupCount;
     }
 
+    @Deprecated
     public Integer getValueRangeSize() {
         return valueRangeSize;
     }
 
+    @Deprecated
     public void setValueRangeSize(Integer valueRangeSize) {
         this.valueRangeSize = valueRangeSize;
     }
@@ -86,17 +95,20 @@ public class GroupBy {
         this.tags = tags;
         return this;
     }
-    
+
+    @Deprecated
     public GroupBy withTimeRangeSize(String timeRangeSize) {
         this.timeRangeSize = timeRangeSize;
         return this;
     }
-    
+
+    @Deprecated
     public GroupBy withGroupCount(int groupCount) {
         this.groupCount = groupCount;
         return this;
     }
-    
+
+    @Deprecated
     public GroupBy withValueRangeSize(int valueRangeSize) {
         this.valueRangeSize = valueRangeSize;
         return this;

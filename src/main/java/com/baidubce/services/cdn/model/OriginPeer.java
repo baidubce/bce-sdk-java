@@ -20,50 +20,58 @@ package com.baidubce.services.cdn.model;
 public class OriginPeer extends JsonObject {
     private String peer;
     private String host;
+    private boolean backup;
+    private boolean follow302;
     
-    /**
-     * @param peer
-     * @return returns this object
-     */
     public OriginPeer withPeer(String peer) {
         this.peer = peer;
         return this;
     }
     
-    /**
-     * @param host
-     * @return returns this object
-     */
     public OriginPeer withHost(String host) {
         this.host = host;
         return this;
     }
+    
+    public OriginPeer withBackup(boolean backup) {
+        this.backup = backup;
+        return this;
+    }
+    
+    public OriginPeer withFollow302(boolean follow302) {
+        this.follow302 = follow302;
+        return this;
+    }
 
-    /**
-     * @return peer
-     */
     public String getPeer() {
         return peer;
     }
 
-    /**
-     * @param peer
-     */
     public void setPeer(String peer) {
         this.peer = peer;
     }
-    
-    /**
-     * @return host
-     */
+
     public String getHost() {
         return host;
     }
 
-    /**
-     * @param host
-     */
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public boolean isBackup() {
+        return backup;
+    }
+
+    public void setBackup(boolean backup) {
+        this.backup = backup;
+    }
+
+    public boolean isFollow302() {
+        return follow302;
+    }
+
+    public void setFollow302(boolean follow302) {
+        this.follow302 = follow302;
     }
 }

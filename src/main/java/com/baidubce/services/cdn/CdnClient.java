@@ -46,6 +46,7 @@ import com.baidubce.services.cdn.model.PrefetchTask;
 import com.baidubce.services.cdn.model.PurgeRequest;
 import com.baidubce.services.cdn.model.PurgeResponse;
 import com.baidubce.services.cdn.model.PurgeTask;
+import com.baidubce.services.cdn.model.RequestAuth;
 import com.baidubce.services.cdn.model.SetDomainCacheFullUrlRequest;
 import com.baidubce.services.cdn.model.SetDomainCacheFullUrlResponse;
 import com.baidubce.services.cdn.model.SetDomainCacheTTLRequest;
@@ -96,6 +97,13 @@ import com.baidubce.services.cdn.model.GetDomainConfigRequest;
 import com.baidubce.services.cdn.model.GetDomainConfigResponse;
 import com.baidubce.services.cdn.model.GetDomainLogRequest;
 import com.baidubce.services.cdn.model.GetDomainLogResponse;
+import com.baidubce.services.cdn.model.HttpsConfig;
+import com.baidubce.services.cdn.model.SetHttpsConfigRequest;
+import com.baidubce.services.cdn.model.SetHttpsConfigResponse;
+import com.baidubce.services.cdn.model.SetRequestAuthRequest;
+import com.baidubce.services.cdn.model.SetRequestAuthResponse;
+import com.baidubce.services.cdn.model.DescribeIpRequest;
+import com.baidubce.services.cdn.model.DescribeIpResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.baidubce.util.DateUtils;
@@ -131,6 +139,11 @@ public class CdnClient extends AbstractBceClient {
      * The common URI prefix for log operation.
      */
     private static final String LOG = "log";
+    
+    /**
+     * The common URI prefix for utils operation.
+     */
+    private static final String UTILS = "utils";
     
     /**
      * Generate signature with specified headers.
@@ -431,6 +444,62 @@ public class CdnClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, SetDomainLimitRateResponse.class);
     }
     
+    /**
+     * Set HTTPS with certain configuration.
+     * 
+     * @param domain Name of the domain.
+     * @param https The configuration of HTTPS.
+     */
+    public void setHttpsConfig(String domain, HttpsConfig https) {
+        SetHttpsConfigRequest request = new SetHttpsConfigRequest()
+                .withDomain(domain)
+                .withHttps(https);
+        setHttpsConfig(request);
+    }
+    
+    /**
+     * Set HTTPS with certain configuration.
+     * 
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setHTTPSAcceleration operation returned by the service.
+     */
+    public SetHttpsConfigResponse setHttpsConfig(SetHttpsConfigRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = 
+                createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("https", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetHttpsConfigResponse.class);
+    }
+    
+    /**
+     * Set the request authentication.
+     * 
+     * @param domain Name of the domain.
+     * @param requestAuth The configuration of authentication.
+     */
+    public void setRequestAuth(String domain, RequestAuth requestAuth) {
+        SetRequestAuthRequest request = new SetRequestAuthRequest()
+                .withDomain(domain)
+                .withRequestAuth(requestAuth);
+        setRequestAuth(request);
+    }
+    
+    /**
+     * Set the request authentication.
+     * 
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setHTTPSAcceleration operation returned by the service.
+     */
+    public SetRequestAuthResponse setRequestAuth(SetRequestAuthRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = 
+                createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("requestAuth", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetRequestAuthResponse.class);
+    }
+        
     /**
      * Post prefetch request
      *
@@ -820,7 +889,7 @@ public class CdnClient extends AbstractBceClient {
     }
     
     /**
-     * Get URLs of log files
+     * Get cache operation quota.
      *
      * @param request The request containing all the options related to the statistics.
      * @return Details of statistics
@@ -831,11 +900,41 @@ public class CdnClient extends AbstractBceClient {
     }
     
     /**
-     * 
+     * Get URLs of log files
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
      */
     public GetDomainLogResponse getDomainLog(GetDomainLogRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, LOG, request.getDomain(), "log");
         return this.invokeHttpClient(internalRequest, GetDomainLogResponse.class);
+    }
+    
+    /**
+     * Get the description of certain IP address.
+     *
+     * @param ip IP address.
+     * @return Details of statistics
+     */
+    public DescribeIpResponse describeIp(String ip) {
+        DescribeIpRequest request = new DescribeIpRequest()
+                .withIp(ip);
+        return describeIp(request);
+    }
+    
+    /**
+     * Get the description of certain IP address.
+     *
+     * @param request The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public DescribeIpResponse describeIp(DescribeIpRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, UTILS);
+        checkNotNull(request.getIp());
+        internalRequest.addParameter("action", request.getAction());
+        internalRequest.addParameter("ip", request.getIp());
+        
+        return this.invokeHttpClient(internalRequest, DescribeIpResponse.class);
     }
     
     /**

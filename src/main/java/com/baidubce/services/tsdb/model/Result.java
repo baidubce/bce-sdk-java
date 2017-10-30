@@ -19,6 +19,10 @@ public class Result {
     
     private List<Group> groups;
 
+    private Boolean truncated;
+
+    private String nextMarker;
+
     public String getMetric() {
         return metric;
     }
@@ -65,5 +69,21 @@ public class Result {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    public boolean isTruncated() {
+        return truncated != null && truncated;
+    }
+
+    public void setTruncated(Boolean truncated) {
+        this.truncated = truncated;
+    }
+
+    public String getNextMarker() {
+        return nextMarker;
+    }
+
+    public void setNextMarker(String nextMarker) {
+        this.nextMarker = nextMarker;
     }
 }

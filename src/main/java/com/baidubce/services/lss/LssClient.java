@@ -49,22 +49,20 @@ import com.baidubce.services.lss.model.GetAllDomainsBandwidthResponse;
 import com.baidubce.services.lss.model.GetAllDomainsPlayCountResponse;
 import com.baidubce.services.lss.model.GetAllDomainsStatisticsRequest;
 import com.baidubce.services.lss.model.GetAllDomainsTrafficResponse;
+import com.baidubce.services.lss.model.GetAppRequest;
+import com.baidubce.services.lss.model.GetAppResponse;
+import com.baidubce.services.lss.model.GetAppStreamRequest;
+import com.baidubce.services.lss.model.GetAppStreamResponse;
 import com.baidubce.services.lss.model.GetDomainStatisticsRequest;
 import com.baidubce.services.lss.model.GetDomainStatisticsResponse;
 import com.baidubce.services.lss.model.GetDomainSummaryStatisticsRequest;
 import com.baidubce.services.lss.model.GetDomainSummaryStatisticsResponse;
-import com.baidubce.services.lss.model.GetOneDomainTrafficResponse;
-import com.baidubce.services.lss.model.ListDomainStatisticsResponse;
-import com.baidubce.services.lss.model.GetStreamStatisticsResponse;
-import com.baidubce.services.lss.model.ListStreamStatisticsResponse;
-import com.baidubce.services.lss.model.ListDomainStatisticsRequest;
-import com.baidubce.services.lss.model.ListStreamStatisticsRequest;
-import com.baidubce.services.lss.model.GetStreamStatisticsRequest;
 import com.baidubce.services.lss.model.GetNotificationRequest;
 import com.baidubce.services.lss.model.GetNotificationResponse;
 import com.baidubce.services.lss.model.GetOneDomainBandwidthResponse;
 import com.baidubce.services.lss.model.GetOneDomainPlayCountResponse;
 import com.baidubce.services.lss.model.GetOneDomainStatisticsRequest;
+import com.baidubce.services.lss.model.GetOneDomainTrafficResponse;
 import com.baidubce.services.lss.model.GetPresetRequest;
 import com.baidubce.services.lss.model.GetPresetResponse;
 import com.baidubce.services.lss.model.GetRecordingRequest;
@@ -75,18 +73,30 @@ import com.baidubce.services.lss.model.GetSessionRequest;
 import com.baidubce.services.lss.model.GetSessionResponse;
 import com.baidubce.services.lss.model.GetSessionSourceInfoRequest;
 import com.baidubce.services.lss.model.GetSessionSourceInfoResponse;
+import com.baidubce.services.lss.model.GetSessionStatisticsRequest;
+import com.baidubce.services.lss.model.GetSessionStatisticsResponse;
 import com.baidubce.services.lss.model.GetStreamRequest;
 import com.baidubce.services.lss.model.GetStreamResponse;
+import com.baidubce.services.lss.model.GetStreamStatisticsRequest;
+import com.baidubce.services.lss.model.GetStreamStatisticsResponse;
 import com.baidubce.services.lss.model.Hls;
 import com.baidubce.services.lss.model.InsertCuePointInnerRequest;
 import com.baidubce.services.lss.model.InsertCuePointRequest;
 import com.baidubce.services.lss.model.InsertCuePointResponse;
+import com.baidubce.services.lss.model.ListAppRequest;
+import com.baidubce.services.lss.model.ListAppResponse;
+import com.baidubce.services.lss.model.ListAppStreamsRequest;
+import com.baidubce.services.lss.model.ListAppStreamsResponse;
 import com.baidubce.services.lss.model.ListDomainAppRequest;
 import com.baidubce.services.lss.model.ListDomainAppResponse;
+import com.baidubce.services.lss.model.ListDomainStatisticsRequest;
+import com.baidubce.services.lss.model.ListDomainStatisticsResponse;
 import com.baidubce.services.lss.model.ListNotificationsRequest;
 import com.baidubce.services.lss.model.ListNotificationsResponse;
 import com.baidubce.services.lss.model.ListPresetsRequest;
 import com.baidubce.services.lss.model.ListPresetsResponse;
+import com.baidubce.services.lss.model.ListRealtimeStreamStatisticsRequest;
+import com.baidubce.services.lss.model.ListRealtimeStreamStatisticsResponse;
 import com.baidubce.services.lss.model.ListRecordingsResponse;
 import com.baidubce.services.lss.model.ListSecurityPoliciesRequest;
 import com.baidubce.services.lss.model.ListSecurityPoliciesResponse;
@@ -94,6 +104,8 @@ import com.baidubce.services.lss.model.ListSessionsRequest;
 import com.baidubce.services.lss.model.ListSessionsResponse;
 import com.baidubce.services.lss.model.ListStreamRequest;
 import com.baidubce.services.lss.model.ListStreamResponse;
+import com.baidubce.services.lss.model.ListStreamStatisticsRequest;
+import com.baidubce.services.lss.model.ListStreamStatisticsResponse;
 import com.baidubce.services.lss.model.LivePublishInfo;
 import com.baidubce.services.lss.model.LiveThumbnail;
 import com.baidubce.services.lss.model.PauseAppStreamRequest;
@@ -106,10 +118,10 @@ import com.baidubce.services.lss.model.RefreshSessionRequest;
 import com.baidubce.services.lss.model.RefreshSessionResponse;
 import com.baidubce.services.lss.model.ResumeAppStreamRequest;
 import com.baidubce.services.lss.model.ResumeAppStreamResponse;
-import com.baidubce.services.lss.model.ResumeSessionRequest;
-import com.baidubce.services.lss.model.ResumeSessionResponse;
 import com.baidubce.services.lss.model.ResumeDomainStreamRequest;
 import com.baidubce.services.lss.model.ResumeDomainStreamResponse;
+import com.baidubce.services.lss.model.ResumeSessionRequest;
+import com.baidubce.services.lss.model.ResumeSessionResponse;
 import com.baidubce.services.lss.model.Rtmp;
 import com.baidubce.services.lss.model.StartPullSessionRequest;
 import com.baidubce.services.lss.model.StartPullSessionResponse;
@@ -127,16 +139,6 @@ import com.baidubce.services.lss.model.UpdateStreamRecordingRequest;
 import com.baidubce.services.lss.model.UpdateStreamWatermarkRequest;
 import com.baidubce.services.lss.model.Video;
 import com.baidubce.services.lss.model.Watermarks;
-import com.baidubce.services.lss.model.GetAppResponse;
-import com.baidubce.services.lss.model.GetAppRequest;
-import com.baidubce.services.lss.model.GetAppStreamResponse;
-import com.baidubce.services.lss.model.GetAppStreamRequest;
-import com.baidubce.services.lss.model.ListAppResponse;
-import com.baidubce.services.lss.model.ListAppRequest;
-import com.baidubce.services.lss.model.ListAppStreamsResponse;
-import com.baidubce.services.lss.model.ListAppStreamsRequest;
-import com.baidubce.services.lss.model.GetSessionStatisticsRequest;
-import com.baidubce.services.lss.model.GetSessionStatisticsResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import org.joda.time.DateTime;
@@ -165,6 +167,8 @@ public class LssClient extends AbstractBceClient {
      * The version information for Lss service APIs as URI prefix.
      */
     private static final String VERSION = "v5";
+
+    private static final String VERSION_V6 = "v6";
 
     /**
      * The common URI prefix for live preset services.
@@ -245,6 +249,11 @@ public class LssClient extends AbstractBceClient {
      * Parameter for statistics.
      */
     private static final String STATISTICS = "statistics";
+
+    /**
+     * Parameter for realtime.
+     */
+    private static final String REALTIME = "realtime";
 
     /**
      * Responsible for handling httpResponses from all service calls.
@@ -2067,6 +2076,25 @@ public class LssClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, GetStreamStatisticsResponse.class);
     }
 
+    public ListRealtimeStreamStatisticsResponse listRealTimeStreamStatistics(String playDomain, String app) {
+        ListRealtimeStreamStatisticsRequest request = new ListRealtimeStreamStatisticsRequest();
+
+        request.withPlayDomain(playDomain).withApp(app);
+
+        return listRealTimeStreamStatistics(request);
+    }
+
+    public ListRealtimeStreamStatisticsResponse listRealTimeStreamStatistics(
+            ListRealtimeStreamStatisticsRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getPlayDomain(), "playDomain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty.");
+
+        InternalRequest internalRequest = createRequestV6(HttpMethodName.GET, request,
+                STATISTICS, REALTIME, LIVE_DOMAIN, request.getPlayDomain(), LIVE_APP, request.getApp());
+
+        return invokeHttpClient(internalRequest, ListRealtimeStreamStatisticsResponse.class);
+    }
 
     /**
      * Creates and initializes a new request object for the specified resource.
@@ -2123,6 +2151,33 @@ public class LssClient extends AbstractBceClient {
         internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
         internalRequest.setContent(RestartableInputStream.wrap(requestJson));
 
+        return internalRequest;
+    }
+
+    private InternalRequest createRequestV6(
+            HttpMethodName httpMethod, AbstractBceRequest request, String... pathVariables) {
+
+        // build URL paths
+        List<String> pathComponents = new ArrayList<String>();
+        pathComponents.add(VERSION_V6);
+
+        // append resourceKeys,pathVariables,
+        // For example:/resourcekey1/resourcekey2/../pathVariable1/pathVariable2
+        if (pathVariables != null) {
+            for (String pathVariable : pathVariables) {
+                pathComponents.add(pathVariable);
+            }
+        }
+
+        URI uri = HttpUtils.appendUri(getEndpoint(), pathComponents.toArray(new String[pathComponents.size()]));
+
+        // get a InternalRequest instance and set headers
+        InternalRequest internalRequest = new InternalRequest(httpMethod, uri);
+        internalRequest.setCredentials(request.getRequestCredentials());
+
+        if (httpMethod == HttpMethodName.POST || httpMethod == HttpMethodName.PUT) {
+            fillRequestPayload(internalRequest, request);
+        }
         return internalRequest;
     }
 }

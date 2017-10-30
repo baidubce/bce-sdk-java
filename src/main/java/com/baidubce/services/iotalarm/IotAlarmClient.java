@@ -61,6 +61,17 @@ public class IotAlarmClient extends AbstractBceClient {
     public ListAlarmResponse listAlarms(ListAlarmRequest request) {
         InternalRequest internalRequest =
                 createRequest(request, HttpMethodName.GET, ALARM);
+        internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        if (request.getAlarmState() != null) {
+            internalRequest.addParameter("alarmState", request.getAlarmState());
+        }
+        if (request.getDisabled() != null) {
+            internalRequest.addParameter("disabled", request.getDisabled());
+        }
+        if (request.getServerity() != null) {
+            internalRequest.addParameter("severity", request.getServerity());
+        }
         return this.invokeHttpClient(internalRequest, ListAlarmResponse.class);
     }
 
