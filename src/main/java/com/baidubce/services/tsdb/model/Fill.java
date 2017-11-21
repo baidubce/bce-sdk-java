@@ -1,5 +1,6 @@
 package com.baidubce.services.tsdb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.fasterxml.jackson.databind.node.LongNode;
@@ -65,14 +66,21 @@ public class Fill {
         return value;
     }
 
+    public void setValue(JsonNode value) {
+        this.value = value;
+    }
+
+    @JsonIgnore
     public void setValue(long value) {
         this.value = new LongNode(value);
     }
 
+    @JsonIgnore
     public void setValue(double value) {
         this.value = new DoubleNode(value);
     }
 
+    @JsonIgnore
     public void setValue(String value) {
         this.value = new TextNode(value);
     }

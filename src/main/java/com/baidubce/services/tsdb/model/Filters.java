@@ -56,6 +56,12 @@ public class Filters {
      */
     private List<FieldFilter> fields;
 
+    /**
+     * Optional.
+     * The or conditions. Or conditions is in conflict with other fields.
+     */
+    private List<Filters> or;
+
     public JsonNode getStart() {
         return start;
     }
@@ -94,6 +100,14 @@ public class Filters {
 
     public void setFields(List<FieldFilter> fields) {
         this.fields = fields;
+    }
+
+    public List<Filters> getOr() {
+        return or;
+    }
+
+    public void setOr(List<Filters> or) {
+        this.or = or;
     }
 
     /**
@@ -227,6 +241,25 @@ public class Filters {
         return this;
     }
 
+    public Filters withOr(List<Filters> or) {
+        emptyOtherFields();
+        this.or = or;
+        return this;
+    }
+
+    /**
+     * Add an or condition.
+     *
+     * @param or an filters for or condition.
+     * @return Filters
+     */
+    public Filters addOr(Filters or) {
+        emptyOtherFields();
+        initialOr();
+        this.or.add(or);
+        return this;
+    }
+
     private void addTags(String tagKey, List<String> tagValues) {
         initialTags();
         if (tags.containsKey(tagKey)) {
@@ -258,4 +291,19 @@ public class Filters {
             fields = new ArrayList<FieldFilter>();
         }
     }
+
+    private void initialOr() {
+        if (or == null) {
+            or = new ArrayList<Filters>();
+        }
+    }
+
+    private void emptyOtherFields() {
+        start = null;
+        end = null;
+        tags = null;
+        value = null;
+        fields = null;
+    }
+
 }
