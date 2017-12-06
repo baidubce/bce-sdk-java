@@ -15,13 +15,15 @@ public class FieldFilter {
     /**
      * Optional.
      * The value filter. It contains two parts. The first part is a operation such as <, <=, =, !=, > and >=.
-     * The second part is a value which can be a long type number, a double type number or a string surrounding by
-     * single quotations.
-     * Long or double value support <, <=, =, !=, > and >= operations.
-     * String value only support =, !=.
-     * Example: "= 111", "> 1.1", "!= 'abc'".
+     * The second part is a value which can be a long type number, a double type number, a string surrounding by
+     * single quotations or a tag key.
+     * Support <, <=, =, !=, > and >= operations.
+     * Example: "= 111", "> 1.1", "!= 'abc'" or "> tag1".
      */
     private String value;
+
+    public FieldFilter() {
+    }
 
     public FieldFilter(String field, String value) {
         this.field = field;
@@ -39,6 +41,14 @@ public class FieldFilter {
 
     public String getValue() {
         return value;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     /**

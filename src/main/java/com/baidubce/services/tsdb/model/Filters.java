@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.baidubce.util.JsonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -30,10 +35,17 @@ public class Filters {
 
     /**
      * Optional.
-     * The tag key-values map. Means the datapoints with tags that the value of the corresponding key
-     * should match.
+     * The tag key-values map. Means the datapoints with tags that the value of the corresponding key should match.
      */
+    @JsonIgnore
     private Map<String, List<String>> tags;
+
+    /**
+     * Optional.
+     * The tagFilter list. Means the datapoints with tags that should match the tagFilters.
+     */
+    @JsonIgnore
+    private List<TagFilter> tagFilters;
 
     /**
      * Optional.
@@ -41,9 +53,8 @@ public class Filters {
      * It contains two parts. The first part is a operation such as <, <=, =, !=, > and >=.
      * The second part is a value which can be a long type number, a double type number or a string surrounding by
      * single quotations.
-     * Long or double value support <, <=, =, !=, > and >= operations.
-     * String value only support =, !=.
-     * Example: "= 111", "> 1.1", "!= 'abc'".
+     * Support <, <=, =, !=, > and >= operations.
+     * Example: "= 111", "> 1.1", "!= 'abc'", "> tag1".
      * Conflict with fields parameter.
      *
      */
@@ -78,11 +89,14 @@ public class Filters {
         this.end = end;
     }
 
+    @JsonIgnore
     public Map<String, List<String>> getTags() {
         return tags;
     }
 
+    @JsonIgnore
     public void setTags(Map<String, List<String>> tags) {
+        tagFilters = null;
         this.tags = tags;
     }
 
@@ -108,6 +122,54 @@ public class Filters {
 
     public void setOr(List<Filters> or) {
         this.or = or;
+    }
+
+    @JsonIgnore
+    public List<TagFilter> getTagFilters() {
+        return tagFilters;
+    }
+
+    @JsonIgnore
+    public void setTagFilters(List<TagFilter> tagFilters) {
+        tags = null;
+        this.tagFilters = tagFilters;
+    }
+
+    @JsonProperty("tags")
+    public JsonNode getTagsJsonNode() {
+        if (tagFilters != null) {
+            return JsonUtils.getObjectMapper().valueToTree(tagFilters);
+        } else {
+            return JsonUtils.getObjectMapper().valueToTree(tags);
+        }
+    }
+
+    @JsonProperty("tags")
+    public void setTagsJsonNode(JsonNode tags) throws JsonProcessingException {
+        if (tags.isArray()) {
+            TypeReference<List<TagFilter>> type = new TypeReference<List<TagFilter>>() {
+            };
+            this.tagFilters = JsonUtils.getObjectMapper().convertValue(tags, type);
+        } else {
+            TypeReference<Map<String, List<String>>> type = new TypeReference<Map<String, List<String>>>() {
+            };
+            this.tags = JsonUtils.getObjectMapper().convertValue(tags, type);
+        }
+    }
+
+    public Filters withTagFilters(List<TagFilter> tagFilters) {
+        tags = null;
+        this.tagFilters = tagFilters;
+        return this;
+    }
+
+    public Filters addTagFilter(TagFilter tagFilter) {
+        if (tagFilters == null) {
+            tags = null;
+            tagFilters = new ArrayList<TagFilter>();
+        }
+        tagFilters.add(tagFilter);
+        return this;
     }
 
     /**
@@ -188,6 +250,7 @@ public class Filters {
     }
 
     public Filters withTags(Map<String, List<String>> tags) {
+        tagFilters = null;
         this.tags = tags;
         return this;
     }
@@ -282,6 +345,7 @@ public class Filters {
 
     private void initialTags() {
         if (tags == null) {
+            tagFilters = null;
             tags = Maps.newHashMap();
         }
     }

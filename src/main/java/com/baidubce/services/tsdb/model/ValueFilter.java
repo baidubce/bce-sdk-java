@@ -22,7 +22,10 @@ public class ValueFilter {
      */
     private String value;
 
-    private ValueFilter(String operation, String value) {
+    public ValueFilter() {
+    }
+
+    public ValueFilter(String operation, String value) {
         this.operation = operation;
         this.value = value;
     }
@@ -33,6 +36,14 @@ public class ValueFilter {
 
     public String getValue() {
         return value;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     private static final String SINGLE_QUOTATION = "'";
@@ -53,12 +64,15 @@ public class ValueFilter {
     public static final List<String> LONG_DOUBLE_SUPPORTED_OPERATION = Arrays.asList(EQUAL, NOT_EQUAL, GREATER, LESS,
             GREATER_OR_EQUAL, LESS_OR_EQUAL);
 
-    public static final List<String> STRING_SUPPORTED_OPERATION = Arrays.asList(EQUAL, NOT_EQUAL);
+    public static final List<String> STRING_SUPPORTED_OPERATION = Arrays.asList(EQUAL, NOT_EQUAL, GREATER, LESS,
+            GREATER_OR_EQUAL, LESS_OR_EQUAL);
+
+    public static final List<String> TAG_SUPPORTED_OPERATION = LONG_DOUBLE_SUPPORTED_OPERATION;
 
     /**
      * Create value filter for String type.
      *
-     * @param operation Operation for comparing which only support = and !=.
+     * @param operation Operation for comparing which only support =, !=, &gt;, &lt;, &gt;= and &lt;=.
      * @param value Value for comparing with.
      * @return ValueFilter
      */
@@ -96,4 +110,19 @@ public class ValueFilter {
         ValueFilter valueFilter = new ValueFilter(operation, String.valueOf(value));
         return valueFilter;
     }
+
+    /**
+     * Create value filter for comparing with the value of tag key.
+     *
+     * @param operation Operation for comparing which support =, !=, &gt;, &lt;, &gt;= and &lt;=.
+     * @param tagKey Value of tag key for comparing with.
+     * @return ValueFilter
+     */
+    public static ValueFilter createValueFilterOfTag(String operation, String tagKey) {
+        checkArgument(TAG_SUPPORTED_OPERATION.contains(operation), "Value of tag key only support operations in "
+                + TAG_SUPPORTED_OPERATION.toString());
+        ValueFilter valueFilter = new ValueFilter(operation, tagKey);
+        return valueFilter;
+    }
+
 }
