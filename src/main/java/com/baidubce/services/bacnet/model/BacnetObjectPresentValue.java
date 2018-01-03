@@ -10,7 +10,7 @@ public class BacnetObjectPresentValue {
     private int  instanceNumber;
     private String objectType;
     private int objectInstance;
-    private double presentValue;
+    private String presentValue;
 
     public int getInstanceNumber() {
         return instanceNumber;
@@ -36,11 +36,11 @@ public class BacnetObjectPresentValue {
         this.objectInstance = objectInstance;
     }
 
-    public double getPresentValue() {
+    public String getPresentValue() {
         return presentValue;
     }
 
-    public void setPresentValue(double presentValue) {
+    public void setPresentValue(String presentValue) {
         this.presentValue = presentValue;
     }
 }

@@ -13,6 +13,8 @@
 package com.baidubce.services.bmr.model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +26,7 @@ public class StepConfig {
     private String type;
     private Map<String, String> properties;
     private String name;
+    private List<AdditionalFile> additionalFiles;
 
     public String getActionOnFailure() {
         return actionOnFailure;
@@ -62,5 +65,20 @@ public class StepConfig {
             this.properties = new HashMap<String, String>();
         }
         this.properties.put(key, value);
+    }
+
+    public List<AdditionalFile> getAdditionalFiles() {
+        return additionalFiles;
+    }
+
+    public void setAdditionalFiles(List<AdditionalFile> additionalFiles) {
+        this.additionalFiles = additionalFiles;
+    }
+
+    public void addAdditionalFile(String remote, String local) {
+        if (this.additionalFiles == null) {
+            this.additionalFiles = new LinkedList<AdditionalFile>();
+        }
+        this.additionalFiles.add(new AdditionalFile().withRemote(remote).withLocal(local));
     }
 }

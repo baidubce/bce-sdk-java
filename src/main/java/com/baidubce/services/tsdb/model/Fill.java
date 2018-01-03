@@ -1,6 +1,7 @@
 package com.baidubce.services.tsdb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.fasterxml.jackson.databind.node.LongNode;
@@ -62,10 +63,12 @@ public class Fill {
         this.maxWriteInterval = maxWriteInterval;
     }
 
+    @JsonProperty
     public JsonNode getValue() {
         return value;
     }
 
+    @JsonProperty
     public void setValue(JsonNode value) {
         this.value = value;
     }

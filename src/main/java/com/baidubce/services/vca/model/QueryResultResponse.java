@@ -70,7 +70,7 @@ public class QueryResultResponse extends AbstractBceResponse {
     }
 
     public String getPublishTime() {
-        return this.getPublishTime();
+        return this.publishTime;
     }
 
     public String getSource() {

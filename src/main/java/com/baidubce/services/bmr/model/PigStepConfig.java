@@ -100,4 +100,16 @@ public class PigStepConfig extends StepConfig {
         this.setActionOnFailure(actionOnFailure);
         return this;
     }
+
+    /**
+     * Configure the additional file for the step.
+     *
+     * @param remote The remote file of the additional file.
+     * @param local The local file of the additional file.
+     * @return PigStepConfig
+     */
+    public PigStepConfig withAdditionalFile(String remote, String local) {
+        this.addAdditionalFile(remote, local);
+        return this;
+    }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 public class GetMediaResponse extends AbstractBceResponse {
     private String mediaId;
     private String source;
+    private String description;
     private String preset;
     private String notification;
     private String status;
@@ -46,6 +47,14 @@ public class GetMediaResponse extends AbstractBceResponse {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPreset() {
@@ -125,6 +134,7 @@ public class GetMediaResponse extends AbstractBceResponse {
         final StringBuilder sb = new StringBuilder("GetMediaResponse{");
         sb.append("mediaId='").append(mediaId).append('\'');
         sb.append(", source='").append(source).append('\'');
+        sb.append(", description='").append(description).append('\'');
         sb.append(", preset='").append(preset).append('\'');
         sb.append(", notification='").append(notification).append('\'');
         sb.append(", status='").append(status).append('\'');

@@ -87,4 +87,16 @@ public class JavaStepConfig extends StepConfig {
         this.setName(name);
         return this;
     }
+
+    /**
+     * Configure the additional file for the step.
+     *
+     * @param remote The remote file of the additional file.
+     * @param local The local file of the additional file.
+     * @return JavaStepConfig
+     */
+    public JavaStepConfig withAdditionalFile(String remote, String local) {
+        this.addAdditionalFile(remote, local);
+        return this;
+    }
 }

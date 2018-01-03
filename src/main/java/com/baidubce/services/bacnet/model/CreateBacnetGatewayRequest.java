@@ -15,7 +15,10 @@ public class CreateBacnetGatewayRequest extends GenericAccountRequest {
     private int pollInterval;
     private int pollIntervalCov;
     private int whoIsInterval;
+    private int objectDiscoverInterval;
     private int subscribeDuration;
+    private String subscribeType;
+    private double covIncrement;
     private String destTopics;
 
     public String getName() {
@@ -96,5 +99,30 @@ public class CreateBacnetGatewayRequest extends GenericAccountRequest {
 
     public void setDestTopics(String destTopics) {
         this.destTopics = destTopics;
+    }
+
+    public int getObjectDiscoverInterval() {
+        return objectDiscoverInterval;
+    }
+
+    public void setObjectDiscoverInterval(int objectDiscoverInterval) {
+        this.objectDiscoverInterval = objectDiscoverInterval;
+    }
+
+
+    public double getCovIncrement() {
+        return covIncrement;
+    }
+
+    public void setCovIncrement(double covIncrement) {
+        this.covIncrement = covIncrement;
+    }
+
+    public String getSubscribeType() {
+        return subscribeType;
+    }
+
+    public void setSubscribeType(String subscribeType) {
+        this.subscribeType = subscribeType;
     }
 }

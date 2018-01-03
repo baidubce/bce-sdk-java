@@ -19,4 +19,5 @@ public class DestinationKind {
     public static final String BOS = "BOS";
     public static final String MQTT_DYNAMIC = "MQTT_DYNAMIC";
     public static final String SMS = "SMS";
+    public static final String FUNCTION = "FUNCTION";
 }

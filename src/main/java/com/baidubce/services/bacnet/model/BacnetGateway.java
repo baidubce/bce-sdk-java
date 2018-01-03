@@ -19,8 +19,11 @@ public class BacnetGateway extends AbstractBceResponse {
     private int pollInterval;
     private int pollIntervalCov;
     private int whoIsInterval;
+    private int objectDiscoverInterval;
     private int subscribeDuration;
     private Date lastActiveTime;
+    private String subscribeType;
+    private double covIncrement;
     private String destTopics;
     private Date createTime;
 
@@ -126,5 +129,29 @@ public class BacnetGateway extends AbstractBceResponse {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public int getObjectDiscoverInterval() {
+        return objectDiscoverInterval;
+    }
+
+    public void setObjectDiscoverInterval(int objectDiscoverInterval) {
+        this.objectDiscoverInterval = objectDiscoverInterval;
+    }
+
+    public String getSubscribeType() {
+        return subscribeType;
+    }
+
+    public void setSubscribeType(String subscribeType) {
+        this.subscribeType = subscribeType;
+    }
+
+    public double getCovIncrement() {
+        return covIncrement;
+    }
+
+    public void setCovIncrement(double covIncrement) {
+        this.covIncrement = covIncrement;
     }
 }

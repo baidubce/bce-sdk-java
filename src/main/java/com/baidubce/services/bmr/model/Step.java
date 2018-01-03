@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.bmr.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +26,7 @@ public class Step {
     private String name;
     private StepStatus status;
     private String logUri;
+    private List<AdditionalFile> additionalFiles;
 
     public String getId() {
         return id;
@@ -80,5 +82,13 @@ public class Step {
 
     public void setLogUri(String logUri) {
         this.logUri = logUri;
+    }
+
+    public List<AdditionalFile> getAdditionalFiles() {
+        return additionalFiles;
+    }
+
+    public void setAdditionalFiles(List<AdditionalFile> additionalFiles) {
+        this.additionalFiles = additionalFiles;
     }
 }

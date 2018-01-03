@@ -54,6 +54,7 @@ public class BacnetClient extends AbstractBceClient {
     private static final String SUB = "sub";
     private static final String UNSUB = "unsub";
     private static final String PRESENT_VALUE = "presentvalue";
+    private static final String REFRESH = "refresh";
     private static final String CREDENTIAL = "credential";
     private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
@@ -198,6 +199,14 @@ public class BacnetClient extends AbstractBceClient {
         InternalRequest internalRequest =
                 createRequest(request, HttpMethodName.POST, BACNET, OBJECT, GATEWAY,
                         String.valueOf(gatewayid), DEVICE, String.valueOf(instance), UNSUB);
+        return this.invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public CommonResponse refreshObject(long gatewayid, long instanceNumber, String objectType, int objectInstance) {
+        InternalRequest internalRequest =
+                createRequest(new GenericAccountRequest(), HttpMethodName.PUT, BACNET, OBJECT, GATEWAY,
+                        String.valueOf(gatewayid), DEVICE, String.valueOf(instanceNumber),
+                        TYPE, objectType, INST, String.valueOf(objectInstance), REFRESH);
         return this.invokeHttpClient(internalRequest, CommonResponse.class);
     }
 

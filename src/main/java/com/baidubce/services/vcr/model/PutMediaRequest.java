@@ -20,6 +20,7 @@ import com.baidubce.model.AbstractBceRequest;
  */
 public class PutMediaRequest extends AbstractBceRequest {
     private String source;
+    private String description;
     private String preset;
     private String notification;
 
@@ -35,6 +36,14 @@ public class PutMediaRequest extends AbstractBceRequest {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPreset() {
@@ -57,6 +66,7 @@ public class PutMediaRequest extends AbstractBceRequest {
     public String toString() {
         final StringBuilder sb = new StringBuilder("PutMediaRequest{");
         sb.append("source='").append(source).append('\'');
+        sb.append(", description='").append(description).append('\'');
         sb.append(", preset='").append(preset).append('\'');
         sb.append(", notification='").append(notification).append('\'');
         sb.append('}');

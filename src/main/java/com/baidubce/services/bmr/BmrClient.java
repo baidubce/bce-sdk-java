@@ -28,6 +28,7 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bmr.model.AddStepsRequest;
 import com.baidubce.services.bmr.model.AddStepsResponse;
+import com.baidubce.services.bmr.model.AdditionalFile;
 import com.baidubce.services.bmr.model.ApplicationConfig;
 import com.baidubce.services.bmr.model.CreateClusterRequest;
 import com.baidubce.services.bmr.model.CreateClusterResponse;
@@ -438,6 +439,14 @@ public class BmrClient extends AbstractBceClient {
                     jsonGenerator.writeObjectField(propertyKey, step.getProperties().get(propertyKey));
                 }
                 jsonGenerator.writeEndObject();
+                jsonGenerator.writeArrayFieldStart("additionalFiles");
+                for (AdditionalFile additionalFile : step.getAdditionalFiles()) {
+                    jsonGenerator.writeStartObject();
+                    jsonGenerator.writeStringField("remote", additionalFile.getRemote());
+                    jsonGenerator.writeStringField("local", additionalFile.getLocal());
+                    jsonGenerator.writeEndObject();
+                }
+                jsonGenerator.writeEndArray();
                 jsonGenerator.writeEndObject();
             }
             jsonGenerator.writeEndArray();
