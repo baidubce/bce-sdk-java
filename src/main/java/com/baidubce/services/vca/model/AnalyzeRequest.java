@@ -15,6 +15,8 @@ public class AnalyzeRequest extends AbstractBceRequest {
 
     private String source;
 
+    private String auth;
+
     private String preset;
 
     private String notification;
@@ -27,6 +29,11 @@ public class AnalyzeRequest extends AbstractBceRequest {
 
     public AnalyzeRequest withMediaSource(String source) {
         this.setSource(source);
+        return this;
+    }
+
+    public AnalyzeRequest withAuth(String auth) {
+        this.setAuth(auth);
         return this;
     }
 
@@ -44,6 +51,7 @@ public class AnalyzeRequest extends AbstractBceRequest {
     public String toString() {
         final StringBuilder sb = new StringBuilder("AnalyzeRequest{");
         sb.append("source='").append(source).append('\'');
+        sb.append("auth='").append(auth).append('\'');
         sb.append("preset='").append(preset).append('\'');
         sb.append("notification='").append(notification).append('\'');
         sb.append('}');
@@ -56,6 +64,14 @@ public class AnalyzeRequest extends AbstractBceRequest {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
     }
 
     public String getPreset() {
