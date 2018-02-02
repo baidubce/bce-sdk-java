@@ -97,7 +97,7 @@ public class Group {
 
         @JsonIgnore
         public boolean isLong() {
-            return value.get(0).isIntegralNumber();
+            return isLong(0);
         }
 
         @JsonIgnore
@@ -107,7 +107,7 @@ public class Group {
 
         @JsonIgnore
         public boolean isDouble() {
-            return value.get(0).isFloatingPointNumber();
+            return isDouble(0);
         }
 
         @JsonIgnore
@@ -129,7 +129,7 @@ public class Group {
 
         @JsonIgnore
         public long getLongValue() {
-            return value.get(0).asLong();
+            return getLongValue(0);
         }
 
         @JsonIgnore
@@ -139,7 +139,7 @@ public class Group {
 
         @JsonIgnore
         public double getDoubleValue() {
-            return value.get(0).asDouble();
+            return getDoubleValue(0);
         }
 
         @JsonIgnore
@@ -149,17 +149,20 @@ public class Group {
 
         @JsonIgnore
         public String getStringValue() {
-            return value.get(0).asText();
+            return getStringValue(0);
         }
 
         @JsonIgnore
         public String getStringValue(int index) {
+            if (isNull(index)) {
+                return null;
+            }
             return value.get(index).asText();
         }
 
         @JsonIgnore
         public byte[] getBytesValue() throws IOException {
-            return value.get(0).binaryValue();
+            return getBytesValue(0);
         }
 
         @JsonIgnore
@@ -169,12 +172,12 @@ public class Group {
 
         @JsonIgnore
         public boolean isNull() {
-            return value.get(0).isNull();
+            return isNull(0);
         }
 
         @JsonIgnore
         public boolean isNull(int index) {
-            return value.get(index).isNull();
+            return value.get(index) == null || value.get(index).isNull();
         }
     }
 }
