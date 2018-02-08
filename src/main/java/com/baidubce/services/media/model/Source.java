@@ -15,8 +15,13 @@ package com.baidubce.services.media.model;
 
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Source {
     private String sourceKey = null;
+
+    private List<SourceClip> clips = null;
 
     /**
      * 原始文件的BOS Key
@@ -36,12 +41,39 @@ public class Source {
         return this;
     }
 
+    /**
+     * 多输入情况
+     */
+    public List<SourceClip> getClips() {
+        return clips;
+    }
+
+    public void setClips(List<SourceClip> clips) {
+        this.clips = clips;
+    }
+
+    public Source withClips(List<SourceClip> clips) {
+        this.clips = clips;
+        return this;
+    }
+
+    public void addClip(SourceClip clip) {
+        if (clips == null) {
+            clips = new ArrayList<SourceClip>();
+        }
+        clips.add(clip);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Source {\n");
 
-        sb.append("    sourceKey: ").append(sourceKey).append("\n");
+        if (sourceKey != null) {
+            sb.append("    sourceKey: ").append(sourceKey).append("\n");
+        } else if (clips != null) {
+            sb.append("    clips: ").append(clips).append("\n");
+        }
         sb.append("}\n");
         return sb.toString();
     }

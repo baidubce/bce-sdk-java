@@ -23,6 +23,8 @@ public class ThumbnailCapture {
     
     private Integer intervalInSecond = null;
 
+    private Integer frameNumber = null;
+
     public String getMode() {
         return mode;
     }
@@ -75,10 +77,23 @@ public class ThumbnailCapture {
         return this;
     }
 
+    public Integer getFrameNumber() {
+        return frameNumber;
+    }
+
+    public void setFrameNumber(Integer frameNumber) {
+        this.frameNumber = frameNumber;
+    }
+
+    public ThumbnailCapture withFrameNumber(Integer frameNumber) {
+        this.frameNumber = frameNumber;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ThumbnailCapture [mode=" + mode + ", startTimeInSecond=" + startTimeInSecond + ", endTimeInSecond="
-                + endTimeInSecond + ", intervalInSecond=" + intervalInSecond + "]";
+                + endTimeInSecond + ", intervalInSecond=" + intervalInSecond + ", frameNumber=" + frameNumber + "]";
     }
-    
+
 }

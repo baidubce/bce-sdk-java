@@ -15,9 +15,13 @@ package com.baidubce.services.media.model;
 
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 
+import java.util.List;
+
 public class Target {
     private String targetKey = null;
     private String presetName = null;
+    private DelogoArea delogoArea = null;
+    private List<String> watermarkIds = null;
 
     /**
      * 目标文件的BOS key
@@ -54,6 +58,31 @@ public class Target {
         this.presetName = presetName;
         return this;
     }
+    public DelogoArea getDelogoArea() {
+        return delogoArea;
+    }
+
+    public void setDelogoArea(DelogoArea delogoArea) {
+        this.delogoArea = delogoArea;
+    }
+
+    public Target withDelogoArea(DelogoArea delogoArea) {
+        this.delogoArea = delogoArea;
+        return this;
+    }
+
+    public List<String> getWatermarkIds() {
+        return watermarkIds;
+    }
+
+    public void setWatermarkIds(List<String> watermarkIds) {
+        this.watermarkIds = watermarkIds;
+    }
+
+    public Target withWatermarkIds(List<String> watermarkIds) {
+        this.watermarkIds = watermarkIds;
+        return this;
+    }
 
     @Override
     public String toString() {
@@ -62,6 +91,8 @@ public class Target {
 
         sb.append("    targetKey: ").append(targetKey).append("\n");
         sb.append("    presetName: ").append(presetName).append("\n");
+        sb.append("    delogoArea: ").append(delogoArea).append("\n");
+        sb.append("    watermarkIds: ").append(watermarkIds).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

@@ -30,6 +30,8 @@ public class Video {
 
     private String sizingPolicy    = null;
 
+    private Float        playbackSpeed   = null;
+
     /**
      * 视频编码信息集合(H.264)
      **/
@@ -142,6 +144,19 @@ public class Video {
         return this;
     }
 
+    public Float getPlaybackSpeed() {
+        return playbackSpeed;
+    }
+
+    public void setPlaybackSpeed(Float playbackSpeed) {
+        this.playbackSpeed = playbackSpeed;
+    }
+
+    public Video withPlaybackSpeed(Float playbackSpeed) {
+        this.playbackSpeed = playbackSpeed;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -154,6 +169,7 @@ public class Video {
         sb.append("    maxWidth: ").append(maxWidthInPixel).append("\n");
         sb.append("    maxHeight: ").append(maxHeigtInPixel).append("\n");
         sb.append("    sizingPolicy: ").append(sizingPolicy).append("\n");
+        sb.append("    playbackSpeed: ").append(playbackSpeed).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

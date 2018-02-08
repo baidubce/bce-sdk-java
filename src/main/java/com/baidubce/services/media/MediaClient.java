@@ -16,6 +16,7 @@ package com.baidubce.services.media;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.baidubce.AbstractBceClient;
@@ -49,6 +50,7 @@ import com.baidubce.services.media.model.DeletePresetRequest;
 import com.baidubce.services.media.model.DeletePresetResponse;
 import com.baidubce.services.media.model.DeleteWaterMarkRequest;
 import com.baidubce.services.media.model.DeleteWaterMarkResponse;
+import com.baidubce.services.media.model.DelogoArea;
 import com.baidubce.services.media.model.Encryption;
 import com.baidubce.services.media.model.GetJobRequest;
 import com.baidubce.services.media.model.GetJobResponse;
@@ -78,6 +80,7 @@ import com.baidubce.services.media.model.ListWaterMarkRequest;
 import com.baidubce.services.media.model.ListWaterMarkResponse;
 import com.baidubce.services.media.model.PipelineConfig;
 import com.baidubce.services.media.model.Source;
+import com.baidubce.services.media.model.SourceClip;
 import com.baidubce.services.media.model.Target;
 import com.baidubce.services.media.model.ThumbnailCapture;
 import com.baidubce.services.media.model.ThumbnailSource;
@@ -85,10 +88,10 @@ import com.baidubce.services.media.model.ThumbnailTarget;
 import com.baidubce.services.media.model.Video;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+import com.google.common.base.Strings;
 
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 import static com.baidubce.util.Validate.checkNotNull;
-import static com.baidubce.util.Validate.checkIsTrue;
 
 
 /**
@@ -296,6 +299,26 @@ public class MediaClient extends AbstractBceClient {
      */
     public CreateTranscodingJobResponse createTranscodingJob(
             String pipelineName, String sourceKey, String targetKey, String presetName) {
+        return createTranscodingJob(pipelineName, sourceKey, targetKey, presetName,
+                null, null);
+    }
+
+    /**
+     * Creates a new transcoder job which converts media files in BOS buckets with specified preset, watermarkId, and
+     * delogoArea.
+     *
+     * @param pipelineName The name of pipeline used by this job.
+     * @param sourceKey    The key of the source media file in the bucket specified in the pipeline.
+     * @param targetKey    The key of the target media file in the bucket specified in the pipeline.
+     * @param presetName   The name of the preset used by this job.
+     * @param watermarkId  Single watermarkId associated with the job.
+     * @param delogoArea   The delogo area (x, y, width, height).
+     *
+     * @return The newly created job ID.
+     */
+    public CreateTranscodingJobResponse createTranscodingJob(
+            String pipelineName, String sourceKey, String targetKey, String presetName,
+            String watermarkId, DelogoArea delogoArea) {
         CreateTranscodingJobRequest request = new CreateTranscodingJobRequest();
         request.setPipelineName(pipelineName);
         Source source = new Source();
@@ -304,11 +327,91 @@ public class MediaClient extends AbstractBceClient {
         Target target = new Target();
         target.setTargetKey(targetKey);
         target.setPresetName(presetName);
+        if (!Strings.isNullOrEmpty(watermarkId)) {
+            List<String> watermarkIds = Collections.singletonList(watermarkId);
+            target.setWatermarkIds(watermarkIds);
+        }
+        if (delogoArea != null) {
+            target.setDelogoArea(delogoArea);
+        }
         request.setTarget(target);
 
         return createTranscodingJob(request);
     }
-    
+
+    /**
+     * Creates a new transcoder job which converts media files in BOS buckets with specified preset.
+     *
+     * @param pipelineName The name of pipeline used by this job.
+     * @param clips    The keys of the source media file in the bucket specified in the pipeline.
+     * @param targetKey    The key of the target media file in the bucket specified in the pipeline.
+     * @param presetName   The name of the preset used by this job.
+     *
+     * @return The newly created job ID.
+     */
+    public CreateTranscodingJobResponse createTranscodingJob(
+            String pipelineName, List<SourceClip> clips, String targetKey, String presetName) {
+        return createTranscodingJob(pipelineName, clips, targetKey, presetName,
+                null, null);
+    }
+
+    /**
+     * Creates a new transcoder job which converts media files in BOS buckets with specified preset and watermarkId
+     * associated with the job.
+     *
+     * @param pipelineName The name of pipeline used by this job.
+     * @param clips    The keys of the source media file in the bucket specified in the pipeline.
+     * @param targetKey    The key of the target media file in the bucket specified in the pipeline.
+     * @param presetName   The name of the preset used by this job.
+     * @param watermarkId  Single watermarkId associated with the job.
+     *
+     * @return The newly created job ID.
+     */
+    public CreateTranscodingJobResponse createTranscodingJob(
+            String pipelineName, List<SourceClip> clips, String targetKey, String presetName,
+            String watermarkId) {
+        return createTranscodingJob(pipelineName, clips, targetKey, presetName,
+                watermarkId, null);
+    }
+
+    /**
+     * Creates a new transcoder job which converts media files in BOS buckets with specified preset, watermarkId, and
+     * delogoArea.
+     *
+     * @param pipelineName The name of pipeline used by this job.
+     * @param clips    The keys of the source media file in the bucket specified in the pipeline.
+     * @param targetKey    The key of the target media file in the bucket specified in the pipeline.
+     * @param presetName   The name of the preset used by this job.
+     * @param watermarkId  Single watermarkId associated with the job.
+     * @param delogoArea   The delogo area (x, y, width, height).
+     *
+     * @return The newly created job ID.
+     */
+    public CreateTranscodingJobResponse createTranscodingJob(
+            String pipelineName, List<SourceClip> clips, String targetKey, String presetName,
+            String watermarkId, DelogoArea delogoArea) {
+        CreateTranscodingJobRequest request = new CreateTranscodingJobRequest();
+        request.setPipelineName(pipelineName);
+        Source source = new Source();
+        for (SourceClip clip : clips) {
+            source.addClip(clip);
+        }
+        request.setSource(source);
+        Target target = new Target();
+        target.setTargetKey(targetKey);
+        target.setPresetName(presetName);
+        if (!Strings.isNullOrEmpty(watermarkId)) {
+            List<String> watermarkIds = Collections.singletonList(watermarkId);
+            target.setWatermarkIds(watermarkIds);
+        }
+        if (delogoArea != null) {
+            target.setDelogoArea(delogoArea);
+        }
+        request.setTarget(target);
+
+        return createTranscodingJob(request);
+    }
+
     /**
      * Creates a new transcoder job which converts media files in BOS buckets with specified preset.
      *
@@ -322,8 +425,6 @@ public class MediaClient extends AbstractBceClient {
         checkStringNotEmpty(request.getPipelineName(),
                 "The parameter pipelineName should NOT be null or empty string.");
         checkNotNull(request.getSource(), "The parameter source should NOT be null.");
-        checkStringNotEmpty(request.getSource().getSourceKey(),
-                "The parameter sourceKey should NOT be null or empty string.");
         checkNotNull(request.getTarget(), "The parameter target should NOT be null.");
         checkStringNotEmpty(request.getTarget().getTargetKey(),
                 "The parameter targetKey should NOT be null or empty string.");
@@ -1098,6 +1199,31 @@ public class MediaClient extends AbstractBceClient {
                 new CreateThumbnailJobRequest().withPipelineName(pipelineName).withSource(source).withTarget(target)
                         .withCapture(capture);
         
+        return createThumbnailJob(request);
+    }
+
+    /**
+     * Creates a thumbnail job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
+     * @param sourceKey The key of source object.
+     * @param target The property container of target object.
+     * @param capture The property container of thumbnail generating policies.
+     * @param delogoArea The property container of delogo Area.
+     *
+     * @return the unique ID of the new thumbnail job.
+     */
+    public CreateThumbnailJobResponse createThumbnailJob(
+            String pipelineName, String sourceKey, ThumbnailTarget target,
+            ThumbnailCapture capture, DelogoArea delogoArea) {
+
+        ThumbnailSource source = new ThumbnailSource();
+        source.setKey(sourceKey);
+
+        CreateThumbnailJobRequest request =
+                new CreateThumbnailJobRequest().withPipelineName(pipelineName).withSource(source).withTarget(target)
+                        .withCapture(capture).withDelogoArea(delogoArea);
+
         return createThumbnailJob(request);
     }
     

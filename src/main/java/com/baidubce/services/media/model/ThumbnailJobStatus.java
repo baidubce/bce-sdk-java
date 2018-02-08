@@ -27,6 +27,8 @@ public class ThumbnailJobStatus {
     
     private ThumbnailCapture capture = null;
 
+    private DelogoArea delogoArea = null;
+
     private MediaError error = null;
 
     public String getJobId() {
@@ -77,6 +79,14 @@ public class ThumbnailJobStatus {
         this.capture = capture;
     }
 
+    public DelogoArea getDelogoArea() {
+        return delogoArea;
+    }
+
+    public void setDelogoArea(DelogoArea delogoArea) {
+        this.delogoArea = delogoArea;
+    }
+
     public MediaError getError() {
         return error;
     }
@@ -95,6 +105,9 @@ public class ThumbnailJobStatus {
         sb.append("    source: ").append(source).append("\n");
         sb.append("    target: ").append(target).append("\n");
         sb.append("    capture: ").append(capture).append("\n");
+        if (delogoArea != null) {
+            sb.append("    delogoArea: ").append(delogoArea).append("\n");
+        }
         if (error != null) {
             sb.append(error).append("\n");
         }

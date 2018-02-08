@@ -907,6 +907,12 @@ public class CdnClient extends AbstractBceClient {
      */
     public GetDomainLogResponse getDomainLog(GetDomainLogRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, LOG, request.getDomain(), "log");
+        if (request.getStartTime() != null) {
+            internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
+        }
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
+        }
         return this.invokeHttpClient(internalRequest, GetDomainLogResponse.class);
     }
     

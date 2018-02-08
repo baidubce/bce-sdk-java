@@ -26,6 +26,8 @@ public class CreateThumbnailJobRequest extends AbstractBceRequest {
     
     private ThumbnailCapture capture = null;
 
+    private DelogoArea delogoArea = null;
+
     public String getPipelineName() {
         return pipelineName;
     }
@@ -75,6 +77,19 @@ public class CreateThumbnailJobRequest extends AbstractBceRequest {
 
     public CreateThumbnailJobRequest withCapture(ThumbnailCapture capture) {
         this.capture = capture;
+        return this;
+    }
+
+    public DelogoArea getDelogoArea() {
+        return delogoArea;
+    }
+
+    public void setDelogoArea(DelogoArea delogoArea) {
+        this.delogoArea = delogoArea;
+    }
+
+    public CreateThumbnailJobRequest withDelogoArea(DelogoArea delogoArea) {
+        this.delogoArea = delogoArea;
         return this;
     }
 
