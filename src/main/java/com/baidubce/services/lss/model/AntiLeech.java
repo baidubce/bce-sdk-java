@@ -13,10 +13,12 @@
 
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Reprsents the anti-leech settings. Currently only refer & single ip restriction are supported.
  */
-public class AntiLeech {
+public class AntiLeech implements Serializable {
     private Refer refer = null;
 
     private IP ip = null;

@@ -16,6 +16,7 @@ package com.baidubce.services.vcr.model;
  * A specific item in CheckResult.
  */
 public class ResultItem {
+    private String subType;
     private String target;
     private Integer timeInSeconds;
     private Integer startTimeInSeconds;
@@ -27,6 +28,14 @@ public class ResultItem {
     private String label;
     private String extra;
     private Evidence evidence;
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
+    }
 
     public String getTarget() {
         return target;
@@ -119,7 +128,8 @@ public class ResultItem {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ResultItem{");
-        sb.append("target='").append(target).append('\'');
+        sb.append("subType='").append(subType).append('\'');
+        sb.append(", target='").append(target).append('\'');
         sb.append(", timeInSeconds=").append(timeInSeconds);
         sb.append(", startTimeInSeconds=").append(startTimeInSeconds);
         sb.append(", endTimeInSeconds=").append(endTimeInSeconds);

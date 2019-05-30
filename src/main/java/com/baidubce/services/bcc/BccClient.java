@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,24 +11,6 @@
  * specific language governing permissions and limitations under the License.
  */
 package com.baidubce.services.bcc;
-
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
@@ -45,7 +27,31 @@ import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bcc.model.Billing;
+import com.baidubce.services.bcc.model.image.ListOsRequest;
+import com.baidubce.services.bcc.model.image.ListOsResponse;
+import com.baidubce.services.bcc.model.instance.ModifyInstanceDescRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairAction;
+import com.baidubce.services.bcc.model.keypair.KeypairAttachRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairCreateRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairCreateResponse;
+import com.baidubce.services.bcc.model.keypair.KeypairDeleteRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairDetachRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairDetailRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairImportRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairModel;
 import com.baidubce.services.bcc.model.Reservation;
+import com.baidubce.services.bcc.model.TagModel;
+import com.baidubce.services.bcc.model.asp.AspAction;
+import com.baidubce.services.bcc.model.asp.AttachAspRequest;
+import com.baidubce.services.bcc.model.asp.CreateAspRequest;
+import com.baidubce.services.bcc.model.asp.CreateAspResponse;
+import com.baidubce.services.bcc.model.asp.DeleteAspRequest;
+import com.baidubce.services.bcc.model.asp.DetachAspRequest;
+import com.baidubce.services.bcc.model.asp.GetAspRequest;
+import com.baidubce.services.bcc.model.asp.GetAspResponse;
+import com.baidubce.services.bcc.model.asp.ListAspsRequest;
+import com.baidubce.services.bcc.model.asp.ListAspsResponse;
+import com.baidubce.services.bcc.model.image.CancelRemoteCopyImageRequest;
 import com.baidubce.services.bcc.model.image.CreateImageRequest;
 import com.baidubce.services.bcc.model.image.CreateImageResponse;
 import com.baidubce.services.bcc.model.image.DeleteImageRequest;
@@ -53,14 +59,24 @@ import com.baidubce.services.bcc.model.image.GetImageRequest;
 import com.baidubce.services.bcc.model.image.GetImageResponse;
 import com.baidubce.services.bcc.model.image.ListImagesRequest;
 import com.baidubce.services.bcc.model.image.ListImagesResponse;
+import com.baidubce.services.bcc.model.image.ListSharedUserRequest;
+import com.baidubce.services.bcc.model.image.ListSharedUserResponse;
+import com.baidubce.services.bcc.model.image.RemoteCopyImageRequest;
+import com.baidubce.services.bcc.model.image.ShareImageRequest;
+import com.baidubce.services.bcc.model.image.UnShareImageRequest;
 import com.baidubce.services.bcc.model.instance.BindSecurityGroupRequest;
+import com.baidubce.services.bcc.model.instance.BindTagsRequest;
 import com.baidubce.services.bcc.model.instance.CreateInstanceRequest;
 import com.baidubce.services.bcc.model.instance.CreateInstanceResponse;
+import com.baidubce.services.bcc.model.instance.FpgaCardType;
 import com.baidubce.services.bcc.model.instance.GetInstanceRequest;
 import com.baidubce.services.bcc.model.instance.GetInstanceResponse;
 import com.baidubce.services.bcc.model.instance.GetInstanceVncRequest;
 import com.baidubce.services.bcc.model.instance.GetInstanceVncResponse;
+import com.baidubce.services.bcc.model.instance.GpuCardType;
+import com.baidubce.services.bcc.model.image.ImageAction;
 import com.baidubce.services.bcc.model.instance.InstanceAction;
+import com.baidubce.services.bcc.model.instance.InstanceType;
 import com.baidubce.services.bcc.model.instance.ListInstanceSpecsRequest;
 import com.baidubce.services.bcc.model.instance.ListInstanceSpecsResponse;
 import com.baidubce.services.bcc.model.instance.ListInstancesRequest;
@@ -75,6 +91,8 @@ import com.baidubce.services.bcc.model.instance.ResizeInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
 import com.baidubce.services.bcc.model.instance.UnbindSecurityGroupRequest;
+import com.baidubce.services.bcc.model.instance.UnbindTagsRequest;
+import com.baidubce.services.bcc.model.keypair.KeypairResponse;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupResponse;
 import com.baidubce.services.bcc.model.securitygroup.DeleteSecurityGroupRequest;
@@ -97,6 +115,8 @@ import com.baidubce.services.bcc.model.volume.GetVolumeRequest;
 import com.baidubce.services.bcc.model.volume.GetVolumeResponse;
 import com.baidubce.services.bcc.model.volume.ListVolumesRequest;
 import com.baidubce.services.bcc.model.volume.ListVolumesResponse;
+import com.baidubce.services.bcc.model.volume.ModifyCdsAttrRequest;
+import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeRequest;
 import com.baidubce.services.bcc.model.volume.PurchaseReservedVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ReleaseVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ResizeVolumeRequest;
@@ -106,6 +126,25 @@ import com.baidubce.services.bcc.model.zone.ListZonesResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
+import static com.baidubce.util.Validate.checkIsTrue;
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Provides the client for accessing the Baidu Cloud Compute Service(bcc).
@@ -119,9 +158,43 @@ public class BccClient extends AbstractBceClient {
     private static final String INSTANCE_PREFIX = "instance";
     private static final String VOLUME_PREFIX = "volume";
     private static final String IMAGE_PREFIX = "image";
+    private static final String OS_PREFIX = "os";
     private static final String SECURITYGROUP_PREFIX = "securityGroup";
     private static final String SNAPSHOT_PREFIX = "snapshot";
     private static final String ZONE = "zone";
+    private static final String TAG = "tag";
+    private static final String ASP = "asp";
+    private static final String KEYPAIR = "keypair";
+    private static final String SHARED_USER = "sharedUsers";
+    private static final String CLIENT_TOKEN = "clientToken";
+    private static final String MARKER = "marker";
+    private static final String MAX_KEYS = "maxKeys";
+    private static final String ZONE_NAME = "zoneName";
+    private static final String INTERNAL_IP = "internalIp";
+    private static final String DEDICATED_HOST_ID = "dedicatedHostId";
+    private static final String IMAGE_TYPE = "imageType";
+    private static final String VOLUME_NAME = "volumeName";
+    private static final String VPC_ID = "vpcId";
+
+    /**
+     * Exception messages.
+     */
+    private static final String REQUEST_NULL_ERROR_MESSAGE = "request should not be null.";
+    private static final String CHANGETAGS_NULL_ERROR_MESSAGE = "request changeTags should not be null.";
+    private static final String INSTANCEID_MESSAGE_KEY = "instanceId";
+    private static final String TAGKEY_MESSAGE_KEY = "tagKey";
+    private static final String ADMINPASS_MESSAGE_KEY = "adminPass";
+    private static final String IMAGEID_MESSAGE_KEY = "imageId";
+    private static final String NAME_MESSAGE_KEY = "name";
+    private static final String DESC_MESSAGE_KEY = "desc";
+    private static final String SECURITYGROUPID_MESSAGE_KEY = "securityGroupId";
+    private static final String VOLUMEID_MESSAGE_KEY = "volumeId";
+    private static final String SNAPSHOTID_MESSAGE_KEY = "snapshotId";
+    private static final String IMAGENAME_MESSAGE_KEY = "imageName";
+    private static final String SNAPSHOTNAME_MESSAGE_KEY = "snapshotName";
+    private static final String ASPNAME_MESSAGE_KEY = "aspName";
+    private static final String ASPID_MESSAGE_KEY = "aspId";
+    private static final String KEYPAIR_ID_MESSAGE_KEY = "keypair";
 
     /**
      * Responsible for handling httpResponses from all bcc service calls.
@@ -161,7 +234,7 @@ public class BccClient extends AbstractBceClient {
      * any additional headers or parameters, and execute.
      */
     private InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
-            String... pathVariables) {
+                                          String... pathVariables) {
         List<String> path = new ArrayList<String>();
 
         path.add(VERSION);
@@ -271,16 +344,29 @@ public class BccClient extends AbstractBceClient {
      */
     public CreateInstanceResponse createInstance(CreateInstanceRequest request)
             throws BceClientException {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
         if (null == request.getBilling()) {
             request.setBilling(generateDefaultBilling());
         }
-        checkStringNotEmpty(request.getImageId(), "imageId should not be empty");
+        if (null != request.getTags() && !request.getTags().isEmpty()) {
+            for (TagModel tag : request.getTags()) {
+                checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+            }
+        }
+        if (InstanceType.G1.name().equalsIgnoreCase(request.getInstanceType())) {
+            checkIsTrue(GpuCardType.isExists(request.getGpuCard()), "invalid gpgCard parameter");
+            checkIsTrue(request.getCardCount() > 0, "invalid cardCount parameter");
+        }
+        if (InstanceType.F1.name().equalsIgnoreCase(request.getInstanceType())) {
+            checkIsTrue(FpgaCardType.isExists(request.getFpgaCard()), "invalid fpgaCard parameter");
+            checkIsTrue(request.getCardCount() > 0, "invalid cardCount parameter");
+        }
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, INSTANCE_PREFIX);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         if (!Strings.isNullOrEmpty(request.getAdminPass())) {
             BceCredentials credentials = config.getCredentials();
             if (internalRequest.getCredentials() != null) {
@@ -312,22 +398,22 @@ public class BccClient extends AbstractBceClient {
      * @return The response containing a list of instances owned by the authenticated user.
      */
     public ListInstancesResponse listInstances(ListInstancesRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, INSTANCE_PREFIX);
         if (request.getMarker() != null) {
-            internalRequest.addParameter("marker", request.getMarker());
+            internalRequest.addParameter(MARKER, request.getMarker());
         }
         if (request.getMaxKeys() > 0) {
-            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
         }
         if (!Strings.isNullOrEmpty(request.getInternalIp())) {
-            internalRequest.addParameter("internalIp", request.getInternalIp());
+            internalRequest.addParameter(INTERNAL_IP, request.getInternalIp());
         }
         if (!Strings.isNullOrEmpty(request.getDedicatedHostId())) {
-            internalRequest.addParameter("dedicatedHostId", request.getDedicatedHostId());
+            internalRequest.addParameter(DEDICATED_HOST_ID, request.getDedicatedHostId());
         }
         if (!Strings.isNullOrEmpty(request.getZoneName())) {
-            internalRequest.addParameter("zoneName", request.getZoneName());
+            internalRequest.addParameter(ZONE_NAME, request.getZoneName());
         }
         return invokeHttpClient(internalRequest, ListInstancesResponse.class);
     }
@@ -349,8 +435,9 @@ public class BccClient extends AbstractBceClient {
      * @return A instance detail model for the instanceId.
      */
     public GetInstanceResponse getInstance(GetInstanceRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkNotNull(request.getInstanceId(), "request instanceId should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(),
+                checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, INSTANCE_PREFIX, request.getInstanceId());
         return this.invokeHttpClient(internalRequest, GetInstanceResponse.class);
@@ -383,8 +470,8 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for starting the instance.
      */
     public void startInstance(StartInstanceRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.start.name(), null);
@@ -439,8 +526,8 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for stopping the instance.
      */
     public void stopInstance(StopInstanceRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.stop.name(), null);
@@ -493,8 +580,8 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for rebooting the instance.
      */
     public void rebootInstance(RebootInstanceRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.reboot.name(), null);
@@ -535,9 +622,9 @@ public class BccClient extends AbstractBceClient {
      * @throws BceClientException
      */
     public void modifyInstancePassword(ModifyInstancePasswordRequest request) throws BceClientException {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
-        checkStringNotEmpty(request.getAdminPass(), "request adminPass should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getAdminPass(), checkEmptyExceptionMessageFormat(ADMINPASS_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.changePass.name(), null);
@@ -563,12 +650,28 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for modifying the instance attribute.
      */
     public void modifyInstanceAttributes(ModifyInstanceAttributesRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
-        checkStringNotEmpty(request.getName(), "request name should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.modifyAttribute.name(), null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Modifying the special describe to new value of the instance.
+     *
+     * @param request The request containing all options for modifying the instance desc.
+     */
+    public void modifyInstanceDesc(ModifyInstanceDescRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getDesc(), checkEmptyExceptionMessageFormat(DESC_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
+        internalRequest.addParameter(InstanceAction.modifyDesc.name(), null);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -613,10 +716,10 @@ public class BccClient extends AbstractBceClient {
      * @throws BceClientException
      */
     public void rebuildInstance(RebuildInstanceRequest request) throws BceClientException {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
-        checkStringNotEmpty(request.getImageId(), "request imageId should not be empty.");
-        checkStringNotEmpty(request.getAdminPass(), "request adminPass should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getAdminPass(), checkEmptyExceptionMessageFormat(ADMINPASS_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.rebuild.name(), null);
@@ -664,8 +767,8 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for releasing the instance.
      */
     public void releaseInstance(ReleaseInstanceRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.DELETE, INSTANCE_PREFIX, request.getInstanceId());
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -684,11 +787,11 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for resizing the instance.
      */
     public void resizeInstance(ResizeInstanceRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         if (request.getCpuCount() <= 0) {
             throw new IllegalArgumentException("request cpuCount should be positive.");
         }
@@ -698,7 +801,7 @@ public class BccClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.resize.name(), null);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -720,9 +823,10 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for binding the instance to specified securitygroup.
      */
     public void bindInstanceToSecurityGroup(BindSecurityGroupRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
-        checkStringNotEmpty(request.getSecurityGroupId(), "request securityGroupId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSecurityGroupId(),
+                checkEmptyExceptionMessageFormat(SECURITYGROUPID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.bind.name(), null);
@@ -742,15 +846,17 @@ public class BccClient extends AbstractBceClient {
                 .withInstanceId(instanceId).withSecurityGroupId(securityGroupId));
     }
 
+
     /**
      * Unbinding the instance from securitygroup.
      *
      * @param request The request containing all options for unbinding the instance from securitygroup.
      */
     public void unbindInstanceFromSecurityGroup(UnbindSecurityGroupRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
-        checkStringNotEmpty(request.getSecurityGroupId(), "request securityGroupId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSecurityGroupId(),
+                checkEmptyExceptionMessageFormat(SECURITYGROUPID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.unbind.name(), null);
@@ -758,6 +864,71 @@ public class BccClient extends AbstractBceClient {
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    /**
+     * Binding the instance to specified list of tags.
+     *
+     * @param instanceId The id of the instance.
+     * @param changeTags The list of tags.
+     */
+    public void bindInstanceToTags(String instanceId, List<TagModel> changeTags) {
+        this.bindInstanceToTags(new BindTagsRequest()
+                .withInstanceId(instanceId).withChangeTags(changeTags));
+    }
+
+    /**
+     * Binding the instance to specified list of tags.
+     *
+     * @param request The request containing all options for binding the instance to specified list of tags.
+     */
+    public void bindInstanceToTags(BindTagsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        if (null != request.getChangeTags() && !request.getChangeTags().isEmpty()) {
+            for (TagModel tag : request.getChangeTags()) {
+                checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+            }
+        } else {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                INSTANCE_PREFIX, request.getInstanceId(), TAG);
+        internalRequest.addParameter("bind", null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Unbinding the instance to specified list of tags.
+     *
+     * @param instanceId The id of the instance.
+     * @param changeTags The list of tags to be unbound.
+     */
+    public void unbindInstanceFromTags(String instanceId, List<TagModel> changeTags) {
+        this.unbindInstanceFromTags(new UnbindTagsRequest()
+                .withInstanceId(instanceId).withChangeTags(changeTags));
+    }
+
+    /**
+     * Unbinding the instance to specified list of tags.
+     *
+     * @param request The request containing all options for unbinding the instance to specified list of tags.
+     */
+    public void unbindInstanceFromTags(UnbindTagsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        if (null != request.getChangeTags() && !request.getChangeTags().isEmpty()) {
+            for (TagModel tag : request.getChangeTags()) {
+                checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+            }
+        } else {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                INSTANCE_PREFIX, request.getInstanceId(), TAG);
+        internalRequest.addParameter("unbind", null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
 
     /**
      * Getting the vnc url to access the instance.
@@ -778,8 +949,8 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for getting the vnc url.
      */
     public GetInstanceVncResponse getInstanceVnc(GetInstanceVncRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, INSTANCE_PREFIX, request.getInstanceId(), "vnc");
         return this.invokeHttpClient(internalRequest, GetInstanceVncResponse.class);
@@ -802,8 +973,8 @@ public class BccClient extends AbstractBceClient {
         this.purchaseReservedInstance(new PurchaseReservedInstanceRequeset()
                 .withInstanceId(instanceId)
                 .withBilling(new Billing().withReservation(new Reservation()
-                                .withReservationLength(reservationLength)
-                                .withReservationTimeUnit(reservationTimeUnit))));
+                        .withReservationLength(reservationLength)
+                        .withReservationTimeUnit(reservationTimeUnit))));
     }
 
     /**
@@ -817,18 +988,18 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for renewing the instance with fixed duration.
      */
     public void purchaseReservedInstance(PurchaseReservedInstanceRequeset request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
         if (null == request.getBilling()) {
             request.setBilling(generateDefaultBillingWithReservation());
         }
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.purchaseReserved.name(), null);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -845,6 +1016,7 @@ public class BccClient extends AbstractBceClient {
      *
      * @return List of specification for instance resource to buy.
      */
+    @Deprecated
     public ListInstanceSpecsResponse listInstanceSpecs() {
         return this.listInstanceSpecs(new ListInstanceSpecsRequest());
     }
@@ -862,6 +1034,7 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for Listing all of specification for instance resource.
      * @return List of specification for instance resource to buy.
      */
+    @Deprecated
     public ListInstanceSpecsResponse listInstanceSpecs(ListInstanceSpecsRequest request) {
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, INSTANCE_PREFIX, "spec");
@@ -880,7 +1053,7 @@ public class BccClient extends AbstractBceClient {
      * @return The response with list of id of volumes newly created.
      */
     public CreateVolumeResponse createVolume(CreateVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
@@ -888,7 +1061,7 @@ public class BccClient extends AbstractBceClient {
             request.setBilling(generateDefaultBilling());
         }
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, VOLUME_PREFIX);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, CreateVolumeResponse.class);
     }
@@ -911,16 +1084,16 @@ public class BccClient extends AbstractBceClient {
     public ListVolumesResponse listVolumes(ListVolumesRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, VOLUME_PREFIX);
         if (request.getMarker() != null) {
-            internalRequest.addParameter("marker", request.getMarker());
+            internalRequest.addParameter(MARKER, request.getMarker());
         }
         if (request.getMaxKeys() > 0) {
-            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
         }
         if (!Strings.isNullOrEmpty(request.getInstanceId())) {
-            internalRequest.addParameter("instanceId", request.getInstanceId());
+            internalRequest.addParameter(INSTANCEID_MESSAGE_KEY, request.getInstanceId());
         }
         if (!Strings.isNullOrEmpty(request.getZoneName())) {
-            internalRequest.addParameter("zoneName", request.getZoneName());
+            internalRequest.addParameter(ZONE_NAME, request.getZoneName());
         }
         return invokeHttpClient(internalRequest, ListVolumesResponse.class);
     }
@@ -942,8 +1115,8 @@ public class BccClient extends AbstractBceClient {
      * @return The response containing the detail information of specified volume.
      */
     public GetVolumeResponse getVolume(GetVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.GET, VOLUME_PREFIX, request.getVolumeId());
         return invokeHttpClient(internalRequest, GetVolumeResponse.class);
@@ -975,9 +1148,9 @@ public class BccClient extends AbstractBceClient {
      * @return The response containing the volume-instance attach relation.
      */
     public AttachVolumeResponse attachVolume(AttachVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.PUT, VOLUME_PREFIX, request.getVolumeId());
         internalRequest.addParameter(VolumeAction.attach.name(), null);
@@ -1009,9 +1182,9 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for detaching the specified volume from a specified instance.
      */
     public void detachVolume(DetachVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
-        checkStringNotEmpty(request.getInstanceId(), "request instanceId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.PUT, VOLUME_PREFIX, request.getVolumeId());
         internalRequest.addParameter(VolumeAction.detach.name(), null);
@@ -1042,10 +1215,37 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for releasing the specified volume.
      */
     public void releaseVolume(ReleaseVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
-        InternalRequest internalRequest =
-                this.createRequest(request, HttpMethodName.DELETE, VOLUME_PREFIX, request.getVolumeId());
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+
+        if (StringUtils.isEmpty(request.getAutoSnapshot())
+                && StringUtils.isEmpty(request.getManualSnapshot())) {
+            InternalRequest internalRequest =
+                    this.createRequest(request, HttpMethodName.DELETE, VOLUME_PREFIX, request.getVolumeId());
+            invokeHttpClient(internalRequest, AbstractBceResponse.class);
+        } else {
+            InternalRequest internalRequest =
+                    this.createRequest(request, HttpMethodName.POST, VOLUME_PREFIX, request.getVolumeId());
+            fillPayload(internalRequest, request);
+            invokeHttpClient(internalRequest, AbstractBceResponse.class);
+        }
+    }
+
+    /**
+     * Change the volume's billing method.
+     * billingMethod can be set to 'prepay' or 'postpay'. when 'prepay' is used, reservationLength must be
+     * set to a positive integer which denotes how many month to buy this volume.
+     * @param request
+     */
+    public void modifyVolumeChargeType(ModifyVolumeChargeRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+
+        ModifyVolumeChargeRequest.ModifyVolumeChargeModel requestModel = request.toModifyVolumeChargeModel();
+        InternalRequest internalRequest = this.createRequest(requestModel, HttpMethodName.PUT,
+                VOLUME_PREFIX, request.getVolumeId());
+        internalRequest.addParameter(VolumeAction.modifyChargeType.name(), null);
+        fillPayload(internalRequest, requestModel);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -1082,16 +1282,16 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for resize the specified volume.
      */
     public void resizeVolume(ResizeVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
         checkState(request.getNewCdsSizeInGB() > 0, "request newCdsSizeInGB should greater than 0");
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.PUT, VOLUME_PREFIX, request.getVolumeId());
         internalRequest.addParameter(VolumeAction.resize.name(), null);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -1135,9 +1335,9 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for rolling back the specified volume.
      */
     public void rollbackVolume(RollbackVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
-        checkStringNotEmpty(request.getSnapshotId(), "request snapshotId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSnapshotId(), checkEmptyExceptionMessageFormat(SNAPSHOTID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.PUT, VOLUME_PREFIX, request.getVolumeId());
         internalRequest.addParameter(VolumeAction.rollback.name(), null);
@@ -1174,20 +1374,40 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for renew the specified volume.
      */
     public void purchaseReservedVolume(PurchaseReservedVolumeRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
         if (null == request.getBilling()) {
             request.setBilling(generateDefaultBillingWithReservation());
         }
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.PUT, VOLUME_PREFIX, request.getVolumeId());
         internalRequest.addParameter(VolumeAction.purchaseReserved.name(), null);
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
+
+    /**
+     * change cds volume's attribute。
+     * this interface is used to change cds's attribute, currently Name/Desc attribute is supported.
+     * @param modifyCdsAttrRequest
+     */
+    public void modifyCdsAttribute(ModifyCdsAttrRequest modifyCdsAttrRequest) {
+        checkNotNull(modifyCdsAttrRequest, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(modifyCdsAttrRequest.getCdsId(),
+                checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(modifyCdsAttrRequest, HttpMethodName.PUT, VOLUME_PREFIX,
+                        modifyCdsAttrRequest.getCdsId());
+
+        internalRequest.addParameter(VolumeAction.modify.name(), null);
+        fillPayload(internalRequest, modifyCdsAttrRequest);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
 
     /**
      * Creating a customized image from the instance..
@@ -1249,16 +1469,16 @@ public class BccClient extends AbstractBceClient {
      * @return The response with id of image newly created.
      */
     public CreateImageResponse createImage(CreateImageRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
-        checkStringNotEmpty(request.getImageName(), "request imageName should not be empty.");
+        checkStringNotEmpty(request.getImageName(), checkEmptyExceptionMessageFormat(IMAGENAME_MESSAGE_KEY));
         if (Strings.isNullOrEmpty(request.getInstanceId()) && Strings.isNullOrEmpty(request.getSnapshotId())) {
             throw new IllegalArgumentException("request instanceId or snapshotId should not be empty .");
         }
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, IMAGE_PREFIX);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, CreateImageResponse.class);
     }
@@ -1279,16 +1499,16 @@ public class BccClient extends AbstractBceClient {
      * @return The response with list of images.
      */
     public ListImagesResponse listImages(ListImagesRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, IMAGE_PREFIX);
         if (!Strings.isNullOrEmpty(request.getMarker())) {
-            internalRequest.addParameter("marker", request.getMarker());
+            internalRequest.addParameter(MARKER, request.getMarker());
         }
         if (request.getMaxKeys() > 0) {
-            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
         }
         if (!Strings.isNullOrEmpty(request.getImageType())) {
-            internalRequest.addParameter("imageType", request.getImageType());
+            internalRequest.addParameter(IMAGE_TYPE, request.getImageType());
         }
         return invokeHttpClient(internalRequest, ListImagesResponse.class);
     }
@@ -1310,8 +1530,8 @@ public class BccClient extends AbstractBceClient {
      * @return The response with the image detail information.
      */
     public GetImageResponse getImage(GetImageRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getImageId(), "request imageId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.GET, IMAGE_PREFIX, request.getImageId());
         return invokeHttpClient(internalRequest, GetImageResponse.class);
@@ -1338,11 +1558,143 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for deleting the specified image.
      */
     public void deleteImage(DeleteImageRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getImageId(), "request imageId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.DELETE, IMAGE_PREFIX, request.getImageId());
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * Sharing the specified image.
+     *
+     * Only the customized image can be shared,
+     * otherwise,it's will get <code>403</code> errorCode.
+     *
+     * @param request The request containing all options for sharing the specified image.
+     */
+    public void shareImage(ShareImageRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
+        if (Strings.isNullOrEmpty(request.getAccount())
+                && Strings.isNullOrEmpty(request.getAccountId())) {
+            throw new IllegalArgumentException("request account or accountId should not be empty .");
+        }
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, IMAGE_PREFIX, request.getImageId());
+        internalRequest.addParameter(ImageAction.share.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * UnSharing the specified image.
+     *
+     * Only the customized and shared image can be unshared,
+     * otherwise,it's will get <code>403</code> errorCode.
+     *
+     * @param request The request containing all options for unsharing the specified image.
+     */
+    public void unShareImage(UnShareImageRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
+        if (Strings.isNullOrEmpty(request.getAccount())
+                && Strings.isNullOrEmpty(request.getAccountId())) {
+            throw new IllegalArgumentException("request account or accountId should not be empty .");
+        }
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, IMAGE_PREFIX, request.getImageId());
+        internalRequest.addParameter(ImageAction.unshare.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Listing sharedUsers by the authenticated imageId.
+     *
+     * @return The response with list of sharedUsers.
+     */
+    public ListSharedUserResponse listSharedUser(String imageId) {
+        return this.listSharedUser(new ListSharedUserRequest().withImageId(imageId));
+    }
+
+    /**
+     * Listing sharedUsers by the authenticated imageId.
+     *
+     * @param request The request containing all options for Listing sharedUsers.
+     * @return The response with list of sharedUsers.
+     */
+    public ListSharedUserResponse listSharedUser(ListSharedUserRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, IMAGE_PREFIX, request.getImageId(), SHARED_USER);
+        return this.invokeHttpClient(internalRequest, ListSharedUserResponse.class);
+    }
+
+    /**
+     * Remote copy image.
+     *
+     * @param request The request containing all options for remote copy image.
+     */
+    public void remoteCopyImage(RemoteCopyImageRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(IMAGENAME_MESSAGE_KEY));
+        if (request.getDestRegion() == null || request.getDestRegion().size() == 0) {
+            throw new IllegalArgumentException("request destRegion should not be empty .");
+        }
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, IMAGE_PREFIX, request.getImageId());
+        internalRequest.addParameter(ImageAction.remoteCopy.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Cancel remote copy image.
+     *
+     * @param imageId The id of image.
+     */
+    public void cancelRemoteCopyImage(String imageId) {
+        this.cancelRemoteCopyImage(new CancelRemoteCopyImageRequest().withImageId(imageId));
+    }
+
+    /**
+     * Cancel remote copy image.
+     *
+     * @param request The request containing all options for cancel remote copy image.
+     */
+    public void cancelRemoteCopyImage(CancelRemoteCopyImageRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getImageId(), checkEmptyExceptionMessageFormat(IMAGEID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, IMAGE_PREFIX, request.getImageId());
+        internalRequest.addParameter(ImageAction.cancelRemoteCopy.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * list os by instanceIds.
+     *
+     * @param request The request containing instanceIds which to query.
+     * @return response ListOsResponse
+     */
+    public ListOsResponse listOs(ListOsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (request.getInstanceIds().size() == 0) {
+            throw new IllegalArgumentException("request instanceIds should not be empty.");
+        }
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                IMAGE_PREFIX, OS_PREFIX);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, ListOsResponse.class);
     }
 
     /**
@@ -1404,14 +1756,14 @@ public class BccClient extends AbstractBceClient {
      * @return The response with the id of snapshot created.
      */
     public CreateSnapshotResponse createSnapshot(CreateSnapshotRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
-        checkStringNotEmpty(request.getVolumeId(), "request volumeId should not be empty.");
-        checkStringNotEmpty(request.getSnapshotName(), "request snapshotName should not be empty.");
+        checkStringNotEmpty(request.getVolumeId(), checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSnapshotName(), checkEmptyExceptionMessageFormat(SNAPSHOTNAME_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, SNAPSHOT_PREFIX);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, CreateSnapshotResponse.class);
     }
@@ -1423,16 +1775,16 @@ public class BccClient extends AbstractBceClient {
      * @return The response contains a list of snapshots owned by the user.
      */
     public ListSnapshotsResponse listSnapshots(ListSnapshotsRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, SNAPSHOT_PREFIX);
         if (!Strings.isNullOrEmpty(request.getMarker())) {
-            internalRequest.addParameter("marker", request.getMarker());
+            internalRequest.addParameter(MARKER, request.getMarker());
         }
         if (request.getMaxKeys() > 0) {
-            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
         }
         if (!Strings.isNullOrEmpty(request.getVolumeId())) {
-            internalRequest.addParameter("volumeId", request.getVolumeId());
+            internalRequest.addParameter(VOLUMEID_MESSAGE_KEY, request.getVolumeId());
         }
         return invokeHttpClient(internalRequest, ListSnapshotsResponse.class);
     }
@@ -1454,8 +1806,8 @@ public class BccClient extends AbstractBceClient {
      * @return The response with the snapshot detail information.
      */
     public GetSnapshotResponse getSnapshot(GetSnapshotRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getSnapshotId(), "request snapshotId should no be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSnapshotId(), checkEmptyExceptionMessageFormat(SNAPSHOTID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.GET, SNAPSHOT_PREFIX, request.getSnapshotId());
         return invokeHttpClient(internalRequest, GetSnapshotResponse.class);
@@ -1482,14 +1834,136 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for deleting the specified snapshot.
      */
     public void deleteSnapshot(DeleteSnapshotRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getSnapshotId(), "request snapshotId should no be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSnapshotId(), checkEmptyExceptionMessageFormat(SNAPSHOTID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.DELETE, SNAPSHOT_PREFIX, request.getSnapshotId());
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    /**
+     * Creating autoSnapshotPolicy
+     *
+     * @param request contains params for creating a new asp
+     * @return response contains the id of new asp
+     */
+    public CreateAspResponse createAsp(CreateAspRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(ASPNAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, ASP);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateAspResponse.class);
+    }
 
+    /**
+     * Deleting autoSnapshotPolicy
+     *
+     * @param request contains the id of asp for deleting
+     */
+    public void deleteAsp(DeleteAspRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getAspId(), checkEmptyExceptionMessageFormat(ASPID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.DELETE, ASP, request.getAspId());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Deleting autoSnapshotPolicy
+     *
+     * @param aspId for deleting
+     */
+    public void deleteAsp(String aspId) {
+        this.deleteAsp(new DeleteAspRequest().withAspId(aspId));
+    }
+
+    /**
+     * Attaching the specified asp to volumes.
+     *
+     * @param request The request containing all options for attaching the specified asp to specified volumes.
+     */
+    public void attachAsp(AttachAspRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getAspId(), checkEmptyExceptionMessageFormat(ASPID_MESSAGE_KEY));
+        for (String volumeId : request.getVolumeIds()) {
+            checkStringNotEmpty(volumeId, checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+        }
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, ASP, request.getAspId());
+        internalRequest.addParameter(AspAction.attach.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Detaching the specified asp to volumes.
+     *
+     * @param request The request containing all options for detaching the specified asp to specified volumes.
+     */
+    public void detachAsp(DetachAspRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getAspId(), checkEmptyExceptionMessageFormat(ASPID_MESSAGE_KEY));
+        for (String volumeId : request.getVolumeIds()) {
+            checkStringNotEmpty(volumeId, checkEmptyExceptionMessageFormat(VOLUMEID_MESSAGE_KEY));
+        }
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, ASP, request.getAspId());
+        internalRequest.addParameter(AspAction.detach.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Listing asps owned by the authenticated user.
+     *
+     * @param request The request containing all options for listing asps owned by user.
+     * @return The response with list of asps.
+     */
+    public ListAspsResponse listAsps(ListAspsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, ASP);
+        if (!Strings.isNullOrEmpty(request.getMarker())) {
+            internalRequest.addParameter(MARKER, request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
+        }
+        if (!Strings.isNullOrEmpty(request.getAspName())) {
+            internalRequest.addParameter(ASPNAME_MESSAGE_KEY, request.getAspName());
+        }
+        if (!Strings.isNullOrEmpty(request.getVolumeName())) {
+            internalRequest.addParameter(VOLUME_NAME, request.getVolumeName());
+        }
+        return invokeHttpClient(internalRequest, ListAspsResponse.class);
+    }
+
+    /**
+     * Getting the detail information of specified asp.
+     *
+     * @param request The request containing all options for getting the detail information of specified asp.
+     * @return The response with the asp detail information.
+     */
+    public GetAspResponse getAsp(GetAspRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getAspId(), checkEmptyExceptionMessageFormat(ASPID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.GET, ASP, request.getAspId());
+        return invokeHttpClient(internalRequest, GetAspResponse.class);
+    }
+
+    /**
+     * Get the detail information of specified asp.
+     *
+     * @param aspId The id of asp.
+     * @return The response with the asp detail information.
+     */
+    public GetAspResponse getAsp(String aspId) {
+        return this.getAsp(new GetAspRequest().withAspId(aspId));
+    }
 
     /**
      * Listing SecurityGroup owned by the authenticated user.
@@ -1498,19 +1972,19 @@ public class BccClient extends AbstractBceClient {
      * @return The response with list of SecurityGroup which contains SecurityGroup rules owned by user.
      */
     public ListSecurityGroupsResponse listSecurityGroups(ListSecurityGroupsRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, SECURITYGROUP_PREFIX);
         if (!Strings.isNullOrEmpty(request.getMarker())) {
-            internalRequest.addParameter("marker", request.getMarker());
+            internalRequest.addParameter(MARKER, request.getMarker());
         }
         if (request.getMaxKeys() > 0) {
-            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
         }
         if (!Strings.isNullOrEmpty(request.getInstanceId())) {
-            internalRequest.addParameter("instanceId", request.getInstanceId());
+            internalRequest.addParameter(INSTANCEID_MESSAGE_KEY, request.getInstanceId());
         }
         if (!Strings.isNullOrEmpty(request.getVpcId())) {
-            internalRequest.addParameter("vpcId", request.getVpcId());
+            internalRequest.addParameter(VPC_ID, request.getVpcId());
         }
         return invokeHttpClient(internalRequest, ListSecurityGroupsResponse.class);
     }
@@ -1522,16 +1996,16 @@ public class BccClient extends AbstractBceClient {
      * @return The response with the id of SecurityGroup that was created newly.
      */
     public CreateSecurityGroupResponse createSecurityGroup(CreateSecurityGroupRequest request) {
-        checkNotNull(request, "request should not be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
-        checkStringNotEmpty(request.getName(), "request name should not be empty.");
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
         if (null == request.getRules() || request.getRules().isEmpty()) {
             throw new IllegalArgumentException("request rules should not be empty");
         }
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, SECURITYGROUP_PREFIX);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, CreateSecurityGroupResponse.class);
     }
@@ -1541,8 +2015,9 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for authorizing security group rule
      */
     public void authorizeSecurityGroupRule(SecurityGroupRuleOperateRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getSecurityGroupId(), "securityGroupId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSecurityGroupId(),
+                checkEmptyExceptionMessageFormat(SECURITYGROUPID_MESSAGE_KEY));
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
@@ -1552,7 +2027,7 @@ public class BccClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, SECURITYGROUP_PREFIX,
                 request.getSecurityGroupId());
         internalRequest.addParameter("authorizeRule", null);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -1562,8 +2037,9 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for revoking security group rule
      */
     public void revokeSecurityGroupRule(SecurityGroupRuleOperateRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getSecurityGroupId(), "securityGroupId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSecurityGroupId(),
+                checkEmptyExceptionMessageFormat(SECURITYGROUPID_MESSAGE_KEY));
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
@@ -1573,7 +2049,7 @@ public class BccClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, SECURITYGROUP_PREFIX,
                 request.getSecurityGroupId());
         internalRequest.addParameter("revokeRule", null);
-        internalRequest.addParameter("clientToken", request.getClientToken());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -1593,8 +2069,9 @@ public class BccClient extends AbstractBceClient {
      * @param request The request containing all options for deleting the specified SecurityGroup owned by user.
      */
     public void deleteSecurityGroup(DeleteSecurityGroupRequest request) {
-        checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getSecurityGroupId(), "request securityGroupId should not be empty.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSecurityGroupId(),
+                checkEmptyExceptionMessageFormat(SECURITYGROUPID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.DELETE, SECURITYGROUP_PREFIX, request.getSecurityGroupId());
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -1621,5 +2098,98 @@ public class BccClient extends AbstractBceClient {
     public ListZonesResponse listZones(AbstractBceRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, ZONE);
         return invokeHttpClient(internalRequest, ListZonesResponse.class);
+    }
+
+    /**
+     * create an keypair.
+     * @param request you can specify name and description in the request
+     * @return KeypairModel
+     */
+    public KeypairModel createKeypair(KeypairCreateRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, KEYPAIR);
+        internalRequest.addParameter(KeypairAction.create.name(), null);
+        fillPayload(internalRequest, request);
+        KeypairCreateResponse response =  invokeHttpClient(internalRequest, KeypairCreateResponse.class);
+        return response.getKeypair();
+    }
+
+    /**
+     * Import an keypair.
+     * User can import an keypair which is created manually.
+     * The imported keypair must support one of the following encrypt method: rsa/dsa/ssh-rsa/ssh-dss/ecdsa
+     * @param request KeypairImportRequest
+     */
+    public KeypairModel importKeypair(KeypairImportRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, KEYPAIR);
+        fillPayload(internalRequest, request);
+        KeypairCreateResponse response = invokeHttpClient(internalRequest, KeypairCreateResponse.class);
+        return response.getKeypair();
+    }
+
+    /**
+     * Attach an keypair to one or more instances.
+     * @param request KeypairAttachRequest
+     */
+    public void attachKeypair(KeypairAttachRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getKeypairId(), checkEmptyExceptionMessageFormat(KEYPAIR_ID_MESSAGE_KEY));
+        if (request.getInstanceIds() == null || request.getInstanceIds().size() == 0) {
+            throw new IllegalArgumentException("keypair attach: instanceIds can not be empty");
+        }
+
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, KEYPAIR, request.getKeypairId());
+        internalRequest.addParameter(KeypairAction.attach.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Detach the keypair from one or more instances.
+     * if the keypair has not been attached to one instance, the operation will be ignored.
+     * @param request KeypairDetachRequest
+     */
+    public void detachKeypair(KeypairDetachRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getKeypairId(), checkEmptyExceptionMessageFormat(KEYPAIR_ID_MESSAGE_KEY));
+        if (request.getInstanceIds() == null || request.getInstanceIds().size() == 0) {
+            throw new IllegalArgumentException("keypair detach: instanceIds can not be empty");
+        }
+
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, KEYPAIR, request.getKeypairId());
+        internalRequest.addParameter(KeypairAction.detach.name(), null);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Delete keypair.
+     * If the keypair is attached to one or more instances, then it can not be deleted.
+     * @param  request KeypairDeleteRequest
+     */
+    public void deleteKeypair(KeypairDeleteRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getKeypairId(), checkEmptyExceptionMessageFormat(KEYPAIR_ID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.DELETE, KEYPAIR, request.getKeypairId());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Query keypair's detail information.
+     * @param request KeypairDetailRequest
+     */
+    public KeypairModel keypairDetail(KeypairDetailRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getKeypairId(), checkEmptyExceptionMessageFormat(KEYPAIR_ID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.GET, KEYPAIR, request.getKeypairId());
+        KeypairResponse response = invokeHttpClient(internalRequest, KeypairResponse.class);
+        return response.getKeypair();
     }
 }

@@ -77,6 +77,8 @@ import com.baidubce.services.lss.model.GetSessionStatisticsRequest;
 import com.baidubce.services.lss.model.GetSessionStatisticsResponse;
 import com.baidubce.services.lss.model.GetStreamRequest;
 import com.baidubce.services.lss.model.GetStreamResponse;
+import com.baidubce.services.lss.model.GetStreamSourceInfoRequest;
+import com.baidubce.services.lss.model.GetStreamSourceInfoResponse;
 import com.baidubce.services.lss.model.GetStreamStatisticsRequest;
 import com.baidubce.services.lss.model.GetStreamStatisticsResponse;
 import com.baidubce.services.lss.model.Hls;
@@ -1079,6 +1081,27 @@ public class LssClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, LIVE_SESSION, sessionId);
         internalRequest.addParameter(SOURCE_INFO, null);
         return invokeHttpClient(internalRequest, GetSessionSourceInfoResponse.class);
+    }
+
+    /**
+     * Get your live stream source info by live stream tuple (domain, app, stream).
+     *
+     * @param domain live stream play domain
+     * @param app live stream app
+     * @param stream live stream name
+     * @return Live stream source info response
+     */
+    public GetStreamSourceInfoResponse getStreamSourceInfo(String domain, String app, String stream) {
+
+        checkStringNotEmpty(domain, "The parameter domain should NOT be null or empty string.");
+        checkStringNotEmpty(app, "The parameter app should NOT be null or empty string.");
+        checkStringNotEmpty(stream, "The parameter stream should NOT be null or empty string.");
+
+        GetStreamSourceInfoRequest request = new GetStreamSourceInfoRequest();
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, LIVE_DOMAIN, domain, LIVE_APP, app,
+                LIVE_STREAM, stream);
+        internalRequest.addParameter(SOURCE_INFO, null);
+        return invokeHttpClient(internalRequest, GetStreamSourceInfoResponse.class);
     }
 
     /**

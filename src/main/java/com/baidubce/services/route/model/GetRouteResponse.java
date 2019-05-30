@@ -1,8 +1,8 @@
 package com.baidubce.services.route.model;
 
-import com.baidubce.model.AbstractBceResponse;
-
 import java.util.List;
+
+import com.baidubce.model.AbstractBceResponse;
 
 /**
  * Created by zhangjing60 on 17/8/2.

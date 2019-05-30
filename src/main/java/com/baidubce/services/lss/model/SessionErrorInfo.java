@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class SessionErrorInfo {
+import java.io.Serializable;
+
+public class SessionErrorInfo implements Serializable {
     private String code = null;
 
     private String message = null;

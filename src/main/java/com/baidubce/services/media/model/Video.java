@@ -14,27 +14,57 @@
 package com.baidubce.services.media.model;
 
 public class Video {
+    /**
+     * codec, options include h264, h265
+     */
     private String        codec           = null;
+
+    /**
+     * codec options like profile
+     **/
     private CodecOptions codecOptions    = null;
+
+    /**
+     * target bitrate in bps
+     **/
     private Integer      bitRateInBps    = null;
 
-    /*
+    /**
      * The max frames per second,
      * possible values include: 10,15, 23.97, 24, 25, 29.97, 30, 50, 60
-     */
+     **/
     private Float      maxFrameRate    = null;
 
+    /**
+     * target max width in pixel
+     **/
     private Integer      maxWidthInPixel = null;
 
+    /**
+     * target max height in pixel
+     **/
     private Integer      maxHeigtInPixel = null;
 
+    /**
+     * sizing policy, options include keep、shrinkToFit、stretch
+     **/
     private String sizingPolicy    = null;
 
+    /**
+     * playback speed
+     **/
     private Float        playbackSpeed   = null;
 
     /**
-     * 视频编码信息集合(H.264)
+     * constant rate factor
      **/
+    private Integer      crf             = null;
+
+    /**
+     * auto adjust resolution if video is portrait and preset's width bigger than its height
+     **/
+    private Boolean autoAdjustResolution = null;
+
     public String getCodec() {
         return codec;
     }
@@ -48,9 +78,6 @@ public class Video {
         return this;
     }
 
-    /**
-     * 视频编码的配置选项
-     **/
     public CodecOptions getCodecOptions() {
         return codecOptions;
     }
@@ -64,9 +91,6 @@ public class Video {
         return this;
     }
 
-    /**
-     * 视频目标码率
-     **/
     public Integer getBitRateInBps() {
         return bitRateInBps;
     }
@@ -80,9 +104,6 @@ public class Video {
         return this;
     }
 
-    /**
-     * 目标视频最大帧率
-     **/
     public Float getMaxFrameRate() {
         return maxFrameRate;
     }
@@ -96,9 +117,6 @@ public class Video {
         return this;
     }
 
-    /**
-     * 目标视频最大帧率
-     **/
     public Integer getMaxWidthInPixel() {
         return maxWidthInPixel;
     }
@@ -112,9 +130,6 @@ public class Video {
         return this;
     }
 
-    /**
-     * 目标视频的最大高度
-     **/
     public Integer getMaxHeightInPixel() {
         return maxHeigtInPixel;
     }
@@ -128,9 +143,6 @@ public class Video {
         return this;
     }
 
-    /**
-     * 尺寸伸缩策略
-     **/
     public String getSizingPolicy() {
         return sizingPolicy;
     }
@@ -157,6 +169,32 @@ public class Video {
         return this;
     }
 
+    public Integer getCrf() {
+        return crf;
+    }
+
+    public void setCrf(Integer crf) {
+        this.crf = crf;
+    }
+
+    public Video withCrf(Integer crf) {
+        this.crf = crf;
+        return this;
+    }
+
+    public Boolean getAutoAdjustResolution() {
+        return autoAdjustResolution;
+    }
+
+    public void setAutoAdjustResolution(Boolean autoAdjustResolution) {
+        this.autoAdjustResolution = autoAdjustResolution;
+    }
+
+    public Video withAutoAdjustResolution(Boolean autoAdjustResolution) {
+        this.autoAdjustResolution = autoAdjustResolution;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -170,6 +208,8 @@ public class Video {
         sb.append("    maxHeight: ").append(maxHeigtInPixel).append("\n");
         sb.append("    sizingPolicy: ").append(sizingPolicy).append("\n");
         sb.append("    playbackSpeed: ").append(playbackSpeed).append("\n");
+        sb.append("    crf: ").append(crf).append("\n");
+        sb.append("    autoAdjustResolution: ").append(autoAdjustResolution).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

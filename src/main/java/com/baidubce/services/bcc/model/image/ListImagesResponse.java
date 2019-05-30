@@ -12,8 +12,8 @@
  */
 package com.baidubce.services.bcc.model.image;
 
-import com.baidubce.services.bcc.model.ImageModel;
 import com.baidubce.model.ListResponse;
+import com.baidubce.services.bcc.model.ImageModel;
 
 import java.util.List;
 

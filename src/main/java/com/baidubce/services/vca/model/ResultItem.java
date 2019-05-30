@@ -54,7 +54,7 @@ public class ResultItem {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ResultItem{");
-        sb.append(", confidence=").append(confidence);
+        sb.append("confidence=").append(confidence);
         sb.append(", attribute='").append(attribute).append('\'');
         sb.append(", source='").append(source).append('\'');
         sb.append(", time='").append(time).append('\'');

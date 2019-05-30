@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -30,6 +30,7 @@ import com.baidubce.services.bmr.model.AddStepsRequest;
 import com.baidubce.services.bmr.model.AddStepsResponse;
 import com.baidubce.services.bmr.model.AdditionalFile;
 import com.baidubce.services.bmr.model.ApplicationConfig;
+import com.baidubce.services.bmr.model.CdsItem;
 import com.baidubce.services.bmr.model.CreateClusterRequest;
 import com.baidubce.services.bmr.model.CreateClusterResponse;
 import com.baidubce.services.bmr.model.GetClusterRequest;
@@ -37,7 +38,6 @@ import com.baidubce.services.bmr.model.GetClusterResponse;
 import com.baidubce.services.bmr.model.GetStepRequest;
 import com.baidubce.services.bmr.model.GetStepResponse;
 import com.baidubce.services.bmr.model.InstanceGroupConfig;
-import com.baidubce.services.bmr.model.ModifyInstanceGroupConfig;
 import com.baidubce.services.bmr.model.ListClustersRequest;
 import com.baidubce.services.bmr.model.ListClustersResponse;
 import com.baidubce.services.bmr.model.ListInstanceGroupsRequest;
@@ -46,17 +46,22 @@ import com.baidubce.services.bmr.model.ListInstancesRequest;
 import com.baidubce.services.bmr.model.ListInstancesResponse;
 import com.baidubce.services.bmr.model.ListStepsRequest;
 import com.baidubce.services.bmr.model.ListStepsResponse;
+import com.baidubce.services.bmr.model.ModifyInstanceGroupConfig;
 import com.baidubce.services.bmr.model.ModifyInstanceGroupsRequest;
 import com.baidubce.services.bmr.model.StepConfig;
 import com.baidubce.services.bmr.model.TerminateClusterRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.apache.commons.codec.binary.Hex;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.StringWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -211,6 +216,18 @@ public class BmrClient extends AbstractBceClient {
                 jsonGenerator.writeStringField("type", instanceGroup.getType());
                 jsonGenerator.writeStringField("instanceType", instanceGroup.getInstanceType());
                 jsonGenerator.writeNumberField("instanceCount", instanceGroup.getInstanceCount());
+                jsonGenerator.writeNumberField("rootDiskSizeInGB", instanceGroup.getRootDiskSizeInGB());
+                jsonGenerator.writeStringField("rootDiskMediumType", instanceGroup.getRootDiskMediumType());
+                jsonGenerator.writeArrayFieldStart("cds");
+                if (instanceGroup.getCds() != null) {
+                    for (CdsItem cdsItem : instanceGroup.getCds()) {
+                        jsonGenerator.writeStartObject();
+                        jsonGenerator.writeNumberField("sizeInGB", cdsItem.getSizeInGB());
+                        jsonGenerator.writeStringField("mediumType", cdsItem.getMediumType());
+                        jsonGenerator.writeEndObject();
+                    }
+                }
+                jsonGenerator.writeEndArray();
                 jsonGenerator.writeEndObject();
             }
             jsonGenerator.writeEndArray();
@@ -221,6 +238,8 @@ public class BmrClient extends AbstractBceClient {
                 jsonGenerator.writeStringField("logUri", request.getLogUri());
             }
             jsonGenerator.writeBooleanField("autoTerminate", request.getAutoTerminate());
+            jsonGenerator.writeBooleanField("serviceHaEnabled", request.getServiceHaEnabled());
+            jsonGenerator.writeBooleanField("safeModeEnabled", request.getSafeModeEnabled());
 
             if (request.getApplications() != null) {
                 jsonGenerator.writeArrayFieldStart("applications");
@@ -257,6 +276,36 @@ public class BmrClient extends AbstractBceClient {
                     jsonGenerator.writeEndObject();
                 }
                 jsonGenerator.writeEndArray();
+            }
+
+            String requestAdminPwd = request.getAdminPassword();
+            if (requestAdminPwd != null) {
+                if (requestAdminPwd.length() == 0) {
+                    throw new BceClientException("AdminPassword is invalid!");
+                }
+                if (config.getCredentials() == null) {
+                    throw new BceClientException("BceClientConfiguration BceCredentials is null!");
+                }
+                try {
+                    String encryptAdminPassword = aes128EncryptWithFirst16Char(
+                            requestAdminPwd, config.getCredentials().getSecretKey());
+                    jsonGenerator.writeStringField("adminPassword", encryptAdminPassword);
+                } catch (GeneralSecurityException ex) {
+                    throw new BceClientException("Fail to encrypt adminPassword", ex);
+                }
+            }
+
+            if (request.getVpcId() != null) {
+                jsonGenerator.writeStringField("vpcId", request.getVpcId());
+            }
+            if (request.getSubnetId() != null) {
+                jsonGenerator.writeStringField("subnetId", request.getSubnetId());
+            }
+            if (request.getSecurityGroup() != null) {
+                jsonGenerator.writeStringField("securityGroup", request.getSecurityGroup());
+            }
+            if (request.getAvailabilityZone() != null) {
+                jsonGenerator.writeStringField("availabilityZone", request.getAvailabilityZone());
             }
 
             jsonGenerator.writeEndObject();
@@ -439,14 +488,16 @@ public class BmrClient extends AbstractBceClient {
                     jsonGenerator.writeObjectField(propertyKey, step.getProperties().get(propertyKey));
                 }
                 jsonGenerator.writeEndObject();
-                jsonGenerator.writeArrayFieldStart("additionalFiles");
-                for (AdditionalFile additionalFile : step.getAdditionalFiles()) {
-                    jsonGenerator.writeStartObject();
-                    jsonGenerator.writeStringField("remote", additionalFile.getRemote());
-                    jsonGenerator.writeStringField("local", additionalFile.getLocal());
-                    jsonGenerator.writeEndObject();
+                if (null != step.getAdditionalFiles()) {
+                    jsonGenerator.writeArrayFieldStart("additionalFiles");
+                    for (AdditionalFile additionalFile : step.getAdditionalFiles()) {
+                        jsonGenerator.writeStartObject();
+                        jsonGenerator.writeStringField("remote", additionalFile.getRemote());
+                        jsonGenerator.writeStringField("local", additionalFile.getLocal());
+                        jsonGenerator.writeEndObject();
+                    }
+                    jsonGenerator.writeEndArray();
                 }
-                jsonGenerator.writeEndArray();
                 jsonGenerator.writeEndObject();
             }
             jsonGenerator.writeEndArray();
@@ -595,5 +646,31 @@ public class BmrClient extends AbstractBceClient {
         request.setCredentials(bceRequest.getRequestCredentials());
 
         return request;
+    }
+
+    /**
+     * The encryption implement for AES-128 algorithm for BCE password encryption.
+     * Only the first 16 bytes of privateKey will be used to encrypt the content.
+     *
+     * See more detail on
+     * <a href = "https://bce.baidu.com/doc/BCC/API.html#.7A.E6.31.D8.94.C1.A1.C2.1A.8D.92.ED.7F.60.7D.AF">
+     *     BCE API doc</a>
+     *
+     * @param content The content String to encrypt.
+     * @param privateKey The security key to encrypt.
+     *                   Only the first 16 bytes of privateKey will be used to encrypt the content.
+     * @return The encrypted string of the original content with AES-128 algorithm.
+     * @throws GeneralSecurityException
+     */
+    private String aes128EncryptWithFirst16Char(String content, String privateKey) throws GeneralSecurityException {
+        if (privateKey == null || privateKey.length() < 16) {
+            throw new GeneralSecurityException("account secretKey is wrong");
+        }
+        byte[] crypted = null;
+        SecretKeySpec skey = new SecretKeySpec(privateKey.substring(0, 16).getBytes(), "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, skey);
+        crypted = cipher.doFinal(content.getBytes());
+        return new String(Hex.encodeHex(crypted));
     }
 }

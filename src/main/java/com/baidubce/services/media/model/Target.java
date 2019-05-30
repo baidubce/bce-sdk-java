@@ -15,17 +15,41 @@ package com.baidubce.services.media.model;
 
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Target {
+    /**
+     * target BOS key
+     **/
     private String targetKey = null;
+
+    /**
+     * preset name
+     **/
     private String presetName = null;
-    private DelogoArea delogoArea = null;
+
+    /**
+     * delogo area
+     **/
+    private Area delogoArea = null;
+
+    /**
+     * crop area
+     **/
+    private Area crop = null;
+
+    /**
+     * watermark with job
+     **/
     private List<String> watermarkIds = null;
 
     /**
-     * 目标文件的BOS key
+     * inserts of video, audio, image, text types
      **/
+    private List<Insert> inserts = null;
+
+
     public String getTargetKey() {
         return targetKey;
     }
@@ -41,9 +65,6 @@ public class Target {
         return this;
     }
 
-    /**
-     * 输出处理的模板的presetName
-     **/
     public String getPresetName() {
         return presetName;
     }
@@ -58,16 +79,30 @@ public class Target {
         this.presetName = presetName;
         return this;
     }
-    public DelogoArea getDelogoArea() {
+
+    public Area getDelogoArea() {
         return delogoArea;
     }
 
-    public void setDelogoArea(DelogoArea delogoArea) {
+    public void setDelogoArea(Area delogoArea) {
         this.delogoArea = delogoArea;
     }
 
-    public Target withDelogoArea(DelogoArea delogoArea) {
+    public Target withDelogoArea(Area delogoArea) {
         this.delogoArea = delogoArea;
+        return this;
+    }
+
+    public Area getCrop() {
+        return crop;
+    }
+
+    public void setCrop(Area crop) {
+        this.crop = crop;
+    }
+
+    public Target withCrop(Area crop) {
+        this.crop = crop;
         return this;
     }
 
@@ -84,6 +119,26 @@ public class Target {
         return this;
     }
 
+    public List<Insert> getInserts() {
+        return inserts;
+    }
+
+    public void setInserts(List<Insert> inserts) {
+        this.inserts = inserts;
+    }
+
+    public Target withInserts(List<Insert> inserts) {
+        this.inserts = inserts;
+        return this;
+    }
+
+    public void addInsert(Insert insert) {
+        if (inserts == null) {
+            inserts = new ArrayList<Insert>();
+        }
+        inserts.add(insert);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -92,7 +147,9 @@ public class Target {
         sb.append("    targetKey: ").append(targetKey).append("\n");
         sb.append("    presetName: ").append(presetName).append("\n");
         sb.append("    delogoArea: ").append(delogoArea).append("\n");
+        sb.append("    crop: ").append(crop).append("\n");
         sb.append("    watermarkIds: ").append(watermarkIds).append("\n");
+        sb.append("    inserts: ").append(inserts).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

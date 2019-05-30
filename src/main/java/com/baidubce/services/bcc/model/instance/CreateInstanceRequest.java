@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2018 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -16,6 +16,7 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bcc.model.Billing;
 import com.baidubce.services.bcc.model.CreateCdsModel;
+import com.baidubce.services.bcc.model.TagModel;
 import com.baidubce.services.bcc.model.volume.EphemeralDisk;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,7 +42,7 @@ public class CreateInstanceRequest extends AbstractBceRequest {
 
     /**
      * The parameter to specified which kind of instance to create, there is default value when null.
-     * see all of supported instance type in {@link InstanceType}
+     * see all of supported instance type in {@link com.baidubce.services.bcc.model.instance.InstanceType}
      */
     private String instanceType;
 
@@ -57,7 +58,17 @@ public class CreateInstanceRequest extends AbstractBceRequest {
 
     /**
      * The optional parameter to specify the ephemeral disk list
+     *
      * When creating the storage optimized instance, one ephemeral disk must be created together.
+     *
+     * When creating the gpu instance, one ephemeral disk must be created together, the optional ephemeral disk size
+     * see <a href = "https://cloud.baidu.com/doc/BCC/API.html#.5E.9B.3F.DF.1D.60.51.F5.A2.B0.FC.3D.24.64.A0.8C">
+     *     The optional ephemeral disk size for gpu instance</a>
+     *
+     * When creating the fpga instance, one ephemeral disk must be created together, the optional ephemeral disk size
+     * see <a href = "https://cloud.baidu.com/doc/BCC/API.html#.84.A3.73.8E.D2.2E.66.28.54.10.BF.38.C3.94.F7.9A">
+     *     The optional ephemeral disk size for gpu instance</a>
+     *
      */
     private List<EphemeralDisk> ephemeralDisks;
 
@@ -68,6 +79,7 @@ public class CreateInstanceRequest extends AbstractBceRequest {
      *
      * This parameter will be deprecated in the future, we suggest using the ephemeralDisks param instead.
      */
+    @Deprecated
     private int localDiskSizeInGB;
 
     /**
@@ -120,6 +132,16 @@ public class CreateInstanceRequest extends AbstractBceRequest {
     private Billing billing;
 
     /**
+     * Indicates whether the tag is bound to all relation instances.
+     */
+    private boolean relationTag;
+
+    /**
+     * The list of tag to be bonded.
+     */
+    private List<TagModel> tags;
+
+    /**
      * specified id of dedicated host when creating dedicated instance
      */
     private String dedicatedHostId;
@@ -142,6 +164,23 @@ public class CreateInstanceRequest extends AbstractBceRequest {
      * through listSecurityGroups, we can get all securityGroup info at current region
      */
     private String securityGroupId;
+
+    /**
+     * specify the gpuCard info of creating GPU instance,
+     * see all of supported gpu card type in {@link com.baidubce.services.bcc.model.instance.GpuCardType}
+     */
+    private GpuCardType gpuCard;
+
+    /**
+     * specify the gpuCard info of creating FPGA instance,
+     * see all of supported fpga card type in {@link com.baidubce.services.bcc.model.instance.FpgaCardType}
+     */
+    private FpgaCardType fpgaCard;
+
+    /**
+     * specify the card count for creating GPU/FPGA instance
+     */
+    private int cardCount = 1;
 
     /**
      * Configure optional client token for the request. The request will be idempotent if client token is provided.
@@ -245,11 +284,12 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         this.imageId = imageId;
     }
 
-
+    @Deprecated
     public int getLocalDiskSizeInGB() {
         return localDiskSizeInGB;
     }
 
+    @Deprecated
     public void setLocalDiskSizeInGB(int localDiskSizeInGB) {
         this.localDiskSizeInGB = localDiskSizeInGB;
     }
@@ -260,6 +300,7 @@ public class CreateInstanceRequest extends AbstractBceRequest {
      * @param localDiskSizeInGB The optional parameter to specify the temporary disk size in GB.
      * @return CreateInstanceRequest with specific localDiskSizeInGB
      */
+    @Deprecated
     public CreateInstanceRequest withLocalDiskSizeInGB(int localDiskSizeInGB) {
         this.localDiskSizeInGB = localDiskSizeInGB;
         return this;
@@ -385,6 +426,44 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         return this;
     }
 
+    public boolean isRelationTag() {
+        return relationTag;
+    }
+
+    public void setRelationTag(boolean relationTag) {
+        this.relationTag = relationTag;
+    }
+
+    /**
+     * Configure relationTag for the request.
+     *
+     * @param relationTag Indicates whether the tag is bound to all relation instances.
+     * @return CreateInstanceRequest with specific relationTag
+     */
+    public CreateInstanceRequest withRelationTag(boolean relationTag) {
+        this.relationTag = relationTag;
+        return this;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * Configure tags for the request.
+     *
+     * @param tags The list of tag to be bonded.
+     * @return CreateInstanceRequest with specific tags
+     */
+    public CreateInstanceRequest withTags(List<TagModel> tags) {
+        this.tags = tags;
+        return this;
+    }
+
     public CreateInstanceRequest withDedicatedHostId(String dedicatedHostId) {
         this.dedicatedHostId = dedicatedHostId;
         return this;
@@ -398,6 +477,11 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         this.dedicatedHostId = dedicatedHostId;
     }
 
+    /**
+     * Configure the zone name for the request
+     * @param zoneName
+     * @return CreateInstanceRequest with specified zone name
+     */
     public CreateInstanceRequest withZoneName(String zoneName) {
         this.zoneName = zoneName;
         return this;
@@ -411,6 +495,11 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         this.zoneName = zoneName;
     }
 
+    /**
+     * Configure the subnetId for the request
+     * @param subnetId
+     * @return CreateInstanceRequest with specified subnetId
+     */
     public CreateInstanceRequest withSubnetId(String subnetId) {
         this.subnetId = subnetId;
         return this;
@@ -424,6 +513,11 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         this.subnetId = subnetId;
     }
 
+    /**
+     * Configure the securityGroupId for the request
+     * @param securityGroupId
+     * @return CreateInstanceRequest with specified securityGroupId
+     */
     public CreateInstanceRequest withSecurityGroupId(String securityGroupId) {
         this.securityGroupId = securityGroupId;
         return this;
@@ -435,6 +529,64 @@ public class CreateInstanceRequest extends AbstractBceRequest {
 
     public void setSecurityGroupId(String securityGroupId) {
         this.securityGroupId = securityGroupId;
+    }
+
+
+    public GpuCardType getGpuCard() {
+        return gpuCard;
+    }
+
+    public void setGpuCard(GpuCardType gpuCard) {
+        this.gpuCard = gpuCard;
+    }
+
+    /**
+     * Configure the gpuCard for the request,
+     * see all of supported gpu card type in {@link com.baidubce.services.bcc.model.instance.GpuCardType}
+     * @param gpuCard
+     * @return CreateInstanceRequest with specified gpuCard
+     */
+    public CreateInstanceRequest withGpuCard(GpuCardType gpuCard) {
+        this.gpuCard = gpuCard;
+        return this;
+    }
+
+    public FpgaCardType getFpgaCard() {
+        return fpgaCard;
+    }
+
+    public void setFpgaCard(FpgaCardType fpgaCard) {
+        this.fpgaCard = fpgaCard;
+    }
+
+    /**
+     * Configure the fpgaCard for the request,
+     * see all of supported fpga card type in {@link com.baidubce.services.bcc.model.instance.FpgaCardType}
+     * @param fpgaCard
+     * @return CreateInstanceRequest with specified fpgaCard
+     */
+    public CreateInstanceRequest withFpgaCard(FpgaCardType fpgaCard) {
+        this.fpgaCard = fpgaCard;
+        return this;
+    }
+
+    public int getCardCount() {
+        return cardCount;
+    }
+
+    public void setCardCount(int cardCount) {
+        this.cardCount = cardCount;
+    }
+
+    /**
+     * Configure the card count of gpuCardType or gpgaCardType for the request,
+     * if creating gpu / fpga instance, one or more card count must be specified.
+     * @param cardCount
+     * @return CreateInstanceRequest with card count of gpuCardType or gpgaCardTyp.
+     */
+    public CreateInstanceRequest withCardCount(int cardCount) {
+        this.cardCount = cardCount;
+        return this;
     }
 
     /**

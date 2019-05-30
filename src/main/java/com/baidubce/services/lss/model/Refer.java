@@ -13,9 +13,10 @@
 
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Refer {
+public class Refer implements Serializable {
     private List<String> whitelist = null;
 
     private List<String> blacklist = null;

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class DeviceProfile {
 
-    private String id;
 
     private String name;
 
@@ -40,14 +39,6 @@ public class DeviceProfile {
     private JsonNode attributes;
 
     private DeviceAttributes device;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

@@ -42,8 +42,9 @@ class IotDmClientHelper {
     private static final String IOT = "iot";
     private static final String MANAGEMENT = "management";
     private static final String ENDPOINT = "endpoint";
+    private static final String RULES = "rules";
 
-    private static final String[] HEADERS_TO_SIGN = { Headers.HOST, Headers.BCE_DATE };
+    private static final String[] HEADERS_TO_SIGN = {Headers.HOST, Headers.BCE_DATE};
     private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
     /**
@@ -73,6 +74,15 @@ class IotDmClientHelper {
             URI endpoint, SignOptions signOptions, String... pathVariables) {
         List<String> path = new ArrayList<String>();
         path.addAll(Arrays.asList(VERSION_V3, IOT, MANAGEMENT));
+
+        return createRequest(bceRequest, httpMethod, endpoint, signOptions, path, pathVariables);
+    }
+
+    static InternalRequest createRequestForRules(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
+            URI endpoint, SignOptions signOptions,
+            String... pathVariables) {
+        List<String> path = new ArrayList<String>();
+        path.addAll(Arrays.asList(VERSION_V3, IOT, RULES));
 
         return createRequest(bceRequest, httpMethod, endpoint, signOptions, path, pathVariables);
     }

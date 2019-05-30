@@ -14,21 +14,31 @@
 package com.baidubce.services.media.model;
 
 public class Audio {
+    /**
+     * audio target bitrate in bps
+     **/
     private Integer bitRateInBps   = null;
 
-    // public enum bitRateInBpsEnum { };
-
+    /**
+     * audio sample rate in hz
+     **/
     private Integer sampleRateInHz = null;
 
-    // public enum sampelRateInHzEnum { };
-
+    /**
+     * channels of audio
+     **/
     private Integer channels       = null;
 
-    // public enum channelsEnum { };
+    /**
+     * PCM format, options include s16le, can only be set when container is "pcm"
+     **/
+    private String pcmFormat       = null;
 
     /**
-     * 音频目标码率
+     * settings about audio volume
      **/
+    private VolumeAdjust volumeAdjust = null;
+
     public Integer getBitRateInBps() {
         return bitRateInBps;
     }
@@ -42,9 +52,6 @@ public class Audio {
         return this;
     }
 
-    /**
-     * 音频采样率
-     **/
     public Integer getSampleRateInHz() {
         return sampleRateInHz;
     }
@@ -58,9 +65,6 @@ public class Audio {
         return this;
     }
 
-    /**
-     * 音频声道数目
-     **/
     public Integer getChannels() {
         return channels;
     }
@@ -74,6 +78,32 @@ public class Audio {
         return this;
     }
 
+    public String getPcmFormat() {
+        return pcmFormat;
+    }
+
+    public void setPcmFormat(String pcmFormat) {
+        this.pcmFormat = pcmFormat;
+    }
+
+    public Audio withPcmFormat(String pcmFormat) {
+        this.pcmFormat = pcmFormat;
+        return this;
+    }
+
+    public VolumeAdjust getVolumeAdjust() {
+        return volumeAdjust;
+    }
+
+    public void setVolumeAdjust(VolumeAdjust volumeAdjust) {
+        this.volumeAdjust = volumeAdjust;
+    }
+
+    public Audio withVolumeAdjust(VolumeAdjust volumeAdjust) {
+        this.volumeAdjust = volumeAdjust;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -82,6 +112,8 @@ public class Audio {
         sb.append("    bitRateInBps: ").append(bitRateInBps).append("\n");
         sb.append("    sampleRateInHz: ").append(sampleRateInHz).append("\n");
         sb.append("    channels: ").append(channels).append("\n");
+        sb.append("    pcmFormat: ").append(pcmFormat).append("\n");
+        sb.append("    volumeAdjust: ").append(volumeAdjust).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

@@ -13,9 +13,10 @@
 
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Watermarks {
+public class Watermarks implements Serializable {
     private List<String> image = null;
 
     private List<String> timestamp = null;

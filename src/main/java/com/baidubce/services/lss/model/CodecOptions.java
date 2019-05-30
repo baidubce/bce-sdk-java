@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class CodecOptions {
+import java.io.Serializable;
+
+public class CodecOptions implements Serializable {
     private String profile = null;
 
     /**

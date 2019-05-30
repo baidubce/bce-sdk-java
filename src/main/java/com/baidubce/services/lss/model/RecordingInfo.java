@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class RecordingInfo {
+import java.io.Serializable;
+
+public class RecordingInfo implements Serializable {
     private String name = null;
 
     private String description = null;

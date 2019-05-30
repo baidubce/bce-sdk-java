@@ -13,10 +13,12 @@
 
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Represents the BOS information
  */
-public class Bos {
+public class Bos implements Serializable {
     private String bucket = null;
 
     private String region = null;

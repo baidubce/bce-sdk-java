@@ -14,12 +14,15 @@ package com.baidubce.model;
 
 import com.baidubce.BceResponseMetadata;
 
+import java.io.Serializable;
+
 /**
  * Represents the response from an BCE service, including the result payload and any response metadata. BCE response
  * metadata consists primarily of the BCE request ID, which can be used for debugging purposes when services aren't
  * acting as expected.
  */
-public class AbstractBceResponse {
+public class AbstractBceResponse implements Serializable {
+
     protected BceResponseMetadata metadata = new BceResponseMetadata();
 
     public BceResponseMetadata getMetadata() {

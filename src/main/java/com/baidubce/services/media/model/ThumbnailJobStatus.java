@@ -14,21 +14,49 @@
 package com.baidubce.services.media.model;
 
 public class ThumbnailJobStatus {
-
+    /**
+     * the thumbnail job Id
+     **/
     private String jobId = null;
-    
+
+    /**
+     * the thumbnail job status
+     **/
     private String jobStatus = null;
-    
+
+    /**
+     * the pipeline name of the thumbnail job
+     **/
     private String pipelineName = null;
-    
+
+    /**
+     * the source information of the thumbnail job
+     **/
     private ThumbnailSource source = null;
-    
+
+    /**
+     * the target information of the  thumbnail job
+     **/
     private ThumbnailTargetStatus target = null;
-    
+
+    /**
+     * the information that tells how to pick the thumbnails
+     **/
     private ThumbnailCapture capture = null;
 
-    private DelogoArea delogoArea = null;
+    /**
+     * delogo area
+     **/
+    private Area delogoArea = null;
 
+    /**
+     * crop area
+     **/
+    private Area crop = null;
+
+    /**
+     * error information
+     **/
     private MediaError error = null;
 
     public String getJobId() {
@@ -79,12 +107,20 @@ public class ThumbnailJobStatus {
         this.capture = capture;
     }
 
-    public DelogoArea getDelogoArea() {
+    public Area getDelogoArea() {
         return delogoArea;
     }
 
-    public void setDelogoArea(DelogoArea delogoArea) {
+    public void setDelogoArea(Area delogoArea) {
         this.delogoArea = delogoArea;
+    }
+
+    public Area getCrop() {
+        return crop;
+    }
+
+    public void setCrop(Area crop) {
+        this.crop = crop;
     }
 
     public MediaError getError() {
@@ -107,6 +143,9 @@ public class ThumbnailJobStatus {
         sb.append("    capture: ").append(capture).append("\n");
         if (delogoArea != null) {
             sb.append("    delogoArea: ").append(delogoArea).append("\n");
+        }
+        if (crop != null) {
+            sb.append("    crop: ").append(crop).append("\n");
         }
         if (error != null) {
             sb.append(error).append("\n");

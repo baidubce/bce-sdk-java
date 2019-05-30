@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/7/11.
  */
-public class InnerSessionStatistics {
+public class InnerSessionStatistics implements Serializable {
     private String date = null;
 
     private Long durationInMinute = null;

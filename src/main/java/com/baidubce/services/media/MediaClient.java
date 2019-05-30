@@ -31,6 +31,7 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.media.model.Area;
 import com.baidubce.services.media.model.Audio;
 import com.baidubce.services.media.model.Clip;
 import com.baidubce.services.media.model.CreateJobRequest;
@@ -50,8 +51,8 @@ import com.baidubce.services.media.model.DeletePresetRequest;
 import com.baidubce.services.media.model.DeletePresetResponse;
 import com.baidubce.services.media.model.DeleteWaterMarkRequest;
 import com.baidubce.services.media.model.DeleteWaterMarkResponse;
-import com.baidubce.services.media.model.DelogoArea;
 import com.baidubce.services.media.model.Encryption;
+import com.baidubce.services.media.model.ExtraCfg;
 import com.baidubce.services.media.model.GetJobRequest;
 import com.baidubce.services.media.model.GetJobResponse;
 import com.baidubce.services.media.model.GetMediaInfoOfFileRequest;
@@ -66,6 +67,7 @@ import com.baidubce.services.media.model.GetTranscodingJobRequest;
 import com.baidubce.services.media.model.GetTranscodingJobResponse;
 import com.baidubce.services.media.model.GetWaterMarkRequest;
 import com.baidubce.services.media.model.GetWaterMarkResponse;
+import com.baidubce.services.media.model.Insert;
 import com.baidubce.services.media.model.ListJobsRequest;
 import com.baidubce.services.media.model.ListJobsResponse;
 import com.baidubce.services.media.model.ListPipelinesRequest;
@@ -85,7 +87,10 @@ import com.baidubce.services.media.model.Target;
 import com.baidubce.services.media.model.ThumbnailCapture;
 import com.baidubce.services.media.model.ThumbnailSource;
 import com.baidubce.services.media.model.ThumbnailTarget;
+import com.baidubce.services.media.model.Timeline;
+import com.baidubce.services.media.model.TransCfg;
 import com.baidubce.services.media.model.Video;
+import com.baidubce.services.media.model.Watermarks;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -318,7 +323,7 @@ public class MediaClient extends AbstractBceClient {
      */
     public CreateTranscodingJobResponse createTranscodingJob(
             String pipelineName, String sourceKey, String targetKey, String presetName,
-            String watermarkId, DelogoArea delogoArea) {
+            String watermarkId, Area delogoArea) {
         CreateTranscodingJobRequest request = new CreateTranscodingJobRequest();
         request.setPipelineName(pipelineName);
         Source source = new Source();
@@ -389,7 +394,29 @@ public class MediaClient extends AbstractBceClient {
      */
     public CreateTranscodingJobResponse createTranscodingJob(
             String pipelineName, List<SourceClip> clips, String targetKey, String presetName,
-            String watermarkId, DelogoArea delogoArea) {
+            String watermarkId, Area delogoArea) {
+        return createTranscodingJob(pipelineName, clips, targetKey, presetName,
+                watermarkId, delogoArea, null, null);
+    }
+
+    /**
+     * Creates a new transcoder job which converts media files in BOS buckets with specified preset, watermarkId, and
+     * delogoArea.
+     *
+     * @param pipelineName The name of pipeline used by this job.
+     * @param clips    The keys of the source media file in the bucket specified in the pipeline.
+     * @param targetKey    The key of the target media file in the bucket specified in the pipeline.
+     * @param presetName   The name of the preset used by this job.
+     * @param watermarkId  Single watermarkId associated with the job.
+     * @param delogoArea   The delogo area (x, y, width, height).
+     * @param crop   The crop area (x, y, width, height).
+     * @param inserts   The list of Insert.
+     *
+     * @return The newly created job ID.
+     */
+    public CreateTranscodingJobResponse createTranscodingJob(
+            String pipelineName, List<SourceClip> clips, String targetKey, String presetName,
+            String watermarkId, Area delogoArea, Area crop, List<Insert> inserts) {
         CreateTranscodingJobRequest request = new CreateTranscodingJobRequest();
         request.setPipelineName(pipelineName);
         Source source = new Source();
@@ -406,6 +433,12 @@ public class MediaClient extends AbstractBceClient {
         }
         if (delogoArea != null) {
             target.setDelogoArea(delogoArea);
+        }
+        if (crop != null) {
+            target.setCrop(crop);
+        }
+        if (inserts != null) {
+            target.setInserts(inserts);
         }
         request.setTarget(target);
 
@@ -900,13 +933,50 @@ public class MediaClient extends AbstractBceClient {
     }
 
     /**
+     * Create a preset which help to convert media files on be played in a wide range of devices. This version
+     * contains all parameters for creating a preset except watermarkId, since watermarks and watermarkId is conflict.
+     *
+     * @param presetName  The name of the new preset.
+     * @param description The description of the new preset
+     * @param container   The container type for the output file. Valid values include mp4, flv, hls, mp3, m4a.
+     * @param transmux    If true, means only convert source media file to a different container format without changing
+     *            the file contents.
+     * @param clip        The clip property of the preset.
+     * @param audio       Specify the audio format of target file.
+     * @param video       Specify the video format of target file.
+     * @param encryption  Specify the encryption property of target file.
+     * @param watermarks  Specify the watermarks.
+     * @param transCfg    Specify the transcoding configuration.
+     * @param extraCfg    Specify the extra configuration.
+     *
+     */
+    public CreatePresetResponse createPreset(
+            String presetName, String description, String container, boolean transmux, Clip clip, Audio audio,
+            Video video, Encryption encryption, Watermarks watermarks, TransCfg transCfg, ExtraCfg extraCfg) {
+        CreatePresetRequest request = new CreatePresetRequest();
+        request.setPresetName(presetName);
+        request.setDescription(description);
+        request.setContainer(container);
+        request.setTransmux(transmux);
+        request.setClip(clip);
+        request.setAudio(audio);
+        request.setVideo(video);
+        request.setEncryption(encryption);
+        request.setWatermarks(watermarks);
+        request.setTransCfg(transCfg);
+        request.setExtraCfg(extraCfg);
+
+        return createPreset(request);
+    }
+
+    /**
      * Create a preset which help to convert media files on be played in a wide range of devices.
      * 
      * @param request The request object containing all options for deleting presets.
      */
     public CreatePresetResponse createPreset(CreatePresetRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
-        
+
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, PRESET);
 
         return invokeHttpClient(internalRequest, CreatePresetResponse.class);
@@ -1023,7 +1093,7 @@ public class MediaClient extends AbstractBceClient {
     }
     
     /**
-     * Creates a water mark and return water mark ID.
+     * Creates a watermark and return water mark ID.
      *
      * @param bucket  The bucket name of Bos object which you want to read.
      * @param key     The key name of Bos object which your want to read.
@@ -1044,7 +1114,7 @@ public class MediaClient extends AbstractBceClient {
     }
     
     /**
-     * Creates a water mark and return water mark ID.
+     * Creates a watermark and return water mark ID.
      *
      * @param bucket  The bucket name of Bos object which you want to read.
      * @param key     The key name of Bos object which your want to read.
@@ -1065,7 +1135,7 @@ public class MediaClient extends AbstractBceClient {
     }
     
     /**
-     * Creates a water mark and return water mark ID.
+     * Creates a watermark and return water mark ID.
      *
      * @param bucket  The bucket name of Bos object which you want to read.
      * @param key     The key name of Bos object which your want to read.
@@ -1089,7 +1159,40 @@ public class MediaClient extends AbstractBceClient {
 
         return createWaterMark(request);
     }
-    
+
+    /**
+     * Creates a watermark and return water mark ID.
+     *
+     * @param bucket  The bucket name of Bos object which you want to read.
+     * @param key     The key name of Bos object which your want to read.
+     * @param horizontalAlignment  The horizontal alignment, includes left, center, right.
+     * @param verticalAlignment    The vertical alignment, includes top, center, bottom.
+     * @param horizontalOffsetInPixel  The horizontal offset in pixels.
+     * @param verticalOffsetInPixel    The vertical offset in pixels.
+     * @param timeline    The vertical offset in pixels.
+     * @param repeated    The vertical offset in pixels.
+     * @param allowScaling    The vertical offset in pixels.
+     *
+     * @return watermarkId the unique ID of the new water mark.
+     */
+    public CreateWaterMarkResponse createWaterMark(
+            String bucket, String key, String horizontalAlignment, String verticalAlignment,
+            int horizontalOffsetInPixel, int verticalOffsetInPixel,
+            Timeline timeline, Integer repeated, Boolean allowScaling) {
+
+        CreateWaterMarkRequest request =
+                new CreateWaterMarkRequest().withBucket(bucket).withKey(key)
+                        .withHorizontalAlignment(horizontalAlignment)
+                        .withVerticalAlignment(verticalAlignment)
+                        .withHorizontalOffsetInPixel(horizontalOffsetInPixel)
+                        .withVerticalOffsetInPixel(verticalOffsetInPixel)
+                        .withTimeline(timeline)
+                        .withRepeated(repeated)
+                        .withAllowScaling(allowScaling);
+
+        return createWaterMark(request);
+    }
+
     /**
      * Creates a water mark and return water mark ID
      *
@@ -1215,7 +1318,7 @@ public class MediaClient extends AbstractBceClient {
      */
     public CreateThumbnailJobResponse createThumbnailJob(
             String pipelineName, String sourceKey, ThumbnailTarget target,
-            ThumbnailCapture capture, DelogoArea delogoArea) {
+            ThumbnailCapture capture, Area delogoArea) {
 
         ThumbnailSource source = new ThumbnailSource();
         source.setKey(sourceKey);
@@ -1223,6 +1326,32 @@ public class MediaClient extends AbstractBceClient {
         CreateThumbnailJobRequest request =
                 new CreateThumbnailJobRequest().withPipelineName(pipelineName).withSource(source).withTarget(target)
                         .withCapture(capture).withDelogoArea(delogoArea);
+
+        return createThumbnailJob(request);
+    }
+
+    /**
+     * Creates a thumbnail job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
+     * @param sourceKey The key of source object.
+     * @param target The property container of target object.
+     * @param capture The property container of thumbnail generating policies.
+     * @param delogoArea The property container of delogo Area.
+     * @param crop The property container of crop Area.
+     *
+     * @return the unique ID of the new thumbnail job.
+     */
+    public CreateThumbnailJobResponse createThumbnailJob(
+            String pipelineName, String sourceKey, ThumbnailTarget target,
+            ThumbnailCapture capture, Area delogoArea, Area crop) {
+
+        ThumbnailSource source = new ThumbnailSource();
+        source.setKey(sourceKey);
+
+        CreateThumbnailJobRequest request =
+                new CreateThumbnailJobRequest().withPipelineName(pipelineName).withSource(source).withTarget(target)
+                        .withCapture(capture).withDelogoArea(delogoArea).withCrop(crop);
 
         return createThumbnailJob(request);
     }

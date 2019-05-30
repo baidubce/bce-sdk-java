@@ -14,6 +14,7 @@ package com.baidubce.services.lss.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -403,7 +404,7 @@ public class GetStreamResponse extends AbstractBceResponse {
     /**
      * Represents statistics of a streaming stream
      */
-    public static class StreamingStatistics {
+    public static class StreamingStatistics implements Serializable {
         private Long bandwidthInBps = null;
 
         private Long playCount = null;

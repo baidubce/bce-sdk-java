@@ -13,9 +13,10 @@
 
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class LivePlay {
+public class LivePlay implements Serializable {
 
     private String rtmpUrl = null;
 

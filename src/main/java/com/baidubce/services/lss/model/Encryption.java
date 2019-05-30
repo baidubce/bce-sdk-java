@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Encryption {
+import java.io.Serializable;
+
+public class Encryption implements Serializable {
     private HlsEncryption hls = null;
 
     public HlsEncryption getHls() {

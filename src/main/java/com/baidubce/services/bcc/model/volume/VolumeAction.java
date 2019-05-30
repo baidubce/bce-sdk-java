@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -40,5 +40,15 @@ public enum VolumeAction {
     /**
      * The action to purchaseReserved the volume.
      */
-    purchaseReserved
+    purchaseReserved,
+
+    /**
+     * The action to modify the attribute of the volume.
+     */
+    modify,
+
+    /**
+     * The action to modify charge type of the volume.
+     */
+    modifyChargeType
 }

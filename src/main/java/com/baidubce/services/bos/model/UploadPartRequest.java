@@ -52,6 +52,27 @@ public class UploadPartRequest extends GenericUploadRequest {
      */
     private InputStream inputStream;
 
+    /**
+     * The xBceCrc of the newly uploaded part
+     */
+    private String xBceCrc;
+
+    /**
+     * Gets xBceCrc of the newly uploaded part.
+     * @return xBceCrc of the newly uploaded part.
+     */
+    public String getxBceCrc() {
+        return xBceCrc;
+    }
+
+    /**
+     * Sets xBceCrc of the newly uploaded part.
+     * @param xBceCrc The xBceCrc of the newly uploaded part.
+     */
+    public void setxBceCrc(String xBceCrc) {
+        this.xBceCrc = xBceCrc;
+    }
+
     public UploadPartRequest() {
         super();
     }

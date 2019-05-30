@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -62,6 +62,11 @@ public class SnapshotModel {
      * The description of the snapshot.
      */
     private String desc;
+
+    /**
+     * The time when the snapshot will be expired.
+     */
+    private Date expireTime;
 
     public String getId() {
         return id;
@@ -127,6 +132,14 @@ public class SnapshotModel {
         this.desc = desc;
     }
 
+    public Date getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(Date expireTime) {
+        this.expireTime = expireTime;
+    }
+
     @Override
     public String toString() {
         return "SnapshotModel{"
@@ -138,6 +151,7 @@ public class SnapshotModel {
                 + ", createMethod='" + createMethod + '\''
                 + ", volumeId='" + volumeId + '\''
                 + ", desc='" + desc + '\''
+                + ", expireTime='" + expireTime + '\''
                 + '}';
     }
 }

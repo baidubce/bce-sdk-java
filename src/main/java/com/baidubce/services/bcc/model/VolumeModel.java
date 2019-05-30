@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -85,6 +85,31 @@ public class VolumeModel {
      * the name of available zone
      */
     private String zoneName;
+
+    /**
+     * The id of region
+     */
+    private String regionId;
+
+    /**
+     * The count of snapshots on the disk
+     */
+    private String snapshotNum;
+
+    /**
+     * The snapshotId for creating the volume
+     */
+    private String sourceSnapshotId;
+
+    /**
+     * The snapshotPolicy of the volume
+     */
+    private AutoSnapshotPolicyModel autoSnapshotPolicy;
+
+    /**
+     * The list of bonded tags.
+     */
+    private List<TagModel> tags;
 
     public String getId() {
         return id;
@@ -182,6 +207,46 @@ public class VolumeModel {
         this.zoneName = zoneName;
     }
 
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(String regionId) {
+        this.regionId = regionId;
+    }
+
+    public String getSnapshotNum() {
+        return snapshotNum;
+    }
+
+    public void setSnapshotNum(String snapshotNum) {
+        this.snapshotNum = snapshotNum;
+    }
+
+    public String getSourceSnapshotId() {
+        return sourceSnapshotId;
+    }
+
+    public void setSourceSnapshotId(String sourceSnapshotId) {
+        this.sourceSnapshotId = sourceSnapshotId;
+    }
+
+    public AutoSnapshotPolicyModel getAutoSnapshotPolicy() {
+        return autoSnapshotPolicy;
+    }
+
+    public void setAutoSnapshotPolicy(AutoSnapshotPolicyModel autoSnapshotPolicy) {
+        this.autoSnapshotPolicy = autoSnapshotPolicy;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "VolumeModel{"
@@ -189,13 +254,19 @@ public class VolumeModel {
                 + ", name='" + name + '\''
                 + ", diskSizeInGB=" + diskSizeInGB
                 + ", paymentTiming='" + paymentTiming + '\''
-                + ", createTime='" + createTime + '\''
-                + ", expireTime='" + expireTime + '\''
+                + ", createTime=" + createTime
+                + ", expireTime=" + expireTime
                 + ", status='" + status + '\''
                 + ", type='" + type + '\''
+                + ", storageType='" + storageType + '\''
                 + ", desc='" + desc + '\''
                 + ", attachments=" + attachments
                 + ", zoneName='" + zoneName + '\''
+                + ", regionId='" + regionId + '\''
+                + ", snapshotNum='" + snapshotNum + '\''
+                + ", sourceSnapshotId='" + sourceSnapshotId + '\''
+                + ", autoSnapshotPolicy=" + autoSnapshotPolicy
+                + ", tags=" + tags
                 + '}';
     }
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Created on 2017/8/7 13:39.
  *
- * @author yuchenbei@baidu.com
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MediaMeta {

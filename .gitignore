@@ -1,0 +1,10 @@
+*.iml
+.classpath
+.project
+.settings/
+log/
+target/
+.idea/
+eagle.py
+.DS_Store
+/bin/

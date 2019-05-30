@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Capture {
+import java.io.Serializable;
+
+public class Capture implements Serializable {
     private String mode = null;
 
     private Integer startTimeInSecond = null;

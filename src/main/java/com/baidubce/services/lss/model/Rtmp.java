@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Rtmp {
+import java.io.Serializable;
+
+public class Rtmp implements Serializable {
     /**
      * 是否缓存一个gop
      */

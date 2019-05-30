@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Baidu, Inc.
+ * Copyright 2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -751,6 +751,7 @@ public class DocClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 HttpMethodName.GET, request, DOC, request.getDocumentId());
         internalRequest.addParameter("read", null);
+        internalRequest.addParameter("expireInSeconds", String.valueOf(request.getExpireInSeconds()));
         ReadDocumentResponse response;
         try {
             response = this.invokeHttpClient(internalRequest, ReadDocumentResponse.class);

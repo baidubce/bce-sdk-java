@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/7/11.
  */
-public class SessionAggregate {
+public class SessionAggregate implements Serializable {
     private Long durationInMinute = null;
 
     private Long peakPlayCount = null;

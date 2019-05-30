@@ -3,7 +3,6 @@ package com.baidubce.services.tsdb.model;
 /**
  * Field filter. Support filter by value in query.
  *
- * @author Zhu Hongwei(zhuhongwei@baidu.com)
  */
 public class FieldFilter {
 

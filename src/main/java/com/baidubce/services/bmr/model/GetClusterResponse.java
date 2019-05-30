@@ -31,6 +31,8 @@ public class GetClusterResponse extends AbstractBceResponse {
     private boolean autoTerminate;
     private ClusterStatus status;
     private List<Application> applications;
+    private boolean serviceHaEnabled;
+    private boolean safeModeEnabled;
 
     public String getId() {
         return id;
@@ -94,5 +96,21 @@ public class GetClusterResponse extends AbstractBceResponse {
 
     public void setApplications(List<Application> applications) {
         this.applications = applications;
+    }
+
+    public boolean getServiceHaEnabled() {
+        return serviceHaEnabled;
+    }
+
+    public void setServiceHaEnabled(boolean serviceHaEnabled) {
+        this.serviceHaEnabled = serviceHaEnabled;
+    }
+
+    public boolean getSafeModeEnabled() {
+        return safeModeEnabled;
+    }
+
+    public void setSafeModeEnabled(boolean safeModeEnabled) {
+        this.safeModeEnabled = safeModeEnabled;
     }
 }

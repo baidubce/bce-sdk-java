@@ -2,12 +2,13 @@ package com.baidubce.services.lss.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by zhengfeng on 17/10/17.
  */
-public class RealTimeStreamStatistics {
+public class RealTimeStreamStatistics implements Serializable {
 
     private String stream;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,6 +12,9 @@
  */
 package com.baidubce.services.bmr.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represent the configuration for an instance group.
  *
@@ -23,6 +26,9 @@ public class InstanceGroupConfig {
     private String type;
     private String instanceType;
     private int instanceCount;
+    private int rootDiskSizeInGB;
+    private String rootDiskMediumType;
+    private List<CdsItem> cds = new ArrayList<CdsItem>();
 
     public String getName() {
         return name;
@@ -103,6 +109,48 @@ public class InstanceGroupConfig {
      */
     public InstanceGroupConfig withInstanceCount(int instanceCount) {
         this.setInstanceCount(instanceCount);
+        return this;
+    }
+
+    public int getRootDiskSizeInGB() {
+        return rootDiskSizeInGB;
+    }
+
+    public void setRootDiskSizeInGB(int rootDiskSizeInGB) {
+        this.rootDiskSizeInGB = rootDiskSizeInGB;
+    }
+
+    public InstanceGroupConfig withRootDiskSizeInGB(int rootDiskSizeInGB) {
+        this.rootDiskSizeInGB = rootDiskSizeInGB;
+        return  this;
+    }
+
+    public String getRootDiskMediumType() {
+        return rootDiskMediumType;
+    }
+
+    public void setRootDiskMediumType(String rootDiskMediumType) {
+        this.rootDiskMediumType = rootDiskMediumType;
+    }
+
+    public InstanceGroupConfig withRootDiskMediumType(String rootDiskMediumType) {
+        this.rootDiskMediumType = rootDiskMediumType;
+        return this;
+    }
+
+    public List<CdsItem> getCds() {
+        return cds;
+    }
+
+    public void setCds(List<CdsItem> cds) {
+        this.cds = cds;
+    }
+
+    public InstanceGroupConfig withCds(CdsItem cdsItem) {
+        if (this.cds == null) {
+            this.cds = new ArrayList<CdsItem>();
+        }
+        this.cds.add(cdsItem);
         return this;
     }
 }

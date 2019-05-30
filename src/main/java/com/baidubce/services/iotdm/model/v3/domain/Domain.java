@@ -1,0 +1,94 @@
+/*
+ * Copyright 2017 Baidu, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+package com.baidubce.services.iotdm.model.v3.domain;
+
+public class Domain {
+    /**
+     * Name of Domain .
+     */
+    private String name;
+    /**
+     * Description of Domain .
+     */
+    private String description;
+    /**
+     * Type of Domain .
+     */
+    private DomainType type;
+    /**
+     * Create time of Domain .
+     */
+    private Long createTime;
+    /**
+     * Last updated time of Domain .
+     */
+    private Long lastUpdatedTime;
+    /**
+     * Device number in Domain .
+     */
+    private Integer deviceNum;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public DomainType getType() {
+        return type;
+    }
+
+    public void setType(DomainType type) {
+        this.type = type;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getLastUpdatedTime() {
+        return lastUpdatedTime;
+    }
+
+    public void setLastUpdatedTime(Long lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
+    }
+
+    public Integer getDeviceNum() {
+        return deviceNum;
+    }
+
+    public void setDeviceNum(Integer deviceNum) {
+        this.deviceNum = deviceNum;
+    }
+
+    public enum DomainType {
+        ROOT,   // Root Privilege .
+        NORMAL; // Normal Privilege .
+
+    }
+}

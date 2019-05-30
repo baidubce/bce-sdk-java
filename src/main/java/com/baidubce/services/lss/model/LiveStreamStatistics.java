@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/10/19.
  */
-public class LiveStreamStatistics {
+public class LiveStreamStatistics implements Serializable {
 
     private String startDate = null;
 

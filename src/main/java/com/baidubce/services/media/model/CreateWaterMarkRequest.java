@@ -17,12 +17,50 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 
 public class CreateWaterMarkRequest extends AbstractBceRequest {
+    /**
+     * Bos bucket
+     **/
     private String bucket = null;
+
+    /**
+     * Bos key
+     **/
     private String key = null;
+
+    /**
+     * vertical alignment, options include left, center, right
+     **/
     private String verticalAlignment;
+
+    /**
+     * horizontal alignment, options include left, center, right
+     **/
     private String horizontalAlignment;
+
+    /**
+     * vertical offset in pixel
+     **/
     private Integer verticalOffsetInPixel;
+
+    /**
+     * horizontal offset in pixel
+     **/
     private Integer horizontalOffsetInPixel;
+
+    /**
+     * display timeline setting
+     **/
+    private Timeline timeline = null;
+
+    /**
+     * display repeated times, 0 for infinite times
+     **/
+    private Integer repeated = null;
+
+    /**
+     * allow watermarks to scale automatically
+     */
+    private Boolean allowScaling = null;
 
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
@@ -107,6 +145,45 @@ public class CreateWaterMarkRequest extends AbstractBceRequest {
         return this;
     }
 
+    public Timeline getTimeline() {
+        return timeline;
+    }
+
+    public void setTimeline(Timeline timeline) {
+        this.timeline = timeline;
+    }
+
+    public CreateWaterMarkRequest withTimeline(Timeline timeline) {
+        this.timeline = timeline;
+        return this;
+    }
+
+    public Integer getRepeated() {
+        return repeated;
+    }
+
+    public void setRepeated(Integer repeated) {
+        this.repeated = repeated;
+    }
+
+    public CreateWaterMarkRequest withRepeated(Integer repeated) {
+        this.repeated = repeated;
+        return this;
+    }
+
+    public Boolean getAllowScaling() {
+        return allowScaling;
+    }
+
+    public void setAllowScaling(Boolean allowScaling) {
+        this.allowScaling = allowScaling;
+    }
+
+    public CreateWaterMarkRequest withAllowScaling(Boolean allowScaling) {
+        this.allowScaling = allowScaling;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -117,6 +194,9 @@ public class CreateWaterMarkRequest extends AbstractBceRequest {
         sb.append("    horizontalAlignment: ").append(horizontalAlignment).append("\n");
         sb.append("    verticalOffsetInPixel: ").append(verticalOffsetInPixel).append("\n");
         sb.append("    horizontalOffsetInPixel: ").append(horizontalOffsetInPixel).append("\n");
+        sb.append("    timeline: ").append(timeline).append("\n");
+        sb.append("    repeated: ").append(repeated).append("\n");
+        sb.append("    allowScaling: ").append(allowScaling).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

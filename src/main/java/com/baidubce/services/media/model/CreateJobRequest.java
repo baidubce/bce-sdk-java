@@ -21,13 +21,21 @@ import com.baidubce.model.AbstractBceRequest;
 
 public class CreateJobRequest extends AbstractBceRequest {
 
+    /**
+     * the pipelineName of the job
+     **/
     private String pipelineName = null;
-    private Source source       = null;
-    private Target target       = null;
 
     /**
-     * 任务所属的pipelineName
+     * source information
      **/
+    private Source source       = null;
+
+    /**
+     * target and settings information
+     **/
+    private Target target       = null;
+
     public String getPipelineName() {
         return pipelineName;
     }
@@ -43,9 +51,6 @@ public class CreateJobRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * 输入的原始信息的集合
-     **/
     public Source getSource() {
         return source;
     }
@@ -61,9 +66,6 @@ public class CreateJobRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * 输出信息的结合
-     **/
     public Target getTarget() {
         return target;
     }

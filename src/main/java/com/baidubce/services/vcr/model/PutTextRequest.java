@@ -20,6 +20,7 @@ import com.baidubce.model.AbstractBceRequest;
  */
 public class PutTextRequest extends AbstractBceRequest {
     private String text;
+    private String preset;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -35,10 +36,19 @@ public class PutTextRequest extends AbstractBceRequest {
         this.text = text;
     }
 
+    public String getPreset() {
+        return preset;
+    }
+
+    public void setPreset(String preset) {
+        this.preset = preset;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("PutTextRequest{");
         sb.append("text='").append(text).append('\'');
+        sb.append(", preset='").append(preset).append('\'');
         sb.append('}');
         return sb.toString();
     }

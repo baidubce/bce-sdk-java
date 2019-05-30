@@ -1,3 +1,11 @@
+/*
+ * Copyright 2019 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law * or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.baidubce.services.binaryparser;
 
 import com.baidubce.AbstractBceClient;
@@ -19,6 +27,7 @@ import com.baidubce.services.binaryparser.model.CreateBinaryParserRequest;
 import com.baidubce.services.binaryparser.model.ListBinaryParserRequest;
 import com.baidubce.services.binaryparser.model.ListBinaryParserResponse;
 import com.baidubce.services.binaryparser.model.UpdateBinaryParserRequest;
+import com.baidubce.services.binaryparser.model.NormalResponse;
 import com.baidubce.services.iotalarm.model.CommonResponse;
 import com.baidubce.services.iotalarm.model.UuidResponse;
 import com.baidubce.util.HttpUtils;
@@ -30,12 +39,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Client for binary parser service
  * Created by yuanyoujun on 2017/9/2.
  */
 public class BinaryParserClient extends AbstractBceClient {
     private static final String ENDPOINT = "parser.iot.gz.baidubce.com";
     private static final String VERSION = "v1";
     private static final String BINPARSER = "binparser";
+    private static final String CLEAR_ERROR = "clearerror";
     private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
     private static final String DELETE = "delete";
 
@@ -84,6 +95,12 @@ public class BinaryParserClient extends AbstractBceClient {
         InternalRequest internalRequest =
                 createRequest(new GenericAccountRequest(), HttpMethodName.DELETE, BINPARSER, uuid);
         return this.invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public NormalResponse clearError(String uuid) {
+        InternalRequest internalRequest =
+                createRequest(new GenericAccountRequest(), HttpMethodName.PUT, BINPARSER, uuid, CLEAR_ERROR);
+        return this.invokeHttpClient(internalRequest, NormalResponse.class);
     }
 
     private InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,

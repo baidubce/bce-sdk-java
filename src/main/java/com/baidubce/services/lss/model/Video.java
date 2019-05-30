@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Video {
+import java.io.Serializable;
+
+public class Video implements Serializable {
     private String        codec           = null;
     private CodecOptions codecOptions    = null;
     private Integer      bitRateInBps    = null;

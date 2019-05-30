@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Baidu, Inc.
+ * Copyright 2016-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.HashSet;
 
 import com.baidubce.AbstractBceClient;
@@ -63,6 +64,8 @@ import com.baidubce.services.cdn.model.GetPurgeStatusRequest;
 import com.baidubce.services.cdn.model.GetPurgeStatusResponse;
 import com.baidubce.services.cdn.model.GetStatAvgSpeedRequest;
 import com.baidubce.services.cdn.model.GetStatAvgSpeedResponse;
+import com.baidubce.services.cdn.model.GetStatMetricRequest;
+import com.baidubce.services.cdn.model.GetStatMetricResponse;
 import com.baidubce.services.cdn.model.CreateDomainRequest;
 import com.baidubce.services.cdn.model.CreateDomainResponse;
 import com.baidubce.services.cdn.model.DeleteDomainRequest;
@@ -941,6 +944,31 @@ public class CdnClient extends AbstractBceClient {
         internalRequest.addParameter("ip", request.getIp());
         
         return this.invokeHttpClient(internalRequest, DescribeIpResponse.class);
+    }
+    
+    /**
+     * Get statistics metric with specified attributes (stat_version_2.0).
+     *
+     * @param request
+     *            The request containing all the options related to the statistics.
+     * @return Details of statistics
+     */
+    public GetStatMetricResponse getStatMetricData(GetStatMetricRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, STAT, "/query");
+        // this.attachRequestToBody(request, internalRequest);
+        byte[] content;
+        try {
+            Map<String, Object> params = request.toMap();
+            // In order to be compatible with the interface's old parameter, which was not be in camel-style.
+            params.put("key_type", request.getKeyType());
+            content = JsonUtils.toJsonString(params).getBytes("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("utf-8 encoding not supported!", e);
+        }
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(content.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json; charset=utf-8");
+        internalRequest.setContent(RestartableInputStream.wrap(content));
+        return this.invokeHttpClient(internalRequest, GetStatMetricResponse.class);
     }
     
     /**

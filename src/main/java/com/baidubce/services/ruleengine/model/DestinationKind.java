@@ -12,6 +12,9 @@
  */
 package com.baidubce.services.ruleengine.model;
 
+/**
+ * Kinds of rule destination
+ */
 public class DestinationKind {
     public static final String MQTT = "MQTT";
     public static final String TSDB = "TSDB";
@@ -20,4 +23,8 @@ public class DestinationKind {
     public static final String MQTT_DYNAMIC = "MQTT_DYNAMIC";
     public static final String SMS = "SMS";
     public static final String FUNCTION = "FUNCTION";
+    public static final String BIN2JSON = "BIN2JSON";
+    public static final String RULE = "RULE";
+    public static final String RDS = "RDS";
+    public static final String BTS = "BTS";
 }

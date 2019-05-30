@@ -2,6 +2,7 @@ package com.baidubce.services.lss.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class GetAllDomainsBandwidthResponse extends AbstractBceResponse {
         return sb.toString();
     }
 
-    public static class BandwidthStatistics {
+    public static class BandwidthStatistics implements Serializable {
 
         private String timestamp = null;
 

@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/10/14.
  */
-public class LiveStream {
+public class LiveStream implements Serializable {
     private String sessionId = null;
 
     private String playDomain = null;

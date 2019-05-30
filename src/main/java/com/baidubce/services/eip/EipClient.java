@@ -12,6 +12,15 @@
  */
 package com.baidubce.services.eip;
 
+import static com.baidubce.util.Validate.checkNotNull;
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -38,15 +47,6 @@ import com.baidubce.services.eip.model.UnbindEipRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static com.baidubce.util.Validate.checkNotNull;
-import static com.baidubce.util.Validate.checkStringNotEmpty;
 
 /**
  * Provides the client for accessing the Elastic Ip Service (EIP).

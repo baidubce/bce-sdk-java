@@ -12,6 +12,19 @@
  */
 package com.baidubce.services.subnet;
 
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -37,17 +50,6 @@ import com.baidubce.services.subnet.model.NetworkAction;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides the client for accessing the Baidu Cloud network Service subnet part.
@@ -217,6 +219,15 @@ public class SubnetClient extends AbstractBceClient {
         }
         if (request.getMaxKeys() > 0) {
             internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        if (StringUtils.isNotEmpty(request.getVpcId())) {
+            internalRequest.addParameter("vpcId", request.getVpcId());
+        }
+        if (StringUtils.isNotEmpty(request.getZoneName())) {
+            internalRequest.addParameter("zoneName", request.getZoneName());
+        }
+        if (StringUtils.isNotEmpty(request.getSubnetType())) {
+            internalRequest.addParameter("subnetType", request.getSubnetType());
         }
         return invokeHttpClient(internalRequest, ListSubnetsResponse.class);
     }

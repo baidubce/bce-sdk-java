@@ -16,5 +16,5 @@ package com.baidubce.http;
  * The name of http method.
  */
 public enum HttpMethodName {
-    GET, POST, PUT, DELETE, HEAD;
+    GET, POST, PUT, DELETE, HEAD, TRACE, PATCH, CONNECT, OPTIONS, ANY;
 }

@@ -85,4 +85,12 @@ public class GetBucketAclResponse extends BosResponse {
         this.accessControlList = accessControlList;
     }
 
+    @Override
+    public String toString() {
+        return "GetBucketAclResponse{"
+                + "version=" + version
+                + ", owner=" + owner
+                + ", accessControlList=" + accessControlList
+                + '}';
+    }
 }

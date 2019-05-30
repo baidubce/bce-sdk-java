@@ -1,8 +1,8 @@
 package com.baidubce.services.vpc.model;
 
-import com.baidubce.services.subnet.model.Subnet;
-
 import java.util.List;
+
+import com.baidubce.services.subnet.model.Subnet;
 
 /**
  * vpc detail info model

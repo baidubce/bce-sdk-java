@@ -12,8 +12,8 @@
  */
 package com.baidubce.services.bcc.model.instance;
 
-import com.baidubce.services.bcc.model.InstanceModel;
 import com.baidubce.model.ListResponse;
+import com.baidubce.services.bcc.model.InstanceModel;
 
 import java.util.List;
 

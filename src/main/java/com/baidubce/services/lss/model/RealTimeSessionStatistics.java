@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class RealTimeSessionStatistics {
+import java.io.Serializable;
+
+public class RealTimeSessionStatistics implements Serializable {
     private Long bandwidthInBps = null;
 
     private Long playCount = null;

@@ -16,14 +16,61 @@ package com.baidubce.services.media.model;
 import com.baidubce.model.AbstractBceResponse;
 
 public class GetWaterMarkResponse extends AbstractBceResponse {
+    /**
+     * the auto-generated watermark Id
+     **/
     private String watermarkId = null;
+
+    /**
+     * the create time of the watermark
+     **/
     private String createTime = null;
+
+    /**
+     * Bos bucket
+     **/
     private String bucket = null;
+
+    /**
+     * Bos key
+     **/
     private String key = null;
+
+    /**
+     * vertical offset in pixel
+     **/
     private Integer verticalOffsetInPixel = null;
+
+
+    /**
+     * horizontal offset in pixel
+     **/
     private Integer horizontalOffsetInPixel = null;
+
+    /**
+     * vertical alignment, options include left, center, right
+     **/
     private String verticalAlignment = null;
+
+    /**
+     * horizontal alignment, options include left, center, right
+     **/
     private String horizontalAlignment = null;
+
+    /**
+     * display timeline setting
+     **/
+    private Timeline timeline = null;
+
+    /**
+     * display repeated times, 0 for infinite times
+     **/
+    private Integer repeated = null;
+
+    /**
+     * allow watermarks to scale automatically
+     */
+    private Boolean allowScaling = null;
     
     public String getWatermarkId() {
         return watermarkId;
@@ -89,6 +136,30 @@ public class GetWaterMarkResponse extends AbstractBceResponse {
         this.horizontalAlignment = horizontalAlignment;
     }
 
+    public Timeline getTimeline() {
+        return timeline;
+    }
+
+    public void setTimeline(Timeline timeline) {
+        this.timeline = timeline;
+    }
+
+    public Integer getRepeated() {
+        return repeated;
+    }
+
+    public void setRepeated(Integer repeated) {
+        this.repeated = repeated;
+    }
+
+    public Boolean getAllowScaling() {
+        return allowScaling;
+    }
+
+    public void setAllowScaling(Boolean allowScaling) {
+        this.allowScaling = allowScaling;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -101,6 +172,9 @@ public class GetWaterMarkResponse extends AbstractBceResponse {
         sb.append("    verticalAlignment: ").append(verticalAlignment).append("\n");
         sb.append("    verticalOffsetInPixel: ").append(verticalOffsetInPixel).append("\n");
         sb.append("    horizontalOffsetInPixel: ").append(horizontalOffsetInPixel).append("\n");
+        sb.append("    timeline: ").append(timeline).append("\n");
+        sb.append("    repeated: ").append(repeated).append("\n");
+        sb.append("    allowScaling: ").append(allowScaling).append("\n");
         sb.append("}\n");
         return sb.toString();
     } 

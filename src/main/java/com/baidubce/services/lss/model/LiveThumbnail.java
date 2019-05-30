@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class LiveThumbnail {
+import java.io.Serializable;
+
+public class LiveThumbnail implements Serializable {
     private Target target = null;
 
     private Capture capture = null;

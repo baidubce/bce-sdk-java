@@ -99,6 +99,11 @@ public class ObjectMetadata {
 
     private String storageClass;
 
+    /**
+     * The CRC value of the object. CRC(Cyclic Redundancy Check)
+     */
+    private String xBceCrc;
+
     public ObjectMetadata() {
     }
 
@@ -120,6 +125,7 @@ public class ObjectMetadata {
         this.setObjectType(other.getObjectType());
         this.setCacheControl(other.getCacheControl());
         this.setStorageClass(other.getStorageClass());
+        this.setxBceCrc(other.getxBceCrc());
     }
 
     /**
@@ -436,6 +442,9 @@ public class ObjectMetadata {
         if (this.storageClass != null) {
             builder.append(", storageClass=").append(this.storageClass);
         }
+        if (this.xBceCrc != null) {
+            builder.append(", xBceCrc=").append(this.xBceCrc);
+        }
         builder.append(']');
         return builder.toString();
     }
@@ -478,5 +487,21 @@ public class ObjectMetadata {
 
     public void setStorageClass(String storageClass) {
         this.storageClass = storageClass;
+    }
+
+    /**
+     * Gets the crc of object.
+     * @return the crc of object.
+     */
+    public String getxBceCrc() {
+        return xBceCrc;
+    }
+
+    /**
+     * Sets the crc of object.
+     * @return the crc of object.
+     */
+    public void setxBceCrc(String xBceCrc) {
+        this.xBceCrc = xBceCrc;
     }
 }

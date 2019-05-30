@@ -18,6 +18,12 @@ package com.baidubce.services.iothub.model;
 public class QueryPrincipalResponse extends QueryResponse {
     private String principalName;
 
+    private String certificate;
+
+    private Boolean isWithCert;
+
+    private String clientCertCA;
+
     public String getPrincipalName() {
         return principalName;
     }
@@ -25,4 +31,29 @@ public class QueryPrincipalResponse extends QueryResponse {
     public void setPrincipalName(String principalName) {
         this.principalName = principalName;
     }
+
+    public String getCertificate() {
+        return certificate;
+    }
+
+    public void setCertificate(String certificate) {
+        this.certificate = certificate;
+    }
+
+    public Boolean getIsWithCert() {
+        return this.isWithCert;
+    }
+
+    public void setIsWithCert(Boolean withCert) {
+        this.isWithCert = withCert;
+    }
+
+    public String getClientCertCA() {
+        return clientCertCA;
+    }
+
+    public void setClientCertCA(String clientCertCA) {
+        this.clientCertCA = clientCertCA;
+    }
+
 }

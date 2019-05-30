@@ -12,51 +12,11 @@
  */
 package com.baidubce.services.iotdm.model.v3.device;
 
-import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.iotdm.model.AccessDetailResponse;
 
 /**
  * Represent the response of getting the access detail of a device.
  */
-public class DeviceAccessDetailResponse extends AbstractBceResponse {
-
-    private String tcpEndpoint;
-
-    private String sslEndpoint;
-
-    private String username;
-
-    private String key;
-
-    public String getTcpEndpoint() {
-        return tcpEndpoint;
-    }
-
-    public void setTcpEndpoint(String tcpEndpoint) {
-        this.tcpEndpoint = tcpEndpoint;
-    }
-
-    public String getSslEndpoint() {
-        return sslEndpoint;
-    }
-
-    public void setSslEndpoint(String sslEndpoint) {
-        this.sslEndpoint = sslEndpoint;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
+public class DeviceAccessDetailResponse extends AccessDetailResponse {
 
 }

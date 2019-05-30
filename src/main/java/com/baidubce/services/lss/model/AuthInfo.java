@@ -13,10 +13,12 @@
 
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Represents the authentication settings.
  */
-public class AuthInfo {
+public class AuthInfo implements Serializable {
     private Boolean push = null;
 
     private Boolean play = null;

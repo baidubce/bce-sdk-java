@@ -64,6 +64,10 @@ public interface Headers {
 
     public static final String BCE_ACL = "x-bce-acl";
 
+    public static final String BCE_ACL_GRANT_READ = "x-bce-grant-read";
+
+    public static final String BCE_ACL_GRANT_FULL_CONTROL = "x-bce-grant-full-control";
+
     public static final String BCE_CONTENT_SHA256 = "x-bce-content-sha256";
 
     public static final String BCE_COPY_METADATA_DIRECTIVE = "x-bce-metadata-directive";
@@ -80,11 +84,15 @@ public interface Headers {
 
     public static final String BCE_USER_METADATA_PREFIX = "x-bce-meta-";
 
+    public static final String BCE_CONTENT_CRC32 = "x-bce-content-crc32";
+
     /*
      * BOS HTTP Headers
      */
 
     public static final String BCE_COPY_SOURCE = "x-bce-copy-source";
+
+    public static final String BCE_COPY_SOURCE_RANGE = "x-bce-copy-source-range";
 
     public static final String BCE_COPY_SOURCE_IF_MODIFIED_SINCE = "x-bce-copy-source-if-modified-since";
 

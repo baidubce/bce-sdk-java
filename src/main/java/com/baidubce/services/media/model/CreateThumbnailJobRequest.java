@@ -17,16 +17,35 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 
 public class CreateThumbnailJobRequest extends AbstractBceRequest {
-    
+    /**
+     * the pipeline name of the thumbnail job
+     **/
     private String pipelineName = null;
 
+    /**
+     * the source information of the thumbnail job
+     **/
     private ThumbnailSource source = null;
-    
+
+    /**
+     * the target information of the  thumbnail job
+     **/
     private ThumbnailTarget target = null;
-    
+
+    /**
+     * the information that tells how to pick the thumbnails
+     **/
     private ThumbnailCapture capture = null;
 
-    private DelogoArea delogoArea = null;
+    /**
+     * delogo area setting
+     **/
+    private Area delogoArea = null;
+
+    /**
+     * crop area setting
+     **/
+    private Area crop = null;
 
     public String getPipelineName() {
         return pipelineName;
@@ -80,16 +99,29 @@ public class CreateThumbnailJobRequest extends AbstractBceRequest {
         return this;
     }
 
-    public DelogoArea getDelogoArea() {
+    public Area getDelogoArea() {
         return delogoArea;
     }
 
-    public void setDelogoArea(DelogoArea delogoArea) {
+    public void setDelogoArea(Area delogoArea) {
         this.delogoArea = delogoArea;
     }
 
-    public CreateThumbnailJobRequest withDelogoArea(DelogoArea delogoArea) {
+    public CreateThumbnailJobRequest withDelogoArea(Area delogoArea) {
         this.delogoArea = delogoArea;
+        return this;
+    }
+
+    public Area getCrop() {
+        return crop;
+    }
+
+    public void setCrop(Area crop) {
+        this.crop = crop;
+    }
+
+    public CreateThumbnailJobRequest withCrop(Area crop) {
+        this.crop = crop;
         return this;
     }
 

@@ -13,9 +13,10 @@
 
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class LiveSession {
+public class LiveSession implements Serializable {
     private String sessionId = null;
 
     private String description = null;

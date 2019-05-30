@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/10/17.
  */
-public class LiveStatisticsSummary {
+public class LiveStatisticsSummary implements Serializable {
 
     private Long downStreamInByte = null;
 

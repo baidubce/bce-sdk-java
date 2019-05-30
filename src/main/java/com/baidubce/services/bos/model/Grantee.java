@@ -16,6 +16,7 @@ package com.baidubce.services.bos.model;
  * Represents the grantee of an Baidu Bos bucket.
  */
 public class Grantee {
+
     private String id;
 
     /**

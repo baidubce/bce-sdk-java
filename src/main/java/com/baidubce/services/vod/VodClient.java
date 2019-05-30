@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 package com.baidubce.services.vod;
 
 import static com.baidubce.util.Validate.checkIsTrue;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.baidubce.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,45 +42,51 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bos.BosClient;
 import com.baidubce.services.bos.BosClientConfiguration;
 import com.baidubce.services.bos.model.ObjectMetadata;
+import com.baidubce.services.vod.FileUploadSession;
+import com.baidubce.services.vod.model.ActionAttributes;
 import com.baidubce.services.vod.model.CreateMediaResourceResponse;
+import com.baidubce.services.vod.model.CreateNotificationRequest;
+import com.baidubce.services.vod.model.CreateNotificationResponse;
 import com.baidubce.services.vod.model.DeleteMediaResourceRequest;
 import com.baidubce.services.vod.model.DeleteMediaResourceResponse;
+import com.baidubce.services.vod.model.DeleteNotificationRequest;
+import com.baidubce.services.vod.model.DeleteNotificationResponse;
+import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoRequest;
+import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoResponse;
 import com.baidubce.services.vod.model.GenerateMediaIdRequest;
 import com.baidubce.services.vod.model.GenerateMediaIdResponse;
+import com.baidubce.services.vod.model.GenerateMediaPlayerCodeRequest;
+import com.baidubce.services.vod.model.GenerateMediaPlayerCodeResponse;
 import com.baidubce.services.vod.model.GetMediaResourceRequest;
 import com.baidubce.services.vod.model.GetMediaResourceResponse;
+import com.baidubce.services.vod.model.GetMediaSourceDownloadRequest;
+import com.baidubce.services.vod.model.GetMediaSourceDownloadResponse;
+import com.baidubce.services.vod.model.GetMediaStatisticRequest;
+import com.baidubce.services.vod.model.GetMediaStatisticResponse;
+import com.baidubce.services.vod.model.GetNotificationRequest;
+import com.baidubce.services.vod.model.GetNotificationResponse;
+import com.baidubce.services.vod.model.GetPartMediaResourceRequest;
+import com.baidubce.services.vod.model.GetPartMediaResourceResponse;
 import com.baidubce.services.vod.model.InternalCreateMediaRequest;
 import com.baidubce.services.vod.model.InternalCreateMediaResponse;
-import com.baidubce.services.vod.model.ListMediaResourceRequest;
-import com.baidubce.services.vod.model.ListMediaResourceResponse;
 import com.baidubce.services.vod.model.ListMediaResourceByMarkerRequest;
 import com.baidubce.services.vod.model.ListMediaResourceByMarkerResponse;
+import com.baidubce.services.vod.model.ListMediaResourceRequest;
+import com.baidubce.services.vod.model.ListMediaResourceResponse;
+import com.baidubce.services.vod.model.ListNotificationsRequest;
+import com.baidubce.services.vod.model.ListNotificationsResponse;
 import com.baidubce.services.vod.model.PublishMediaResourceRequest;
 import com.baidubce.services.vod.model.PublishMediaResourceResponse;
+import com.baidubce.services.vod.model.ReTranscodeRequest;
+import com.baidubce.services.vod.model.ReTranscodeResponse;
 import com.baidubce.services.vod.model.StopMediaResourceRequest;
 import com.baidubce.services.vod.model.StopMediaResourceResponse;
 import com.baidubce.services.vod.model.UpdateMediaResourceRequest;
 import com.baidubce.services.vod.model.UpdateMediaResourceResponse;
-import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoRequest;
-import com.baidubce.services.vod.model.GenerateMediaDeliveryInfoResponse;
-import com.baidubce.services.vod.model.GenerateMediaPlayerCodeRequest;
-import com.baidubce.services.vod.model.GenerateMediaPlayerCodeResponse;
-import com.baidubce.services.vod.model.GetMediaStatisticRequest;
-import com.baidubce.services.vod.model.GetMediaStatisticResponse;
-import com.baidubce.services.vod.model.ReTranscodeRequest;
-import com.baidubce.services.vod.model.ReTranscodeResponse;
-import com.baidubce.services.vod.model.GetMediaSourceDownloadRequest;
-import com.baidubce.services.vod.model.GetMediaSourceDownloadResponse;
-import com.baidubce.services.vod.model.CreateNotificationRequest;
-import com.baidubce.services.vod.model.CreateNotificationResponse;
-import com.baidubce.services.vod.model.GetNotificationRequest;
-import com.baidubce.services.vod.model.GetNotificationResponse;
-import com.baidubce.services.vod.model.ListNotificationsRequest;
-import com.baidubce.services.vod.model.ListNotificationsResponse;
-import com.baidubce.services.vod.model.DeleteNotificationRequest;
-import com.baidubce.services.vod.model.DeleteNotificationResponse;
+import com.baidubce.util.DateUtils;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+
 
 /**
  * Provides the client for accessing the Baidu MediaResource-On-Demand Service.
@@ -128,6 +132,8 @@ public class VodClient extends AbstractBceClient {
     private static final String PARA_APPLY = "apply";
     private static final String PARA_APPLY_MODE = "mode";
     private static final String PARA_PROCESS = "process";
+    private static final String PARA_GET_SCOPE = "scope";
+    private static final String PARA_GET_TASK_ID = "taskId";
     private static final String PARA_GENDELIVERY = "delivery";
     private static final String PARA_GENCODE = "code";
     private static final String PARA_AK = "ak";
@@ -234,6 +240,31 @@ public class VodClient extends AbstractBceClient {
             int priority,
             String mode)
             throws FileNotFoundException {
+        return createMediaResource(title, description, file, transcodingPresetGroupName, priority, mode, null);
+    }
+
+    /**
+     * Uploads the specified file to Bos under the specified bucket and key name.
+     *
+     * @param title media title.
+     * @param description media description.
+     * @param file The file containing the data to be uploaded to VOD.
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own task
+     * @param mode the mode of the media resource
+     * @param actionAttributes the action attributes
+     * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
+     * @throws FileNotFoundException
+     */
+    public CreateMediaResourceResponse createMediaResource(
+            String title,
+            String description,
+            File file,
+            String transcodingPresetGroupName,
+            int priority,
+            String mode,
+            ActionAttributes actionAttributes)
+            throws FileNotFoundException {
         if (!file.exists()) {
             throw new FileNotFoundException("The media file " + file.getAbsolutePath() + " doesn't exist!");
         }
@@ -267,7 +298,8 @@ public class VodClient extends AbstractBceClient {
                             .withDescription(description)
                             .withSourceExtension(sourceExtension)
                             .withTranscodingPresetGroupName(transcodingPresetGroupName)
-                            .withPriority(priority);
+                            .withPriority(priority)
+                            .withActionAttributes(actionAttributes);
             InternalCreateMediaResponse internalResponse = processMedia(request);
             response.setMediaId(internalResponse.getMediaId());
         }
@@ -318,14 +350,40 @@ public class VodClient extends AbstractBceClient {
             String transcodingPresetGroupName,
             int priority,
             String mode) {
+        return createMediaResource(sourceBucket, sourceKey, title, description, transcodingPresetGroupName, priority,
+                mode, null);
+    }
+
+    /**
+     * Load a media resource from BOS to VOD.
+     *
+     * @param sourceBucket The bucket name of the media resource in BOS
+     * @param sourceKey The key name of the media resource in BOS
+     * @param title The title string of the media resource
+     * @param description The description string of the media resource
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own jobs
+     * @param mode the mode of the media resource
+     * @param actionAttributes the action attributes
+     * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public CreateMediaResourceResponse createMediaResource(
+            String sourceBucket,
+            String sourceKey,
+            String title,
+            String description,
+            String transcodingPresetGroupName,
+            int priority,
+            String mode,
+            ActionAttributes actionAttributes) {
         checkStringNotEmpty(sourceBucket, "sourceBucket should not be null or empty!");
         checkStringNotEmpty(sourceKey, "key should not be null or empty!");
 
         // check if the key exist
         ObjectMetadata metaData = bosClient.getObjectMetadata(sourceBucket, sourceKey);
         checkIsTrue(metaData != null && metaData.getContentLength() > 0,
-                "The object corresponding to [bucket] = " 
-                + sourceBucket + ", [key] = " + sourceKey + " doesn't exist.");
+                "The object corresponding to [bucket] = "
+                        + sourceBucket + ", [key] = " + sourceKey + " doesn't exist.");
 
         // try get file extension
         String sourceExtension = null;
@@ -399,6 +457,29 @@ public class VodClient extends AbstractBceClient {
             String transcodingPresetGroupName,
             int priority,
             String mode) {
+        return createMediaResource(sourceUrl, title, description, transcodingPresetGroupName, priority, mode, null);
+    }
+
+    /**
+     * Load a media resource from URL to VOD.
+     *
+     * @param sourceUrl The source url of the media resource
+     * @param title The title string of the media resource
+     * @param description The description string of the media resource
+     * @param transcodingPresetGroupName set transcoding presetgroup name, if NULL, use default
+     * @param priority set transcoding priority[0,9], lowest priority is 0. Only effect your own jobs
+     * @param mode the mode of the media resource
+     * @param actionAttributes the action attributes
+     * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
+     */
+    public CreateMediaResourceResponse createMediaResource(
+            String sourceUrl,
+            String title,
+            String description,
+            String transcodingPresetGroupName,
+            int priority,
+            String mode,
+            ActionAttributes actionAttributes) {
         checkStringNotEmpty(sourceUrl, "sourceUrl should not be null or empty!");
 
         // generate media Id
@@ -422,7 +503,8 @@ public class VodClient extends AbstractBceClient {
                         .withTitle(title)
                         .withDescription(description)
                         .withTranscodingPresetGroupName(transcodingPresetGroupName)
-                        .withPriority(priority);
+                        .withPriority(priority)
+                        .withActionAttributes(actionAttributes);
         InternalCreateMediaResponse internalResponse = processMedia(request);
 
         CreateMediaResourceResponse response = new CreateMediaResourceResponse();
@@ -437,6 +519,46 @@ public class VodClient extends AbstractBceClient {
         internalRequest.addParameter(PARA_PROCESS, null);
 
         return invokeHttpClient(internalRequest, InternalCreateMediaResponse.class);
+    }
+
+    public InternalCreateMediaResponse processMedia(
+            String mediaId,
+            String title,
+            String description,
+            String sourceExtension,
+            String transcodingPresetGroupName,
+            int priority,
+            ActionAttributes actionAttributes) {
+        InternalCreateMediaRequest request =
+                new InternalCreateMediaRequest()
+                        .withMediaId(mediaId)
+                        .withTitle(title)
+                        .withDescription(description)
+                        .withSourceExtension(sourceExtension)
+                        .withTranscodingPresetGroupName(transcodingPresetGroupName)
+                        .withPriority(priority)
+                        .withActionAttributes(actionAttributes);
+        InternalCreateMediaResponse internalResponse = processMedia(request);
+        return internalResponse;
+    }
+
+    public InternalCreateMediaResponse processMedia(
+            String mediaId,
+            String title,
+            String description,
+            String sourceExtension,
+            String transcodingPresetGroupName,
+            int priority) {
+        InternalCreateMediaRequest request =
+                new InternalCreateMediaRequest()
+                        .withMediaId(mediaId)
+                        .withTitle(title)
+                        .withDescription(description)
+                        .withSourceExtension(sourceExtension)
+                        .withTranscodingPresetGroupName(transcodingPresetGroupName)
+                        .withPriority(priority);
+        InternalCreateMediaResponse internalResponse = processMedia(request);
+        return internalResponse;
     }
 
     public GenerateMediaIdResponse applyMedia() {
@@ -489,6 +611,44 @@ public class VodClient extends AbstractBceClient {
                 createRequest(HttpMethodName.GET, request, PATH_MEDIA, request.getMediaId());
 
         return invokeHttpClient(internalRequest, GetMediaResourceResponse.class);
+    }
+
+    /**
+     * Gets a part of properties of specific media resource managed by VOD service.
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param mediaId The unique ID for each media resource
+     * @param scope The scope of query, such as 'thumbnail'
+     * @param taskId The sign of scope, when scope is thumbnail, taskId can be: default second wonderful
+     * @return A part of the properties of the specific media resource
+     */
+    public GetPartMediaResourceResponse getPartMediaResource(String mediaId, String scope, String taskId) {
+        GetPartMediaResourceRequest request =
+                new GetPartMediaResourceRequest().withMediaId(mediaId).withScope(scope).withTaskId(taskId);
+        return getPartMediaResource(request);
+    }
+
+    /**
+     * Gets the properties of specific media resource managed by VOD service.
+     *
+     * <p>
+     * The caller <i>must</i> authenticate with a valid BCE Access Key / Private Key pair.
+     *
+     * @param request The request wrapper object containing all options.
+     * @return A part of the properties of the specific media resource
+     */
+    public GetPartMediaResourceResponse getPartMediaResource(GetPartMediaResourceRequest request) {
+        checkStringNotEmpty(request.getMediaId(), "Media ID should not be null or empty!");
+        checkStringNotEmpty(request.getScope(), "Scope should not be null or empty!");
+        checkStringNotEmpty(request.getTaskId(), "Task ID should not be null or empty!");
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, PATH_MEDIA, request.getMediaId());
+        internalRequest.addParameter(PARA_GET_SCOPE, request.getScope());
+        internalRequest.addParameter(PARA_GET_TASK_ID, request.getTaskId());
+
+        return invokeHttpClient(internalRequest, GetPartMediaResourceResponse.class);
     }
 
     /**

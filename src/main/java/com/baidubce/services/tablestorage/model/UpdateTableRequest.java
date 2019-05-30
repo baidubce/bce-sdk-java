@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) 2019 Baidu.com, Inc. All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
+package com.baidubce.services.tablestorage.model;
+
+import com.baidubce.BceClientException;
+import com.baidubce.services.tablestorage.TableStorageConstants;
+
+/**
+ * Represent the request for UpdateTable operation.
+ */
+public class UpdateTableRequest extends AbstractTableStorageRequest {
+    private TableOption tableOption;
+
+    /**
+     * Constructs the update table request with target table name and option.
+     *
+     * @param tableName The target table name.
+     * @param option The option used to update table.
+     */
+    public UpdateTableRequest(String tableName, TableOption option) {
+        super(tableName);
+        this.tableOption = option;
+    }
+
+    /**
+     * Convert this object to json object.
+     *
+     * @return the json string represent this object.
+     */
+    @Override
+    public String toJsonString() {
+        StringBuffer buffer = new StringBuffer("{");
+
+        long tableVersion = tableOption.getTableVersion();
+        if (tableVersion < 0) {
+            throw new BceClientException("The tableVersion's value should not be negative.");
+        }
+        if (tableVersion == TableStorageConstants.CREATE_TABLE_VERSION) {
+            throw new BceClientException("The tableVersion's value cannot be "
+                    + TableStorageConstants.CREATE_TABLE_VERSION + " in UpdateTableRequest.");
+        }
+        buffer.append("\"tableVersion\":");
+        buffer.append(tableOption.getTableVersion());
+
+        if (tableOption.getCompressType() != CompressType.DEFAULT) {
+            buffer.append(",\"compressType\":\"");
+            buffer.append(tableOption.getCompressType().toString());
+            buffer.append("\"");
+        }
+
+        long timeToLive = tableOption.getTimeToLive();
+        if (timeToLive >= 0) {
+            buffer.append(",\"ttl\":");
+            buffer.append(tableOption.getTimeToLive());
+        } else if (timeToLive != TableStorageConstants.DEFAULT_LIVE_TIME) {
+            throw new BceClientException("The timeToLive's value cannot be a negative number other than "
+                    + "DEFAULT_LIVE_TIME " + TableStorageConstants.DEFAULT_LIVE_TIME
+                    + ". timeToLive=" + timeToLive + ".");
+        }
+
+
+        int maxVersions = tableOption.getMaxVersions();
+        if (maxVersions > 0) {
+            buffer.append(",\"maxVersions\":");
+            buffer.append(tableOption.getMaxVersions());
+        } else if (tableOption.getMaxVersions() != TableStorageConstants.DEFAULT_TABLE_MAX_VERSIONS ) {
+            throw new BceClientException("The maxVersions' value must be positive, or equal to "
+                    + "DEFAULT_TABLE_MAX_VERSIONS " + TableStorageConstants.DEFAULT_TABLE_MAX_VERSIONS
+                    + ". maxVersions=" + maxVersions + ".");
+        }
+
+        buffer.append("}");
+        return buffer.toString();
+    }
+}

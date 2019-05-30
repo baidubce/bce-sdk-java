@@ -32,6 +32,7 @@ import com.baidubce.services.iothub.model.BaseRequest;
 import com.baidubce.services.iothub.model.BaseResponse;
 import com.baidubce.services.iothub.model.BatchGetMqttClientStatusRequest;
 import com.baidubce.services.iothub.model.BatchGetMqttClientStatusResponse;
+import com.baidubce.services.iothub.model.CreatePrincipalWithCertResponse;
 import com.baidubce.services.iothub.model.MqttClientStatusRequest;
 import com.baidubce.services.iothub.model.MqttClientStatusResponse;
 import com.baidubce.services.iothub.model.CreatePermissionRequest;
@@ -56,7 +57,9 @@ import com.baidubce.services.iothub.model.QueryPrincipalRequest;
 import com.baidubce.services.iothub.model.QueryPrincipalResponse;
 import com.baidubce.services.iothub.model.QueryThingRequest;
 import com.baidubce.services.iothub.model.QueryThingResponse;
-import com.baidubce.services.iothub.model.RegenerateCertRequest;
+import com.baidubce.services.iothub.model.RegeneratePasswordRequest;
+import com.baidubce.services.iothub.model.RenewCertificateRequest;
+import com.baidubce.services.iothub.model.RenewCertificateResponse;
 import com.baidubce.services.iothub.model.UpdatePermissionRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -80,6 +83,8 @@ public class IotHubClient extends AbstractBceClient {
     private static final String ENDPOINT_HOST = "iot.gz.baidubce.com";
     private static final String VERSION = "v1";
     private static final String ENDPOINT = "endpoint";
+    private static final String CERT = "cert";
+    private static final String RENEW = "renew-certificate";
     private static final String THING = "thing";
     private static final String PRINCIPAL = "principal";
     private static final String POLICY = "policy";
@@ -322,6 +327,7 @@ public class IotHubClient extends AbstractBceClient {
                 .withEndpointName(endpointName)
                 .withPrincipalName(principalName));
     }
+
     public CreatePrincipalResponse  createPrincipal(QueryPrincipalRequest createPrincipalRequest) {
         checkNotNull(createPrincipalRequest, "request should not be null.");
         InternalRequest internalRequest = createRequest(createPrincipalRequest,
@@ -333,31 +339,74 @@ public class IotHubClient extends AbstractBceClient {
         return this.invokeHttpClient(internalRequest, CreatePrincipalResponse.class);
     }
 
-    public CreatePrincipalResponse regenerateCert(String endpointName, String principalName) {
+    public CreatePrincipalWithCertResponse createPrincipalWithCert(String endpointName, String principalName) {
         checkNotNull(endpointName, "endpointName should not be null");
         checkNotNull(principalName, "principalName should not be null");
-        return regenerateCert(new RegenerateCertRequest()
+        return createPrincipalWithCert(new QueryPrincipalRequest()
                 .withEndpointName(endpointName)
                 .withPrincipalName(principalName));
     }
-    public CreatePrincipalResponse regenerateCert(String endpointName, String principalName, String target) {
+
+    public CreatePrincipalWithCertResponse  createPrincipalWithCert(QueryPrincipalRequest createPrincipalRequest) {
+        checkNotNull(createPrincipalRequest, "request should not be null.");
+        InternalRequest internalRequest = createRequest(createPrincipalRequest,
+                HttpMethodName.POST,
+                ENDPOINT,
+                createPrincipalRequest.getEndpointName(),
+                PRINCIPAL);
+        internalRequest.addParameter("withCert", "true");
+        fillInHeadAndBody(createPrincipalRequest, internalRequest);
+        return this.invokeHttpClient(internalRequest, CreatePrincipalWithCertResponse.class);
+    }
+
+    public CreatePrincipalResponse regeneratePassword(String endpointName, String principalName) {
         checkNotNull(endpointName, "endpointName should not be null");
         checkNotNull(principalName, "principalName should not be null");
-        return regenerateCert(new RegenerateCertRequest()
+        return regeneratePassword(new RegeneratePasswordRequest()
+                .withEndpointName(endpointName)
+                .withPrincipalName(principalName));
+    }
+    public CreatePrincipalResponse regeneratePassword(String endpointName, String principalName, String target) {
+        checkNotNull(endpointName, "endpointName should not be null");
+        checkNotNull(principalName, "principalName should not be null");
+        return regeneratePassword(new RegeneratePasswordRequest()
                 .withEndpointName(endpointName)
                 .withPrincipalName(principalName)
                 .withTarget(target));
     }
-    public CreatePrincipalResponse regenerateCert(RegenerateCertRequest regenerateCertRequest) {
-        checkNotNull(regenerateCertRequest, "request should not be null.");
-        InternalRequest internalRequest = createRequest(regenerateCertRequest,
+    public CreatePrincipalResponse regeneratePassword(RegeneratePasswordRequest regeneratePasswordRequest) {
+        checkNotNull(regeneratePasswordRequest, "request should not be null.");
+        InternalRequest internalRequest = createRequest(regeneratePasswordRequest,
                 HttpMethodName.POST,
                 ENDPOINT,
-                regenerateCertRequest.getEndpointName(),
+                regeneratePasswordRequest.getEndpointName(),
                 PRINCIPAL,
-                regenerateCertRequest.getPrincipalName() );
-        fillInHeadAndBody(regenerateCertRequest, internalRequest);
+                regeneratePasswordRequest.getPrincipalName() );
+        fillInHeadAndBody(regeneratePasswordRequest, internalRequest);
         return this.invokeHttpClient(internalRequest, CreatePrincipalResponse.class);
+    }
+
+    public RenewCertificateResponse renewCertificate(String endpointName, String principalName) {
+        checkNotNull(endpointName, "endpointName should not be null");
+        checkNotNull(principalName, "principalName should not be null");
+        return renewCertificate(new RenewCertificateRequest()
+                .withEndpointName(endpointName)
+                .withPrincipalName(principalName));
+
+    }
+
+    public RenewCertificateResponse renewCertificate(RenewCertificateRequest renewCertificateRequest) {
+        checkNotNull(renewCertificateRequest, "request should not be null.");
+        InternalRequest internalRequest = createRequest(renewCertificateRequest,
+                HttpMethodName.POST,
+                ENDPOINT,
+                renewCertificateRequest.getEndpointName(),
+                PRINCIPAL,
+                renewCertificateRequest.getPrincipalName(),
+                CERT,
+                RENEW);
+        fillInHeadAndBody(renewCertificateRequest, internalRequest);
+        return this.invokeHttpClient(internalRequest, RenewCertificateResponse.class);
     }
 
     public BaseResponse deletePrincipal(String endpointName, String principalName) {

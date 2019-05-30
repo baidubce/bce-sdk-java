@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Audio {
+import java.io.Serializable;
+
+public class Audio implements Serializable {
     private Integer bitRateInBps = null;
 
     private Integer sampleRateInHz = null;

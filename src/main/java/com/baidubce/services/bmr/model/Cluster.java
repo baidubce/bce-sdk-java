@@ -26,6 +26,8 @@ public class Cluster {
     private boolean autoTerminate;
     private List<Application> applications;
     private ClusterStatus status;
+    private boolean serviceHaEnabled;
+    private boolean safeModeEnabled;
 
     public String getId() {
         return id;
@@ -90,4 +92,12 @@ public class Cluster {
     public void setApplications(List<Application> applications) {
         this.applications = applications;
     }
+
+    public Boolean getServiceHaEnabled() { return serviceHaEnabled; }
+
+    public void setServiceHaEnabled(Boolean serviceHaEnabled) { this.serviceHaEnabled = serviceHaEnabled; }
+
+    public Boolean getSafeModeEnabled() { return safeModeEnabled; }
+
+    public void setSafeModeEnabled(Boolean safeModeEnabled) { this.safeModeEnabled = safeModeEnabled; }
 }

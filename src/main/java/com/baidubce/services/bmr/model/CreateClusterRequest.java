@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2018 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -31,9 +31,16 @@ public class CreateClusterRequest extends AbstractBceRequest {
     private boolean autoTerminate = true;
     private String logUri;
     private String name;
+    private boolean serviceHaEnabled;
+    private boolean safeModeEnabled;
     private List<InstanceGroupConfig> instanceGroups;
     private List<ApplicationConfig> applications;
     private List<StepConfig> steps;
+    private String adminPassword;
+    private String securityGroup;
+    private String vpcId;
+    private String subnetId;
+    private String availabilityZone;
 
     public String getImageType() {
         return imageType;
@@ -83,6 +90,22 @@ public class CreateClusterRequest extends AbstractBceRequest {
         this.name = name;
     }
 
+    public boolean getServiceHaEnabled() {
+        return serviceHaEnabled;
+    }
+
+    public void setServiceHaEnabled(boolean serviceHaEnabled) {
+        this.serviceHaEnabled = serviceHaEnabled;
+    }
+
+    public boolean getSafeModeEnabled() {
+        return safeModeEnabled;
+    }
+
+    public void setSafeModeEnabled(boolean safeModeEnabled) {
+        this.safeModeEnabled = safeModeEnabled;
+    }
+
     public List<InstanceGroupConfig> getInstanceGroups() {
         return instanceGroups;
     }
@@ -105,6 +128,46 @@ public class CreateClusterRequest extends AbstractBceRequest {
 
     public void setSteps(List<StepConfig> steps) {
         this.steps = steps;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    public String getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(String securityGroup) {
+        this.securityGroup = securityGroup;
+    }
+
+    public String getVpcId() {
+        return vpcId;
+    }
+
+    public void setVpcId(String vpcId) {
+        this.vpcId = vpcId;
+    }
+
+    public String getSubnetId() {
+        return subnetId;
+    }
+
+    public void setSubnetId(String subnetId) {
+        this.subnetId = subnetId;
+    }
+
+    public String getAvailabilityZone() {
+        return availabilityZone;
+    }
+
+    public void setAvailabilityZone(String availabilityZone) {
+        this.availabilityZone = availabilityZone;
     }
 
     /**
@@ -162,6 +225,28 @@ public class CreateClusterRequest extends AbstractBceRequest {
      */
     public CreateClusterRequest withName(String name) {
         this.setName(name);
+        return this;
+    }
+
+    /**
+     * Configure optional service HA enable of the cluster. If true will create a ha cluster, default is false.
+     *
+     * @param serviceHaEnabled true if the serivce ha enable, default is false.
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withServiceHaEnabled(boolean serviceHaEnabled) {
+        this.setServiceHaEnabled(serviceHaEnabled);
+        return this;
+    }
+
+    /**
+     * Configure optional safe mode enable of the cluster. If true will create a cluster running as safe mode, default is false.
+     *
+     * @param safeModeEnabled true if the safe mode enable, default is false.
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withSafeModeEnabled(boolean safeModeEnabled) {
+        this.setSafeModeEnabled(safeModeEnabled);
         return this;
     }
 
@@ -240,6 +325,61 @@ public class CreateClusterRequest extends AbstractBceRequest {
      */
     public CreateClusterRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
+        return this;
+    }
+
+    /**
+     * Configure request adminPassword for the request.
+     *
+     * @param adminPassword
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withAdminPassword(String adminPassword) {
+        this.setAdminPassword(adminPassword);
+        return this;
+    }
+
+    /**
+     * Configure request vpc network name for the request.
+     *
+     * @param vpcId
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withVpcId(String vpcId) {
+        this.setVpcId(vpcId);
+        return this;
+    }
+
+    /**
+     * Configure request subnet name for the request.
+     *
+     * @param subnetId
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withSubnetId(String subnetId) {
+        this.setSubnetId(subnetId);
+        return this;
+    }
+
+    /**
+     * Configure request availabilityZone of creating cluster.
+     *
+     * @param availabilityZone
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withAvailabilityZone(String availabilityZone) {
+        this.setAvailabilityZone(availabilityZone);
+        return this;
+    }
+
+    /**
+     * Configure request security group for the request.
+     *
+     * @param securityGroup
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withSecurityGroup(String securityGroup) {
+        this.setSecurityGroup(securityGroup);
         return this;
     }
 }

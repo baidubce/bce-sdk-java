@@ -12,9 +12,9 @@
  */
 package com.baidubce.services.bcc.model.zone;
 
-import java.util.List;
-
 import com.baidubce.model.AbstractBceResponse;
+
+import java.util.List;
 
 /**
  * The response for listing zones.

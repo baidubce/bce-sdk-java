@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Hls {
+import java.io.Serializable;
+
+public class Hls implements Serializable {
     private Integer segmentTimeInSecond = null;
 
     private Integer segmentListSize = null;

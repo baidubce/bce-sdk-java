@@ -1,3 +1,15 @@
+/*
+ * Copyright 2018-2019 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.baidubce.services.tsdb.model;
 
 import com.baidubce.auth.BceCredentials;
@@ -24,6 +36,18 @@ public class CreateDatabaseRequest extends AbstractBceRequest {
      * The database quota of ingestion data points per month.
      */
     private Integer ingestDataPointsMonthly;
+
+    /**
+     * Optional.
+     * The database quota of query units per month.
+     */
+    private Integer queryUnitsMonthly;
+
+    /**
+     * Optional.
+     * The store bytes quota. unit: GB
+     */
+    private Integer storeBytesQuota;
 
     /**
      * Required.
@@ -61,6 +85,22 @@ public class CreateDatabaseRequest extends AbstractBceRequest {
         this.ingestDataPointsMonthly = ingestDataPointsMonthly;
     }
 
+    public Integer getQueryUnitsMonthly() {
+        return queryUnitsMonthly;
+    }
+
+    public void setQueryUnitsMonthly(Integer queryUnitsMonthly) {
+        this.queryUnitsMonthly = queryUnitsMonthly;
+    }
+
+    public Integer getStoreBytesQuota() {
+        return storeBytesQuota;
+    }
+
+    public void setStoreBytesQuota(Integer storeBytesQuota) {
+        this.storeBytesQuota = storeBytesQuota;
+    }
+
     public Integer getPurchaseLength() {
         return purchaseLength;
     }
@@ -89,6 +129,16 @@ public class CreateDatabaseRequest extends AbstractBceRequest {
 
     public CreateDatabaseRequest withIngestDataPointsMonthly(Integer ingestDataPointsMonthly) {
         this.ingestDataPointsMonthly = ingestDataPointsMonthly;
+        return this;
+    }
+
+    public CreateDatabaseRequest withQueryUnitsMonthly(Integer queryUnitsMonthly) {
+        this.queryUnitsMonthly = queryUnitsMonthly;
+        return this;
+    }
+
+    public CreateDatabaseRequest withStoreBytesQuota(Integer storeBytesQuota) {
+        this.storeBytesQuota = storeBytesQuota;
         return this;
     }
 

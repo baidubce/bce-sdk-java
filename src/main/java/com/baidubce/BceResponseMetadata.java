@@ -12,12 +12,13 @@
  */
 package com.baidubce;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents additional metadata included with a response from BCE.
  */
-public class BceResponseMetadata {
+public class BceResponseMetadata implements Serializable {
     private String bceRequestId;
 
     private String bceContentSha256;

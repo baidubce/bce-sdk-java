@@ -19,6 +19,8 @@ import com.baidubce.services.vca.model.AnalyzeResponse;
 import com.baidubce.services.vca.model.QueryResultRequest;
 import com.baidubce.services.vca.model.QueryResultResponse;
 import com.baidubce.services.vca.model.AnalyzeRequest;
+import com.baidubce.services.vca.model.QuerySubTaskRequest;
+import com.baidubce.services.vca.model.QuerySubTaskResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 
@@ -37,7 +39,7 @@ public class VcaClient extends AbstractBceClient {
     private static final String VERSION = "v2";
     private static final String MEDIA = "media";
 
-    private static HttpResponseHandler[] vcrHandlers = new HttpResponseHandler[] {
+    private static HttpResponseHandler[] vcaHandlers = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(),
             new BceErrorResponseHandler(),
             new BceJsonResponseHandler()
@@ -48,27 +50,51 @@ public class VcaClient extends AbstractBceClient {
     }
 
     public VcaClient(BceClientConfiguration config) {
-        super(config, vcrHandlers);
+        super(config, vcaHandlers);
     }
 
+    /**
+     * Initiate media analyze for specified source.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @return Analyze response.
+     */
     public AnalyzeResponse analyze(String source) {
         AnalyzeRequest request = new AnalyzeRequest();
         request.setSource(source);
         return analyze(request);
     }
 
+    /**
+     * Initiate media analyze for specified source.
+     *
+     * @param request Analyze request, including media source path.
+     * @return Analyze response.
+     */
     public AnalyzeResponse analyze(AnalyzeRequest request) {
         InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
                 request, MEDIA);
         return this.invokeHttpClient(internalRequest, AnalyzeResponse.class);
     }
 
+    /**
+     * Query analyze result for specified source.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @return Analyze result.
+     */
     public QueryResultResponse queryResult(String source) {
         QueryResultRequest request = new QueryResultRequest();
         request.setSource(source);
         return queryResult(request);
     }
 
+    /**
+     * Query analyze result for specified source.
+     *
+     * @param request Query request, including media source path.
+     * @return Analyze result.
+     */
     public QueryResultResponse queryResult(QueryResultRequest request) {
         InternalRequest internalRequest = createRequest(HttpMethodName.GET,
                 request, MEDIA);
@@ -76,6 +102,32 @@ public class VcaClient extends AbstractBceClient {
         return this.invokeHttpClient(internalRequest, QueryResultResponse.class);
     }
 
+    /**
+     * Query sub task result for specified source of directed type.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @param type Sub task type.
+     * @return Analyze result of sub task type.
+     */
+    public QuerySubTaskResponse querySubTask(String source, String type) {
+        QuerySubTaskRequest request = new QuerySubTaskRequest();
+        request.setSource(source);
+        request.setSubTaskType(type);
+        return querySubTask(request);
+    }
+
+    /**
+     * Query sub task result for specified source of directed type.
+     *
+     * @param request Query request of sub task, including media source path and sub task type.
+     * @return Analyze result of sub task type.
+     */
+    public QuerySubTaskResponse querySubTask(QuerySubTaskRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET,
+                request, MEDIA, request.getSubTaskType());
+        internalRequest.addParameter("source", request.getSource());
+        return this.invokeHttpClient(internalRequest, QuerySubTaskResponse.class);
+    }
 
     /**
      * Creates and initializes a new request object for the specified resource.

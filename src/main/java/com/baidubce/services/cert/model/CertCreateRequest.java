@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * Certificate creation request.
  *
- * @author dingxiaomin (dingxiaomin@baidu.com)
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)

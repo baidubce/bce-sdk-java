@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Baidu, Inc.
+ * Copyright 2018 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -18,6 +18,10 @@ public class PlayableUrl {
     private String transcodingPresetName;
 
     private String url;
+    /**
+     * meta of transcoding video
+     */
+    private Meta meta;
 
     public String getTranscodingPresetName() {
         return transcodingPresetName;
@@ -25,6 +29,14 @@ public class PlayableUrl {
 
     public void setTranscodingPresetName(String transcodingPresetName) {
         this.transcodingPresetName = transcodingPresetName;
+    }
+
+    public Meta getMeta() {
+        return meta;
+    }
+
+    public void setMeta(Meta meta) {
+        this.meta = meta;
     }
 
     public String getUrl() {
@@ -40,6 +52,7 @@ public class PlayableUrl {
         final StringBuilder sb = new StringBuilder("PlayableUrl { \n");
         sb.append("   transcodingPresetName = ").append(transcodingPresetName).append("\n");
         sb.append("   url = ").append(url).append("\n");
+        sb.append("   meta = ").append(meta).append("\n");
         sb.append("  }\n");
         return sb.toString();
     }

@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/6/28.
  */
-public class PlayPrefix {
+public class PlayPrefix implements Serializable {
     private String rtmp;
 
     private String hls;

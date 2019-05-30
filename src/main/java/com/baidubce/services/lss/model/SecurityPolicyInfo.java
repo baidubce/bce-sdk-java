@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class SecurityPolicyInfo {
+import java.io.Serializable;
+
+public class SecurityPolicyInfo implements Serializable {
     private String name = null;
 
     private AuthInfo auth = null;

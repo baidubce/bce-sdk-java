@@ -9,7 +9,6 @@ import java.io.IOException;
 /**
  * Created on 2017/8/7 19:14.
  *
- * @author yuchenbei@baidu.com
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Tag {

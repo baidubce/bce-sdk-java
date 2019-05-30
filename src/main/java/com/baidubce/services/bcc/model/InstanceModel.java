@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2018 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,6 +13,7 @@
 package com.baidubce.services.bcc.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * instance detail info model
@@ -98,6 +99,11 @@ public class InstanceModel {
     private String zoneName;
 
     /**
+     * The list of bonded tags.
+     */
+    private List<TagModel> tags;
+
+    /**
      * The policy of the instance placement
      * when "default",the instance has been placed by system auto, while "dedicatedHost", stands for been placed at dcc
      */
@@ -106,6 +112,28 @@ public class InstanceModel {
     private String subnetId;
 
     private String vpcId;
+
+    /**
+     * The parameter to specified which kind of instance created.
+     * see all of supported instance type in {@link com.baidubce.services.bcc.model.instance.InstanceType}
+     */
+    private String instanceType;
+
+    /**
+     * The gpu card info for creating gpu instance.
+     */
+    private String gpuCard;
+
+    /**
+     * The fpag card info for creating fpga instance.
+     */
+    private String fpgaCard;
+
+    /**
+     * The card count for creating GPU/FPGA instance
+     */
+    private int cardCount;
+
 
     public String getId() {
         return id;
@@ -227,6 +255,14 @@ public class InstanceModel {
         this.zoneName = zoneName;
     }
 
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     public String getPlacementPolicy() {
         return placementPolicy;
     }
@@ -251,6 +287,38 @@ public class InstanceModel {
         this.vpcId = vpcId;
     }
 
+    public String getInstanceType() {
+        return instanceType;
+    }
+
+    public void setInstanceType(String instanceType) {
+        this.instanceType = instanceType;
+    }
+
+    public String getGpuCard() {
+        return gpuCard;
+    }
+
+    public void setGpuCard(String gpuCard) {
+        this.gpuCard = gpuCard;
+    }
+
+    public String getFpgaCard() {
+        return fpgaCard;
+    }
+
+    public void setFpgaCard(String fpgaCard) {
+        this.fpgaCard = fpgaCard;
+    }
+
+    public int getCardCount() {
+        return cardCount;
+    }
+
+    public void setCardCount(int cardCount) {
+        this.cardCount = cardCount;
+    }
+
     @Override
     public String toString() {
         return "InstanceModel{"
@@ -259,8 +327,8 @@ public class InstanceModel {
                 + ", status='" + status + '\''
                 + ", desc='" + desc + '\''
                 + ", paymentTiming='" + paymentTiming + '\''
-                + ", createTime='" + createTime + '\''
-                + ", expireTime='" + expireTime + '\''
+                + ", createTime=" + createTime
+                + ", expireTime=" + expireTime
                 + ", internalIp='" + internalIp + '\''
                 + ", publicIp='" + publicIp + '\''
                 + ", cpuCount=" + cpuCount
@@ -268,10 +336,15 @@ public class InstanceModel {
                 + ", localDiskSizeInGB=" + localDiskSizeInGB
                 + ", imageId='" + imageId + '\''
                 + ", networkCapacityInMbps=" + networkCapacityInMbps
-                + ", placementPolicy='" + placementPolicy + '\''
                 + ", zoneName='" + zoneName + '\''
+                + ", tags=" + tags
+                + ", placementPolicy='" + placementPolicy + '\''
                 + ", subnetId='" + subnetId + '\''
                 + ", vpcId='" + vpcId + '\''
+                + ", instanceType='" + instanceType + '\''
+                + ", gpuCard='" + gpuCard + '\''
+                + ", fpgaCard='" + fpgaCard + '\''
+                + ", cardCount=" + cardCount
                 + '}';
     }
 }

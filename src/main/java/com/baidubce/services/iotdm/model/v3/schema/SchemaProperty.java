@@ -97,7 +97,9 @@ public class SchemaProperty {
     public enum PropertyType {
         STRING("string"),
         NUMBER("number"),
-        BOOL("bool");
+        BOOL("bool"),
+        OBJECT("object"),
+        ARRAY("array");
 
         private String dataType;
 

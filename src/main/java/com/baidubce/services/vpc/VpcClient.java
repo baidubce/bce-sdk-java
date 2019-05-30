@@ -12,6 +12,18 @@
  */
 package com.baidubce.services.vpc;
 
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -30,24 +42,13 @@ import com.baidubce.services.vpc.model.CreateVpcResponse;
 import com.baidubce.services.vpc.model.DeleteVpcRequest;
 import com.baidubce.services.vpc.model.GetVpcRequest;
 import com.baidubce.services.vpc.model.GetVpcResponse;
-import com.baidubce.services.vpc.model.ListVpcsRequest;
-import com.baidubce.services.vpc.model.ListVpcsResponse;
+import com.baidubce.services.vpc.model.ListVpcRequest;
+import com.baidubce.services.vpc.model.ListVpcResponse;
 import com.baidubce.services.vpc.model.ModifyVpcAttributesRequest;
 import com.baidubce.services.vpc.model.NetworkAction;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides the client for accessing the Baidu Cloud network Service vpc part.
@@ -62,7 +63,7 @@ public class VpcClient extends AbstractBceClient {
     /**
      * Responsible for handling httpResponses from all network service calls.
      */
-    private static final HttpResponseHandler[] vpc_handlers = new HttpResponseHandler[]{
+    private static final HttpResponseHandler[] vpcHandlers = new HttpResponseHandler[]{
             new BceMetadataResponseHandler(),
             new BceErrorResponseHandler(),
             new BceJsonResponseHandler()
@@ -82,7 +83,7 @@ public class VpcClient extends AbstractBceClient {
      *                            connects to network (e.g. proxy settings, retry counts, etc).
      */
     public VpcClient(BceClientConfiguration clientConfiguration) {
-        super(clientConfiguration, vpc_handlers);
+        super(clientConfiguration, vpcHandlers);
     }
 
 
@@ -112,6 +113,7 @@ public class VpcClient extends AbstractBceClient {
         request.setCredentials(bceRequest.getRequestCredentials());
         return request;
     }
+
     /**
      * The method to fill the internalRequest's content field with bceRequest.
      * Only support HttpMethodName.POST or HttpMethodName.PUT
@@ -158,6 +160,7 @@ public class VpcClient extends AbstractBceClient {
         request.withName(name).withCidr(cidr);
         return createVpc(request);
     }
+
     /**
      * Create a vpc with the specified options.
      * You must fill the field of clientToken,which is especially for keeping idempotent.
@@ -187,8 +190,8 @@ public class VpcClient extends AbstractBceClient {
      *
      * @return The response containing a list of vpcs owned by the authenticated user.
      */
-    public ListVpcsResponse listVpcs() {
-        return this.listVpcs(new ListVpcsRequest());
+    public ListVpcResponse listVpcs() {
+        return this.listVpcs(new ListVpcRequest());
     }
 
     /**
@@ -197,7 +200,7 @@ public class VpcClient extends AbstractBceClient {
      * @param request The request containing all options for listing own's vpc.
      * @return The response containing a list of vpcs owned by the authenticated user.
      */
-    public ListVpcsResponse listVpcs(ListVpcsRequest request) {
+    public ListVpcResponse listVpcs(ListVpcRequest request) {
         checkNotNull(request, "request should not be null.");
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, VPC_PREFIX);
         if (request.getMarker() != null) {
@@ -209,7 +212,7 @@ public class VpcClient extends AbstractBceClient {
         if (request.getIsDefault() != null) {
             internalRequest.addParameter("isDefault", request.getIsDefault().toString());
         }
-        return invokeHttpClient(internalRequest, ListVpcsResponse.class);
+        return invokeHttpClient(internalRequest, ListVpcResponse.class);
     }
 
     /**

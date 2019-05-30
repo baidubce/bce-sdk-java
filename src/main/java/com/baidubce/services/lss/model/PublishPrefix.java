@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/6/28.
  */
-public class PublishPrefix {
+public class PublishPrefix implements Serializable {
     private String push;
 
     public String getPush() {

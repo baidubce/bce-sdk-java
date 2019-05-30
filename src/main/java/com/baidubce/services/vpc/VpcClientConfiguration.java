@@ -15,7 +15,7 @@ package com.baidubce.services.vpc;
 import com.baidubce.BceClientConfiguration;
 
 /**
- * Extended client configuration for bcc service.
+ * Extended client configuration for vpc service.
  */
 public class VpcClientConfiguration extends BceClientConfiguration {
 

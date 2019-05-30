@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * Certificate creation response.
  *
- * @author dingxiaomin (dingxiaomin@baidu.com)
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -16,21 +16,77 @@ package com.baidubce.services.media.model;
 import com.baidubce.model.AbstractBceResponse;
 
 public class GetPresetResponse extends AbstractBceResponse {
+    /**
+     * preset name
+     **/
     private String     presetName  = null;
-    private String     description = null;
-    private String     container   = null;
-    private Boolean    transmux    = null;
-    private Clip       clip        = null;
-    private Audio      audio       = null;
-    private Video      video       = null;
-    private Encryption encryption  = null;
-    private String     state       = null;
-    private String     createdTime = null;
-    private String watermarkId = null;
 
     /**
-     * preset名称
+     * preset description
      **/
+    private String     description = null;
+
+    /**
+     * preset container, options include mp4, flv, hls, mp3, m4a, a-hls, pcm, dash
+     **/
+    private String     container   = null;
+
+    /**
+     * transmux mode
+     **/
+    private Boolean    transmux    = null;
+
+    /**
+     * clip source
+     **/
+    private Clip       clip        = null;
+
+    /**
+     * audio settings
+     **/
+    private Audio      audio       = null;
+
+    /**
+     * video settings
+     **/
+    private Video      video       = null;
+
+    /**
+     * HLS encryption settings
+     **/
+    private Encryption encryption  = null;
+
+    /**
+     * watermark Id
+     **/
+    private String     watermarkId = null;
+
+    /**
+     * multiple watermarks setting
+     **/
+    private Watermarks watermarks  = null;
+
+    /**
+     * transcoding configurations
+     **/
+    private TransCfg   transCfg    = null;
+
+    /**
+     * extra transcoding configurations
+     **/
+    private ExtraCfg   extraCfg    = null;
+
+
+    /**
+     * the state of the preset (ACTIVE/INACTIVE)
+     **/
+    private String     state       = null;
+
+    /**
+     * the UTC created time of the preset
+     **/
+    private String     createdTime = null;
+
     public String getPresetName() {
         return presetName;
     }
@@ -39,9 +95,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.presetName = presetName;
     }
 
-    /**
-     * preset详情描述
-     **/
     public String getDescription() {
         return description;
     }
@@ -50,9 +103,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.description = description;
     }
 
-    /**
-     * 音视频文件的容器(MP4, FLV, MOV, MP3, M4A)
-     **/
     public String getContainer() {
         return container;
     }
@@ -61,9 +111,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.container = container;
     }
 
-    /**
-     * 是否仅执行容器格式转换
-     **/
     public Boolean getTransmux() {
         return transmux;
     }
@@ -72,9 +119,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.transmux = transmux;
     }
 
-    /**
-     * 片段截取设置
-     **/
     public Clip getClip() {
         return clip;
     }
@@ -83,9 +127,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.clip = clip;
     }
 
-    /**
-     * 音频输出信息
-     **/
     public Audio getAudio() {
         return audio;
     }
@@ -94,9 +135,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.audio = audio;
     }
 
-    /**
-     * 视频输出信息的集合
-     **/
     public Video getVideo() {
         return video;
     }
@@ -105,9 +143,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.video = video;
     }
 
-    /**
-     * HLS加解密信息的集合
-     **/
     public Encryption getEncryption() {
         return encryption;
     }
@@ -116,9 +151,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.encryption = encryption;
     }
 
-    /**
-     * 模板状态(ACTIVE/INACTIVE)
-     **/
     public String getState() {
         return state;
     }
@@ -127,9 +159,6 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.state = state;
     }
 
-    /**
-     * 模板创建的时间(UTC格式)
-     **/
     public String getCreatedTime() {
         return createdTime;
     }
@@ -146,6 +175,30 @@ public class GetPresetResponse extends AbstractBceResponse {
         this.watermarkId = watermarkId;
     }
 
+    public Watermarks getWatermarks() {
+        return watermarks;
+    }
+
+    public void setWatermarks(Watermarks watermarks) {
+        this.watermarks = watermarks;
+    }
+
+    public TransCfg getTransCfg() {
+        return transCfg;
+    }
+
+    public void setTransCfg(TransCfg transCfg) {
+        this.transCfg = transCfg;
+    }
+
+    public ExtraCfg getExtraCfg() {
+        return extraCfg;
+    }
+
+    public void setExtraCfg(ExtraCfg extraCfg) {
+        this.extraCfg = extraCfg;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -159,6 +212,10 @@ public class GetPresetResponse extends AbstractBceResponse {
         sb.append("    audio: ").append(audio).append("\n");
         sb.append("    video: ").append(video).append("\n");
         sb.append("    encryption: ").append(encryption).append("\n");
+        sb.append("    watermarkId: ").append(watermarkId).append("\n");
+        sb.append("    watermarks: ").append(watermarks).append("\n");
+        sb.append("    transCfg: ").append(transCfg).append("\n");
+        sb.append("    extraCfg: ").append(extraCfg).append("\n");
         sb.append("    state: ").append(state).append("\n");
         sb.append("    createdTime: ").append(createdTime).append("\n");
         sb.append("}\n");

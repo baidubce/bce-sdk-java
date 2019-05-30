@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class LivePreset {
+import java.io.Serializable;
+
+public class LivePreset implements Serializable {
 
     private  String name = null;
 

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 /**
  * CertificateMeta json model.
  *
- * @author dingxiaomin (dingxiaomin@baidu.com)
  */
 public class CertificateMeta {
 

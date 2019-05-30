@@ -1,8 +1,8 @@
 package com.baidubce.services.subnet.model;
 
-import com.baidubce.model.ListResponse;
-
 import java.util.List;
+
+import com.baidubce.model.ListResponse;
 
 /**
  * The response for CreateSubnetRequest.

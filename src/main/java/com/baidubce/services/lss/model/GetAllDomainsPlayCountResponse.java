@@ -2,6 +2,7 @@ package com.baidubce.services.lss.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -82,7 +83,7 @@ public class GetAllDomainsPlayCountResponse extends AbstractBceResponse {
         return sb.toString();
     }
 
-    public static class PlayCountStatistics {
+    public static class PlayCountStatistics implements Serializable {
         private String timestamp = null;
 
         private Long playCount = null;

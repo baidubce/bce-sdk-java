@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -16,7 +16,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
-import com.baidubce.BceServiceException;
 import com.baidubce.Protocol;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.auth.Signer;
@@ -104,6 +103,11 @@ public class BceHttpClient {
     protected CloseableHttpClient httpClient;
 
     /**
+     * Internal async client for sending HTTP requests
+     */
+    protected CloseableHttpAsyncClient httpAsyncClient;
+
+    /**
      * Client configuration options, such as proxy settings, max retries, etc.
      */
     protected BceClientConfiguration config;
@@ -111,6 +115,7 @@ public class BceHttpClient {
     protected Signer signer;
 
     private HttpClientConnectionManager connectionManager;
+    private NHttpClientConnectionManager nioConnectionManager;
 
     private RequestConfig.Builder requestConfigBuilder;
     private CredentialsProvider credentialsProvider;
@@ -172,7 +177,18 @@ public class BceHttpClient {
      */
     public BceHttpClient(BceClientConfiguration config, Signer signer, boolean isHttpAsyncPutEnabled) {
         this(config, signer);
-        this.isHttpAsyncPutEnabled = isHttpAsyncPutEnabled;
+        if (isHttpAsyncPutEnabled) {
+            try {
+                this.nioConnectionManager = this.createNHttpClientConnectionManager();
+                this.httpAsyncClient = this.createHttpAsyncClient(this.nioConnectionManager);
+                this.httpAsyncClient.start();
+                this.isHttpAsyncPutEnabled = true;
+            } catch (IOReactorException e) {
+                this.isHttpAsyncPutEnabled = false;
+            }
+        } else {
+            this.isHttpAsyncPutEnabled = false;
+        }
     }
 
     /**
@@ -199,7 +215,6 @@ public class BceHttpClient {
         for (int attempt = 1; ; ++attempt) {
             HttpRequestBase httpRequest = null;
             CloseableHttpResponse httpResponse = null;
-            CloseableHttpAsyncClient httpAsyncClient = null;
             try {
                 // Sign the request if credentials were provided
                 if (credentials != null) {
@@ -213,8 +228,6 @@ public class BceHttpClient {
                 HttpContext httpContext = this.createHttpContext(request);
 
                 if (this.isHttpAsyncPutEnabled && httpRequest.getMethod().equals("PUT")) {
-                    httpAsyncClient = this.createHttpAsyncClient(this.createNHttpClientConnectionManager());
-                    httpAsyncClient.start();
                     Future<HttpResponse> future = httpAsyncClient.execute(HttpAsyncMethods.create(httpRequest),
                             new BasicAsyncResponseConsumer(),
                             httpContext, null);
@@ -279,14 +292,6 @@ public class BceHttpClient {
                         }
                     }
                 }
-            } finally {
-                try {
-                    if (httpAsyncClient != null) {
-                        httpAsyncClient.close();
-                    }
-                } catch (IOException e) {
-                    logger.debug("Fail to close HttpAsyncClient", e);
-                }
             }
         }
     }
@@ -298,7 +303,27 @@ public class BceHttpClient {
      */
     public void shutdown() {
         IdleConnectionReaper.removeConnectionManager(this.connectionManager);
+        try {
+            this.httpClient.close();
+        } catch (IOException e) {
+            logger.debug("Fail to close httpClient", e);
+        }
         this.connectionManager.shutdown();
+
+        if (this.httpAsyncClient != null) {
+            try {
+                this.httpAsyncClient.close();
+            } catch (IOException e) {
+                logger.debug("Fail to close httpAsyncClient", e);
+            }
+        }
+        if (this.nioConnectionManager != null) {
+            try {
+                this.nioConnectionManager.shutdown();
+            } catch (IOException e) {
+                logger.debug("Fail to shutdown nioConnectionManager", e);
+            }
+        }
     }
 
     /**
@@ -456,7 +481,6 @@ public class BceHttpClient {
         }
 
         httpRequest.addHeader(Headers.HOST, HttpUtils.generateHostHeader(request.getUri()));
-
         // Copy over any other headers already in our request
         for (Entry<String, String> entry : request.getHeaders().entrySet()) {
             /*
@@ -484,7 +508,7 @@ public class BceHttpClient {
     protected HttpClientContext createHttpContext(InternalRequest request) {
         HttpClientContext context = HttpClientContext.create();
         context.setRequestConfig(this.requestConfigBuilder.setExpectContinueEnabled(request.isExpectContinueEnabled())
-                .build());
+                .setSocketTimeout(this.config.getSocketTimeoutInMillis()).build());
         if (this.credentialsProvider != null) {
             context.setCredentialsProvider(this.credentialsProvider);
         }

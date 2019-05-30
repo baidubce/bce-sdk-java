@@ -1,9 +1,11 @@
 package com.baidubce.services.lss.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wuyafei on 16/10/18.
  */
-public class LiveDomainStatistics {
+public class LiveDomainStatistics implements Serializable {
 
     private String domain = null;
 

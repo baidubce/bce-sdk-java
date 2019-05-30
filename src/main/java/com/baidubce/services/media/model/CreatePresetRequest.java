@@ -20,20 +20,66 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 
 public class CreatePresetRequest extends AbstractBceRequest {
-
+    /**
+     * preset name
+     **/
     private String     presetName  = null;
+
+    /**
+     * preset description
+     **/
     private String     description = null;
+
+    /**
+     * preset container, options include mp4, flv, hls, mp3, m4a, a-hls, pcm, dash
+     **/
     private String  container   = null;
+
+    /**
+     * transmux mode
+     **/
     private Boolean    transmux    = null;
+
+    /**
+     * clip source
+     **/
     private Clip       clip        = null;
+
+    /**
+     * audio settings
+     **/
     private Audio      audio       = null;
+
+    /**
+     * video settings
+     **/
     private Video      video       = null;
+
+    /**
+     * HLS encryption settings
+     **/
     private Encryption encryption  = null;
+
+    /**
+     * watermark Id
+     **/
     private String watermarkId = null;
 
     /**
-     * preset名称
+     * multiple watermarks setting
      **/
+    private Watermarks watermarks  = null;
+
+    /**
+     * transcoding configurations
+     **/
+    private TransCfg   transCfg    = null;
+
+    /**
+     * extra transcoding configurations
+     **/
+    private ExtraCfg   extraCfg    = null;
+
     public String getPresetName() {
         return presetName;
     }
@@ -49,9 +95,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * preset详情描述
-     **/
     public String getDescription() {
         return description;
     }
@@ -65,9 +108,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * 音视频文件的容器(MP4, FLV, MOV, MP3, M4A)
-     **/
     public String getContainer() {
         return container;
     }
@@ -83,9 +123,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * 是否仅执行容器格式转换
-     **/
     public Boolean getTransmux() {
         return transmux;
     }
@@ -99,9 +136,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * 片段截取设置
-     **/
     public Clip getClip() {
         return clip;
     }
@@ -115,9 +149,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * 音频输出信息
-     **/
     public Audio getAudio() {
         return audio;
     }
@@ -131,9 +162,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * 视频输出信息的集合
-     **/
     public Video getVideo() {
         return video;
     }
@@ -147,9 +175,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * HLS加解密信息的集合
-     **/
     public Encryption getEncryption() {
         return encryption;
     }
@@ -163,11 +188,6 @@ public class CreatePresetRequest extends AbstractBceRequest {
         return this;
     }
 
-    public CreatePresetRequest withRequestCredentials(BceCredentials credentials) {
-        this.setRequestCredentials(credentials);
-        return this;
-    }
-
     public String getWatermarkId() {
         return watermarkId;
     }
@@ -178,6 +198,50 @@ public class CreatePresetRequest extends AbstractBceRequest {
 
     public CreatePresetRequest withWatermarkId(String watermarkId) {
         this.watermarkId = watermarkId;
+        return this;
+    }
+
+    public Watermarks getWatermarks() {
+        return watermarks;
+    }
+
+    public void setWatermarks(Watermarks watermarks) {
+        this.watermarks = watermarks;
+    }
+
+    public CreatePresetRequest withWatermarks(Watermarks watermarks) {
+        this.watermarks = watermarks;
+        return this;
+    }
+
+    public TransCfg getTransCfg() {
+        return transCfg;
+    }
+
+    public void setTransCfg(TransCfg transCfg) {
+        this.transCfg = transCfg;
+    }
+
+    public CreatePresetRequest withTransCfg(TransCfg transCfg) {
+        this.transCfg = transCfg;
+        return this;
+    }
+
+    public ExtraCfg getExtraCfg() {
+        return extraCfg;
+    }
+
+    public void setExtraCfg(ExtraCfg extraCfg) {
+        this.extraCfg = extraCfg;
+    }
+
+    public CreatePresetRequest withExtraCfg(ExtraCfg extraCfg) {
+        this.extraCfg = extraCfg;
+        return this;
+    }
+
+    public CreatePresetRequest withRequestCredentials(BceCredentials credentials) {
+        this.setRequestCredentials(credentials);
         return this;
     }
 
@@ -195,6 +259,9 @@ public class CreatePresetRequest extends AbstractBceRequest {
         sb.append("    video: ").append(video).append("\n");
         sb.append("    encryption: ").append(encryption).append("\n");
         sb.append("    watermarkId: ").append(watermarkId).append("\n");
+        sb.append("    watermarks: ").append(watermarks).append("\n");
+        sb.append("    transCfg: ").append(transCfg).append("\n");
+        sb.append("    extraCfg: ").append(extraCfg).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

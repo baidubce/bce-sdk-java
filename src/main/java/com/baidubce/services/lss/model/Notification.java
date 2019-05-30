@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Notification {
+import java.io.Serializable;
+
+public class Notification implements Serializable {
     /**
      * 通知名称
      **/

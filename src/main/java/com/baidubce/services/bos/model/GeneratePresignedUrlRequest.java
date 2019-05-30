@@ -62,7 +62,7 @@ public class GeneratePresignedUrlRequest extends AbstractBceRequest {
      * will no longer be accepted by BOS. If not specified, a default
      * value will be supplied.
      */
-    private int expirationInSeconds = -1;
+    private int expirationInSeconds = 1800;
 
     /**
      * An optional map of additional parameters to include in the pre-signed

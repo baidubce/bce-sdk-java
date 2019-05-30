@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,12 +12,21 @@
  */
 package com.baidubce.services.bmr.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * instanceGroup is the group of instance which is configured identically
+ */
 public class InstanceGroup {
     private String id;
     private String instanceType;
     private String name;
     private String type;
     private int requestedInstanceCount;
+    private int rootDiskSizeInGB;
+    private String rootDiskMediumType;
+    private List<CdsItem> cds = new ArrayList<CdsItem>();
 
     public void setId(String id) {
         this.id = id;
@@ -57,5 +66,29 @@ public class InstanceGroup {
 
     public String getType() {
         return this.type;
+    }
+
+    public int getRootDiskSizeInGB() {
+        return rootDiskSizeInGB;
+    }
+
+    public void setRootDiskSizeInGB(int rootDiskSizeInGB) {
+        this.rootDiskSizeInGB = rootDiskSizeInGB;
+    }
+
+    public String getRootDiskMediumType() {
+        return rootDiskMediumType;
+    }
+
+    public void setRootDiskMediumType(String rootDiskMediumType) {
+        this.rootDiskMediumType = rootDiskMediumType;
+    }
+
+    public List<CdsItem> getCds() {
+        return cds;
+    }
+
+    public void setCds(List<CdsItem> cds) {
+        this.cds = cds;
     }
 }

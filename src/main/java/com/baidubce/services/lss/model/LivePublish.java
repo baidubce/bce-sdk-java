@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class LivePublish {
+import java.io.Serializable;
+
+public class LivePublish implements Serializable {
     private String region = null;
 
     private String pullUrl = null;

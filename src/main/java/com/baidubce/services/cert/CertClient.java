@@ -34,7 +34,6 @@ import com.baidubce.util.JsonUtils;
 /**
  * Client for cert public api.
  *
- * @author dingxiaomin (dingxiaomin@baidu.com)
  */
 public class CertClient extends AbstractBceClient {
 

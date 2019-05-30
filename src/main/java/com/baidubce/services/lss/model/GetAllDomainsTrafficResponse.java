@@ -2,6 +2,7 @@ package com.baidubce.services.lss.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class GetAllDomainsTrafficResponse extends AbstractBceResponse {
         return sb.toString();
     }
 
-    public static class TrafficStatistics {
+    public static class TrafficStatistics implements Serializable {
 
         private String timestamp = null;
 

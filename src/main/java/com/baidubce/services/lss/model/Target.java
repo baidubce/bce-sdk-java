@@ -13,7 +13,9 @@
 
 package com.baidubce.services.lss.model;
 
-public class Target {
+import java.io.Serializable;
+
+public class Target implements Serializable {
     private String format = null;
 
     private String sizingPolicy = null;
