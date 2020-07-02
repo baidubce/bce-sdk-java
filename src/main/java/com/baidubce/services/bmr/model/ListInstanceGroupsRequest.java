@@ -17,24 +17,25 @@ import com.baidubce.model.AbstractBceRequest;
 
 /**
  * Provide options for getting the instance groups of the target cluster.
- *
+ * <p>
  * The essential option is the ID of cluster.
  */
 public class ListInstanceGroupsRequest extends AbstractBceRequest {
     private String clusterId;
 
-    public void setClusterId(String clusterId) {
-        this.clusterId = clusterId;
-    }
-
     public String getClusterId() {
         return this.clusterId;
+    }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
     }
 
     /**
      * Configure the cluster ID for the request.
      *
      * @param clusterId The ID of the target cluster.
+     *
      * @return ListInstanceGroupsRequest
      */
     public ListInstanceGroupsRequest withClusterId(String clusterId) {
@@ -46,6 +47,7 @@ public class ListInstanceGroupsRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return ListInstanceGroupsRequest
      */
     public ListInstanceGroupsRequest withRequestCredentials(BceCredentials credentials) {

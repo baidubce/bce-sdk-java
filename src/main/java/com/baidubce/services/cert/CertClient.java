@@ -26,14 +26,16 @@ import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.cert.model.CertCreateRequest;
 import com.baidubce.services.cert.model.CertCreateResponse;
-import com.baidubce.services.cert.model.CertListRequest;
 import com.baidubce.services.cert.model.CertListResponse;
+import com.baidubce.services.cert.model.CertRequest;
+import com.baidubce.services.cert.model.CertResponse;
+import com.baidubce.services.cert.model.CertUpdateNameRequest;
+import com.baidubce.services.cert.model.CertificateMeta;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 
 /**
  * Client for cert public api.
- *
  */
 public class CertClient extends AbstractBceClient {
 
@@ -77,10 +79,38 @@ public class CertClient extends AbstractBceClient {
     }
 
     public CertListResponse listUserCerts() {
-        CertListRequest request = new CertListRequest();
+        CertRequest request = new CertRequest();
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, CERT_BASE_URL);
         return this.invokeHttpClient(internalRequest, CertListResponse.class);
 
+    }
+
+    public CertificateMeta getCertInfo(String certId) {
+        CertRequest request = new CertRequest();
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, CERT_BASE_URL, certId);
+        return this.invokeHttpClient(internalRequest, CertificateMeta.class);
+    }
+
+    public void updateCertName(String certId, String certName) {
+        CertUpdateNameRequest request = new CertUpdateNameRequest(certName);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                CERT_BASE_URL, certId);
+        attachRequestToBody(request, internalRequest);
+        internalRequest.addParameter("certName", "");
+        this.invokeHttpClient(internalRequest, CertResponse.class);
+    }
+
+    public void delete(String certId) {
+        CertRequest request = new CertRequest();
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE, CERT_BASE_URL, certId);
+        this.invokeHttpClient(internalRequest, CertResponse.class);
+    }
+
+    public void replaceCertData(String certId, CertCreateRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, CERT_BASE_URL, certId);
+        attachRequestToBody(request, internalRequest);
+        internalRequest.addParameter("certData", "");
+        this.invokeHttpClient(internalRequest, CertResponse.class);
     }
 
     /**

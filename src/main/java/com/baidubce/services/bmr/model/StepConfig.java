@@ -28,6 +28,31 @@ public class StepConfig {
     private String name;
     private List<AdditionalFile> additionalFiles;
 
+    public StepConfig withActionOnFailure(String actionOnFailure) {
+        this.setActionOnFailure(actionOnFailure);
+        return this;
+    }
+
+    public StepConfig withType(String type) {
+        this.setType(type);
+        return this;
+    }
+
+    public StepConfig withProperties(Map<String, String> properties) {
+        this.setProperties(properties);
+        return this;
+    }
+
+    public StepConfig withName(String name) {
+        this.setName(name);
+        return this;
+    }
+
+    public StepConfig withAdditionalFiles(List<AdditionalFile> additionalFiles) {
+        this.setAdditionalFiles(additionalFiles);
+        return this;
+    }
+
     public String getActionOnFailure() {
         return actionOnFailure;
     }

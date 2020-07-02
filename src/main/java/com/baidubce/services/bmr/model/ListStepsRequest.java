@@ -17,7 +17,7 @@ import com.baidubce.model.AbstractBceRequest;
 
 /**
  * Provides options for listing steps.
- *
+ * <p>
  * The essential option is cluster ID, and the optional query parameters are marker and max keys.
  */
 public class ListStepsRequest extends AbstractBceRequest {
@@ -53,6 +53,7 @@ public class ListStepsRequest extends AbstractBceRequest {
      * Configure the cluster ID on which the target steps run.
      *
      * @param clusterId The cluster ID.
+     *
      * @return ListStepsRequest
      */
     public ListStepsRequest withClusterId(String clusterId) {
@@ -65,6 +66,7 @@ public class ListStepsRequest extends AbstractBceRequest {
      * The marker marks the starting point for the query.
      *
      * @param marker the marker
+     *
      * @return ListStepsRequest
      */
     public ListStepsRequest withMarker(String marker) {
@@ -78,6 +80,7 @@ public class ListStepsRequest extends AbstractBceRequest {
      * reset to 1000.
      *
      * @param maxKeys The max count for each response page.
+     *
      * @return ListStepsRequest
      */
     public ListStepsRequest withMaxKeys(int maxKeys) {
@@ -89,6 +92,7 @@ public class ListStepsRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return ListStepsRequest
      */
     public ListStepsRequest withRequestCredentials(BceCredentials credentials) {

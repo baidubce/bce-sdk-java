@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -42,6 +42,11 @@ public class ResizeVolumeRequest extends AbstractBceRequest {
      * The new volume size in GB, available size is 0-5120 GB
      */
     private int newCdsSizeInGB;
+
+    /**
+     * The new volumeType
+     */
+    private String newVolumeType;
 
     public String getClientToken() {
         return clientToken;
@@ -101,6 +106,19 @@ public class ResizeVolumeRequest extends AbstractBceRequest {
      */
     public ResizeVolumeRequest withNewCdsSizeInGB(int newCdsSizeInGB) {
         this.newCdsSizeInGB = newCdsSizeInGB;
+        return this;
+    }
+
+    public String getNewVolumeType() {
+        return newVolumeType;
+    }
+
+    public void setNewVolumeType(String newVolumeType) {
+        this.newVolumeType = newVolumeType;
+    }
+
+    public ResizeVolumeRequest withNewVolumeType(String newVolumeType) {
+        this.newVolumeType = newVolumeType;
         return this;
     }
 

@@ -224,16 +224,16 @@ public class BlbClient extends AbstractBceClient {
     public ListBlbResponse listBlbs(ListBlbRequest listBlbRequest) {
         checkNotNull(listBlbRequest, "request should not be null.");
         InternalRequest internalRequest = this.createRequest(listBlbRequest, HttpMethodName.GET, PREFIX);
-        if (StringUtils.isEmpty(listBlbRequest.getAddress())) {
+        if (StringUtils.isNotEmpty(listBlbRequest.getAddress())) {
             internalRequest.addParameter("address", listBlbRequest.getAddress());
         }
-        if (StringUtils.isEmpty(listBlbRequest.getName())) {
+        if (StringUtils.isNotEmpty(listBlbRequest.getName())) {
             internalRequest.addParameter("name", listBlbRequest.getName());
         }
-        if (StringUtils.isEmpty(listBlbRequest.getBlbId())) {
+        if (StringUtils.isNotEmpty(listBlbRequest.getBlbId())) {
             internalRequest.addParameter("blbId", listBlbRequest.getBlbId());
         }
-        if (StringUtils.isEmpty(listBlbRequest.getBccId())) {
+        if (StringUtils.isNotEmpty(listBlbRequest.getBccId())) {
             internalRequest.addParameter("bccId", listBlbRequest.getBccId());
         }
         if (listBlbRequest.getMarker() != null) {
@@ -562,6 +562,7 @@ public class BlbClient extends AbstractBceClient {
                 modifyBSAttributesRequest.getBlbId(), "backendserver");
         internalRequest.addParameter(BSAction.update.name(), null);
         internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, modifyBSAttributesRequest.getClientToken());
+        fillPayload(internalRequest, modifyBSAttributesRequest);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 

@@ -43,6 +43,26 @@ public class TableStorageConstants {
     public static final int CREATE_TABLE_VERSION = 0;
 
     /**
+     * storageType's value is empty. Used in createTable operation.
+     */
+    public static final String EMPTY_STORAGE_TYPE = "";
+
+    /**
+     * storageType's value is HighPerformance. Used in createTable operation.
+     */
+    public static final String STORAGE_TYPE_HIGH_PERFORMANCE = "HighPerformance";
+
+    /**
+     * storageType's value is CommonPerformance. Used in createTable operation.
+     */
+    public static final String STORAGE_TYPE_COMMON_PERFORMANCE = "CommonPerformance";
+
+    /**
+     * Minimum value of TimeToLive which is set to 23 hours
+     */
+    public static final int MIN_VALID_LIVE_TIME = 23 * 3600;
+
+    /**
      * TimeToLive's value. Indicates that the data is always valid until it is deleted.
      */
     public static final int FORERVER_LIVE_TIME = 0;
@@ -237,7 +257,7 @@ public class TableStorageConstants {
     /**
      * The max version key in json response
      */
-    public static final String JSON_MAX_VERSION                = "maxVersion";
+    public static final String JSON_MAX_VERSIONS                = "maxVersions";
 
     /**
      * The create time key in json response
@@ -293,4 +313,9 @@ public class TableStorageConstants {
      * The stop key ranges key in json response
      */
     public static final String JSON_END_KEY                    = "endKey";
+
+    /**
+     * The storage type key in json response
+     */
+    public static final String JSON_STORAGE_TYPE               = "storageType";
 }

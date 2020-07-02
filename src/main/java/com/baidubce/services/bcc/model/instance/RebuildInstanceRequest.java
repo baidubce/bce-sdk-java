@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -31,6 +31,11 @@ public class RebuildInstanceRequest extends AbstractBceRequest {
      * The id of image.
      */
     private String imageId;
+
+    /**
+     * The id of the keypair
+     */
+    private String keypairId;
 
     /**
      * The admin password to login the instance.
@@ -101,6 +106,24 @@ public class RebuildInstanceRequest extends AbstractBceRequest {
      */
     public RebuildInstanceRequest withImageId(String imageId) {
         this.imageId = imageId;
+        return this;
+    }
+
+    public String getKeypairId() {
+        return keypairId;
+    }
+
+    public void setKeypairId(String keypairId) {
+        this.keypairId = keypairId;
+    }
+
+    /**
+     * Configure keypairId for the request.
+     * @param keypairId The id of the keypair which will be used to rebuild the instance.
+     * @return RebuildInstanceRequest with keypairId.
+     */
+    public RebuildInstanceRequest withKeypairId(String keypairId) {
+        this.keypairId = keypairId;
         return this;
     }
 

@@ -62,8 +62,9 @@ public class ShowTableResponseUnmarshaller implements Unmarshaller<ShowTableResp
         String createTime = root.get(TableStorageConstants.JSON_CREATE_TIME).asText();
         String compressType = root.get(TableStorageConstants.JSON_COMPRESS_TYPE).asText();
         int ttl = root.get(TableStorageConstants.JSON_TTL).asInt();
-        int maxVersion = root.has(TableStorageConstants.JSON_MAX_VERSION)
-                ? root.get(TableStorageConstants.JSON_MAX_VERSION).asInt() : 1;
+        String storageType = root.get(TableStorageConstants.JSON_STORAGE_TYPE).asText();
+        int maxVersions = root.has(TableStorageConstants.JSON_MAX_VERSIONS)
+                ? root.get(TableStorageConstants.JSON_MAX_VERSIONS).asInt() : 1;
 
         result.setInstanceName(instanceName);
         result.setTableName(tableName);
@@ -72,7 +73,8 @@ public class ShowTableResponseUnmarshaller implements Unmarshaller<ShowTableResp
         result.setCreateTime(createTime);
         result.setCompressType(CompressType.valueOf(compressType));
         result.setTimeToLive(ttl);
-        result.setMaxVersion(maxVersion);
+        result.setStorageType(storageType);
+        result.setMaxVersions(maxVersions);
 
         return result;
     }

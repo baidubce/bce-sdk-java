@@ -59,14 +59,15 @@ public class CreateTableRequest extends AbstractTableStorageRequest {
 
         buffer.append(",\"ttl\":");
         long timeToLive = tableOption.getTimeToLive();
-        if (timeToLive >= 0) {
+        if (timeToLive >= TableStorageConstants.MIN_VALID_LIVE_TIME
+                || timeToLive == TableStorageConstants.FORERVER_LIVE_TIME) {
             buffer.append(tableOption.getTimeToLive());
         } else if (timeToLive == TableStorageConstants.DEFAULT_LIVE_TIME) {
             buffer.append(TableStorageConstants.FORERVER_LIVE_TIME);
         } else {
-            throw new BceClientException("The timeToLive's value cannot be a negative number other than "
-                    + "DEFAULT_LIVE_TIME " + TableStorageConstants.DEFAULT_LIVE_TIME
-                    + ". timeToLive=" + timeToLive + ".");
+            throw new BceClientException("The timeToLive's value must be "
+                    + TableStorageConstants.DEFAULT_LIVE_TIME + " or greater than "
+                    + TableStorageConstants.MIN_VALID_LIVE_TIME + ". timeToLive=" + timeToLive + ".");
         }
 
         buffer.append(",\"maxVersions\":");
@@ -79,6 +80,19 @@ public class CreateTableRequest extends AbstractTableStorageRequest {
             throw new BceClientException("The maxVersions' value must be positive, or equal to "
                     + "DEFAULT_TABLE_MAX_VERSIONS " + TableStorageConstants.DEFAULT_TABLE_MAX_VERSIONS
                     + ". maxVersions=" + maxVersions + ".");
+        }
+
+        String storageType = tableOption.getStorageType();
+        if (!storageType.equals(TableStorageConstants.EMPTY_STORAGE_TYPE)) {
+            if (storageType.equals(TableStorageConstants.STORAGE_TYPE_HIGH_PERFORMANCE)
+                    || storageType.equals(TableStorageConstants.STORAGE_TYPE_COMMON_PERFORMANCE)) {
+                buffer.append(",\"storageType\":\"");
+                buffer.append(storageType);
+                buffer.append("\"");
+            }
+            else {
+                throw new BceClientException("The storageType's value must be HighPerformance or CommonPerformance");
+            }
         }
 
         buffer.append("}");

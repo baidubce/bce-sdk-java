@@ -16,6 +16,7 @@ import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
 import com.baidubce.auth.BceCredentials;
+import com.baidubce.auth.SignOptions;
 import com.baidubce.http.Headers;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.http.handler.BceErrorResponseHandler;
@@ -72,6 +73,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -120,6 +123,10 @@ public class BbcClient extends AbstractBceClient {
     private static final String IMAGEID_MESSAGE_KEY = "imageId";
     private static final String IMAGENAME_MESSAGE_KEY = "imageName";
 
+    /**
+     * Generate signature with specified headers.
+     */
+    private static final String[] HEADERS_TO_SIGN = {"host", "x-bce-date"};
 
     /**
      * Responsible for handling httpResponses from all bbc service calls.
@@ -179,6 +186,9 @@ public class BbcClient extends AbstractBceClient {
         }
         URI uri = HttpUtils.appendUri(this.getEndpoint(), path.toArray(new String[path.size()]));
         InternalRequest request = new InternalRequest(httpMethod, uri);
+        SignOptions signOptions = new SignOptions();
+        signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
+        request.setSignOptions(signOptions);
         request.setCredentials(bceRequest.getRequestCredentials());
         return request;
     }

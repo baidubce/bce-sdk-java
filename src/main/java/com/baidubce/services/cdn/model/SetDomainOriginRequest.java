@@ -17,17 +17,42 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.util.List;
 
 /**
  * @author yixing
- *
+ * update by changxing01 on 19/8/28
  */
 public class SetDomainOriginRequest extends AbstractBceRequest {
     
     private List<OriginPeer> origin;
     private String domain;
-    
+    private String defaultHost;
+
+    /**
+     * @return defaultHost
+     */
+    public String getDefaultHost() {
+        return defaultHost;
+    }
+
+    /**
+     * @param defaultHost default back source host
+     */
+    public void setDefaultHost(String defaultHost) {
+        this.defaultHost = defaultHost;
+    }
+
+    /**
+     * @param defaultHost default back source host
+     * @return this object
+     */
+    public SetDomainOriginRequest withDefaultHost(String defaultHost) {
+        this.defaultHost = defaultHost;
+        return this;
+    }
+
     /**
      * @return domain
      */
@@ -83,10 +108,10 @@ public class SetDomainOriginRequest extends AbstractBceRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
-    
+
     /**
      * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

@@ -199,7 +199,7 @@ public abstract class AbstractBceClient {
      * @return the computed service ID.
      * @throws IllegalStateException if the class name does not follow the naming convention for BCE clients.
      */
-    private String computeServiceId() {
+    public String computeServiceId() {
         String packageName = this.getClass().getPackage().getName();
         String prefix = AbstractBceClient.class.getPackage().getName() + ".services.";
         if (!packageName.startsWith(prefix)) {
@@ -207,6 +207,10 @@ public abstract class AbstractBceClient {
                     + "'" + prefix + "' expected");
         }
         String serviceId = packageName.substring(prefix.length());
+        // Compatible with v2 version sdk.
+        if (serviceId.endsWith(".v2")) {
+            serviceId = serviceId.substring(0, serviceId.length() - 3);
+        }
         if (serviceId.indexOf('.') != -1) {
             throw new IllegalStateException("The client class should be put in package like " + prefix + "XXX");
         }
@@ -214,7 +218,7 @@ public abstract class AbstractBceClient {
         String expectedClassName =
                 packageName + '.' + Character.toUpperCase(serviceId.charAt(0)) + serviceId.substring(1) + "Client";
         /**
-         * Comment out this verification for media services, since media service is a suit of 
+         * Comment out this verification for media services, since media service is a suit of
          * services, the media package contains multiple Client classes.
          *
          */

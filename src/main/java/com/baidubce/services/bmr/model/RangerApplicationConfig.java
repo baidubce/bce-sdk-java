@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent a Ranger applicaton.
- * 
+ * <p>
  * A Ranger application can be configured with property of version.
  */
 public class RangerApplicationConfig extends ApplicationConfig {
@@ -27,11 +27,12 @@ public class RangerApplicationConfig extends ApplicationConfig {
     /**
      * Configure the version of Ranger.
      * The reference version is as follows:
-     *
-     *     image type |  image version | Ranger version supported
-     *      hadoop    |    1.2.0       |    0.11
+     * <p>
+     * image type |  image version | Ranger version supported
+     * hadoop    |    1.2.0       |    0.11
      *
      * @param version The version of Ranger.
+     *
      * @return RangerApplicationConfig
      */
     public RangerApplicationConfig withVersion(String version) {

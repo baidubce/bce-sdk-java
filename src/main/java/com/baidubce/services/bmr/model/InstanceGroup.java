@@ -28,44 +28,44 @@ public class InstanceGroup {
     private String rootDiskMediumType;
     private List<CdsItem> cds = new ArrayList<CdsItem>();
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return this.id;
     }
 
-    public void setInstanceType(String instanceType) {
-        this.instanceType = instanceType;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getInstanceType() {
         return this.instanceType;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setInstanceType(String instanceType) {
+        this.instanceType = instanceType;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public void setRequestedInstanceCount(int requestedInstanceCount) {
-        this.requestedInstanceCount = requestedInstanceCount;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getRequestedInstanceCount() {
         return this.requestedInstanceCount;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRequestedInstanceCount(int requestedInstanceCount) {
+        this.requestedInstanceCount = requestedInstanceCount;
     }
 
     public String getType() {
         return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getRootDiskSizeInGB() {

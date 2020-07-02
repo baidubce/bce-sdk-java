@@ -17,7 +17,7 @@ import com.baidubce.model.AbstractBceRequest;
 
 /**
  * Provides options for describing a step.
- *
+ * <p>
  * The essential options are cluster ID and step ID.
  */
 public class GetStepRequest extends AbstractBceRequest {
@@ -44,6 +44,7 @@ public class GetStepRequest extends AbstractBceRequest {
      * Configure the cluster ID for the request.
      *
      * @param clusterId The ID of cluster which executes the target step.
+     *
      * @return GetStepRequest
      */
     public GetStepRequest withClusterId(String clusterId) {
@@ -55,6 +56,7 @@ public class GetStepRequest extends AbstractBceRequest {
      * Configure the step ID for the request.
      *
      * @param stepId The ID of the step.
+     *
      * @return GetStepRequest
      */
     public GetStepRequest withStepId(String stepId) {
@@ -66,6 +68,7 @@ public class GetStepRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return GetStepRequest
      */
     public GetStepRequest withRequestCredentials(BceCredentials credentials) {

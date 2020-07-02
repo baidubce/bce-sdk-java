@@ -23,6 +23,7 @@ import java.util.List;
  * Base class for all BatchXXXRowRequest objects.
  */
 public class BatchRowRequest<T extends TableStorageRow> extends AbstractTableStorageRequest {
+    private int maxVersions = TableStorageConstants.DEFAULT_MAX_VERSIONS;
     protected List<T> rows = new ArrayList<T>();
 
     BatchRowRequest(String tableName) {
@@ -55,6 +56,24 @@ public class BatchRowRequest<T extends TableStorageRow> extends AbstractTableSto
     }
 
     /**
+     * Get maxVersions in BatchGetRow.
+     *
+     * @return The target maxVersions.
+     */
+    public int getMaxVersions() {
+        return maxVersions;
+    }
+
+    /**
+     * Set maxVersions.
+     *
+     * @param maxVersions The target maxVersions.
+     */
+    public void setMaxVersions(int maxVersions) {
+        this.maxVersions = maxVersions;
+    }
+
+    /**
      * Convert this request to json string.
      *
      * @return The json string represent this request.
@@ -62,8 +81,10 @@ public class BatchRowRequest<T extends TableStorageRow> extends AbstractTableSto
     @Override
     public String toJsonString() {
         checkBatchRequest(this);
-
-        StringBuffer buffer = new StringBuffer("{\"rows\":[");
+        StringBuffer buffer = new StringBuffer("{");
+        buffer.append("\"maxVersions\":" + maxVersions);
+        buffer.append(",");
+        buffer.append("\"rows\":[");
         for (int i = 0; i < rows.size(); i++) {
             if (i > 0) {
                 buffer.append(",");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -31,5 +31,12 @@ public class ListZonesResponse extends AbstractBceResponse {
 
     public void setZones(List<ZoneModel> zones) {
         this.zones = zones;
+    }
+
+    @Override
+    public String toString() {
+        return "ListZoneResponse{"
+                + "zones='" + zones + '\''
+                + '}';
     }
 }

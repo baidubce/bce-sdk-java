@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Baidu, Inc.
+ * Copyright 2015-2020 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,11 +13,17 @@
 
 package com.baidubce.services.media.model;
 
+import lombok.Data;
+
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The model which will be used to set target info in creating transcoding job
+ */
+@Data
 public class Target {
     /**
      * target BOS key
@@ -34,6 +40,12 @@ public class Target {
      **/
     private Area delogoArea = null;
 
+
+    /**
+     * enable auto crop
+     **/
+    private Boolean autoCrop = null;
+
     /**
      * crop area
      **/
@@ -49,29 +61,10 @@ public class Target {
      **/
     private List<Insert> inserts = null;
 
-
-    public String getTargetKey() {
-        return targetKey;
-    }
-
-    public void setTargetKey(String targetKey) {
-        checkStringNotEmpty(targetKey, "The parameter targetKey should NOT be null or empty string.");
-        this.targetKey = targetKey;
-    }
-
     public Target withTargetKey(String targetKey) {
         checkStringNotEmpty(targetKey, "The parameter targetKey should NOT be null or empty string.");
         this.targetKey = targetKey;
         return this;
-    }
-
-    public String getPresetName() {
-        return presetName;
-    }
-
-    public void setPresetName(String presetName) {
-        checkStringNotEmpty(presetName, "The parameter presetName should NOT be null or empty string.");
-        this.presetName = presetName;
     }
 
     public Target withPresetName(String presetName) {
@@ -80,25 +73,14 @@ public class Target {
         return this;
     }
 
-    public Area getDelogoArea() {
-        return delogoArea;
-    }
-
-    public void setDelogoArea(Area delogoArea) {
-        this.delogoArea = delogoArea;
-    }
-
     public Target withDelogoArea(Area delogoArea) {
         this.delogoArea = delogoArea;
         return this;
     }
 
-    public Area getCrop() {
-        return crop;
-    }
-
-    public void setCrop(Area crop) {
-        this.crop = crop;
+    public Target withAutpCrop(Boolean autoCrop) {
+        this.autoCrop = autoCrop;
+        return this;
     }
 
     public Target withCrop(Area crop) {
@@ -106,25 +88,9 @@ public class Target {
         return this;
     }
 
-    public List<String> getWatermarkIds() {
-        return watermarkIds;
-    }
-
-    public void setWatermarkIds(List<String> watermarkIds) {
-        this.watermarkIds = watermarkIds;
-    }
-
     public Target withWatermarkIds(List<String> watermarkIds) {
         this.watermarkIds = watermarkIds;
         return this;
-    }
-
-    public List<Insert> getInserts() {
-        return inserts;
-    }
-
-    public void setInserts(List<Insert> inserts) {
-        this.inserts = inserts;
     }
 
     public Target withInserts(List<Insert> inserts) {
@@ -147,6 +113,7 @@ public class Target {
         sb.append("    targetKey: ").append(targetKey).append("\n");
         sb.append("    presetName: ").append(presetName).append("\n");
         sb.append("    delogoArea: ").append(delogoArea).append("\n");
+        sb.append("    autoCrop: ").append(autoCrop).append("\n");
         sb.append("    crop: ").append(crop).append("\n");
         sb.append("    watermarkIds: ").append(watermarkIds).append("\n");
         sb.append("    inserts: ").append(inserts).append("\n");

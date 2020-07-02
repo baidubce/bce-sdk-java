@@ -14,10 +14,18 @@ package com.baidubce.services.billing.model;
 
 import java.math.BigDecimal;
 
+import lombok.ToString;
+
 /**
  * the detail info of resource month bill
  */
+@ToString
 public class ResourceMonthInstanceBill {
+
+    /**
+     * service provider
+     */
+    private String vendor;
 
     /**
      * user id
@@ -115,6 +123,11 @@ public class ResourceMonthInstanceBill {
     private String amountUnit = "";
 
     /**
+     * the usage amount of discount
+     */
+    private String discountAmount;
+
+    /**
      * the unit price of the charge item
      */
     private String unitPrice = "";
@@ -125,9 +138,24 @@ public class ResourceMonthInstanceBill {
     private String pricingUnit = "";
 
     /**
+     * the discounts of the bill
+     */
+    private String discountUnit = "";
+
+    /**
+     * the tex of the resource
+     */
+    private BigDecimal tex;
+
+    /**
      * amount of bill
      */
     private BigDecimal originPrice;
+
+    /**
+     * amount need to pay
+     */
+    private BigDecimal financePrice;
 
     /**
      * amount of cash
@@ -155,6 +183,11 @@ public class ResourceMonthInstanceBill {
     private BigDecimal debt;
 
     /**
+     * amount not need to pay
+     */
+    private BigDecimal noPaidPrice;
+
+    /**
      * amount of coupon
      */
     private BigDecimal couponPrice;
@@ -173,6 +206,14 @@ public class ResourceMonthInstanceBill {
      * amount of sales
      */
     private BigDecimal sysGold;
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
 
     public String getAccountId() {
         return accountId;
@@ -326,6 +367,14 @@ public class ResourceMonthInstanceBill {
         this.amountUnit = amountUnit;
     }
 
+    public String getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(String discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
     public String getUnitPrice() {
         return unitPrice;
     }
@@ -342,12 +391,36 @@ public class ResourceMonthInstanceBill {
         this.pricingUnit = pricingUnit;
     }
 
+    public String getDiscountUnit() {
+        return discountUnit;
+    }
+
+    public void setDiscountUnit(String discountUnit) {
+        this.discountUnit = discountUnit;
+    }
+
+    public BigDecimal getTex() {
+        return tex;
+    }
+
+    public void setTex(BigDecimal tex) {
+        this.tex = tex;
+    }
+
     public BigDecimal getOriginPrice() {
         return originPrice;
     }
 
     public void setOriginPrice(BigDecimal originPrice) {
         this.originPrice = originPrice;
+    }
+
+    public BigDecimal getFinancePrice() {
+        return financePrice;
+    }
+
+    public void setFinancePrice(BigDecimal financePrice) {
+        this.financePrice = financePrice;
     }
 
     public BigDecimal getCash() {
@@ -388,6 +461,14 @@ public class ResourceMonthInstanceBill {
 
     public void setDebt(BigDecimal debt) {
         this.debt = debt;
+    }
+
+    public BigDecimal getNoPaidPrice() {
+        return noPaidPrice;
+    }
+
+    public void setNoPaidPrice(BigDecimal noPaidPrice) {
+        this.noPaidPrice = noPaidPrice;
     }
 
     public BigDecimal getCouponPrice() {

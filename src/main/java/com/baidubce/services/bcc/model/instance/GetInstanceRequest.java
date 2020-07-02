@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,6 +14,7 @@ package com.baidubce.services.bcc.model.instance;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The request for getting instance detail
@@ -23,6 +24,7 @@ public class GetInstanceRequest extends AbstractBceRequest {
     /**
      * The id of instance.
      */
+    @JsonIgnore
     private String instanceId;
 
     public String getInstanceId() {

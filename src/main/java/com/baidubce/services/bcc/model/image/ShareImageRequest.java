@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -34,9 +34,14 @@ public class ShareImageRequest extends AbstractBceRequest {
     private String account;
 
     /**
-     * The accout id of user
+     * The account id of user
      */
     private String accountId;
+
+    /**
+     * The account of uc.
+     */
+    private String ucAccount;
 
     public String getImageId() {
         return imageId;
@@ -60,6 +65,14 @@ public class ShareImageRequest extends AbstractBceRequest {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+
+    public String getUcAccount() {
+        return ucAccount;
+    }
+
+    public void setUcAccount(String ucAccount) {
+        this.ucAccount = ucAccount;
     }
 
     /**
@@ -92,6 +105,17 @@ public class ShareImageRequest extends AbstractBceRequest {
      */
     public ShareImageRequest withAccountId(String accountId) {
         this.accountId = accountId;
+        return this;
+    }
+
+    /**
+     * Configure ucAccount for the request.
+     *
+     * @param ucAccount The account of uc.
+     * @return ShareImageRequest with ucAccount.
+     */
+    public ShareImageRequest withUcAccount(String ucAccount) {
+        this.ucAccount = ucAccount;
         return this;
     }
 

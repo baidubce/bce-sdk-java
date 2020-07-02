@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -33,6 +33,12 @@ public class StopInstanceRequest extends AbstractBceRequest {
      * and it may result int losing important data which have not written to disk.
      */
     private boolean forceStop = false;
+
+    /**
+     * The option param to indicate that whether the instance can be stopped with no charge or not,
+     * default value is false. If <code>true</>, it means the instance can be stopped with no charge.
+     */
+    private boolean stopWithNoCharge;
 
     public String getInstanceId() {
         return instanceId;
@@ -72,6 +78,26 @@ public class StopInstanceRequest extends AbstractBceRequest {
      */
     public StopInstanceRequest withForceStop(boolean forceStop) {
         this.forceStop = forceStop;
+        return this;
+    }
+
+    public boolean isStopWithNoCharge() {
+        return stopWithNoCharge;
+    }
+
+    public void setStopWithNoCharge(boolean stopWithNoCharge) {
+        this.stopWithNoCharge = stopWithNoCharge;
+    }
+
+    /**
+     * Configure stopWithNoCharge for the request.
+     * @param stopWithNoCharge The option param to indicate that whether the instance can be stopped
+     *                         with no charge or not, default value is false. If <code>true</>,
+     *                         it means the instance can be stopped with no charge.
+     * @return StopInstanceRequest with stopWithNoCharge.
+     */
+    public StopInstanceRequest withStopWithNoCharge(boolean stopWithNoCharge) {
+        this.stopWithNoCharge = stopWithNoCharge;
         return this;
     }
 

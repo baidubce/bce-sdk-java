@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 
 /**
- * Respones for shadow filter
+ * Response for shadow filter
  */
 public class ShadowFilterResponse extends AbstractBceResponse {
     private long amount;

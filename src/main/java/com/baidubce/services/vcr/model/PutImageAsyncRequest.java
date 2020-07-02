@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Baidu, Inc.
+ * Copyright 2018-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -22,6 +22,7 @@ public class PutImageAsyncRequest extends AbstractBceRequest {
     private String source;
     private String preset;
     private String notification;
+    private String description;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -53,12 +54,21 @@ public class PutImageAsyncRequest extends AbstractBceRequest {
         this.notification = notification;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("PutImageAsyncRequest{");
         sb.append("source='").append(source).append('\'');
         sb.append(", preset='").append(preset).append('\'');
         sb.append(", notification='").append(notification).append('\'');
+        sb.append(", description='").append(description).append('\'');
         sb.append('}');
         return sb.toString();
     }

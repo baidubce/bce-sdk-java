@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Baidu, Inc.
+ * Copyright 2015-2020 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,8 +13,14 @@
 
 package com.baidubce.services.media.model;
 
+import lombok.Data;
+
 import java.util.List;
 
+/**
+ * The model which will be used to set extra configs in preset
+ */
+@Data
 public class ExtraCfg {
     /**
      * set the conditions of the video that will disable watermark, options include "portrait"
@@ -26,29 +32,34 @@ public class ExtraCfg {
      **/
     private Float segmentDurationInSecond = null;
 
-    public List<String> getWatermarkDisableWhitelist() {
-        return watermarkDisableWhitelist;
-    }
+    /**
+     * set the gop length
+     **/
+    private Integer gopLength = null;
 
-    public void setWatermarkDisableWhitelist(List<String> watermarkDisableWhitelist) {
-        this.watermarkDisableWhitelist = watermarkDisableWhitelist;
-    }
+    /**
+     * enable skip black frame
+     **/
+    private Boolean skipBlackFrame = null;
+
 
     public ExtraCfg withWatermarkDisableWhitelist(List<String> watermarkDisableWhitelist) {
         this.watermarkDisableWhitelist = watermarkDisableWhitelist;
         return this;
     }
 
-    public Float getSegmentDurationInSecond() {
-        return segmentDurationInSecond;
-    }
-
-    public void setSegmentDurationInSecond(Float segmentDurationInSecond) {
-        this.segmentDurationInSecond = segmentDurationInSecond;
-    }
-
     public ExtraCfg withSegmentDurationInSecond(Float segmentDurationInSecond) {
         this.segmentDurationInSecond = segmentDurationInSecond;
+        return this;
+    }
+
+    public ExtraCfg withGopLength(Integer gopLength) {
+        this.gopLength = gopLength;
+        return this;
+    }
+
+    public ExtraCfg withSkipBlackFrame(Boolean skipBlackFrame) {
+        this.skipBlackFrame = skipBlackFrame;
         return this;
     }
 
@@ -59,6 +70,8 @@ public class ExtraCfg {
 
         sb.append("    watermarkDisableWhitelist: ").append(watermarkDisableWhitelist).append("\n");
         sb.append("    segmentDurationInSecond: ").append(segmentDurationInSecond).append("\n");
+        sb.append("    gopLength: ").append(gopLength).append("\n");
+        sb.append("    skipBlackFrame: ").append(skipBlackFrame).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

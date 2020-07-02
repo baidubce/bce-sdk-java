@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Baidu, Inc.
+ * Copyright 2015-2020 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,7 +13,19 @@
 
 package com.baidubce.services.media.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+
+/**
+ * The model which will be used to set source clip info in creating transcoding job
+ */
+@Data
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SourceClip {
+    /**
+     * source bucket
+     */
+    private String bucket = null;
     /**
      * Bos key
      */
@@ -44,6 +56,21 @@ public class SourceClip {
      */
     private Boolean enableLogo = null;
 
+    /**
+     * the clip will be the master clip
+     */
+    private Boolean asMasterClip;
+
+    /**
+     * the clip will enable delogo
+     */
+    private Boolean enableDelogo;
+
+    /**
+     * the clip will enable crop
+     */
+    private Boolean enableCrop;
+
     public String getSourceKey() {
         return sourceKey;
     }
@@ -57,38 +84,15 @@ public class SourceClip {
         return this;
     }
 
-    public Integer getStartTimeInSecond() {
-        return startTimeInSecond;
-    }
-
-    public void setStartTimeInSecond(Integer startTimeInSecond) {
-        this.startTimeInSecond = startTimeInSecond;
-    }
-
     public SourceClip withStartTimeInSecond(Integer startTimeInSecond) {
         this.startTimeInSecond = startTimeInSecond;
         return this;
     }
 
-    public Integer getDurationInSecond() {
-        return durationInSecond;
-    }
-
-    public void setDurationInSecond(Integer durationInSecond) {
-        this.durationInSecond = durationInSecond;
-    }
 
     public SourceClip withDurationInSecond(Integer durationInSecond) {
         this.durationInSecond = durationInSecond;
         return this;
-    }
-
-    public Integer getStartTimeInMillisecond() {
-        return startTimeInMillisecond;
-    }
-
-    public void setStartTimeInMillisecond(Integer startTimeInMillisecond) {
-        this.startTimeInMillisecond = startTimeInMillisecond;
     }
 
     public SourceClip withStartTimeInMillisecond(Integer startTimeInMillisecond) {
@@ -96,28 +100,9 @@ public class SourceClip {
         return this;
     }
 
-    /**
-     * 片段的持续时间，单位毫秒
-     **/
-    public Integer getDurationInMillisecond() {
-        return durationInMillisecond;
-    }
-
-    public void setDurationInMillisecond(Integer durationInMillisecond) {
-        this.durationInMillisecond = durationInMillisecond;
-    }
-
     public SourceClip withDurationInMillisecond(Integer durationInMillisecond) {
         this.durationInMillisecond = durationInMillisecond;
         return this;
-    }
-
-    public Boolean getEnableLogo() {
-        return enableLogo;
-    }
-
-    public void setEnableLogo(Boolean enableLogo) {
-        this.enableLogo = enableLogo;
     }
 
     public SourceClip withEnableLogo(Boolean enableLogo) {
@@ -125,16 +110,40 @@ public class SourceClip {
         return this;
     }
 
+    public SourceClip withBucket(String bucket) {
+        this.bucket = bucket;
+        return this;
+    }
+
+    public SourceClip withAsMasterClip(Boolean enableDelogo) {
+        this.asMasterClip = asMasterClip;
+        return this;
+    }
+
+    public SourceClip withEnableDelogo(Boolean enableDelogo) {
+        this.enableDelogo = enableDelogo;
+        return this;
+    }
+
+    public SourceClip withEnableCrop(Boolean enableCrop) {
+        this.enableCrop = enableCrop;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Clip {\n");
+        sb.append("    bucket: ").append(bucket).append("\n");
         sb.append("    sourceKey: ").append(sourceKey).append("\n");
         sb.append("    startTimeInSecond: ").append(startTimeInSecond).append("\n");
         sb.append("    durationInSecond: ").append(durationInSecond).append("\n");
         sb.append("    startTimeInMillisecond: ").append(startTimeInMillisecond).append("\n");
         sb.append("    durationInMillisecond: ").append(durationInMillisecond).append("\n");
         sb.append("    enableLogo: ").append(enableLogo).append("\n");
+        sb.append("    asMasterClip: ").append(asMasterClip).append("\n");
+        sb.append("    enableDelogo: ").append(enableDelogo).append("\n");
+        sb.append("    enableCrop: ").append(enableCrop).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

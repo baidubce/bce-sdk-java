@@ -116,6 +116,8 @@ import com.baidubce.services.lss.model.PauseDomainStreamRequest;
 import com.baidubce.services.lss.model.PauseDomainStreamResponse;
 import com.baidubce.services.lss.model.PauseSessionRequest;
 import com.baidubce.services.lss.model.PauseSessionResponse;
+import com.baidubce.services.lss.model.RecordingClipRequest;
+import com.baidubce.services.lss.model.RecordingClipResponse;
 import com.baidubce.services.lss.model.RefreshSessionRequest;
 import com.baidubce.services.lss.model.RefreshSessionResponse;
 import com.baidubce.services.lss.model.ResumeAppStreamRequest;
@@ -129,6 +131,8 @@ import com.baidubce.services.lss.model.StartPullSessionRequest;
 import com.baidubce.services.lss.model.StartPullSessionResponse;
 import com.baidubce.services.lss.model.StartRecordingRequest;
 import com.baidubce.services.lss.model.StartRecordingResponse;
+import com.baidubce.services.lss.model.StreamingStreamRequest;
+import com.baidubce.services.lss.model.StreamingStreamResponse;
 import com.baidubce.services.lss.model.StopRecordingRequest;
 import com.baidubce.services.lss.model.StopRecordingResponse;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyInnerRequest;
@@ -233,9 +237,19 @@ public class LssClient extends AbstractBceClient {
     private static final String REFRESH = "refresh";
 
     /**
+     * The common URI prefix for get ongiong stream.
+     */
+    private static final String ONGOING_STREAM = "streaming";
+
+    /**
      * Parameter for starting pulling live session.
      */
     private static final String PULL = "pull";
+
+    /**
+     * Parameter for clip recording file.
+     */
+    private static final String CLIP = "clip";
 
     /**
      * Parameter for getting live source info.
@@ -1163,6 +1177,23 @@ public class LssClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, ListRecordingsResponse.class);
     }
 
+    /**
+     *Clip your recording file.
+     *
+     * @param The request object containing all params for clipping recording file.
+     * @return The details of your file clipping task;
+     */
+    public RecordingClipResponse recordingClip(RecordingClipRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getPlayDomain(), "PlayDomain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty.");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+        checkStringNotEmpty(request.getSourceFile(), "SourceFile should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, RECORDING, CLIP);
+        return invokeHttpClient(internalRequest, RecordingClipResponse.class);
+    }
 
     /**
      * List all your live notifications.
@@ -1434,6 +1465,23 @@ public class LssClient extends AbstractBceClient {
 
         return invokeHttpClient(internalRequest, ListStreamResponse.class);
 
+    }
+
+    /**
+     * List streaming streams for requested domain.
+     *
+     * @param playDomain The requested domain
+     * @return streaming streams
+     */
+    public StreamingStreamResponse listOngiongStream(String playDomain) {
+        checkStringNotEmpty(playDomain, "PlayDomain should NOT be empty.");
+
+        StreamingStreamRequest request = new StreamingStreamRequest();
+        request.setPlayDomain(playDomain);
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET,
+                request, LIVE_DOMAIN, request.getPlayDomain(), ONGOING_STREAM);
+        return invokeHttpClient(internalRequest, StreamingStreamResponse.class);
     }
 
     /**

@@ -1,0 +1,275 @@
+/*
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+package com.baidubce.services.billing.example;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.baidubce.auth.BceCredentials;
+import com.baidubce.auth.DefaultBceCredentials;
+import com.baidubce.services.billing.BillingClient;
+import com.baidubce.services.billing.BillingClientConfiguration;
+import com.baidubce.services.billing.model.ResourceMonthBillRequest;
+import com.baidubce.services.billing.model.ResourceMonthBillResponse;
+import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
+import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
+import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
+import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
+import com.baidubce.services.billing.model.finance.TransferResultResponse;
+import com.baidubce.services.billing.model.order.OrderListRequest;
+import com.baidubce.services.billing.model.order.OrderListResponse;
+import com.baidubce.services.billing.model.price.ChargeItem;
+import com.baidubce.services.billing.model.price.CpcPricingRequest;
+import com.baidubce.services.billing.model.price.CptPricingRequest;
+import com.baidubce.services.billing.model.price.Flavor;
+import com.baidubce.services.billing.model.price.PricingQueryResponse;
+import com.baidubce.services.billing.model.renew.RenewResourceListRequest;
+import com.baidubce.services.billing.model.renew.RenewResourceResponse;
+import com.baidubce.services.billing.model.renew.ResourceAutoRenewRequest;
+
+/**
+ * examples for billing open api
+ */
+public class BillingExample {
+
+    private static final String ACCESS_KEY_ID = "ak ";
+    private static final String SECRET_ACCESS_KEY = "sk ";
+    private static final String ENDPOINT = "https://billing endpoint";
+
+    public static void main(String[] args) {
+        sampleForQueryRenewResourceList();
+        // sampleForSetRenewResourceRule();
+        sampleForQueryPrepayShareBill();
+        sampleForGetResourceMonthBills();
+        sampleForQueryOrderList();
+        sampleForgetSpecificCptPrice();
+        sampleForgetSpecificCpcPrice();
+    }
+
+    private static void sampleForQueryRenewResourceList() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        RenewResourceListRequest request = new RenewResourceListRequest();
+        request.setServiceType("CDS");
+        request.setPageNo(1);
+        request.setPageSize(50);
+
+        RenewResourceResponse response = client.queryRenewResourceList(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForQueryRenewResourceList RenewResourceResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    loginName:  " + response.getLoginName());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    resources:  " + response.getResources());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForSetRenewResourceRule() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        ResourceAutoRenewRequest request = new ResourceAutoRenewRequest();
+        request.setServiceType("CDS");
+        request.setInstanceId("id ");
+        request.setRegion("bj");
+        request.setRenewTime(1);
+        request.setRenewTimeUnit("year");
+
+        client.setRenewResourceRule(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForSetRenewResourceRule ResourceAutoRenewRequest :");
+        System.out.println("    serviceType:  " + request.getServiceType());
+        System.out.println("    instanceId:  " + request.getInstanceId());
+        System.out.println("    region:  " + request.getRegion());
+        System.out.println("    renewTime:  " + request.getRenewTime());
+        System.out.println("    renewTimeUnit:  " + request.getRenewTimeUnit());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForQueryPrepayShareBill() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        PrepayShareBillRequest request = new PrepayShareBillRequest();
+        request.setMonth("2020-04");
+        request.setPageNo(1);
+        request.setPageSize(50);
+
+        PrepayShareBillResponse response = client.queryPrepayShareBill(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForQueryPrepayShareBill PrepayShareBillResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    month:  " + response.getBillMonth());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    bills:  " + response.getBills());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForGetResourceMonthBills() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        ResourceMonthBillRequest request = new ResourceMonthBillRequest();
+        request.setMonth("2019-04");
+        request.setProductType("postpay");
+        request.setPageNo(1);
+        request.setPageSize(50);
+
+        ResourceMonthBillResponse response = client.getResourceMonthBill(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForGetResourceMonthBills ResourceMonthBillResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    month:  " + response.getBillMonth());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    bills:  " + response.getBills());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForQueryOrderList() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        OrderListRequest request = new OrderListRequest();
+        request.setProductType("postpay");
+        request.setPageNo(1);
+        request.setPageSize(50);
+
+        OrderListResponse response = client.getOrderList(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForQueryOrderList OrderListResponse result:");
+        System.out.println("    pageNo:  " + response.getPageNo());
+        System.out.println("    pageSize:  " + response.getPageSize());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    orders:  " + response.getOrders());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForgetSpecificCptPrice() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        Flavor flavor = new Flavor();
+        List<ChargeItem> items = new ArrayList<ChargeItem>();
+        items.add(new ChargeItem("memory", "1g", BigDecimal.valueOf(8)));
+        items.add(new ChargeItem("physicalZone", "zone id", BigDecimal.valueOf(8)));
+        items.add(new ChargeItem("cpu", "1", BigDecimal.valueOf(2)));
+        items.add(new ChargeItem("subServiceType", "defaultBcc3", null));
+        flavor.setChargeItems(items);
+
+        CptPricingRequest request = new CptPricingRequest();
+        request.setServiceType("BCC");
+        request.setProductType("RESERVED");
+        request.setRegion("bj");
+        request.setFlavor(flavor);
+        request.setCount(1);
+        request.setPeriod("P1M");
+
+        PricingQueryResponse response = client.getSpecificCptPrice(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForgetSpecificCptPrice PricingQueryResponse result:");
+        System.out.println("    price:  " + response.getPrice());
+        System.out.println("    catalogPrice:  " + response.getCatalogPrice());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForgetSpecificCpcPrice() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        Flavor flavor = new Flavor();
+        List<ChargeItem> items = new ArrayList<ChargeItem>();
+        items.add(new ChargeItem("OutBytes", "10G", null));
+        flavor.setChargeItems(items);
+
+        CpcPricingRequest request = new CpcPricingRequest();
+        request.setServiceType("LSS");
+        request.setProductType("ON_DEMAND");
+        request.setRegion("global");
+        request.setFlavor(flavor);
+        request.setCount(1);
+
+        PricingQueryResponse response = client.getSpecificCpcPrice(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForgetSpecificCpcPrice PricingQueryResponse result:");
+        System.out.println("    price:  " + response.getPrice());
+        System.out.println("    catalogPrice:  " + response.getCatalogPrice());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForBalanceTransfer() {
+
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        SupervisorBalanceTransferRequest request = new SupervisorBalanceTransferRequest();
+        request.setSupervisedId("subUserId");
+        request.setAmount(new BigDecimal("20"));
+
+        TransferResultResponse response = client.balanceTransfer(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForBalanceTransfer response result:");
+        System.out.println("    result:  " + response.isSuccess());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForTransactionList() {
+
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        SupervisorTransactionPageRequest request = new SupervisorTransactionPageRequest();
+        request.setBeginTime("2019-12-31T16:00:00");
+        request.setEndTime("2020-01-31T15:59:59");
+        request.setPageNo(1);
+        request.setPageSize(100);
+
+        SupervisorTransactionResponse response = client.transactionList(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForBalanceTransfer response result:");
+        System.out.println("    pageno:  " + response.getPageNo());
+        System.out.println("    pagesize:  " + response.getPageSize());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    result:  " + response.getResult());
+        System.out.println("==================================");
+    }
+}

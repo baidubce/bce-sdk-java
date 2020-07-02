@@ -90,6 +90,4 @@ public class GetRow extends TableStorageRow {
         buffer.append("]}");
         return buffer.toString();
     }
-
-
 }

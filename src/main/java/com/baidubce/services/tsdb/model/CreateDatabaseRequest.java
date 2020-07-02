@@ -33,13 +33,13 @@ public class CreateDatabaseRequest extends AbstractBceRequest {
 
     /**
      * Required.
-     * The database quota of ingestion data points per month.
+     * The database quota of ingestion data points per month. unit: million.
      */
     private Integer ingestDataPointsMonthly;
 
     /**
      * Optional.
-     * The database quota of query units per month.
+     * The database quota of query units per month. unit：ten thousand.
      */
     private Integer queryUnitsMonthly;
 

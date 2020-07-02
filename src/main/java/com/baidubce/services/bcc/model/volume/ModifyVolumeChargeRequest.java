@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2019-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -21,7 +21,6 @@ import com.baidubce.services.bcc.model.Reservation;
  * the request for changing volume's billing method
  */
 public class ModifyVolumeChargeRequest extends AbstractBceRequest {
-
     /**
      * specify the volume to change billing method
      */
@@ -96,6 +95,7 @@ public class ModifyVolumeChargeRequest extends AbstractBceRequest {
 
     /**
      * convert user request to internal request model
+     *
      * @return ModifyVolumeChargeModel
      */
     public ModifyVolumeChargeModel toModifyVolumeChargeModel() {
@@ -119,7 +119,6 @@ public class ModifyVolumeChargeRequest extends AbstractBceRequest {
      * internal request class
      */
     public static class ModifyVolumeChargeModel extends AbstractBceRequest {
-
         private Billing billing;
 
         public Billing getBilling() {

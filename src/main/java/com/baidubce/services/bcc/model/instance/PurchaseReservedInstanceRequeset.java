@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -41,6 +41,12 @@ public class PurchaseReservedInstanceRequeset extends AbstractBceRequest {
      * The detail model to specify the billing.
      */
     private Billing billing;
+
+    /**
+     * The flag of instance related renew.
+     * see all of supported flag type in {@link com.baidubce.services.bcc.model.instance.RelatedRenewFlagType}
+     */
+    private String relatedRenewFlag;
 
     public String getClientToken() {
         return clientToken;
@@ -99,6 +105,26 @@ public class PurchaseReservedInstanceRequeset extends AbstractBceRequest {
      */
     public PurchaseReservedInstanceRequeset withBilling(Billing billing) {
         this.billing = billing;
+        return this;
+    }
+
+    public String getRelatedRenewFlag() {
+        return relatedRenewFlag;
+    }
+
+    public void setRelatedRenewFlag(String relatedRenewFlag) {
+        this.relatedRenewFlag = relatedRenewFlag;
+    }
+
+    /**
+     * Configure relatedRenewFlag for the request.
+     * see all of supported flag type in {@link com.baidubce.services.bcc.model.instance.RelatedRenewFlagType}
+     *
+     * @param relatedRenewFlag The flag of instance related renew.
+     * @return PurchaseReservedInstanceRequeset with specific relatedRenewFlag
+     */
+    public PurchaseReservedInstanceRequeset withRelatedRenewFlag(String relatedRenewFlag) {
+        this.relatedRenewFlag = relatedRenewFlag;
         return this;
     }
 

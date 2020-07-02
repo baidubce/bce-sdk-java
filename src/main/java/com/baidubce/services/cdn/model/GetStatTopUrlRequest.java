@@ -13,9 +13,10 @@
 
 package com.baidubce.services.cdn.model;
 
-import java.util.Date;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+
+import java.util.Date;
 
 /**
  * @author yixing

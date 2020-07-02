@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent configuration for a hive step.
- *
+ * <p>
  * A hive step can be configured with name, actionOnFailure, script, input, output and arguments.
  * The essential options are script and actionOnFailure,
  * and the optional ones are name, input, output and arguments.
@@ -34,6 +34,7 @@ public class HiveStepConfig extends StepConfig {
      * Configure the input path of the hive step.
      *
      * @param input The input path of the hive step.
+     *
      * @return HiveStepConfig
      */
     public HiveStepConfig withInput(String input) {
@@ -45,6 +46,7 @@ public class HiveStepConfig extends StepConfig {
      * Configure the script path of the hive step.
      *
      * @param script The script path of the hive step.
+     *
      * @return HiveStepConfig
      */
     public HiveStepConfig withScript(String script) {
@@ -56,6 +58,7 @@ public class HiveStepConfig extends StepConfig {
      * Configure the output path of the hive step.
      *
      * @param output The output path of the hive step.
+     *
      * @return HiveStepConfig
      */
     public HiveStepConfig withOutput(String output) {
@@ -67,6 +70,7 @@ public class HiveStepConfig extends StepConfig {
      * Configure the arguments of the hive step.
      *
      * @param arguments The arguments of the hive step.
+     *
      * @return HiveStepConfig
      */
     public HiveStepConfig withArguments(String arguments) {
@@ -78,6 +82,7 @@ public class HiveStepConfig extends StepConfig {
      * Configure the name of the hive step.
      *
      * @param name The name of the hive step.
+     *
      * @return HiveStepConfig
      */
     public HiveStepConfig withName(String name) {
@@ -88,11 +93,12 @@ public class HiveStepConfig extends StepConfig {
     /**
      * Configure the action on failure for the hive step.
      * This property is set to enum value:
-     *     "Continue": continue to execute other steps.
-     *     "TerminateCluster": terminate the cluster when this step fails.
-     *     "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
+     * "Continue": continue to execute other steps.
+     * "TerminateCluster": terminate the cluster when this step fails.
+     * "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
      *
      * @param actionOnFailure The action on step's failure.
+     *
      * @return HiveStepConfig
      */
     public HiveStepConfig withActionOnFailure(String actionOnFailure) {
@@ -104,7 +110,8 @@ public class HiveStepConfig extends StepConfig {
      * Configure the additional file for the step.
      *
      * @param remote The remote file of the additional file.
-     * @param local The local file of the additional file.
+     * @param local  The local file of the additional file.
+     *
      * @return HiveStepConfig
      */
     public HiveStepConfig withAdditionalFile(String remote, String local) {

@@ -12,15 +12,15 @@
  */
 package com.baidubce.services.bmr.model;
 
-import com.baidubce.auth.BceCredentials;
-import com.baidubce.model.AbstractBceRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baidubce.auth.BceCredentials;
+import com.baidubce.model.AbstractBceRequest;
+
 /**
  * Provide options for adding steps to the target cluster.
- *
+ * <p>
  * The essential option is the ID of cluster, and the List of steps can be constructed by
  * calling the methods of StepConfig.
  */
@@ -57,6 +57,7 @@ public class AddStepsRequest extends AbstractBceRequest {
      * Configure the ID of the cluster.
      *
      * @param clusterId The ID of the cluster.
+     *
      * @return AddStepsRequest
      */
     public AddStepsRequest withClusterId(String clusterId) {
@@ -68,6 +69,7 @@ public class AddStepsRequest extends AbstractBceRequest {
      * Configure the step to be added.
      *
      * @param step a StepConfig object to be added.
+     *
      * @return AddStepsRequest
      */
     public AddStepsRequest withStep(StepConfig step) {
@@ -84,6 +86,7 @@ public class AddStepsRequest extends AbstractBceRequest {
      * if both of them are used for the same AddStepsRequest instance.
      *
      * @param steps a List of StepConfig instances to be added.
+     *
      * @return AddStepsRequest
      */
     public AddStepsRequest withSteps(List<StepConfig> steps) {
@@ -95,6 +98,7 @@ public class AddStepsRequest extends AbstractBceRequest {
      * Configure optional client token for the request. The request will be idempotent if client token is provided.
      *
      * @param clientToken An ASCII string whose length is less than 64.
+     *
      * @return AddStepsRequest
      */
     public AddStepsRequest withClientToken(String clientToken) {
@@ -106,6 +110,7 @@ public class AddStepsRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return AddStepsRequest
      */
     public AddStepsRequest withRequestCredentials(BceCredentials credentials) {

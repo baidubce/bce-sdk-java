@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Baidu, Inc.
+ * Copyright 2018-2020 Baidu, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -24,12 +24,18 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.vcr.model.CancelStreamRequest;
+import com.baidubce.services.vcr.model.CancelStreamResponse;
+import com.baidubce.services.vcr.model.GetAudioRequest;
+import com.baidubce.services.vcr.model.GetAudioResponse;
 import com.baidubce.services.vcr.model.GetImageAsyncRequest;
 import com.baidubce.services.vcr.model.GetImageAsyncResponse;
 import com.baidubce.services.vcr.model.GetMediaCharacterResponse;
 import com.baidubce.services.vcr.model.GetMediaRequest;
 import com.baidubce.services.vcr.model.GetMediaResponse;
 import com.baidubce.services.vcr.model.GetMediaSpeechResponse;
+import com.baidubce.services.vcr.model.GetStreamCheckTaskListRequest;
+import com.baidubce.services.vcr.model.GetStreamCheckTaskListResponse;
 import com.baidubce.services.vcr.model.GetStreamRequest;
 import com.baidubce.services.vcr.model.GetStreamResponse;
 import com.baidubce.services.vcr.model.LibBriefRequest;
@@ -37,6 +43,8 @@ import com.baidubce.services.vcr.model.LibBriefResponse;
 import com.baidubce.services.vcr.model.LibImageRequest;
 import com.baidubce.services.vcr.model.LibImageResponse;
 import com.baidubce.services.vcr.model.LibResponse;
+import com.baidubce.services.vcr.model.PutAudioRequest;
+import com.baidubce.services.vcr.model.PutAudioResponse;
 import com.baidubce.services.vcr.model.PutImageAsyncRequest;
 import com.baidubce.services.vcr.model.PutImageAsyncResponse;
 import com.baidubce.services.vcr.model.PutImageRequest;
@@ -67,12 +75,19 @@ public class VcrClient extends AbstractBceClient {
     private static final String VERSION = "v1";
     private static final String VERSION_V2 = "v2";
     private static final String MEDIA = "media";
+    private static final String AUDIO = "audio";
     private static final String STREAM = "stream";
     private static final String IMAGE = "image";
     private static final String TEXT = "text";
     private static final String FACE_LIB = "face/lib";
     private static final String LOGO_LIB = "logo/lib";
     private static final String PARAM_SOURCE = "source";
+    private static final String CHECK = "check";
+    private static final String CANCEL = "cancel";
+    private static final String LIST = "list";
+    private static final String PARAM_MAXKEYS = "maxKeys";
+    private static final String PARAM_MARKER = "marker";
+    private static final String PARAM_STATUS = "status";
 
     private static final long MILLIS_PER_HOUR = 60 * 60 * 1000L;
 
@@ -153,17 +168,53 @@ public class VcrClient extends AbstractBceClient {
         return this.invokeHttpClient(internalRequest, GetMediaCharacterResponse.class);
     }
 
+    /**
+     * This interface is no longer supported, please use new interface putStreamV2.
+     **/
+    @Deprecated
     public PutStreamResponse putStream(String source) {
         PutStreamRequest request = new PutStreamRequest();
         request.setSource(source);
         return putStream(request);
     }
 
+    /**
+     * This interface is no longer supported, please use new interface putStreamV2.
+     **/
+    @Deprecated
     public PutStreamResponse putStream(PutStreamRequest request) {
         InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, VERSION, STREAM);
         return this.invokeHttpClient(internalRequest, PutStreamResponse.class);
     }
 
+    /**
+     * Create an stream check task with the request.
+     *
+     * @param request: The request when check stream
+     *
+     * @return PutStreamResponse
+     **/
+    public PutStreamResponse putStreamV2(PutStreamRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, VERSION_V2, STREAM, CHECK);
+        return this.invokeHttpClient(internalRequest, PutStreamResponse.class);
+    }
+
+    /**
+     * Cancel an stream check task with the request.
+     *
+     * @param request: The request when cancel stream
+     *
+     * @return CancelStreamResponse
+     **/
+    public CancelStreamResponse cancelStreamV2(CancelStreamRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, VERSION_V2, STREAM, CANCEL);
+        return this.invokeHttpClient(internalRequest, CancelStreamResponse.class);
+    }
+
+    /**
+     * This interface is no longer supported, please use new interface getStreamV2.
+     **/
+    @Deprecated
     public GetStreamResponse getStream(String source) {
         GetStreamRequest request = new GetStreamRequest();
         Date endTime = new Date();
@@ -174,6 +225,10 @@ public class VcrClient extends AbstractBceClient {
         return getStream(request);
     }
 
+    /**
+     * This interface is no longer supported, please use new interface getStreamV2.
+     **/
+    @Deprecated
     public GetStreamResponse getStream(GetStreamRequest request) {
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, VERSION, STREAM);
         internalRequest.addParameter(PARAM_SOURCE, request.getSource());
@@ -184,6 +239,101 @@ public class VcrClient extends AbstractBceClient {
             internalRequest.addParameter("endTime", request.getEndTime());
         }
         return this.invokeHttpClient(internalRequest, GetStreamResponse.class);
+    }
+
+    /**
+     * Get a stream check task result with the specified source.
+     *
+     * @param source: The source of stream
+     *
+     * @return GetStreamResponse
+     **/
+    public GetStreamResponse getStreamV2(String source) {
+        GetStreamRequest request = new GetStreamRequest();
+        request.setSource(source);
+        return getStreamV2(request);
+    }
+
+    /**
+     * Get a stream check task result with GetStreamRequest.
+     *
+     * @param request: The request when get stream response
+     *
+     * @return GetStreamResponse
+     **/
+    public GetStreamResponse getStreamV2(GetStreamRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, VERSION_V2, STREAM);
+        internalRequest.addParameter(PARAM_SOURCE, request.getSource());
+        return this.invokeHttpClient(internalRequest, GetStreamResponse.class);
+    }
+
+    /**
+     * Get a stream check task list with the specified maxKeys, marker and status.
+     *
+     * @param maxKeys: The stream check task number when return, max value is 100
+     * @param marker: Starting position of this query, first query not use this value
+     * @param status: The stream check status of stream
+     *
+     * @return GetStreamCheckTaskListResponse
+     **/
+    public GetStreamCheckTaskListResponse getStreamCheckTaskListV2(Integer maxKeys, String marker, String status) {
+        GetStreamCheckTaskListRequest request = new GetStreamCheckTaskListRequest();
+        request.setMaxKeys(maxKeys);
+        request.setMarker(marker);
+        request.setStatus(status);
+        return getStreamCheckTaskListV2(request);
+    }
+
+    /**
+     * Get a stream check task list with the specified maxKeys, marker and status.
+     *
+     * @param request: The request when get stream check task list
+     *
+     * @return GetStreamCheckTaskListResponse
+     **/
+    public GetStreamCheckTaskListResponse getStreamCheckTaskListV2(GetStreamCheckTaskListRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, VERSION_V2, STREAM, LIST);
+        internalRequest.addParameter(PARAM_MAXKEYS, String.valueOf(request.getMaxKeys()));
+        internalRequest.addParameter(PARAM_MARKER, request.getMarker());
+        internalRequest.addParameter(PARAM_STATUS, request.getStatus());
+        return this.invokeHttpClient(internalRequest, GetStreamCheckTaskListResponse.class);
+    }
+
+    /**
+     * Create an audio check task with the specified source.
+     *
+     * @param source The source of audio
+     *
+     * @return PutAudioResponse
+     */
+    public PutAudioResponse putAudio(String source) {
+        PutAudioRequest request = new PutAudioRequest();
+        request.setSource(source);
+        return putAudio(request);
+    }
+
+    public PutAudioResponse putAudio(PutAudioRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request, VERSION_V2, AUDIO);
+        return this.invokeHttpClient(internalRequest, PutAudioResponse.class);
+    }
+
+    /**
+     * Get an audio check task result with the specified source.
+     *
+     * @param source The source of audio
+     *
+     * @return result of the audio check task
+     */
+    public GetAudioResponse getAudio(String source) {
+        GetAudioRequest request = new GetAudioRequest();
+        request.setSource(source);
+        return getAudio(request);
+    }
+
+    public GetAudioResponse getAudio(GetAudioRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, VERSION_V2, AUDIO);
+        internalRequest.addParameter(PARAM_SOURCE, request.getSource());
+        return this.invokeHttpClient(internalRequest, GetAudioResponse.class);
     }
 
     /**

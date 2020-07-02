@@ -2,7 +2,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent configuration for modify instance group operation.
- *
+ * <p>
  * The essential options are id and instance count.
  */
 public class ModifyInstanceGroupConfig {

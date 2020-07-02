@@ -12,8 +12,11 @@
  */
 package com.baidubce.services.vod.model;
 
+import com.baidubce.services.media.model.Insert;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * The advanced attributes in media process
@@ -61,5 +64,10 @@ public class ActionAttributes {
      * The advanced attributes of clips merge
      */
     private ClipsMerge clipsMerge;
+
+    /**
+     * The advanced attributes of media inserts
+     */
+    private List<Insert> inserts;
 
 }

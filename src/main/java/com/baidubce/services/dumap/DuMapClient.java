@@ -233,7 +233,7 @@ public class DuMapClient extends BaseDuMapClient {
         if (StringUtils.isBlank(param.getOutput())) {
             param.setOutput(DEFAULT_OUTPUT);
         }
-        return callDuMap("/direction/v2/transit", appId, null, param, HttpMethodName.GET).getPayload();
+        return callDuMap("/direction/v2/riding", appId, null, param, HttpMethodName.GET).getPayload();
     }
 
     /**
@@ -254,7 +254,7 @@ public class DuMapClient extends BaseDuMapClient {
         if (StringUtils.isBlank(param.getOutput())) {
             param.setOutput(DEFAULT_OUTPUT);
         }
-        return callDuMap("/direction/v2/transit", appId, null, param, HttpMethodName.GET).getPayload();
+        return callDuMap("/direction/v2/driving", appId, null, param, HttpMethodName.GET).getPayload();
     }
 
     /**
@@ -309,6 +309,6 @@ public class DuMapClient extends BaseDuMapClient {
         Validate.checkNotNull(request.getSrc(), DuMapValidateMsg.VALIDATE_MESSAGE_SRC);
         Validate.checkNotNull(request.getProd(), DuMapValidateMsg.VALIDATE_MESSAGE_PROD);
         Validate.checkNotNull(request.getVer(), DuMapValidateMsg.VALIDATE_MESSAGE_VER);
-        return callDuMap("/locapi/v2", appId, request, null, HttpMethodName.POST).getPayload();
+        return callDuMap("/locapi/v2", appId, request, null, HttpMethodName.POST, BodyType.JSON).getPayload();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,11 +13,15 @@
 package com.baidubce.services.sms;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.Date;
 
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
@@ -40,7 +44,7 @@ import com.baidubce.util.HttpUtils;
  * should need
  */
 public abstract class SmsClientSupport extends AbstractBceClient {
-    protected static final HttpResponseHandler[] SMS_HANDLERS = new HttpResponseHandler[] {
+    protected static final HttpResponseHandler[] SMS_HANDLERS = new HttpResponseHandler[]{
             new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler()};
 
     protected SmsClientSupport(BceClientConfiguration config, HttpResponseHandler[] responseHandlers) {
@@ -56,7 +60,6 @@ public abstract class SmsClientSupport extends AbstractBceClient {
      * @param bceRequest    bceRequest
      * @param httpMethod    method: post、get etc.
      * @param pathVariables variables
-     *
      * @return send request message
      */
     protected InternalRequest createGeneralRequest(String pathPrefix, AbstractBceRequest bceRequest,
@@ -133,6 +136,10 @@ public abstract class SmsClientSupport extends AbstractBceClient {
 
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(requestJson.length));
         internalRequest.addHeader(Headers.CONTENT_TYPE, SmsConstant.CONTENT_TYPE);
+        SimpleDateFormat utcTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        utcTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String bce_date = utcTimeFormat.format(new Date());
+        internalRequest.addHeader(Headers.BCE_DATE, bce_date);
         internalRequest.setContent(RestartableInputStream.wrap(requestJson));
 
         return internalRequest;
@@ -146,6 +153,12 @@ public abstract class SmsClientSupport extends AbstractBceClient {
             throw new IllegalArgumentException(errorMessage);
         }
 
+    }
+
+    protected void assertMapNotNullOrEmpty(Map parameterValue, String errorMessage) {
+        if (parameterValue == null || parameterValue.isEmpty()) {
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
 
     protected void assertStringArrayNotNullOrEmpty(String[] parameterValue, String errorMessage) {

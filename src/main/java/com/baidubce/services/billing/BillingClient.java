@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.billing;
 
+import static com.baidubce.util.Validate.checkIsTrue;
 import static com.baidubce.util.Validate.checkNotNull;
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +38,23 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
+import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
+import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
+import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
+import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
+import com.baidubce.services.billing.model.finance.TransferResultResponse;
+import com.baidubce.services.billing.model.order.OrderListRequest;
+import com.baidubce.services.billing.model.order.OrderListResponse;
+import com.baidubce.services.billing.model.price.CpcPricingRequest;
+import com.baidubce.services.billing.model.price.CptPricingRequest;
+import com.baidubce.services.billing.model.price.PricingQueryResponse;
+import com.baidubce.services.billing.model.renew.RenewResourceListRequest;
+import com.baidubce.services.billing.model.renew.RenewResourceResponse;
+import com.baidubce.services.billing.model.renew.ResourceAutoRenewRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 
@@ -50,7 +67,22 @@ public class BillingClient extends AbstractBceClient {
     private static final String VERSION_V1 = "v1";
     private static final String BILL = "bill";
     private static final String RESOURCE = "resource";
+    private static final String RENEW = "renew";
     private static final String MONTH = "month";
+    private static final String SHARE_PREPAY = "share/prepay";
+    private static final String PRICE = "price";
+    private static final String CPC = "cpc";
+    private static final String CPT = "cpt";
+    private static final String ORDER = "order";
+    private static final String LIST = "list";
+
+    private static final String FINANCE = "finance";
+    private static final String SUPERVISOR = "supervisor";
+    private static final String BALANCE = "balance";
+    private static final String TRANSFER = "transfer";
+    private static final String GATHER = "gather";
+    private static final String CASH = "cash";
+    private static final String TRANSACTION = "transaction";
 
     /**
      * Responsible for handling httpResponses from all billing service calls.
@@ -77,19 +109,34 @@ public class BillingClient extends AbstractBceClient {
 
     /**
      * Query the detail resource month bills.
-     * Set the parameter queryAccountId if want to query the sub accout's bills whole is in finance circle.
+     * Set the parameter queryAccountId if want to query the sub account's bills whole is in finance circle.
      *
      * @param request The request containing all options for getting the bills info.
-     * @return detail resource month bills.
+     * @return detailed resource month bill list.
      */
     public ResourceMonthBillResponse getResourceMonthBill(ResourceMonthBillRequest request) {
         checkNotNull(request, "The parameter request should NOT be null.");
 
-        checkStringNotEmpty(request.getMonth(), "The parameter month should NOT be null");
+        checkIsTrue(!StringUtils.isEmpty(request.getBeginTime()) || !StringUtils.isEmpty(request.getEndTime())
+                        || !StringUtils.isEmpty(request.getMonth()),
+                "Parameters month , beginTime and endTime cannot all be empty!");
+        checkIsTrue(!(StringUtils.isEmpty(request.getBeginTime()) && !StringUtils.isEmpty(request.getEndTime())),
+                "If parameter endTime is not empty, parameter beginTime cannot be empty!");
+        checkIsTrue(!(!StringUtils.isEmpty(request.getBeginTime()) && StringUtils.isEmpty(request.getEndTime())),
+                "If parameter beginTime is not empty, parameter endTime cannot be empty!");
         checkStringNotEmpty(request.getProductType(), "The parameter productType should NOT be null");
 
-        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VERSION_V1, BILL, RESOURCE, MONTH);
-        internalRequest.addParameter(MONTH, request.getMonth());
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VERSION_V1, BILL, RESOURCE,
+                MONTH);
+        if (request.getMonth() != null) {
+            internalRequest.addParameter(MONTH, request.getMonth());
+        }
+        if (request.getBeginTime() != null) {
+            internalRequest.addParameter("beginTime", request.getBeginTime());
+        }
+        if (request.getEndTime() != null) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
         internalRequest.addParameter("productType", request.getProductType());
 
         if (request.getServiceType() != null) {
@@ -106,6 +153,185 @@ public class BillingClient extends AbstractBceClient {
         }
 
         return invokeHttpClient(internalRequest, ResourceMonthBillResponse.class);
+    }
+
+    /**
+     * Query the detail prepay share bills.
+     * Set the parameter queryAccountId if want to query the sub account's bills whole is in finance circle.
+     *
+     * @param request The request containing all options for getting the bills info.
+     * @return detailed prepay share bill list.
+     */
+    public PrepayShareBillResponse queryPrepayShareBill(PrepayShareBillRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkIsTrue(!StringUtils.isEmpty(request.getMonth()), "The parameter month cannot be empty!");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VERSION_V1, BILL, SHARE_PREPAY);
+        if (request.getMonth() != null) {
+            internalRequest.addParameter(MONTH, request.getMonth());
+        }
+        if (request.getServiceType() != null) {
+            internalRequest.addParameter("serviceType", request.getServiceType());
+        }
+        if (request.getQueryAccountId() != null) {
+            internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
+        }
+        if (request.getPageNo() != null) {
+            internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        }
+        if (request.getPageSize() != null) {
+            internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        }
+
+        return invokeHttpClient(internalRequest, PrepayShareBillResponse.class);
+    }
+
+    /**
+     * Query the order list
+     *
+     * @param request The request containing all options for getting the order info.
+     * @return detailed order information list.
+     */
+    public OrderListResponse getOrderList(OrderListRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, ORDER, LIST);
+
+        return invokeHttpClient(internalRequest, OrderListResponse.class);
+    }
+
+    /**
+     * Query the detail price of charge items
+     *
+     * @param request The request containing all options for getting the price info.
+     * @return detail price.
+     */
+    public PricingQueryResponse getSpecificCpcPrice(CpcPricingRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getServiceType(), "The parameter serviceType should NOT be null");
+        checkStringNotEmpty(request.getProductType(), "The parameter productType should NOT be null");
+        checkStringNotEmpty(request.getRegion(), "The parameter region should NOT be null");
+        checkNotNull(request.getFlavor(), "The parameter flavor should NOT be null");
+        checkNotNull(request.getFlavor().getChargeItems(), "The parameter chargeItems should NOT be null");
+        checkIsTrue(request.getFlavor().getChargeItems().size() > 0, "The parameter chargeItems should NOT be empty!");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, PRICE, CPC);
+
+        return invokeHttpClient(internalRequest, PricingQueryResponse.class);
+    }
+
+    /**
+     * Query the detail price of charge items
+     *
+     * @param request The request containing all options for getting the price info.
+     * @return detail price.
+     */
+    public PricingQueryResponse getSpecificCptPrice(CptPricingRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getServiceType(), "The parameter serviceType should NOT be null");
+        checkStringNotEmpty(request.getProductType(), "The parameter productType should NOT be null");
+        checkStringNotEmpty(request.getRegion(), "The parameter region should NOT be null");
+        checkNotNull(request.getFlavor(), "The parameter flavor should NOT be null");
+        checkNotNull(request.getFlavor().getChargeItems(), "The parameter chargeItems should NOT be null");
+        checkIsTrue(request.getFlavor().getChargeItems().size() > 0, "The parameter chargeItems should NOT be empty!");
+        checkNotNull(request.getPeriod(), "The parameter period should NOT be null.");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, PRICE, CPT);
+
+        return invokeHttpClient(internalRequest, PricingQueryResponse.class);
+    }
+
+    /**
+     * Query auto renew resource list
+     * Set the parameter queryAccountId if want to query the sub account's bills whole is in finance circle.
+     *
+     * @param request The request containing all options for getting the resource list info.
+     * @return detailed prepay resource list
+     */
+    public RenewResourceResponse queryRenewResourceList(RenewResourceListRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkIsTrue(!StringUtils.isEmpty(request.getServiceType()), "The parameter serviceType cannot be empty!");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, RENEW,
+                "/resource/list");
+
+        return invokeHttpClient(internalRequest, RenewResourceResponse.class);
+    }
+
+    /**
+     * SET auto renew resource rule
+     * Set the parameter accountId if want to manage the sub account's resource who is in finance circle.
+     *
+     * @param request The request containing all options for set the resource list renew rule.
+     */
+    public void setRenewResourceRule(ResourceAutoRenewRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getServiceType(), "The parameter serviceType should NOT be null");
+        checkStringNotEmpty(request.getRegion(), "The parameter region should NOT be null");
+        checkStringNotEmpty(request.getInstanceId(), "The parameter instanceId should NOT be null");
+        checkNotNull(request.getRenewTime(), "The parameter renewTime should NOT be null.");
+        checkNotNull(request.getRenewTimeUnit(), "The parameter renewTimeUnit should NOT be null.");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, RENEW,
+                "/resource/rule/create");
+
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * do balance transfer form supervisor to supervised account
+     *
+     * @param request request contain supervisedId and amount
+     * @return transfer result
+     */
+    public TransferResultResponse balanceTransfer(SupervisorBalanceTransferRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getSupervisedId(), "The parameter supervisedId should NOT be null");
+        checkNotNull(request.getAmount(), "The parameter amount should NOT be null");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, FINANCE, SUPERVISOR,
+                BALANCE, TRANSFER);
+        return invokeHttpClient(internalRequest, TransferResultResponse.class);
+    }
+
+    /**
+     * do balance gather form supervised account to supervisor
+     *
+     * @param request request contain supervisedId and amount
+     * @return gather result
+     */
+    public TransferResultResponse balanceGather(SupervisorBalanceTransferRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getSupervisedId(), "The parameter supervisedId should NOT be null");
+        checkNotNull(request.getAmount(), "The parameter amount should NOT be null");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, FINANCE, SUPERVISOR,
+                BALANCE, GATHER);
+        return invokeHttpClient(internalRequest, TransferResultResponse.class);
+    }
+
+    /**
+     * get the transfer record
+     *
+     * @param request request contain time and page param
+     * @return page result
+     */
+    public SupervisorTransactionResponse transactionList(SupervisorTransactionPageRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getBeginTime(), "The parameter beginTime should NOT be null");
+        checkStringNotEmpty(request.getEndTime(), "The parameter endTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, FINANCE, SUPERVISOR,
+                CASH, TRANSACTION);
+        return invokeHttpClient(internalRequest, SupervisorTransactionResponse.class);
     }
 
     /**

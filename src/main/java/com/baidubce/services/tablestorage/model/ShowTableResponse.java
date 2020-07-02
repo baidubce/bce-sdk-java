@@ -24,7 +24,8 @@ public class ShowTableResponse extends AbstractTableStorageResponse {
     private String createTime;
     private CompressType compressType;
     private int timeToLive;
-    private int maxVersion;
+    private int maxVersions;
+    private String storageType;
 
     /**
      * Get the instance name of the table.
@@ -154,8 +155,8 @@ public class ShowTableResponse extends AbstractTableStorageResponse {
      *
      * @return The max version of the target table.
      */
-    public int getMaxVersion() {
-        return maxVersion;
+    public int getMaxVersions() {
+        return maxVersions;
     }
 
     /**
@@ -163,8 +164,26 @@ public class ShowTableResponse extends AbstractTableStorageResponse {
      *
      * @return The max version set to this show table response.
      */
-    public void setMaxVersion(int maxVersion) {
-        this.maxVersion = maxVersion;
+    public void setMaxVersions(int maxVersions) {
+        this.maxVersions = maxVersions;
+    }
+
+    /**
+     * Get the storage type of target table.
+     *
+     * @return The storage type of the target table.
+     */
+    public String getStorageType() {
+        return storageType;
+    }
+
+    /**
+     * Set the storage type.
+     *
+     * @param storageType The storage type set to this show table response.
+     */
+    public void setStorageType(String storageType) {
+        this.storageType = storageType;
     }
 
     /**
@@ -181,6 +200,7 @@ public class ShowTableResponse extends AbstractTableStorageResponse {
                 + ", \n  createTime=" + createTime
                 + ", \n  compressType=" + compressType
                 + ", \n  timeToLive=" + timeToLive
-                + ", \n  maxVersion=" + maxVersion + "\n]";
+                + ", \n  maxVersions=" + maxVersions
+                + ", \n  storageType=" + storageType + "\n]";
     }
 }

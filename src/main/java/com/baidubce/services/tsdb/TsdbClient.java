@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Baidu, Inc.
+ * Copyright (c) 2019-2020 Baidu. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -17,14 +17,18 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.auth.BceV1Signer;
 import com.baidubce.auth.SignOptions;
 import com.baidubce.auth.Signer;
+import com.baidubce.http.Headers;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.internal.InternalRequest;
+import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.tsdb.model.Datapoint;
 import com.baidubce.services.tsdb.model.GetFieldsRequest;
@@ -157,8 +161,15 @@ public class TsdbClient extends AbstractTsdbBceClient {
 
     public GetRowsWithSqlResponse getRowsWithSql(GetRowsWithSqlRequest request) {
         checkNotNull(request, "request should not be null.");
-        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, ROW);
-        internalRequest.addParameter(SQL, request.getSql());
+        if (StringUtils.isBlank(request.getSql())) {
+            throw new BceClientException("sql should not be blank.");
+        }
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, ROW);
+        internalRequest.addParameter(SQL, null);
+        byte[] content = request.getSql().getBytes();
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, Integer.toString(content.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, CONTENT_TYPE);
+        internalRequest.setContent(RestartableInputStream.wrap(content));
         return this.invokeHttpClient(internalRequest, GetRowsWithSqlResponse.class);
     }
 

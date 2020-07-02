@@ -19,26 +19,27 @@ public class ListInstancesRequest extends AbstractBceRequest {
     private String clusterId;
     private String instanceGroupId;
 
-    public void setClusterId(String clusterId) {
-        this.clusterId = clusterId;
-    }
-
     public String getClusterId() {
         return this.clusterId;
     }
 
-    public void setInstanceGroupId(String instanceGroupId) {
-        this.instanceGroupId = instanceGroupId;
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
     }
 
     public String getInstanceGroupId() {
         return this.instanceGroupId;
     }
 
+    public void setInstanceGroupId(String instanceGroupId) {
+        this.instanceGroupId = instanceGroupId;
+    }
+
     /**
      * Configure the ID of the target cluster for the request.
      *
      * @param clusterId The ID of the target cluster.
+     *
      * @return ListInstancesRequest
      */
     public ListInstancesRequest withClusterId(String clusterId) {
@@ -50,16 +51,19 @@ public class ListInstancesRequest extends AbstractBceRequest {
      * Configure the ID of the target instance group for the request.
      *
      * @param instanceGroupId The ID of the instance group.
+     *
      * @return ListInstancesRequest
      */
     public ListInstancesRequest withInstanceGroupId(String instanceGroupId) {
         this.setInstanceGroupId(instanceGroupId);
         return this;
     }
+
     /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return ListInstancesRequest
      */
     public ListInstancesRequest withRequestCredentials(BceCredentials credentials) {

@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Json response model of listing certs.
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

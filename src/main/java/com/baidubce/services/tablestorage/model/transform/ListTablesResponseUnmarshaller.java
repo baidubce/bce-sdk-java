@@ -67,11 +67,16 @@ public class ListTablesResponseUnmarshaller implements Unmarshaller<ListTablesRe
                 String name = table.get(TableStorageConstants.JSON_TABLE_NAME).asText();
                 String state = table.get(TableStorageConstants.JSON_TABLE_STATE).asText();
                 long version = table.get(TableStorageConstants.JSON_TABLE_VERSION).asLong();
+                int maxVersions = table.has(TableStorageConstants.JSON_MAX_VERSIONS)
+                        ? table.get(TableStorageConstants.JSON_MAX_VERSIONS).asInt() : 1;
+                String storageType = table.get(TableStorageConstants.JSON_STORAGE_TYPE).asText();
 
                 TableInfo info = new TableInfo();
                 info.setTableName(name);
                 info.setTableState(TableState.valueOf(state));
                 info.setTableVersion(version);
+                info.setMaxVersions(maxVersions);
+                info.setStorageType(storageType);
 
                 tableInfos.add(info);
             }

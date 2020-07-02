@@ -12,13 +12,13 @@
  */
 package com.baidubce.services.bmr.model;
 
-import com.baidubce.model.AbstractBceResponse;
-
 import java.util.List;
+
+import com.baidubce.model.AbstractBceResponse;
 
 /**
  * Represent the response of GetClusterRequest.
- *
+ * <p>
  * The response contains the properties of the target cluster, such as:
  * id, imageType, imageVersion, logUri, name, autoTerminate, status, applications.
  */
@@ -33,6 +33,15 @@ public class GetClusterResponse extends AbstractBceResponse {
     private List<Application> applications;
     private boolean serviceHaEnabled;
     private boolean safeModeEnabled;
+    private String templateType;
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
 
     public String getId() {
         return id;
@@ -54,6 +63,10 @@ public class GetClusterResponse extends AbstractBceResponse {
         return imageVersion;
     }
 
+    public void setImageVersion(String imageVersion) {
+        this.imageVersion = imageVersion;
+    }
+
     public String getName() {
         return name;
     }
@@ -68,10 +81,6 @@ public class GetClusterResponse extends AbstractBceResponse {
 
     public void setLogUri(String logUri) {
         this.logUri = logUri;
-    }
-
-    public void setImageVersion(String imageVersion) {
-        this.imageVersion = imageVersion;
     }
 
     public boolean getAutoTerminate() {

@@ -27,6 +27,8 @@ public class ListTablesResponse extends AbstractTableStorageResponse {
         private String tableName;
         private TableState tableState;
         private long tableVersion;
+        private String storageType;
+        private int maxVersions;
 
         /**
          * Get the table name.
@@ -80,6 +82,41 @@ public class ListTablesResponse extends AbstractTableStorageResponse {
         }
 
         /**
+         * Get the maxVersions.
+         * @return The maxVersions.
+         */
+        public long getMaxVersions() {
+            return maxVersions;
+        }
+
+        /**
+         * Set the MaxVersions.
+         *
+         * @param maxVersions The MaxVersions set to table info.
+         */
+        public void setMaxVersions(int maxVersions) {
+            this.maxVersions = maxVersions;
+        }
+
+        /**
+         * Get the storage type.
+         *
+         * @return The table storage type.
+         */
+        public String getStorageType() {
+            return storageType;
+        }
+
+        /**
+         * Set the storage type.
+         *
+         * @param storageType The storage type set to table info.
+         */
+        public void setStorageType(String storageType) {
+            this.storageType = storageType;
+        }
+
+        /**
          * Convert this object to string.
          *
          * @return the string represent this table info object.
@@ -88,7 +125,9 @@ public class ListTablesResponse extends AbstractTableStorageResponse {
         public String toString() {
             return "TableInfo [\n  tableName=" + tableName
                     + ", \n  tableState=" + tableState
-                    + ", \n  tableVersion=" + tableVersion + "\n]";
+                    + ", \n  tableVersion=" + tableVersion
+                    + ", \n  maxVersions=" + maxVersions
+                    + ", \n  storageType=" + storageType + "\n]";
         }
     }
 

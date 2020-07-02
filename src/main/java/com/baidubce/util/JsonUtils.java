@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2020 Baidu, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -31,14 +31,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+/**
+ * JsonUtils for Serialization and deserialization of JSON
+ */
 public class JsonUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    // support object root name
+    private static final ObjectMapper objectMapperOther = new ObjectMapper();
 
     static {
         JsonUtils.objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         JsonUtils.objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         JsonUtils.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonUtils.objectMapper.setSerializationInclusion(Include.NON_NULL);
+        objectMapperOther.setSerializationInclusion(Include.NON_NULL);
+        objectMapperOther.enable(SerializationFeature.WRAP_ROOT_VALUE);
     }
 
     private static final ObjectWriter writer = JsonUtils.objectMapper.writer();
@@ -51,6 +58,19 @@ public class JsonUtils {
     public static String toJsonString(Object value) {
         try {
             return JsonUtils.writer.writeValueAsString(value);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * Serialization of object
+     * @param value the object need Serialize
+     * @return json string include object name
+     */
+    public static String toJsonStringWithRootName(Object value) {
+        try {
+            return objectMapperOther.writeValueAsString(value);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

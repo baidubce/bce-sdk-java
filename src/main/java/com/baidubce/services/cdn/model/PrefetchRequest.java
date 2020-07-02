@@ -13,14 +13,14 @@
 
 package com.baidubce.services.cdn.model;
 
-import java.util.List;
-
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.cdn.model.cache.PrefetchTask;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yixing
@@ -76,7 +76,7 @@ public class PrefetchRequest extends AbstractBceRequest {
 
     /**
      * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

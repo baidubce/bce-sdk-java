@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent an HBase application.
- *
+ * <p>
  * An HBase application can be configured with properties about backup and restore.
  */
 public class HBaseApplicationConfig extends ApplicationConfig {
@@ -34,12 +34,13 @@ public class HBaseApplicationConfig extends ApplicationConfig {
     /**
      * Configure the version of HBase.
      * The reference version is as follows:
-     *
-     *     image type |  image version | hbase version supported
-     *      hadoop    |    0.1.0       |    0.98.0
-     *      hadoop    |    0.1.0       |    0.98.0
+     * <p>
+     * image type |  image version | hbase version supported
+     * hadoop    |    0.1.0       |    0.98.0
+     * hadoop    |    0.1.0       |    0.98.0
      *
      * @param version The version of HBase.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withVersion(String version) {
@@ -52,6 +53,7 @@ public class HBaseApplicationConfig extends ApplicationConfig {
      * the properties of backup-location, backup-internal and backup start time should be set.
      *
      * @param backupEnabled The switch of backup. Turn it on by setting true.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withBackupEnabled(boolean backupEnabled) {
@@ -64,6 +66,7 @@ public class HBaseApplicationConfig extends ApplicationConfig {
      * This property must be set if the backupEnabled is set true.
      *
      * @param backupLocation The BOS path for backup.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withBackupLocation(String backupLocation) {
@@ -76,6 +79,7 @@ public class HBaseApplicationConfig extends ApplicationConfig {
      * This property must be set if the backupEnabled is set true.
      *
      * @param minutes The number of minutes for backup interval time.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withBackupIntervalInMinutes(int minutes) {
@@ -88,6 +92,7 @@ public class HBaseApplicationConfig extends ApplicationConfig {
      * This property must be set if the backupEnabled is set true.
      *
      * @param startDatetime The start date time for HBase backup.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withBackupStartDatetime(String startDatetime) {
@@ -101,6 +106,7 @@ public class HBaseApplicationConfig extends ApplicationConfig {
      * If restore is not enabled, then the HBase will be a purely new one.
      *
      * @param restoreEnabled The switch of restore. Turn it on by setting true.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withRestoreEnabled(boolean restoreEnabled) {
@@ -113,6 +119,7 @@ public class HBaseApplicationConfig extends ApplicationConfig {
      * This property must be set if the restoreEnabled is set true.
      *
      * @param restoreLocation The BOS path for restore.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withRestoreLocation(String restoreLocation) {
@@ -125,6 +132,7 @@ public class HBaseApplicationConfig extends ApplicationConfig {
      * This property must be set if the restoreEnabled is set true.
      *
      * @param restoreVersion The version of HBase backup files.
+     *
      * @return HBaseApplicationConfig
      */
     public HBaseApplicationConfig withRestoreVersion(String restoreVersion) {

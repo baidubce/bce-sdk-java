@@ -21,6 +21,8 @@ public class AnalyzeRequest extends AbstractBceRequest {
 
     private String notification;
 
+    private String title;
+
     @Override
     public AnalyzeRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
@@ -47,13 +49,19 @@ public class AnalyzeRequest extends AbstractBceRequest {
         return this;
     }
 
+    public AnalyzeRequest withTitle(String title) {
+        this.setTitle(title);
+        return this;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("AnalyzeRequest{");
         sb.append("source='").append(source).append('\'');
-        sb.append("auth='").append(auth).append('\'');
-        sb.append("preset='").append(preset).append('\'');
-        sb.append("notification='").append(notification).append('\'');
+        sb.append(",auth='").append(auth).append('\'');
+        sb.append(",preset='").append(preset).append('\'');
+        sb.append(",notification='").append(notification).append('\'');
+        sb.append(",title='").append(title).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -88,5 +96,13 @@ public class AnalyzeRequest extends AbstractBceRequest {
 
     public void setNotification(String notification) {
         this.notification = notification;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

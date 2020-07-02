@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Baidu, Inc.
+ * Copyright 2018-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -34,6 +34,10 @@ import com.baidubce.services.tsdb.model.GetTaskRequest;
 import com.baidubce.services.tsdb.model.GetTaskResponse;
 import com.baidubce.services.tsdb.model.ListDatabaseRequest;
 import com.baidubce.services.tsdb.model.ListDatabaseResponse;
+import com.baidubce.services.tsdb.model.RenewDatabaseRequest;
+import com.baidubce.services.tsdb.model.RenewDatabaseResponse;
+import com.baidubce.services.tsdb.model.ResizeDatabaseRequest;
+import com.baidubce.services.tsdb.model.ResizeDatabaseResponse;
 import com.baidubce.services.tsdb.model.TaskParams;
 import com.baidubce.services.tsdb.model.TaskResult;
 import com.baidubce.services.tsdb.model.TaskType;
@@ -51,6 +55,8 @@ public class TsdbAdminClient extends AbstractTsdbBceClient {
     private static final String DATABASE = "database";
     private static final String TASK = "task";
     private static final String CLIENT_TOKEN = "clientToken";
+    private static final String QUOTA = "quota";
+    private static final String RENEW = "renew";
 
     private static final String REQUEST_NOT_NULL = "request should not be null.";
     private static final String DATABASE_ID_NOT_NULL = "database id should not be null.";
@@ -65,6 +71,26 @@ public class TsdbAdminClient extends AbstractTsdbBceClient {
         internalRequest.addParameter(CLIENT_TOKEN, clientToken);
         fillInHeadAndBody(createDatabaseRequest, internalRequest);
         return this.invokeHttpClient(internalRequest, CreateDatabaseResponse.class);
+    }
+
+    public ResizeDatabaseResponse resizeDatabase(ResizeDatabaseRequest resizeDatabaseRequest) {
+        checkNotNull(resizeDatabaseRequest);
+
+        InternalRequest internalRequest = createRequest(resizeDatabaseRequest, HttpMethodName.PUT,
+                DATABASE, resizeDatabaseRequest.getDatabaseId());
+        internalRequest.addParameter(QUOTA, null);
+        fillInHeadAndBody(resizeDatabaseRequest, internalRequest);
+        return this.invokeHttpClient(internalRequest, ResizeDatabaseResponse.class);
+    }
+
+    public RenewDatabaseResponse renewDatabase(RenewDatabaseRequest renewDatabaseRequest) {
+        checkNotNull(renewDatabaseRequest);
+
+        InternalRequest internalRequest = createRequest(renewDatabaseRequest, HttpMethodName.PUT,
+                DATABASE, renewDatabaseRequest.getDatabaseId());
+        internalRequest.addParameter(RENEW, null);
+        fillInHeadAndBody(renewDatabaseRequest, internalRequest);
+        return this.invokeHttpClient(internalRequest, RenewDatabaseResponse.class);
     }
 
     public DeleteDatabaseResponse deleteDatabase(String databaseId) {

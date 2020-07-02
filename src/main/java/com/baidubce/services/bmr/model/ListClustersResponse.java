@@ -12,14 +12,14 @@
  */
 package com.baidubce.services.bmr.model;
 
+import java.util.List;
+
 import com.baidubce.model.AbstractBceResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 /**
  * Represent the response of ListClustersRequest.
- *
+ * <p>
  * The response contains a array of BMR Cluster objects.
  */
 public class ListClustersResponse extends AbstractBceResponse {
@@ -57,8 +57,7 @@ public class ListClustersResponse extends AbstractBceResponse {
         return this.isTruncated;
     }
 
-    @JsonProperty("isTruncated")
-    public void setTruncated(boolean isTruncated) {
+    @JsonProperty("isTruncated") public void setTruncated(boolean isTruncated) {
         this.isTruncated = isTruncated;
     }
 

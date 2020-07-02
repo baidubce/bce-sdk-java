@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,6 +11,8 @@
  * specific language governing permissions and limitations under the License.
  */
 package com.baidubce.services.bcc.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
@@ -75,6 +77,32 @@ public class ImageModel {
      * The description of the image.
      */
     private String desc;
+
+    /**
+     * The special version information of the operating system.
+     */
+    private String specialVersion;
+
+    /**
+     * The language of the operation system. CHS means Chinese, ENG means English.
+     */
+    private String osLang;
+
+    /**
+     * Whether the image is big or not. The default value is false. If <code>true</code>, it means it is the big image.
+     */
+    @JsonProperty("package")
+    private boolean packaged;
+
+    /**
+     * Limit on the number of users that can be shared.
+     */
+    private int shareToUserNumLimit;
+
+    /**
+     * The number of users shared.
+     */
+    private int sharedToUserNum;
 
     public String getId() {
         return id;
@@ -164,6 +192,46 @@ public class ImageModel {
         this.desc = desc;
     }
 
+    public String getSpecialVersion() {
+        return specialVersion;
+    }
+
+    public void setSpecialVersion(String specialVersion) {
+        this.specialVersion = specialVersion;
+    }
+
+    public String getOsLang() {
+        return osLang;
+    }
+
+    public void setOsLang(String osLang) {
+        this.osLang = osLang;
+    }
+
+    public boolean isPackaged() {
+        return packaged;
+    }
+
+    public void setPackaged(boolean packaged) {
+        this.packaged = packaged;
+    }
+
+    public int getShareToUserNumLimit() {
+        return shareToUserNumLimit;
+    }
+
+    public void setShareToUserNumLimit(int shareToUserNumLimit) {
+        this.shareToUserNumLimit = shareToUserNumLimit;
+    }
+
+    public int getSharedToUserNum() {
+        return sharedToUserNum;
+    }
+
+    public void setSharedToUserNum(int sharedToUserNum) {
+        this.sharedToUserNum = sharedToUserNum;
+    }
+
     @Override
     public String toString() {
         return "ImageModel{"
@@ -178,6 +246,11 @@ public class ImageModel {
                 + ", createTime='" + createTime + '\''
                 + ", status='" + status + '\''
                 + ", desc='" + desc + '\''
+                + ", specialVersion='" + specialVersion + '\''
+                + ", osLang='" + osLang + '\''
+                + ", package='" + packaged + '\''
+                + ", shareToUserNumLimit='" + shareToUserNumLimit + '\''
+                + ", sharedToUserNum='" + sharedToUserNum + '\''
                 + '}';
     }
 }

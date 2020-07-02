@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Baidu, Inc.
+ * Copyright 2014-2020 Baidu, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -180,7 +180,8 @@ public class VodClient extends AbstractBceClient {
         // enable HTTP Async manner for PUT method
         super(vodConfig, responseHandlers, true);
 
-        BosClientConfiguration bosConfig = new BosClientConfiguration(vodConfig, null).withRegion(Region.CN_N1);
+        BosClientConfiguration bosConfig = new BosClientConfiguration(vodConfig, "http://bj.bcebos.com")
+                .withRegion(Region.CN_N1);
         bosClient = new BosClient(bosConfig);
 
     }
@@ -191,7 +192,7 @@ public class VodClient extends AbstractBceClient {
      * @param vodConfig The client configuration options controlling how this client connects to Vod services
      *            (e.g. proxy settings, retry counts, etc).
      */
-    VodClient(BceClientConfiguration vodConfig, BosClientConfiguration bosConfig) {
+    public VodClient(BceClientConfiguration vodConfig, BosClientConfiguration bosConfig) {
         // enable HTTP Async manner for PUT method
         super(vodConfig, responseHandlers, true);
         bosClient = new BosClient(bosConfig);

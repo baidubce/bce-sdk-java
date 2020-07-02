@@ -33,6 +33,7 @@ public class TerminateClusterRequest extends AbstractBceRequest {
      * Configure the cluster ID for the request.
      *
      * @param clusterId The ID of cluster that to be terminated.
+     *
      * @return TerminateClusterRequest
      */
     public TerminateClusterRequest withClusterId(String clusterId) {
@@ -44,6 +45,7 @@ public class TerminateClusterRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return TerminateClusterRequest
      */
     public TerminateClusterRequest withRequestCredentials(BceCredentials credentials) {

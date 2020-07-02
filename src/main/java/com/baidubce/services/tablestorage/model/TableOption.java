@@ -21,8 +21,9 @@ import com.baidubce.services.tablestorage.TableStorageConstants;
 public class TableOption {
     private long tableVersion = TableStorageConstants.CREATE_TABLE_VERSION;
     private long timeToLive = TableStorageConstants.DEFAULT_LIVE_TIME;
-    private int maxVersions = TableStorageConstants.DEFAULT_TABLE_MAX_VERSIONS;
+    private int maxVersions = TableStorageConstants.DEFAULT_MAX_VERSIONS;
     private CompressType compressType = CompressType.DEFAULT;
+    private String storageType = TableStorageConstants.EMPTY_STORAGE_TYPE;
 
     /**
      * Get table version of this table option object.
@@ -92,5 +93,20 @@ public class TableOption {
      */
     public void setMaxVersions(int maxVersions) {
         this.maxVersions = maxVersions;
+    }
+
+    /**
+     * Get storage type of this table option object.
+     *
+     * @return The storage type.
+     */
+    public String getStorageType() {
+        return storageType;
+    }
+    /**
+     * Set storage type  of this table option object.
+     */
+    public void setStorageType(String storageType) {
+        this.storageType = storageType;
     }
 }

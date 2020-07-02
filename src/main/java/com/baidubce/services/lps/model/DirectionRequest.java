@@ -65,6 +65,13 @@ public class DirectionRequest extends GenericAccountRequest {
     private String destination;
 
     /**
+     * The way points of the route.
+     * <p>
+     * The default value is empty string.
+     */
+    private String waypoints;
+
+    /**
      * Type of the coordinate of the start point and end point.
      * <p>
      * Optional values are "bd09ll", "bd09mc", "gcj02", "wgs84".

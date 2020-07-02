@@ -13,20 +13,19 @@
 
 package com.baidubce.services.cdn.model;
 
+import com.baidubce.auth.BceCredentials;
+import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.util.DateUtils;
+import com.baidubce.util.JsonUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.baidubce.auth.BceCredentials;
-import com.baidubce.model.AbstractBceRequest;
-import com.baidubce.util.DateUtils;
-import com.baidubce.util.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * The params of metric query
@@ -409,8 +408,8 @@ public class GetStatMetricRequest extends AbstractBceRequest {
 
     /**
      * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
+     *
+     * @see Object#toString()
      */
     @Override
     public String toString() {

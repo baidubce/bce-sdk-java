@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -110,6 +110,11 @@ public class VolumeModel {
      * The list of bonded tags.
      */
     private List<TagModel> tags;
+
+    /**
+     * Whether to encrypt
+     */
+    private String encrypted;
 
     public String getId() {
         return id;
@@ -247,26 +252,35 @@ public class VolumeModel {
         this.tags = tags;
     }
 
+    public String getEncrypted() {
+        return encrypted;
+    }
+
+    public void setEncrypted(String encrypted) {
+        this.encrypted = encrypted;
+    }
+
     @Override
     public String toString() {
-        return "VolumeModel{"
-                + "id='" + id + '\''
-                + ", name='" + name + '\''
-                + ", diskSizeInGB=" + diskSizeInGB
-                + ", paymentTiming='" + paymentTiming + '\''
-                + ", createTime=" + createTime
-                + ", expireTime=" + expireTime
-                + ", status='" + status + '\''
-                + ", type='" + type + '\''
-                + ", storageType='" + storageType + '\''
-                + ", desc='" + desc + '\''
-                + ", attachments=" + attachments
-                + ", zoneName='" + zoneName + '\''
-                + ", regionId='" + regionId + '\''
-                + ", snapshotNum='" + snapshotNum + '\''
-                + ", sourceSnapshotId='" + sourceSnapshotId + '\''
-                + ", autoSnapshotPolicy=" + autoSnapshotPolicy
-                + ", tags=" + tags
-                + '}';
+        return "VolumeModel{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", diskSizeInGB=" + diskSizeInGB +
+                ", paymentTiming='" + paymentTiming + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", expireTime='" + expireTime + '\'' +
+                ", status=" + status +
+                ", type=" + type +
+                ", storageType=" + storageType +
+                ", desc='" + desc + '\'' +
+                ", attachments=" + attachments +
+                ", zoneName='" + zoneName + '\'' +
+                ", regionId='" + regionId + '\'' +
+                ", snapshotNum='" + snapshotNum + '\'' +
+                ", sourceSnapshotId='" + sourceSnapshotId + '\'' +
+                ", autoSnapshotPolicy=" + autoSnapshotPolicy +
+                ", tags=" + tags +
+                ", encrypted='" + encrypted + '\'' +
+                '}';
     }
 }

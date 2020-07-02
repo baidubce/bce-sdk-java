@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright 2014-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -31,6 +31,11 @@ public class BosClientConfiguration extends BceClientConfiguration {
      * should be true.
      */
     private boolean cnameEnabled;
+
+    /**
+     * whether to enable using nio to http async put, default value is true for async put
+     */
+    private boolean enableHttpAsyncPut = true;
 
     public int getStreamBufferSize() {
         return this.streamBufferSize;
@@ -79,6 +84,27 @@ public class BosClientConfiguration extends BceClientConfiguration {
 
     public BosClientConfiguration withCnameEnabled(boolean cnameEnabled) {
         this.setCnameEnabled(cnameEnabled);
+        return this;
+    }
+
+    /**
+     * Returns whether to enable http async put
+     * @return whether to enable http async put
+     */
+    public boolean isEnableHttpAsyncPut() {
+        return enableHttpAsyncPut;
+    }
+
+    /**
+     * Set whether to enable http async put
+     * @param enableHttpAsyncPut whether to enable http async put
+     */
+    public void setEnableHttpAsyncPut(boolean enableHttpAsyncPut) {
+        this.enableHttpAsyncPut = enableHttpAsyncPut;
+    }
+
+    public BosClientConfiguration withEnableHttpAsyncPut(boolean enableHttpAsyncPut) {
+        this.setEnableHttpAsyncPut(enableHttpAsyncPut);
         return this;
     }
 

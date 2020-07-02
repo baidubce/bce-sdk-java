@@ -21,5 +21,29 @@ public enum Permission {
     READ,
     WRITE,
     LIST,
-    GetObject;
+
+    GetBucket,
+    GetBucketAcl,
+    GetBucketCors,
+    GetBucketStyle,
+    GetBucketMirroring,
+    GetCopyRightProtection,
+    PutBucket,
+    PutBucketAcl,
+    PutBucketCors,
+    PutBucketStyle,
+    PutBucketMirroring,
+    PutCopyRightProtection,
+    ListBucket,
+
+    GetObject,
+    PutObject,
+    DeleteObject,
+    RenameObject,
+    GetObjectAcl,
+    PutObjectAcl,
+    RestoreObject,
+    ListParts,
+
+    MODIFY;
 }

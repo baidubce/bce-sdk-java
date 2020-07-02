@@ -21,10 +21,21 @@ import com.baidubce.model.AbstractBceResponse;
  * the detail info of resource month bills
  */
 public class ResourceMonthBillResponse extends AbstractBceResponse {
+
     /**
      * the month of bill
      */
     String billMonth;
+
+    /**
+     * the begin time of bill, query by day
+     */
+    private String beginTime;
+
+    /**
+     * the end time of bill, query by day
+     */
+    private String endTime;
 
     /**
      * the account id
@@ -77,6 +88,22 @@ public class ResourceMonthBillResponse extends AbstractBceResponse {
 
     public void setBillMonth(String billMonth) {
         this.billMonth = billMonth;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getAccountId() {
