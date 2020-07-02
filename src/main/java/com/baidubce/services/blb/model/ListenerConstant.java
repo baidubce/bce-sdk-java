@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -25,8 +25,9 @@ public class ListenerConstant {
     public static final String HTTP_LISTENER = "HTTP";
     public static final String TCP_LISTENER = "TCP";
     public static final String UDP_LISTENER = "UDP";
+    public static final String SSL_LISTENER = "SSL";
 
     public static final Set<String> LISTENER_SET = new HashSet<String>(Arrays.asList(HTTPS_LISTENER, HTTP_LISTENER,
-            TCP_LISTENER, UDP_LISTENER));
+            TCP_LISTENER, UDP_LISTENER, SSL_LISTENER));
 
 }

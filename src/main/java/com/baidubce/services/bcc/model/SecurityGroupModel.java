@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -44,6 +44,11 @@ public class SecurityGroupModel {
      */
     private List<SecurityGroupRuleModel> rules;
 
+    /**
+     * The list of tags.
+     */
+    private List<TagModel> tags;
+
 
     public String getId() {
         return id;
@@ -85,14 +90,23 @@ public class SecurityGroupModel {
         this.rules = rules;
     }
 
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
-        return "SecurityGroupModel{"
-                + "id='" + id + '\''
-                + ", name='" + name + '\''
-                + ", vpcId='" + vpcId + '\''
-                + ", desc='" + desc + '\''
-                + ", rules=" + rules
-                + '}';
+        return "SecurityGroupModel{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", vpcId='" + vpcId + '\'' +
+                ", desc='" + desc + '\'' +
+                ", rules=" + rules +
+                ", tags=" + tags +
+                '}';
     }
 }

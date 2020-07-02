@@ -52,6 +52,11 @@ public class Grant {
     private List<String> notResource;
 
     /**
+     * the effect of Bucket Acl (Allow or Deny)
+     */
+    private String effect;
+
+    /**
      * Gets the grantee being granted a permission by this grant.
      * @return The grantee being granted a permission by this grant.
      */
@@ -190,6 +195,32 @@ public class Grant {
     public Grant(List<Grantee> grantee, List<Permission> permission) {
         this.grantee = grantee;
         this.permission = permission;
+    }
+
+    /**
+     * Gets effect of Bucket Acl
+     * @return the effect of Bucket Acl
+     */
+    public String getEffect() {
+        return effect;
+    }
+
+    /**
+     * Sets effect of Bucket Acl
+     * @param effect
+     */
+    public void setEffect(String effect) {
+        this.effect = effect;
+    }
+
+    /**
+     * Sets effect of Bucket Acl
+     * @param effect
+     * @return this object
+     */
+    public Grant withEffect(String effect) {
+        this.setEffect(effect);
+        return this;
     }
 
     /**

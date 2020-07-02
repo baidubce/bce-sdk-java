@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent configuration for a pig step.
- *
+ * <p>
  * A pig step can be configured with name, actionOnFailure, script, input, output and arguments.
  * The essential options are script and actionOnFailure,
  * and the optional ones are name, input, output and arguments.
@@ -26,7 +26,6 @@ public class PigStepConfig extends StepConfig {
     private static final String OUTPUT = "output";
     private static final String ARGUMENTS = "arguments";
 
-    
     public PigStepConfig() {
         this.setType(PIG_STEP);
     }
@@ -35,6 +34,7 @@ public class PigStepConfig extends StepConfig {
      * Configure the input path of the pig step.
      *
      * @param input The input path of the pig step.
+     *
      * @return PigStepConfig
      */
     public PigStepConfig withInput(String input) {
@@ -46,6 +46,7 @@ public class PigStepConfig extends StepConfig {
      * Configure the script path of the pig step.
      *
      * @param script The script path of the pig step.
+     *
      * @return PigStepConfig
      */
     public PigStepConfig withScript(String script) {
@@ -57,6 +58,7 @@ public class PigStepConfig extends StepConfig {
      * Configure the output path of the pig step.
      *
      * @param output The output path of the pig step.
+     *
      * @return PigStepConfig
      */
     public PigStepConfig withOutput(String output) {
@@ -68,32 +70,35 @@ public class PigStepConfig extends StepConfig {
      * Configure the arguments of the pig step.
      *
      * @param arguments The arguments of the pig step.
+     *
      * @return PigStepConfig
      */
     public PigStepConfig withArguments(String arguments) {
         this.addProperty(ARGUMENTS, arguments);
         return this;
     }
-    
+
     /**
      * Configure the name of the pig step.
      *
      * @param name The name of the pig step.
+     *
      * @return PigStepConfig
      */
     public PigStepConfig withName(String name) {
         this.setName(name);
         return this;
     }
-    
+
     /**
      * Configure the action on failure for the pig step.
      * This property is set to enum value:
-     *     "Continue": continue to execute other steps.
-     *     "TerminateCluster": terminate the cluster when this step fails.
-     *     "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
+     * "Continue": continue to execute other steps.
+     * "TerminateCluster": terminate the cluster when this step fails.
+     * "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
      *
      * @param actionOnFailure The action on step's failure.
+     *
      * @return PigStepConfig
      */
     public PigStepConfig withActionOnFailure(String actionOnFailure) {
@@ -105,7 +110,8 @@ public class PigStepConfig extends StepConfig {
      * Configure the additional file for the step.
      *
      * @param remote The remote file of the additional file.
-     * @param local The local file of the additional file.
+     * @param local  The local file of the additional file.
+     *
      * @return PigStepConfig
      */
     public PigStepConfig withAdditionalFile(String remote, String local) {

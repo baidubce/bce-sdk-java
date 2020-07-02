@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Baidu, Inc.
+ * Copyright 2015-2020 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -15,6 +15,9 @@ package com.baidubce.services.media.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
+/**
+ * The response for getting pipeline
+ */
 public class GetPipelineResponse extends AbstractBceResponse {
     private String pipelineName   = null;
     private String description    = null;
@@ -25,6 +28,15 @@ public class GetPipelineResponse extends AbstractBceResponse {
     private String lastUpdateTime = null;
     private JobStatus jobStatus      = null;
 
+    public PipelineStatus getPipeline() {
+        PipelineStatus pipeline =  new PipelineStatus();
+        pipeline.setPipelineName(pipelineName);
+        pipeline.setDescription(description);
+        pipeline.setSourceBucket(sourceBucket);
+        pipeline.setTargetBucket(targetBucket);
+        pipeline.setConfig(config);
+        return pipeline;
+    }
     /**
      * 系统生成的队列唯一标示
      **/

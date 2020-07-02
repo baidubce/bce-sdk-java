@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2019-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -44,6 +44,16 @@ public class OsModel {
      */
     private String osType;
 
+    /**
+     * The language of the operating system. CHS means Chinese, ENG means English.
+     */
+    private String osLang;
+
+    /**
+     * The special version information of the operating system.
+     */
+    private String specialVersion;
+
     public String getInstanceId() {
         return instanceId;
     }
@@ -84,6 +94,22 @@ public class OsModel {
         this.osType = osType;
     }
 
+    public String getOsLang() {
+        return osLang;
+    }
+
+    public void setOsLang(String osLang) {
+        this.osLang = osLang;
+    }
+
+    public String getSpecialVersion() {
+        return specialVersion;
+    }
+
+    public void setSpecialVersion(String specialVersion) {
+        this.specialVersion = specialVersion;
+    }
+
     @Override
     public String toString() {
         return "OsModel{"
@@ -92,6 +118,8 @@ public class OsModel {
                 + ", osName='" + osName + '\''
                 + ", osVersion='" + osVersion + '\''
                 + ", osType='" + osType + '\''
+                + ", osLang='" + osLang + '\''
+                + ", specialVersion='" + specialVersion + '\''
                 + '}';
     }
 }

@@ -12,23 +12,23 @@
  */
 package com.baidubce.services.bmr.model;
 
-import com.baidubce.model.AbstractBceResponse;
-
 import java.util.List;
+
+import com.baidubce.model.AbstractBceResponse;
 
 /**
  * Represent the response of ListInstanceGroupsRequest.
- *
+ * <p>
  * The response contains a array of BMR InstanceGroup objects.
  */
 public class ListInstanceGroupsResponse extends AbstractBceResponse {
     private List<InstanceGroup> instanceGroups;
 
-    public void setInstanceGroups(List<InstanceGroup> instanceGroups) {
-        this.instanceGroups = instanceGroups;
-    }
-
     public List<InstanceGroup> getInstanceGroups() {
         return this.instanceGroups;
+    }
+
+    public void setInstanceGroups(List<InstanceGroup> instanceGroups) {
+        this.instanceGroups = instanceGroups;
     }
 }

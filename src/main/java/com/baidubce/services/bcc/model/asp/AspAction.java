@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2019-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -24,6 +24,10 @@ public enum  AspAction {
     /**
      * The action to detach the asp.
      */
-    detach
+    detach,
 
+    /**
+     * The action to update the asp.
+     */
+    update
 }

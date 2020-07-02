@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2019-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -27,6 +27,11 @@ public class SharedUserModel {
      */
     private String accountId;
 
+    /**
+     * The account of uc for sharing image
+     */
+    private String ucAccount;
+
     public String getAccount() {
         return account;
     }
@@ -43,11 +48,20 @@ public class SharedUserModel {
         this.accountId = accountId;
     }
 
+    public String getUcAccount() {
+        return ucAccount;
+    }
+
+    public void setUcAccount(String ucAccount) {
+        this.ucAccount = ucAccount;
+    }
+
     @Override
     public String toString() {
         return "SharedUserModel{"
                 + "account='" + account + '\''
                 + ", accountId='" + accountId + '\''
+                + ", ucAccount='" + ucAccount + '\''
                 + '}';
     }
 }

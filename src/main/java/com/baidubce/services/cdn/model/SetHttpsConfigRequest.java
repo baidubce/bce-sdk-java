@@ -15,6 +15,7 @@ package com.baidubce.services.cdn.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.cdn.model.domain.HttpsConfig;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 

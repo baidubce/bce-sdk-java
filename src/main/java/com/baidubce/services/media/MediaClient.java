@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Baidu, Inc.
+ * Copyright 2015-2020 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -36,6 +36,8 @@ import com.baidubce.services.media.model.Audio;
 import com.baidubce.services.media.model.Clip;
 import com.baidubce.services.media.model.CreateJobRequest;
 import com.baidubce.services.media.model.CreateJobResponse;
+import com.baidubce.services.media.model.CreateNotificationRequest;
+import com.baidubce.services.media.model.CreateNotificationResponse;
 import com.baidubce.services.media.model.CreatePipelineRequest;
 import com.baidubce.services.media.model.CreatePipelineResponse;
 import com.baidubce.services.media.model.CreatePresetRequest;
@@ -46,6 +48,8 @@ import com.baidubce.services.media.model.CreateTranscodingJobRequest;
 import com.baidubce.services.media.model.CreateTranscodingJobResponse;
 import com.baidubce.services.media.model.CreateWaterMarkRequest;
 import com.baidubce.services.media.model.CreateWaterMarkResponse;
+import com.baidubce.services.media.model.DeleteNotificationRequest;
+import com.baidubce.services.media.model.DeleteNotificationResponse;
 import com.baidubce.services.media.model.DeletePipelineRequest;
 import com.baidubce.services.media.model.DeletePresetRequest;
 import com.baidubce.services.media.model.DeletePresetResponse;
@@ -57,6 +61,8 @@ import com.baidubce.services.media.model.GetJobRequest;
 import com.baidubce.services.media.model.GetJobResponse;
 import com.baidubce.services.media.model.GetMediaInfoOfFileRequest;
 import com.baidubce.services.media.model.GetMediaInfoOfFileResponse;
+import com.baidubce.services.media.model.GetNotificationRequest;
+import com.baidubce.services.media.model.GetNotificationResponse;
 import com.baidubce.services.media.model.GetPipelineRequest;
 import com.baidubce.services.media.model.GetPipelineResponse;
 import com.baidubce.services.media.model.GetPresetRequest;
@@ -70,6 +76,8 @@ import com.baidubce.services.media.model.GetWaterMarkResponse;
 import com.baidubce.services.media.model.Insert;
 import com.baidubce.services.media.model.ListJobsRequest;
 import com.baidubce.services.media.model.ListJobsResponse;
+import com.baidubce.services.media.model.ListNotificationsRequest;
+import com.baidubce.services.media.model.ListNotificationsResponse;
 import com.baidubce.services.media.model.ListPipelinesRequest;
 import com.baidubce.services.media.model.ListPipelinesResponse;
 import com.baidubce.services.media.model.ListPresetsRequest;
@@ -89,12 +97,18 @@ import com.baidubce.services.media.model.ThumbnailSource;
 import com.baidubce.services.media.model.ThumbnailTarget;
 import com.baidubce.services.media.model.Timeline;
 import com.baidubce.services.media.model.TransCfg;
+import com.baidubce.services.media.model.UpdatePipelineRequest;
+import com.baidubce.services.media.model.UpdatePipelineResponse;
+import com.baidubce.services.media.model.UpdatePresetRequest;
+import com.baidubce.services.media.model.UpdatePresetResponse;
 import com.baidubce.services.media.model.Video;
 import com.baidubce.services.media.model.Watermarks;
+
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
 
+import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 import static com.baidubce.util.Validate.checkNotNull;
 
@@ -143,10 +157,33 @@ public class MediaClient extends AbstractBceClient {
     private static final String THUMBNAIL = "job/thumbnail";
 
     /**
+     * The common URI prefix for notification services.
+     */
+    private static final String NOTIFICATION = "notification";
+
+    /**
      * The default capacity of a new pipeline.
      */
     private static final int DEFAULT_PIPELINE_CAPACITY = 20;
 
+    /**
+     * Exception messages.
+     */
+    public static final String REQUEST_NULL_ERROR_MESSAGE = "request should not be null.";
+    public static final String PIPELINENAME_MESSAGE_KEY = "pipelineName";
+    public static final String SOURCE_MESSAGE_KEY = "source";
+    public static final String TARGET_MESSAGE_KEY = "target";
+    public static final String SOURCEKEY_MESSAGE_KEY = "sourceKey";
+    public static final String TARGETKEY_MESSAGE_KEY = "targetKey";
+    public static final String SOURCEBUCKET_MESSAGE_KEY = "sourceBucket";
+    public static final String TARGETBUCKET_MESSAGE_KEY = "targetBucket";
+    public static final String NAME_MESSAGE_KEY = "name";
+    public static final String ENDPOINT_MESSAGE_KEY = "endpoint";
+    public static final String PRESETNAME_MESSAGE_KEY = "presetName";
+    public static final String JOBID_MESSAGE_KEY = "jobId";
+    public static final String BUCKET_MESSAGE_KEY = "bucket";
+    public static final String KEY_MESSAGE_KEY = "key";
+    public static final String WATERMARKID_MESSAGE_KEY = "watermarkId";
     /**
      * Responsible for handling httpResponses from all service calls.
      */
@@ -209,18 +246,17 @@ public class MediaClient extends AbstractBceClient {
      */
     @Deprecated
     public CreateJobResponse createJob(CreateJobRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         
         checkStringNotEmpty(request.getPipelineName(),
-                "The parameter pipelineName should NOT be null or empty string.");
-        checkNotNull(request.getSource(), "The parameter source should NOT be null.");
-        checkStringNotEmpty(request.getSource().getSourceKey(),
-                "The parameter sourceKey should NOT be null or empty string.");
-        checkNotNull(request.getTarget(), "The parameter target should NOT be null.");
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
+        checkNotNull(request.getSource(), checkEmptyExceptionMessageFormat(SOURCE_MESSAGE_KEY));
+        checkNotNull(request.getTarget(), checkEmptyExceptionMessageFormat(TARGET_MESSAGE_KEY));
         checkStringNotEmpty(request.getTarget().getTargetKey(),
-                "The parameter targetKey should NOT be null or empty string.");
+                checkEmptyExceptionMessageFormat(TARGETKEY_MESSAGE_KEY));
         checkStringNotEmpty(request.getTarget().getPresetName(),
-                "The parameter presetName should NOT be null or empty string.");
+                checkEmptyExceptionMessageFormat(PRESETNAME_MESSAGE_KEY));
         
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, TRANSCODE_JOB);
 
@@ -252,11 +288,11 @@ public class MediaClient extends AbstractBceClient {
      */
     @Deprecated
     public ListJobsResponse listJobs(ListJobsRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getPipelineName(),
-                "The parameter pipelineName should NOT be null or empty string.");
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, TRANSCODE_JOB);
-        internalRequest.addParameter("pipelineName", request.getPipelineName());
+        internalRequest.addParameter(PIPELINENAME_MESSAGE_KEY, request.getPipelineName());
         return invokeHttpClient(internalRequest, ListJobsResponse.class);
     }
     
@@ -285,8 +321,8 @@ public class MediaClient extends AbstractBceClient {
      */
     @Deprecated
     public GetJobResponse getJob(GetJobRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getJobId(), "The parameter jobId should NOT be null or empty string.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getJobId(),  checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, TRANSCODE_JOB, request.getJobId());
 
         return invokeHttpClient(internalRequest, GetJobResponse.class);
@@ -453,17 +489,16 @@ public class MediaClient extends AbstractBceClient {
      * @return The newly created job ID.
      */
     public CreateTranscodingJobResponse createTranscodingJob(CreateTranscodingJobRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+
         checkStringNotEmpty(request.getPipelineName(),
-                "The parameter pipelineName should NOT be null or empty string.");
-        checkNotNull(request.getSource(), "The parameter source should NOT be null.");
-        checkNotNull(request.getTarget(), "The parameter target should NOT be null.");
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
+        checkNotNull(request.getSource(), checkEmptyExceptionMessageFormat(SOURCE_MESSAGE_KEY));
+        checkNotNull(request.getTarget(), checkEmptyExceptionMessageFormat(TARGET_MESSAGE_KEY));
         checkStringNotEmpty(request.getTarget().getTargetKey(),
-                "The parameter targetKey should NOT be null or empty string.");
+                checkEmptyExceptionMessageFormat(TARGETKEY_MESSAGE_KEY));
         checkStringNotEmpty(request.getTarget().getPresetName(),
-                "The parameter presetName should NOT be null or empty string.");
-        
+                checkEmptyExceptionMessageFormat(PRESETNAME_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, TRANSCODE_JOB);
 
         return invokeHttpClient(internalRequest, CreateTranscodingJobResponse.class);
@@ -490,11 +525,12 @@ public class MediaClient extends AbstractBceClient {
      * @return The list of job IDs.
      */
     public ListTranscodingJobsResponse listTranscodingJobs(ListTranscodingJobsRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+
         checkStringNotEmpty(request.getPipelineName(),
-                "The parameter pipelineName should NOT be null or empty string.");
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, TRANSCODE_JOB);
-        internalRequest.addParameter("pipelineName", request.getPipelineName());
+        internalRequest.addParameter(PIPELINENAME_MESSAGE_KEY, request.getPipelineName());
         return invokeHttpClient(internalRequest, ListTranscodingJobsResponse.class);
     }
     
@@ -519,8 +555,9 @@ public class MediaClient extends AbstractBceClient {
      * @return The status of a job.
      */
     public GetTranscodingJobResponse getTranscodingJob(GetTranscodingJobRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getJobId(), "The parameter jobId should NOT be null or empty string.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getJobId(),
+                checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, TRANSCODE_JOB, request.getJobId());
 
         return invokeHttpClient(internalRequest, GetTranscodingJobResponse.class);
@@ -550,7 +587,12 @@ public class MediaClient extends AbstractBceClient {
      */
     public CreatePipelineResponse createPipeline(
             String pipelineName, String sourceBucket, String targetBucket) {
-        return createPipeline(pipelineName, null, sourceBucket, targetBucket, DEFAULT_PIPELINE_CAPACITY);
+        CreatePipelineRequest request = new CreatePipelineRequest();
+        request.setPipelineName(pipelineName);
+        request.setDescription("");
+        request.setSourceBucket(sourceBucket);
+        request.setTargetBucket(targetBucket);
+        return createPipeline(request);
     }
 
     /**
@@ -602,21 +644,36 @@ public class MediaClient extends AbstractBceClient {
      * 
      */
     public CreatePipelineResponse createPipeline(CreatePipelineRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getPipelineName(), 
-                "The parameter pipelineName should NOT be null or empty string.");
-        checkStringNotEmpty(request.getSourceBucket(), 
-                "The parameter sourceBucket should NOT be null or empty string.");
-        checkStringNotEmpty(request.getTargetBucket(), 
-                "The parameter targetBucket should NOT be null or empty string.");
-        if (request.getConfig() == null || request.getConfig().getCapacity() == null) {
-            PipelineConfig config = new PipelineConfig();
-            config.setCapacity(DEFAULT_PIPELINE_CAPACITY);
-            request.setConfig(config);
-        }
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPipelineName(),
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSourceBucket(),
+                checkEmptyExceptionMessageFormat(SOURCEBUCKET_MESSAGE_KEY));
+        checkStringNotEmpty(request.getTargetBucket(),
+                checkEmptyExceptionMessageFormat(TARGETBUCKET_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, PIPELINE);
         
         return invokeHttpClient(internalRequest, CreatePipelineResponse.class);
+    }
+
+    /**
+     * Creates a pipeline which enable you to perform multiple transcodes in parallel.
+     *
+     * @param request The request object containing all options for creating new pipeline.
+     *
+     */
+    public UpdatePipelineResponse updatePipeline(UpdatePipelineRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPipelineName(),
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSourceBucket(),
+                checkEmptyExceptionMessageFormat(SOURCEBUCKET_MESSAGE_KEY));
+        checkStringNotEmpty(request.getTargetBucket(),
+                checkEmptyExceptionMessageFormat(TARGETBUCKET_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT, request
+                , PIPELINE, request.getPipelineName());
+
+        return invokeHttpClient(internalRequest, UpdatePipelineResponse.class);
     }
 
     /**
@@ -637,7 +694,7 @@ public class MediaClient extends AbstractBceClient {
      * @return The list of all your pipelines 
      */
     public ListPipelinesResponse listPipelines(ListPipelinesRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PIPELINE);
         return invokeHttpClient(internalRequest, ListPipelinesResponse.class);
     }
@@ -663,9 +720,9 @@ public class MediaClient extends AbstractBceClient {
      * @return The information of your pipeline. 
      */
     public GetPipelineResponse getPipeline(GetPipelineRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getPipelineName(), 
-                "The parameter pipelineName should NOT be null or empty string.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPipelineName(),
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.GET, request, PIPELINE, request.getPipelineName());
 
@@ -691,9 +748,9 @@ public class MediaClient extends AbstractBceClient {
      * 
      */
     public void deletePipeline(DeletePipelineRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getPipelineName(), 
-                "The parameter pipelineName should NOT be null or empty string.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPipelineName(),
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.DELETE, request, PIPELINE, request.getPipelineName());
 
@@ -975,11 +1032,23 @@ public class MediaClient extends AbstractBceClient {
      * @param request The request object containing all options for deleting presets.
      */
     public CreatePresetResponse createPreset(CreatePresetRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
 
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, PRESET);
 
         return invokeHttpClient(internalRequest, CreatePresetResponse.class);
+    }
+
+    /**
+     * Update a preset.
+     *
+     * @param request The request object containing all options for updating presets.
+     */
+    public UpdatePresetResponse updatePreset(UpdatePresetRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+                request, PRESET, request.getPresetName());
+        return invokeHttpClient(internalRequest, UpdatePresetResponse.class);
     }
 
     /**
@@ -1000,7 +1069,7 @@ public class MediaClient extends AbstractBceClient {
      * @return The list of all available preset. 
      */
     public ListPresetsResponse listPresets(ListPresetsRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PRESET);
         return invokeHttpClient(internalRequest, ListPresetsResponse.class);
     }
@@ -1026,8 +1095,9 @@ public class MediaClient extends AbstractBceClient {
      * @return The information of the preset. 
      */
     public GetPresetResponse getPreset(GetPresetRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getPresetName(), "The parameter presetName should NOT be null or empty string.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPresetName(),
+                checkEmptyExceptionMessageFormat(PRESETNAME_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, PRESET, request.getPresetName());
 
         return invokeHttpClient(internalRequest, GetPresetResponse.class);
@@ -1052,8 +1122,9 @@ public class MediaClient extends AbstractBceClient {
      * 
      */
     public void deletePreset(DeletePresetRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getPresetName(), "The parameter presetName should NOT be null or empty string.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPresetName(),
+                checkEmptyExceptionMessageFormat(PRESETNAME_MESSAGE_KEY));
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.DELETE, request, PRESET, request.getPresetName());
 
@@ -1083,12 +1154,13 @@ public class MediaClient extends AbstractBceClient {
      * @return The media information of an object in Bos bucket.
      */
     public GetMediaInfoOfFileResponse getMediaInfoOfFile(GetMediaInfoOfFileRequest request) {
-        checkNotNull(request, "The parameter request should NOT be null.");
-        checkStringNotEmpty(request.getBucket(), "The parameter bucket should NOT be null or empty string.");
-        checkStringNotEmpty(request.getKey(), "The parameter key should NOT be null or empty string.");
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBucket(),
+                checkEmptyExceptionMessageFormat(BUCKET_MESSAGE_KEY));
+        checkStringNotEmpty(request.getKey(), checkEmptyExceptionMessageFormat(KEY_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, MEDIAINFO);
-        internalRequest.addParameter("bucket", request.getBucket());
-        internalRequest.addParameter("key", request.getKey());
+        internalRequest.addParameter(BUCKET_MESSAGE_KEY, request.getBucket());
+        internalRequest.addParameter(KEY_MESSAGE_KEY, request.getKey());
         return invokeHttpClient(internalRequest, GetMediaInfoOfFileResponse.class);
     }
     
@@ -1201,8 +1273,9 @@ public class MediaClient extends AbstractBceClient {
      * @return watermarkId the unique ID of the new water mark.
      */
     public CreateWaterMarkResponse createWaterMark(CreateWaterMarkRequest request) {
-        checkStringNotEmpty(request.getBucket(), "The parameter bucket should NOT be null or empty string.");
-        checkStringNotEmpty(request.getKey(), "The parameter key should NOT be null or empty string.");
+        checkStringNotEmpty(request.getBucket(),
+                checkEmptyExceptionMessageFormat(BUCKET_MESSAGE_KEY));
+        checkStringNotEmpty(request.getKey(), checkEmptyExceptionMessageFormat(KEY_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, WATER_MARK);
         
         return invokeHttpClient(internalRequest, CreateWaterMarkResponse.class);
@@ -1227,7 +1300,7 @@ public class MediaClient extends AbstractBceClient {
      * @return The information of the water mark.
      */
     public GetWaterMarkResponse getWaterMark(GetWaterMarkRequest request) {
-        checkStringNotEmpty(request.getWatermarkId(), "The parameter watermarkId should NOT be null or empty string.");
+        checkStringNotEmpty(request.getWatermarkId(), checkEmptyExceptionMessageFormat(WATERMARKID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.GET, request, WATER_MARK, request.getWatermarkId());
         
@@ -1275,7 +1348,7 @@ public class MediaClient extends AbstractBceClient {
      * 
      */
     public void deleteWaterMark(DeleteWaterMarkRequest request) {
-        checkStringNotEmpty(request.getWatermarkId(), "The parameter watermarkId should NOT be null or empty string.");
+        checkStringNotEmpty(request.getWatermarkId(), checkEmptyExceptionMessageFormat(WATERMARKID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.DELETE, request, WATER_MARK, request.getWatermarkId());
         
@@ -1382,11 +1455,11 @@ public class MediaClient extends AbstractBceClient {
      * @return the unique ID of the new thumbnail job.
      */
     public CreateThumbnailJobResponse createThumbnailJob(CreateThumbnailJobRequest request) {
-        checkStringNotEmpty(request.getPipelineName(), 
-                "The parameter pipelineName should NOT be null or empty string.");
-        checkNotNull(request.getSource(), "The parameter source should NOT be null.");
+        checkStringNotEmpty(request.getPipelineName(),
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
+        checkNotNull(request.getSource(),  checkEmptyExceptionMessageFormat(SOURCE_MESSAGE_KEY));
         checkStringNotEmpty(request.getSource().getKey(),
-                "The parameter source key should NOT be null or empty string.");
+                checkEmptyExceptionMessageFormat(SOURCEKEY_MESSAGE_KEY));
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.POST, request, THUMBNAIL);
         
@@ -1414,7 +1487,7 @@ public class MediaClient extends AbstractBceClient {
      * @return The information of the thumbnail job.
      */
     public GetThumbnailJobResponse getThumbnailJob(GetThumbnailJobRequest request) {
-        checkStringNotEmpty(request.getJobId(), "The parameter jobId should NOT be null or empty string.");
+        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 createRequest(HttpMethodName.GET, request, THUMBNAIL, request.getJobId());
         
@@ -1442,11 +1515,72 @@ public class MediaClient extends AbstractBceClient {
      * @return List of thumbnail jobs.
      */
     public ListThumbnailJobsResponse listThumbnailJobs(ListThumbnailJobsRequest request) {
-        checkStringNotEmpty(request.getPipeline(), "The parameter pipelineName should NOT be null or empty string.");
+        checkStringNotEmpty(request.getPipeline(), checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, THUMBNAIL);
-        internalRequest.addParameter("pipelineName", request.getPipeline()); 
+        internalRequest.addParameter(PIPELINENAME_MESSAGE_KEY, request.getPipeline());
         return invokeHttpClient(internalRequest, ListThumbnailJobsResponse.class);
     }
+
+    /**
+     * get a notification.
+     *
+     * @param name notification name
+     */
+    public GetNotificationResponse getNotification(String name) {
+        checkNotNull(name, checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+
+        GetNotificationRequest request = new GetNotificationRequest()
+                .withName(name);
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request
+                , NOTIFICATION, request.getName());
+
+        return invokeHttpClient(internalRequest, GetNotificationResponse.class);
+    }
+
+    /**
+     * list all notifications.
+     *
+     */
+    public ListNotificationsResponse listNotification() {
+        ListNotificationsRequest request = new ListNotificationsRequest();
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, NOTIFICATION);
+        return invokeHttpClient(internalRequest, ListNotificationsResponse.class);
+    }
+
+    /**
+     * Create a notification.
+     *
+     * @param name notification name
+     * @param endpoint notification endpoint
+     */
+    public CreateNotificationResponse createNotification(String name, String endpoint) {
+        checkNotNull(name, checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+        checkNotNull(endpoint, checkEmptyExceptionMessageFormat(ENDPOINT_MESSAGE_KEY));
+
+        CreateNotificationRequest request = new CreateNotificationRequest()
+                .withName(name)
+                .withEndpoint(endpoint);
+        InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, NOTIFICATION);
+
+        return invokeHttpClient(internalRequest, CreateNotificationResponse.class);
+    }
+
+    /**
+     * Delete a notification.
+     *
+     * @param name notification name
+     */
+    public DeleteNotificationResponse deleteNotification(String name) {
+        checkNotNull(name, checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+
+        DeleteNotificationRequest request = new DeleteNotificationRequest()
+                .withName(name);
+        InternalRequest internalRequest = createRequest(HttpMethodName.DELETE, request
+                , NOTIFICATION, request.getName());
+
+        return invokeHttpClient(internalRequest, DeleteNotificationResponse.class);
+    }
+
     
     /**
      * Creates and initializes a new request object for the specified resource.
@@ -1486,7 +1620,8 @@ public class MediaClient extends AbstractBceClient {
         InternalRequest internalRequest = new InternalRequest(httpMethod, uri);
         internalRequest.setCredentials(request.getRequestCredentials());
 
-        if (httpMethod == HttpMethodName.POST) {
+        if (httpMethod == HttpMethodName.POST
+                || httpMethod == HttpMethodName.PUT) {
             fillRequestPayload(internalRequest, request);
         }
         return internalRequest;

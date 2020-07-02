@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -15,6 +15,7 @@ package com.baidubce.services.bcc.model.securitygroup;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bcc.model.SecurityGroupRuleModel;
+import com.baidubce.services.bcc.model.TagModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
@@ -54,6 +55,11 @@ public class CreateSecurityGroupRequest extends AbstractBceRequest {
      * The list of rules which define how the SecurityGroup works.
      */
     private List<SecurityGroupRuleModel> rules;
+
+    /**
+     * The list of tags.
+     */
+    private List<TagModel> tags;
 
     public String getClientToken() {
         return clientToken;
@@ -144,6 +150,25 @@ public class CreateSecurityGroupRequest extends AbstractBceRequest {
      */
     public CreateSecurityGroupRequest withRules(List<SecurityGroupRuleModel> rules) {
         this.rules = rules;
+        return this;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * Configure tags for the request.
+     *
+     * @param tags The list of tags which define how the SecurityGroup works.
+     * @return CreateSecurityGroupRequest with tags.
+     */
+    public CreateSecurityGroupRequest withTags(List<TagModel> tags) {
+        this.tags = tags;
         return this;
     }
 

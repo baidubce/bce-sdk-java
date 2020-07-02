@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Baidu, Inc.
+ * Copyright 2018-2019 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -25,6 +25,7 @@ public class GetImageAsyncResponse extends AbstractBceResponse {
     private List<CheckResult> results;
     private VcrError error;
     private String status;
+    private String description;
 
     public String getSource() {
         return source;
@@ -66,6 +67,14 @@ public class GetImageAsyncResponse extends AbstractBceResponse {
         this.status = status;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("GetImageAsyncResponse{");
@@ -73,6 +82,7 @@ public class GetImageAsyncResponse extends AbstractBceResponse {
         sb.append(", label='").append(label).append('\'');
         sb.append(", status='").append(status).append('\'');
         sb.append(", error='").append(error).append('\'');
+        sb.append(", description='").append(description).append('\'');
         sb.append(", results=").append(results);
         sb.append('}');
         return sb.toString();

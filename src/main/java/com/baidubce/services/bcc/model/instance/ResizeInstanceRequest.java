@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,7 +14,10 @@ package com.baidubce.services.bcc.model.instance;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bcc.model.volume.EphemeralDisk;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 /**
  * The request for resizing instance.
@@ -37,6 +40,11 @@ public class ResizeInstanceRequest extends AbstractBceRequest {
     private String instanceId;
 
     /**
+     * The spec of instance
+     */
+    private String spec;
+
+    /**
      * The parameter of specified the cpu core to resize the instance.
      */
     private int cpuCount;
@@ -45,6 +53,13 @@ public class ResizeInstanceRequest extends AbstractBceRequest {
      * The parameter of specified the capacity of memory in GB to resize the instance.
      */
     private int memoryCapacityInGB;
+
+
+    /**
+     * The parameter of ephemeral disk capacity. Currently, this parameter only supports the DCC instances
+     * of storage type. And the capacity will be deducted from the corresponding capacity of the DCC flavor.
+     */
+    private List<EphemeralDisk> ephemeralDisks;
 
 
     public String getInstanceId() {
@@ -63,6 +78,19 @@ public class ResizeInstanceRequest extends AbstractBceRequest {
      */
     public ResizeInstanceRequest withInstanceId(String instanceId) {
         this.setInstanceId(instanceId);
+        return this;
+    }
+
+    public String getSpec() {
+        return spec;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
+    }
+
+    public ResizeInstanceRequest withSpec(String spec) {
+        this.setSpec(spec);
         return this;
     }
 
@@ -100,7 +128,7 @@ public class ResizeInstanceRequest extends AbstractBceRequest {
      * Configure request cpuCount for the request.
      *
      * @param cpuCount The parameter of specified the cpu core to resize the instance.
-     * @return ResizeInstanceRequest with credentials.
+     * @return ResizeInstanceRequest with cpuCount.
      */
     public ResizeInstanceRequest withCpuCount(int cpuCount) {
         this.cpuCount = cpuCount;
@@ -118,15 +146,34 @@ public class ResizeInstanceRequest extends AbstractBceRequest {
     /**
      * Configure request memoryCapacityInGB for the request.
      *
-     * @param memoryCapacityInGB  The parameter of specified the capacity of memory in GB to resize the instance.
-     * @return ResizeInstanceRequest with credentials.
+     * @param memoryCapacityInGB The parameter of specified the capacity of memory in GB to resize the instance.
+     * @return ResizeInstanceRequest with memoryCapacityInGB.
      */
     public ResizeInstanceRequest withMemoryCapacityInGB(int memoryCapacityInGB) {
         this.memoryCapacityInGB = memoryCapacityInGB;
         return this;
     }
 
+    public List<EphemeralDisk> getEphemeralDisks() {
+        return ephemeralDisks;
+    }
 
+    public void setEphemeralDisks(List<EphemeralDisk> ephemeralDisks) {
+        this.ephemeralDisks = ephemeralDisks;
+    }
+
+    /**
+     * Configure request ephemeralDisks for the request.
+     *
+     * @param ephemeralDisks The parameter of ephemeral disk capacity. Currently, this parameter only supports
+     *                       the DCC instances of storage type. And the capacity will be deducted from
+     *                       the corresponding capacity of the DCC flavor.
+     * @return ResizeInstanceRequest with ephemeralDisks.
+     */
+    public ResizeInstanceRequest withEphemeralDisks(List<EphemeralDisk> ephemeralDisks) {
+        this.ephemeralDisks = ephemeralDisks;
+        return this;
+    }
 
     /**
      * Configure request credential for the request.

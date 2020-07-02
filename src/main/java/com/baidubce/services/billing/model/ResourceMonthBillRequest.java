@@ -19,10 +19,21 @@ import com.baidubce.model.AbstractBceRequest;
  * request model for query resource month bill
  */
 public class ResourceMonthBillRequest extends AbstractBceRequest {
+
     /**
-     * the month of bill
+     * the month of bill, query by month
      */
     private String month;
+
+    /**
+     * the begin time of bill, query by day
+     */
+    private String beginTime;
+
+    /**
+     * the end time of bill, query by day
+     */
+    private String endTime;
 
     /**
      * pay type : prepay/postpay
@@ -56,6 +67,22 @@ public class ResourceMonthBillRequest extends AbstractBceRequest {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getProductType() {
@@ -109,4 +136,5 @@ public class ResourceMonthBillRequest extends AbstractBceRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
+
 }

@@ -8,6 +8,7 @@ import com.baidubce.model.AbstractBceRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CertListRequest extends AbstractBceRequest {

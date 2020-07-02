@@ -38,6 +38,7 @@ public class DeleteBSRequest extends AbstractBceRequest {
     /**
      * the blb id of the backendServer.
      */
+    @JsonIgnore
     private String blbId;
     /**
      * the id list of the backendServer to deleting.

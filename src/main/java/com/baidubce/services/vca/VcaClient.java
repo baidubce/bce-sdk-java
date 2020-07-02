@@ -66,6 +66,20 @@ public class VcaClient extends AbstractBceClient {
     }
 
     /**
+     * Initiate media analyze for specified source and title.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @param title Media title.
+     * @return Analyze response.
+     */
+    public AnalyzeResponse analyze(String source, String title) {
+        AnalyzeRequest request = new AnalyzeRequest();
+        request.setSource(source);
+        request.setTitle(title);
+        return analyze(request);
+    }
+
+    /**
      * Initiate media analyze for specified source.
      *
      * @param request Analyze request, including media source path.

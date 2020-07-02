@@ -5,13 +5,13 @@ package com.baidubce.services.cert.model;
 
 import java.util.Date;
 
+import com.baidubce.model.AbstractBceResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * CertificateMeta json model.
- *
  */
-public class CertificateMeta {
+public class CertificateMeta extends AbstractBceResponse {
 
     private String certId;
 

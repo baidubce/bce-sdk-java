@@ -6,7 +6,7 @@
 
     <groupId>com.baidubce</groupId>
     <artifactId>bce-java-sdk</artifactId>
-    <version>0.10.60</version>
+    <version>0.10.115</version>
     <name>bce-sdk-java</name>
     <description>The BCE SDK for Java provides Java APIs for all of BCE services.</description>
     <url>http://bce.baidu.com/sdk/index.html</url>
@@ -50,7 +50,9 @@
         <hamcrest.version>1.3</hamcrest.version>
         <commons-lang3-version>3.5</commons-lang3-version>
         <lombok.version>1.18.2</lombok.version>
-        <mqttv3.version>1.2.0</mqttv3.version>
+        <mqttv3.version>1.2.1</mqttv3.version>
+        <hbase-client.version>1.2.0</hbase-client.version>
+        <bouncycastle.version>1.59</bouncycastle.version>
     </properties>
 
     <dependencies>
@@ -156,11 +158,6 @@
             <version>1.1.0.Final</version>
         </dependency>
         <dependency>
-            <groupId>com.baidu.bce</groupId>
-            <artifactId>bce-internal-sdk-core</artifactId>
-            <version>2.0.5.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>4.0.3.RELEASE</version>
@@ -191,9 +188,20 @@
             <version>2.9.1</version>
         </dependency>
         <dependency>
-            <groupId>com.baidu.bce.fbi</groupId>
-            <artifactId>bp-proxy-client</artifactId>
-            <version>2.0.1802.112510</version>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>${hbase-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -255,6 +263,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+<!--                        <configuration>-->
+<!--                            <additionalparam>-Xdoclint:none</additionalparam>-->
+<!--                        </configuration>-->
                     </execution>
                 </executions>
             </plugin>

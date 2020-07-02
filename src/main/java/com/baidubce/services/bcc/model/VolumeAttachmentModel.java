@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -32,6 +32,11 @@ public class VolumeAttachmentModel {
      */
     private String device;
 
+    /**
+     * The serial number of Volume.
+     */
+    private String serial;
+
     public String getVolumeId() {
         return volumeId;
     }
@@ -56,12 +61,21 @@ public class VolumeAttachmentModel {
         this.device = device;
     }
 
+    public String getSerial() {
+        return serial;
+    }
+
+    public void setSerial(String serial) {
+        this.serial = serial;
+    }
+
     @Override
     public String toString() {
-        return "VolumeAttachmentModel{"
-                + "volumeId='" + volumeId + '\''
-                + ", instanceId='" + instanceId + '\''
-                + ", device='" + device + '\''
-                + '}';
+        return "VolumeAttachmentModel{" +
+                "volumeId='" + volumeId + '\'' +
+                ", instanceId='" + instanceId + '\'' +
+                ", device='" + device + '\'' +
+                ", serial='" + serial + '\'' +
+                '}';
     }
 }

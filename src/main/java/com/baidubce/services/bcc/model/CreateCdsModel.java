@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -26,12 +26,17 @@ public class CreateCdsModel {
      * The storage type of volume, see more detail in
      * <a href = "https://bce.baidu.com/doc/BCC/API.html#StorageType">BCE API doc</a>
      */
-    private String storageType ;
+    private String storageType;
 
     /**
      * The id of snapshot.
      */
     private String snapshotId;
+
+    /**
+     * encryption key
+     */
+    private String encryptKey;
 
     public int getCdsSizeInGB() {
         return cdsSizeInGB;
@@ -89,6 +94,26 @@ public class CreateCdsModel {
      */
     public CreateCdsModel withSnapshotId(String snapshotId) {
         this.snapshotId = snapshotId;
+        return this;
+    }
+
+
+    public String getEncryptKey() {
+        return encryptKey;
+    }
+
+    public void setEncryptKey(String encryptKey) {
+        this.encryptKey = encryptKey;
+    }
+
+    /**
+     * Configure encryptKey for the model.
+     *
+     * @param encryptKey encryption key
+     * @return CreateCdsModel with encryptKey.
+     */
+    public CreateCdsModel withEncryptKey(String encryptKey) {
+        this.encryptKey = encryptKey;
         return this;
     }
 

@@ -108,6 +108,11 @@ public class DirectionResponse extends AbstractBceResponse {
     public static class Step {
 
         /**
+         * Leg index of the step.
+         */
+        private Integer legIndex;
+
+        /**
          * Angle of entry into the road.
          */
         private Integer direction;

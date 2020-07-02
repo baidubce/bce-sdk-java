@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent configuration for a streaming step.
- *
+ * <p>
  * A streaming step can be configured with name, actionOnFailure, mapper, reducer,
  * input, output and arguments.
  * The essential options are mapper, input, output and actionOnFailure,
@@ -37,6 +37,7 @@ public class StreamingStepConfig extends StepConfig {
      * Configure the input for the step.
      *
      * @param input The input path for the step.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withInput(String input) {
@@ -48,6 +49,7 @@ public class StreamingStepConfig extends StepConfig {
      * Configure the mapper program for the step.
      *
      * @param mapper The mapper program for the step.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withMapper(String mapper) {
@@ -59,6 +61,7 @@ public class StreamingStepConfig extends StepConfig {
      * Configure the output for the step.
      *
      * @param output The output path for the step.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withOutput(String output) {
@@ -70,6 +73,7 @@ public class StreamingStepConfig extends StepConfig {
      * Configure the arguments for the step.
      *
      * @param arguments The arguments for the step.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withArguments(String arguments) {
@@ -81,6 +85,7 @@ public class StreamingStepConfig extends StepConfig {
      * Configure the reducer program for the step.
      *
      * @param reducer The reducer program for the step.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withReducer(String reducer) {
@@ -92,6 +97,7 @@ public class StreamingStepConfig extends StepConfig {
      * Configure the name for the step.
      *
      * @param name The name for the step.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withName(String name) {
@@ -102,11 +108,12 @@ public class StreamingStepConfig extends StepConfig {
     /**
      * Configure the action on failure for the streaming step.
      * This property is set to enum value:
-     *     "Continue": continue to execute other steps.
-     *     "TerminateCluster": terminate the cluster when this step fails.
-     *     "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
+     * "Continue": continue to execute other steps.
+     * "TerminateCluster": terminate the cluster when this step fails.
+     * "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
      *
      * @param actionOnFailure The action on step's failure.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withActionOnFailure(String actionOnFailure) {
@@ -118,7 +125,8 @@ public class StreamingStepConfig extends StepConfig {
      * Configure the additional file for the step.
      *
      * @param remote The remote file of the additional file.
-     * @param local The local file of the additional file.
+     * @param local  The local file of the additional file.
+     *
      * @return StreamingStepConfig
      */
     public StreamingStepConfig withAdditionalFile(String remote, String local) {

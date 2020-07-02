@@ -12,14 +12,14 @@
  */
 package com.baidubce.services.bmr.model;
 
-import com.baidubce.model.AbstractBceResponse;
-
 import java.util.List;
 import java.util.Map;
 
+import com.baidubce.model.AbstractBceResponse;
+
 /**
  * Represent the response of GetStepRequest.
- *
+ * <p>
  * The response contains the properties of the target step, such as:
  * id, actionOnFailure, name, type, properties and status.
  */

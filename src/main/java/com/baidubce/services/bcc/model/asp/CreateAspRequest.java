@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2019-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -103,6 +103,31 @@ public class CreateAspRequest extends AbstractBceRequest {
 
     public void setRetentionDays(String retentionDays) {
         this.retentionDays = retentionDays;
+    }
+
+    public CreateAspRequest withClientToken(String clientToken) {
+        this.clientToken = clientToken;
+        return this;
+    }
+
+    public CreateAspRequest withName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public CreateAspRequest withTimePoints(List<Integer> timePoints) {
+        this.timePoints = timePoints;
+        return this;
+    }
+
+    public CreateAspRequest withRepeatWeekdays(List<Integer> repeatWeekdays) {
+        this.repeatWeekdays = repeatWeekdays;
+        return this;
+    }
+
+    public CreateAspRequest withRetentionDays(String retentionDays) {
+        this.retentionDays = retentionDays;
+        return this;
     }
 
     @Override

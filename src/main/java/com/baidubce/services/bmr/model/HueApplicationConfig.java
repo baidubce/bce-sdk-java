@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent a HUE applicaton.
- * 
+ * <p>
  * A HUE application can be configured with property of version.
  */
 public class HueApplicationConfig extends ApplicationConfig {
@@ -27,12 +27,13 @@ public class HueApplicationConfig extends ApplicationConfig {
     /**
      * Configure the version of HUE.
      * The reference version is as follows:
-     *
-     *     image type |  image version | HUE version supported
-     *      hadoop    |    0.1.0       |    3.7.1
-     *      hadoop    |    0.2.0       |    3.7.1
+     * <p>
+     * image type |  image version | HUE version supported
+     * hadoop    |    0.1.0       |    3.7.1
+     * hadoop    |    0.2.0       |    3.7.1
      *
      * @param version The version of HUE.
+     *
      * @return HueApplicationConfig
      */
     public HueApplicationConfig withVersion(String version) {

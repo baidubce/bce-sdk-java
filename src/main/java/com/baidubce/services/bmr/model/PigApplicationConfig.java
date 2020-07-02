@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent a Pig application.
- *
+ * <p>
  * A Pig application can be configured with property of version.
  */
 public class PigApplicationConfig extends ApplicationConfig {
@@ -27,12 +27,13 @@ public class PigApplicationConfig extends ApplicationConfig {
     /**
      * Configure the version of Pig.
      * The reference version is as follows:
-     *
-     *     image type |  image version | pig version supported
-     *      hadoop    |    0.1.0       |    0.11.0
-     *      hadoop    |    0.2.0       |    0.14.0
+     * <p>
+     * image type |  image version | pig version supported
+     * hadoop    |    0.1.0       |    0.11.0
+     * hadoop    |    0.2.0       |    0.14.0
      *
      * @param version The version of Pig.
+     *
      * @return PigApplicationConfig
      */
     public PigApplicationConfig withVersion(String version) {

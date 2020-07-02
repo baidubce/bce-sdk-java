@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 
 /**
- * Response for query multiple shadow
+ *  Response for query multiple shadow
  */
 public class QueryMultipleShadowResponse extends AbstractBceResponse {
     private List<JsonNode> data;

@@ -12,13 +12,13 @@
  */
 package com.baidubce.services.bmr.model;
 
-import com.baidubce.model.AbstractBceResponse;
-
 import java.util.List;
+
+import com.baidubce.model.AbstractBceResponse;
 
 /**
  * Represent the response of AddStepsRequest.
- *
+ * <p>
  * The response contains a Array of IDs which are newly added steps.
  */
 public class AddStepsResponse extends AbstractBceResponse {

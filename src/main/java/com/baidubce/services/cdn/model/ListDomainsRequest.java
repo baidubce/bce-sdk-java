@@ -62,7 +62,7 @@ public class ListDomainsRequest extends AbstractBceRequest {
 
     /**
      * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

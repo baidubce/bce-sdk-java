@@ -14,7 +14,9 @@ package com.baidubce.util;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -133,4 +135,15 @@ public class DateUtils {
     public static Date parseCompressedIso8601Date(String dateString) {
         return DateUtils.compressedIso8601DateFormat.parseDateTime(dateString).toDate();
     }
+
+    public static void validateUtcDate(String dateString) {
+        if (StringUtils.isBlank(dateString)) {
+            return;
+        }
+        String pattern = "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z";
+        if (!Pattern.matches(pattern, dateString)) {
+            throw new IllegalArgumentException("UTC date format is illegal");
+        }
+    }
+
 }

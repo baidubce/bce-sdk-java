@@ -81,10 +81,10 @@ public class SetDomainLimitRateRequest extends AbstractBceRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
-    
+
     /**
      * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

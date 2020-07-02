@@ -33,6 +33,7 @@ public class GetClusterRequest extends AbstractBceRequest {
      * Configure the cluster ID for the request.
      *
      * @param clusterId The ID of BMR cluster.
+     *
      * @return GetClusterRequest
      */
     public GetClusterRequest withClusterId(String clusterId) {
@@ -44,6 +45,7 @@ public class GetClusterRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return GetClusterRequest
      */
     public GetClusterRequest withRequestCredentials(BceCredentials credentials) {

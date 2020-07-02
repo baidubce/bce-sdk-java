@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2019-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -15,6 +15,7 @@ package com.baidubce.services.dcc;
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
+import com.baidubce.auth.BceCredentials;
 import com.baidubce.http.Headers;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.http.handler.BceErrorResponseHandler;
@@ -261,6 +262,39 @@ public class DccClient extends AbstractBceClient {
         }
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
                 DCC_PREFIX, INSTANCE_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateDccInstanceResponse.class);
+    }
+
+    /**
+     * Create a dcc instance with specified options.
+     * This interface will encrypt the password
+     *
+     * @param request CreateDccInstanceRequest
+     * @return CreateDccInstanceResponse
+     */
+    public CreateDccInstanceResponse createDccInstanceWithEncryption(CreateDccInstanceRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+
+        if (null == request.getBilling()) {
+            request.setBilling(generateDefaultBilling());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                DCC_PREFIX, INSTANCE_PREFIX);
+        if (!Strings.isNullOrEmpty(request.getAdminPass())) {
+            BceCredentials credentials = config.getCredentials();
+            if (internalRequest.getCredentials() != null) {
+                credentials = internalRequest.getCredentials();
+            }
+            try {
+                request.setAdminPass(this.aes128WithFirst16Char(request.getAdminPass(), credentials.getSecretKey()));
+            } catch (GeneralSecurityException e) {
+                throw new BceClientException("Encryption procedure exception", e);
+            }
+        }
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, CreateDccInstanceResponse.class);
     }

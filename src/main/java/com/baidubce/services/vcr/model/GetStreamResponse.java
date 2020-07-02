@@ -1,10 +1,21 @@
-/**
- * Copyright (C) 2017 Baidu, Inc. All Rights Reserved.
+/*
+ * Copyright (C) 2017-2020 Baidu, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
+
 package com.baidubce.services.vcr.model;
 
 import com.baidubce.model.AbstractBceResponse;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,8 +29,14 @@ public class GetStreamResponse extends AbstractBceResponse {
     private String label;
     private List<CheckResult> results;
     private VcrError error;
-    private String createTime;
-    private String finishTime;
+    private Date createTime;
+    private Date startTime;
+    private Date finishTime;
+    private Integer duration;
+    private String streamId;
+    private String mediaId;
+    private String description;
+    private StreamParams streamParams;
 
     public String getSource() {
         return source;
@@ -77,20 +94,68 @@ public class GetStreamResponse extends AbstractBceResponse {
         this.error = error;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public String getFinishTime() {
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getFinishTime() {
         return finishTime;
     }
 
-    public void setFinishTime(String finishTime) {
+    public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public String getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(String streamId) {
+        this.streamId = streamId;
+    }
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public StreamParams getStreamParams() {
+        return streamParams;
+    }
+
+    public void setStreamParams(StreamParams streamParams) {
+        this.streamParams = streamParams;
     }
 
     @Override
@@ -104,7 +169,13 @@ public class GetStreamResponse extends AbstractBceResponse {
         sb.append(", results=").append(results);
         sb.append(", error=").append(error);
         sb.append(", createTime='").append(createTime).append('\'');
+        sb.append(", startTime='").append(startTime).append('\'');
         sb.append(", finishTime='").append(finishTime).append('\'');
+        sb.append(", duration='").append(duration).append('\'');
+        sb.append(", streamId='").append(streamId).append('\'');
+        sb.append(", mediaId='").append(mediaId).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", streamParams='").append(streamParams).append('\'');
         sb.append('}');
         return sb.toString();
     }

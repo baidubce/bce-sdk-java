@@ -80,6 +80,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 @ThreadSafe
@@ -122,6 +123,13 @@ public class BceHttpClient {
     private HttpHost proxyHttpHost;
 
     private boolean isHttpAsyncPutEnabled = false;
+
+    // Maintain a single instance with endpoint
+    private static ConcurrentHashMap<String, CloseableHttpAsyncClient> asyncClientMap =
+            new ConcurrentHashMap<String, CloseableHttpAsyncClient>();
+
+    private static ConcurrentHashMap<String, NHttpClientConnectionManager> managerMap =
+            new ConcurrentHashMap<String, NHttpClientConnectionManager>();
 
     /**
      * Constructs a new BCE client using the specified client configuration options (ex: max retry attempts, proxy
@@ -309,21 +317,6 @@ public class BceHttpClient {
             logger.debug("Fail to close httpClient", e);
         }
         this.connectionManager.shutdown();
-
-        if (this.httpAsyncClient != null) {
-            try {
-                this.httpAsyncClient.close();
-            } catch (IOException e) {
-                logger.debug("Fail to close httpAsyncClient", e);
-            }
-        }
-        if (this.nioConnectionManager != null) {
-            try {
-                this.nioConnectionManager.shutdown();
-            } catch (IOException e) {
-                logger.debug("Fail to shutdown nioConnectionManager", e);
-            }
-        }
     }
 
     /**
@@ -392,12 +385,17 @@ public class BceHttpClient {
      * @throws IOReactorException in case if a non-recoverable I/O error.
      */
     protected NHttpClientConnectionManager createNHttpClientConnectionManager() throws IOReactorException {
+        if (managerMap.containsKey(config.getEndpoint())) {
+            return managerMap.get(config.getEndpoint());
+        }
         ConnectingIOReactor ioReactor =
                 new DefaultConnectingIOReactor(IOReactorConfig.custom()
+                        .setSoReuseAddress(true)
                         .setSoTimeout(this.config.getSocketTimeoutInMillis()).setTcpNoDelay(true).build());
         PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(ioReactor);
         connectionManager.setDefaultMaxPerRoute(this.config.getMaxConnections());
         connectionManager.setMaxTotal(this.config.getMaxConnections());
+        managerMap.putIfAbsent(config.getEndpoint(), connectionManager);
         return connectionManager;
     }
 
@@ -427,6 +425,9 @@ public class BceHttpClient {
      * @return Asynchronous http client based on connection manager.
      */
     protected CloseableHttpAsyncClient createHttpAsyncClient(NHttpClientConnectionManager connectionManager) {
+        if (asyncClientMap.containsKey(config.getEndpoint())) {
+            return asyncClientMap.get(config.getEndpoint());
+        }
         HttpAsyncClientBuilder builder = HttpAsyncClients.custom().setConnectionManager(connectionManager);
 
         int socketBufferSizeInBytes = this.config.getSocketBufferSizeInBytes();
@@ -434,7 +435,9 @@ public class BceHttpClient {
             builder.setDefaultConnectionConfig(
                     ConnectionConfig.custom().setBufferSize(socketBufferSizeInBytes).build());
         }
-        return builder.build();
+        CloseableHttpAsyncClient client = builder.build();
+        asyncClientMap.putIfAbsent(config.getEndpoint(), client);
+        return client;
     }
 
     /**

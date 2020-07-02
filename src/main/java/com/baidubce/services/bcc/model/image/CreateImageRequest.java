@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -50,6 +50,11 @@ public class CreateImageRequest extends AbstractBceRequest {
      * When instanceId and snapshotId are specified ,only instanceId will be used.
      */
     private String snapshotId;
+
+    /**
+     * Whether is related with CDS. If <code>true</code>, it means the image is related with CDS.
+     */
+    private boolean relateCds;
 
     public String getClientToken() {
         return clientToken;
@@ -133,6 +138,25 @@ public class CreateImageRequest extends AbstractBceRequest {
      */
     public CreateImageRequest withSnapshotId(String snapshotId) {
         this.snapshotId = snapshotId;
+        return this;
+    }
+
+    public boolean isRelateCds() {
+        return relateCds;
+    }
+
+    public void setRelateCds(boolean relateCds) {
+        this.relateCds = relateCds;
+    }
+
+    /**
+     * Configure relateCds for the request.
+     *
+     * @param relateCds Whether is related with CDS. If <code>true</code>, it means the image is related with CDS.
+     * @return CreateImageRequest with relateCds.
+     */
+    public CreateImageRequest withRelateCds(boolean relateCds) {
+        this.relateCds = relateCds;
         return this;
     }
 

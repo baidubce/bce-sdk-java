@@ -38,6 +38,7 @@ public class ModifyBSAttributesRequest extends AbstractBceRequest {
     /**
      * the id of the blb.
      */
+    @JsonIgnore
     private String blbId;
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,7 +14,10 @@ package com.baidubce.services.blb.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 /**
  * The request for create blb.
@@ -37,6 +40,10 @@ public class CreateBlbRequest extends AbstractBceRequest {
      * the subnet id of blb.
      */
     private String subnetId;
+    /**
+     * the tags of blb.
+     */
+    private List<Tag> tags;
 
     /**
      * An ASCII string whose length is less than 64.
@@ -78,6 +85,11 @@ public class CreateBlbRequest extends AbstractBceRequest {
         return this;
     }
 
+    public CreateBlbRequest withTags(List<Tag> tags) {
+        this.setTags(tags);
+        return this;
+    }
+
     public String getSubnetId() {
         return subnetId;
     }
@@ -108,6 +120,14 @@ public class CreateBlbRequest extends AbstractBceRequest {
 
     public void setVpcId(String vpcId) {
         this.vpcId = vpcId;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public CreateBlbRequest withClientToken(String clientToken) {

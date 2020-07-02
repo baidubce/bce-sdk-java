@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Represent the configuration for an instance group.
- *
+ * <p>
  * An instance group can be configured with name, type, instance type and instance count.
  * And the type, instance type and count are essential options.
  */
@@ -66,6 +66,7 @@ public class InstanceGroupConfig {
      * Configure the name of the instance group.
      *
      * @param name The name of the instance group.
+     *
      * @return InstanceGroupConfig
      */
     public InstanceGroupConfig withName(String name) {
@@ -78,6 +79,7 @@ public class InstanceGroupConfig {
      * The type of instance group can be one of "Master", "Core" or "Task".
      *
      * @param type The type of the instance group.
+     *
      * @return InstanceGroupConfig
      */
     public InstanceGroupConfig withType(String type) {
@@ -88,12 +90,13 @@ public class InstanceGroupConfig {
     /**
      * Configure the instances'type in the target instance group.
      * The instance's type can be one of the following options:
-     *     "g.small":  2 CPU(cores)     8 GB mem     200 GB disk
-     *     "c.large":  8 CPU(cores)    32 GB mem     600 GB disk
-     *     "m.medium": 4 CPU(cores)    32 GB mem     400 GB disk
-     *     "s.medium": 4 CPU(cores)    16 GB mem    1000 GB disk
+     * "g.small":  2 CPU(cores)     8 GB mem     200 GB disk
+     * "c.large":  8 CPU(cores)    32 GB mem     600 GB disk
+     * "m.medium": 4 CPU(cores)    32 GB mem     400 GB disk
+     * "s.medium": 4 CPU(cores)    16 GB mem    1000 GB disk
      *
      * @param instanceType The instances' type for the instance group.
+     *
      * @return InstanceGroupConfig
      */
     public InstanceGroupConfig withInstanceType(String instanceType) {
@@ -105,6 +108,7 @@ public class InstanceGroupConfig {
      * Configure the instance count for the instance group.
      *
      * @param instanceCount The instance count for the instance group.
+     *
      * @return InstanceGroupConfig
      */
     public InstanceGroupConfig withInstanceCount(int instanceCount) {
@@ -122,7 +126,7 @@ public class InstanceGroupConfig {
 
     public InstanceGroupConfig withRootDiskSizeInGB(int rootDiskSizeInGB) {
         this.rootDiskSizeInGB = rootDiskSizeInGB;
-        return  this;
+        return this;
     }
 
     public String getRootDiskMediumType() {

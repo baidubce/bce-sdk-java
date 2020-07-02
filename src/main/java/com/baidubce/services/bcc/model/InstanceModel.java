@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2018-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -134,6 +134,30 @@ public class InstanceModel {
      */
     private int cardCount;
 
+    /**
+     * The id of the keypair
+     */
+    private String keypairId;
+
+    /**
+     * The name of the keypair
+     */
+    private String keypairName;
+
+    /**
+     * specified id of dedicated host when creating dedicated instance
+     */
+    private String dedicatedHostId;
+
+    /**
+     * whether the instacne is auto renew or not
+     */
+    private boolean autoRenew;
+
+    /**
+     * The address of the ipv6
+     */
+    private String ipv6;
 
     public String getId() {
         return id;
@@ -319,6 +343,46 @@ public class InstanceModel {
         this.cardCount = cardCount;
     }
 
+    public String getKeypairId() {
+        return keypairId;
+    }
+
+    public void setKeypairId(String keypairId) {
+        this.keypairId = keypairId;
+    }
+
+    public String getKeypairName() {
+        return keypairName;
+    }
+
+    public void setKeypairName(String keypairName) {
+        this.keypairName = keypairName;
+    }
+
+    public String getDedicatedHostId() {
+        return dedicatedHostId;
+    }
+
+    public void setDedicatedHostId(String dedicatedHostId) {
+        this.dedicatedHostId = dedicatedHostId;
+    }
+
+    public boolean isAutoRenew() {
+        return autoRenew;
+    }
+
+    public void setAutoRenew(boolean autoRenew) {
+        this.autoRenew = autoRenew;
+    }
+
+    public String getIpv6() {
+        return ipv6;
+    }
+
+    public void setIpv6(String ipv6) {
+        this.ipv6 = ipv6;
+    }
+
     @Override
     public String toString() {
         return "InstanceModel{"
@@ -344,7 +408,12 @@ public class InstanceModel {
                 + ", instanceType='" + instanceType + '\''
                 + ", gpuCard='" + gpuCard + '\''
                 + ", fpgaCard='" + fpgaCard + '\''
-                + ", cardCount=" + cardCount
+                + ", cardCount=" + cardCount + '\''
+                + ", keypairId=" + keypairId + '\''
+                + ", keypairName=" + keypairName + '\''
+                + ", dedicatedHostId=" + dedicatedHostId + '\''
+                + ", autoRenew=" + autoRenew + '\''
+                + ", ipv6=" + ipv6
                 + '}';
     }
 }

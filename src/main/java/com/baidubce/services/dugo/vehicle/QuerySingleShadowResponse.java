@@ -7,7 +7,7 @@ import com.baidubce.model.AbstractBceResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Response for querying single shadow
+ *  Response for querying single shadow
  */
 public class QuerySingleShadowResponse extends AbstractBceResponse {
     private String vehicleId;

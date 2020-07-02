@@ -12,15 +12,15 @@
  */
 package com.baidubce.services.bmr.model;
 
-import com.baidubce.auth.BceCredentials;
-import com.baidubce.model.AbstractBceRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baidubce.auth.BceCredentials;
+import com.baidubce.model.AbstractBceRequest;
+
 /**
  * Provides options for creating a BMR cluster.
- *
+ * <p>
  * The essential options are imageType, imageVersion, instanceGroups, and the optional ones are
  * clientToken, name, autoTerminate, logUri, applications and steps.
  */
@@ -41,6 +41,15 @@ public class CreateClusterRequest extends AbstractBceRequest {
     private String vpcId;
     private String subnetId;
     private String availabilityZone;
+    private String templateType;
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
 
     public String getImageType() {
         return imageType;
@@ -174,6 +183,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure the image type for the cluster.
      *
      * @param imageType The image type for cluster's instances.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withImageType(String imageType) {
@@ -185,6 +195,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure image version for the cluster.
      *
      * @param imageVersion The image version for the cluster's instance.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withImageVersion(String imageVersion) {
@@ -197,6 +208,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * the cluster will be terminated when all the steps are done. And the autoTerminate is true by default.
      *
      * @param autoTerminate true if the cluster should be auto terminated.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withAutoTerminate(boolean autoTerminate) {
@@ -209,6 +221,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * steps are not saved in the BOS.
      *
      * @param logUri The valid BOS uri for the logs.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withLogUri(String logUri) {
@@ -221,6 +234,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * "my-cluster" by default.
      *
      * @param name The name for the cluster.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withName(String name) {
@@ -232,6 +246,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure optional service HA enable of the cluster. If true will create a ha cluster, default is false.
      *
      * @param serviceHaEnabled true if the serivce ha enable, default is false.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withServiceHaEnabled(boolean serviceHaEnabled) {
@@ -240,9 +255,11 @@ public class CreateClusterRequest extends AbstractBceRequest {
     }
 
     /**
-     * Configure optional safe mode enable of the cluster. If true will create a cluster running as safe mode, default is false.
+     * Configure optional safe mode enable of the cluster. If true will create a cluster running as safe mode,
+     * default is false.
      *
      * @param safeModeEnabled true if the safe mode enable, default is false.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withSafeModeEnabled(boolean safeModeEnabled) {
@@ -254,6 +271,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure the instance group for the cluster.
      *
      * @param instanceGroup An InstanceGroupConfig instance.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withInstanceGroup(InstanceGroupConfig instanceGroup) {
@@ -268,6 +286,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure optional application for the cluster. BMR provides applications such as Hive、Pig、HBase for the cluster.
      *
      * @param application An ApplicationConfig instance.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withApplication(ApplicationConfig application) {
@@ -283,6 +302,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * And the step also can be added to the cluster by sending AddStepsRequest.
      *
      * @param step a StepConfig instance to be added.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withStep(StepConfig step) {
@@ -299,6 +319,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * of them are used for the same CreateClusterRequest instance.
      *
      * @param steps a List of StepConfig instances to be added.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withSteps(List<StepConfig> steps) {
@@ -310,6 +331,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure optional client token for the request. The request will be idempotent if client token is provided.
      *
      * @param clientToken An ASCII string whose length is less than 64.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withClientToken(String clientToken) {
@@ -321,6 +343,7 @@ public class CreateClusterRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withRequestCredentials(BceCredentials credentials) {
@@ -331,7 +354,8 @@ public class CreateClusterRequest extends AbstractBceRequest {
     /**
      * Configure request adminPassword for the request.
      *
-     * @param adminPassword
+     * @param adminPassword an password for cluster for example bmrtest@123
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withAdminPassword(String adminPassword) {
@@ -342,7 +366,8 @@ public class CreateClusterRequest extends AbstractBceRequest {
     /**
      * Configure request vpc network name for the request.
      *
-     * @param vpcId
+     * @param vpcId vpcId  for create cluster
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withVpcId(String vpcId) {
@@ -353,7 +378,8 @@ public class CreateClusterRequest extends AbstractBceRequest {
     /**
      * Configure request subnet name for the request.
      *
-     * @param subnetId
+     * @param subnetId subnetId for cluster
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withSubnetId(String subnetId) {
@@ -364,7 +390,8 @@ public class CreateClusterRequest extends AbstractBceRequest {
     /**
      * Configure request availabilityZone of creating cluster.
      *
-     * @param availabilityZone
+     * @param availabilityZone cluster availabilityZone
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withAvailabilityZone(String availabilityZone) {
@@ -375,11 +402,24 @@ public class CreateClusterRequest extends AbstractBceRequest {
     /**
      * Configure request security group for the request.
      *
-     * @param securityGroup
+     * @param securityGroup securityGroup for cluster
+     *
      * @return CreateClusterRequest
      */
     public CreateClusterRequest withSecurityGroup(String securityGroup) {
         this.setSecurityGroup(securityGroup);
+        return this;
+    }
+
+    /**
+     * Configure request templateType for the request.
+     *
+     * @param templateType templateType for cluster
+     *
+     * @return CreateClusterRequest
+     */
+    public CreateClusterRequest withTemplateType(String templateType) {
+        this.setTemplateType(templateType);
         return this;
     }
 }

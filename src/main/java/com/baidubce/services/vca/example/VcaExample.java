@@ -24,9 +24,10 @@ public class VcaExample {
         config.setCredentials(new DefaultBceCredentials(ak, sk));
 
         String source = "YourMediaSource";
+        String title = "title";
         VcaClient client = new VcaClient(config);
         // send media analyze request
-        client.analyze(source);
+        client.analyze(source, title);
 
         // get media full analyze result
         QueryResultResponse resultResponse = client.queryResult(source);

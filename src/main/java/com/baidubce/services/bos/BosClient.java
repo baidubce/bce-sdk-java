@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 Baidu, Inc.
+ * Copyright 2014-2020 Baidu, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -46,11 +46,20 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -63,7 +72,7 @@ public class BosClient extends AbstractBceClient {
     /**
      * Responsible for handling httpResponses from all Bos service calls.
      */
-    private static final HttpResponseHandler[] bos_handlers = new HttpResponseHandler[] {
+    private static final HttpResponseHandler[] bos_handlers = new HttpResponseHandler[]{
             new BceMetadataResponseHandler(), new BosMetadataResponseHandler(), new BceErrorResponseHandler(),
             new BosObjectResponseHandler(), new BceJsonResponseHandler()};
 
@@ -83,9 +92,29 @@ public class BosClient extends AbstractBceClient {
     public static final String STORAGE_CLASS_COLD = "COLD";
 
     /**
+     * Archive access BOS storage class
+     */
+    public static final String STORAGE_CLASS_ARCHIVE = "ARCHIVE";
+
+    /**
+     * Standard restore tier
+     */
+    public static final String RESTORE_TIER_STANDARD = "Standard";
+
+    /**
+     * Expedited restore tier
+     */
+    public static final String RESTORE_TIER_EXPEDITED = "Expedited";
+
+    /**
      * Generate signature with specified headers
      */
     private static final String[] HEADERS_TO_SIGN = {Headers.HOST};
+
+    /**
+     * the part size when upload super object file
+     */
+    private static final long CHUNK_SIZE = 1024 * 1024 * 5L;
 
     /**
      * Constructs a new client to invoke service methods on Bos.
@@ -101,7 +130,7 @@ public class BosClient extends AbstractBceClient {
      *                            connects to Bos (e.g. proxy settings, retry counts, etc).
      */
     public BosClient(BosClientConfiguration clientConfiguration) {
-        super(clientConfiguration, bos_handlers, true);
+        super(clientConfiguration, bos_handlers, clientConfiguration.isEnableHttpAsyncPut());
     }
 
     /**
@@ -123,7 +152,6 @@ public class BosClient extends AbstractBceClient {
      * The caller <i>must</i> authenticate with a valid BCE Access Key ID that is registered with Bos.
      *
      * @param request This request containing the credentials for getting the account of the authenticated sender.
-     *
      * @return The account of the authenticated sender
      */
     public User getBosAccountOwner(GetBosAccountOwnerRequest request) {
@@ -156,7 +184,6 @@ public class BosClient extends AbstractBceClient {
      * list buckets that they did not create.
      *
      * @param request The request containing all of the options related to the listing of buckets.
-     *
      * @return All of the Bos buckets owned by the authenticated sender of the request.
      */
     public ListBucketsResponse listBuckets(ListBucketsRequest request) {
@@ -170,7 +197,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param bucketName The name of the bucket to create.
      *                   All buckets in Bos share a single namespace; ensure the bucket is given a unique name.
-     *
      * @return The newly created bucket.
      */
     public CreateBucketResponse createBucket(String bucketName) {
@@ -181,7 +207,6 @@ public class BosClient extends AbstractBceClient {
      * Creates a new Bos bucket with the specified name.
      *
      * @param request The request object containing all options for creating a Bos bucket.
-     *
      * @return The newly created bucket.
      */
     public CreateBucketResponse createBucket(CreateBucketRequest request) {
@@ -208,7 +233,6 @@ public class BosClient extends AbstractBceClient {
      * result.
      *
      * @param bucketName The name of the bucket to check.
-     *
      * @return The value <code>true</code> if the specified bucket exists in Bos;
      * the value <code>false</code> if there is no bucket in Bos with that name.
      */
@@ -228,7 +252,6 @@ public class BosClient extends AbstractBceClient {
      * result.
      *
      * @param request The request object containing all options for checking a Bos bucket.
-     *
      * @return The value <code>true</code> if the specified bucket exists in Bos;
      * the value <code>false</code> if there is no bucket in Bos with that name.
      */
@@ -261,7 +284,6 @@ public class BosClient extends AbstractBceClient {
      * returns an error.
      *
      * @param bucketName The name of the bucket whose ACL is being retrieved.
-     *
      * @return The <code>GetBuckeetAclResponse</code> for the specified Bos bucket.
      */
     public GetBucketAclResponse getBucketAcl(String bucketName) {
@@ -280,7 +302,6 @@ public class BosClient extends AbstractBceClient {
      * returns an error.
      *
      * @param request The request containing the name of the bucket whose ACL is being retrieved.
-     *
      * @return The <code>GetBuckeetAclResponse</code> for the specified Bos bucket.
      */
     public GetBucketAclResponse getBucketAcl(GetBucketAclRequest request) {
@@ -303,7 +324,6 @@ public class BosClient extends AbstractBceClient {
      * Each bucket and object in Bos has an Location that defines its location
      *
      * @param bucketName The name of the bucket whose Location is being retrieved.
-     *
      * @return The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket.
      */
     public GetBucketLocationResponse getBucketLocation(String bucketName) {
@@ -317,7 +337,6 @@ public class BosClient extends AbstractBceClient {
      * Each bucket and object in Bos has an Location that defines its location
      *
      * @param request The request containing the name of the bucket whose Location is being retrieved.
-     *
      * @return The <code>GetBuckeetLocationResponse</code> for the specified Bos bucket.
      */
     public GetBucketLocationResponse getBucketLocation(GetBucketLocationRequest request) {
@@ -450,6 +469,8 @@ public class BosClient extends AbstractBceClient {
                                 }
                                 jsonGenerator.writeEndArray();
                             }
+                            jsonGenerator.writeBooleanField("secureTransport",
+                                    grant.getCondition().isSecureTransport());
                             jsonGenerator.writeEndObject();
                         }
                     }
@@ -461,7 +482,21 @@ public class BosClient extends AbstractBceClient {
                             jsonGenerator.writeString(ipAddress);
                         }
                         jsonGenerator.writeEndArray();
+                        jsonGenerator.writeBooleanField("secureTransport",
+                                grant.getCondition().isSecureTransport());
                         jsonGenerator.writeEndObject();
+                    }
+                    if (grant.getCondition() != null && grant.getCondition().getReferer() == null
+                            && grant.getCondition().getIpAddress() == null) {
+                        jsonGenerator.writeObjectFieldStart("condition");
+                        jsonGenerator.writeBooleanField("secureTransport",
+                                grant.getCondition().isSecureTransport());
+                        jsonGenerator.writeEndObject();
+                    }
+
+                    // set effect
+                    if (grant.getEffect() != null) {
+                        jsonGenerator.writeStringField("effect", grant.getEffect());
                     }
                     jsonGenerator.writeEndObject();
                 }
@@ -477,7 +512,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else if (request.getJsonAcl() != null) {
             byte[] json = null;
@@ -487,7 +522,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else {
             checkNotNull(null, "request.acl should not be null.");
@@ -513,7 +548,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else {
             byte[] json = null;
@@ -536,7 +571,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         }
         this.invokeHttpClient(internalRequest, BosResponse.class);
@@ -552,7 +587,7 @@ public class BosClient extends AbstractBceClient {
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
         internalRequest.addParameter("logging", null);
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
         GetBucketLoggingResponse response = this.invokeHttpClient(internalRequest, GetBucketLoggingResponse.class);
         return response;
     }
@@ -587,7 +622,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else if (request.getCorsConfigurationsList() != null) {
             byte[] json = null;
@@ -642,7 +677,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else {
             checkNotNull(request, "request should not be null.");
@@ -694,7 +729,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else if (request.getRuleList() != null) {
             byte[] json = null;
@@ -746,7 +781,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else {
             checkNotNull(request, "request should not be null.");
@@ -815,7 +850,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName          The name of the bucket containing the desired object.
      * @param key                 The key in the specified bucket under which the desired object is stored.
      * @param expirationInSeconds The expiration after which the returned pre-signed URL will expire.
-     *
      * @return A pre-signed URL which expires at the specified time, and can be
      * used to allow anyone to download the specified object from Bos,
      * without exposing the owner's Bce secret access key.
@@ -831,7 +865,6 @@ public class BosClient extends AbstractBceClient {
      * @param key                 The key in the specified bucket under which the desired object is stored.
      * @param expirationInSeconds The expiration after which the returned pre-signed URL will expire.
      * @param method              The HTTP method verb to use for this URL
-     *
      * @return A pre-signed URL which expires at the specified time, and can be
      * used to allow anyone to download the specified object from Bos,
      * without exposing the owner's Bce secret access key.
@@ -848,7 +881,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param request The request object containing all the options for generating a
      *                pre-signed URL (bucket name, key, expiration date, etc).
-     *
      * @return A pre-signed URL which expires at the specified time, and can be
      * used to allow anyone to download the specified object from Bos,
      * without exposing the owner's Bce secret access key.
@@ -912,7 +944,6 @@ public class BosClient extends AbstractBceClient {
      * List results are <i>always</i> returned in lexicographic (alphabetical) order.
      *
      * @param bucketName The name of the Bos bucket to list.
-     *
      * @return ListObjectsResponse containing a listing of the objects in the specified bucket, along with any
      * other associated information, such as common prefixes (if a delimiter was specified), the original
      * request parameters, etc.
@@ -929,7 +960,6 @@ public class BosClient extends AbstractBceClient {
      * @param prefix     An optional parameter restricting the response to keys beginning with the specified prefix.
      *                   Use prefixes to separate a bucket into different sets of keys, similar to how a file system
      *                   organizes files into directories.
-     *
      * @return ListObjectsResponse containing a listing of the objects in the specified bucket, along with any
      * other associated information, such as common prefixes (if a delimiter was specified), the original
      * request parameters, etc.
@@ -943,7 +973,6 @@ public class BosClient extends AbstractBceClient {
      * List results are <i>always</i> returned in lexicographic (alphabetical) order.
      *
      * @param request The request object containing all options for listing the objects in a specified bucket.
-     *
      * @return ListObjectsResponse containing a listing of the objects in the specified bucket, along with any
      * other associated information, such as common prefixes (if a delimiter was specified), the original
      * request parameters, etc.
@@ -982,7 +1011,6 @@ public class BosClient extends AbstractBceClient {
      * @param previousResponse The previous truncated <code>ListObjectsResponse</code>. If a non-truncated
      *                         <code>ListObjectsResponse</code> is passed in, an empty <code>ListObjectsResponse</code>
      *                         is returned without ever contacting Bos.
-     *
      * @return The next set of <code>ListObjectsResponse</code> results, beginning immediately
      * after the last result in the specified previous <code>ListObjectsResponse</code>.
      */
@@ -1012,7 +1040,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param bucketName The name of the bucket containing the desired object.
      * @param key        The key under which the desired object is stored.
-     *
      * @return The object stored in Bos in the specified bucket and key.
      */
     public BosObject getObject(String bucketName, String key) {
@@ -1028,7 +1055,6 @@ public class BosClient extends AbstractBceClient {
      * @param key             The key under which the desired object is stored.
      * @param destinationFile Indicates the file (which might already exist)
      *                        where to save the object content being downloading from Bos.
-     *
      * @return All Bos object metadata for the specified object.
      * Returns <code>null</code> if constraints were specified but not met.
      */
@@ -1040,7 +1066,6 @@ public class BosClient extends AbstractBceClient {
      * Gets the object stored in Bos under the specified bucket and key.
      *
      * @param request The request object containing all the options on how to download the object.
-     *
      * @return The object stored in Bos in the specified bucket and key.
      */
     public BosObject getObject(GetObjectRequest request) {
@@ -1069,7 +1094,6 @@ public class BosClient extends AbstractBceClient {
      * @param request         The request object containing all the options on how to download the Bos object content.
      * @param destinationFile Indicates the file (which might already exist) where to save the object
      *                        content being downloading from Bos.
-     *
      * @return All Bos object metadata for the specified object.
      * Returns <code>null</code> if constraints were specified but not met.
      */
@@ -1087,7 +1111,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param bucketName The name of the bucket containing the desired object.
      * @param key        The key under which the desired object is stored.
-     *
      * @return The object content stored in Bos in the specified bucket and key.
      */
     public byte[] getObjectContent(String bucketName, String key) {
@@ -1098,7 +1121,6 @@ public class BosClient extends AbstractBceClient {
      * Gets the object content stored in Bos under the specified bucket and key.
      *
      * @param request The request object containing all the options on how to download the Bos object content.
-     *
      * @return The object content stored in Bos in the specified bucket and key.
      */
     public byte[] getObjectContent(GetObjectRequest request) {
@@ -1133,7 +1155,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param bucketName The name of the bucket
      * @param key        The name of the object to check.
-     *
      * @return The value <code>true</code> if the specified object exists in Bos;
      * the value <code>false</code> if there is no object in Bos with that name.
      */
@@ -1160,7 +1181,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param bucketName The name of the bucket containing the object's whose metadata is being retrieved.
      * @param key        The key of the object whose metadata is being retrieved.
-     *
      * @return All Bos object metadata for the specified object.
      */
     public ObjectMetadata getObjectMetadata(String bucketName, String key) {
@@ -1177,7 +1197,6 @@ public class BosClient extends AbstractBceClient {
      * as well as custom user metadata that can be associated with an object in Bos.
      *
      * @param request The request object specifying the bucket, key whose metadata is being retrieved.
-     *
      * @return All Bos object metadata for the specified object.
      */
     public ObjectMetadata getObjectMetadata(GetObjectMetadataRequest request) {
@@ -1193,7 +1212,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param file       The file containing the data to be uploaded to Bos.
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, File file) {
@@ -1208,7 +1226,6 @@ public class BosClient extends AbstractBceClient {
      * @param file       The file containing the data to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, File file, ObjectMetadata metadata) {
@@ -1221,7 +1238,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param value      The string containing the value to be uploaded to Bos.
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, String value) {
@@ -1240,7 +1256,6 @@ public class BosClient extends AbstractBceClient {
      * @param value      The string containing the value to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, String value, ObjectMetadata metadata) {
@@ -1257,7 +1272,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param value      The bytes containing the value to be uploaded to Bos.
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, byte[] value) {
@@ -1272,7 +1286,6 @@ public class BosClient extends AbstractBceClient {
      * @param value      The bytes containing the value to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, byte[] value, ObjectMetadata metadata) {
@@ -1288,7 +1301,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param input      The input stream containing the value to be uploaded to Bos.
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, InputStream input) {
@@ -1303,7 +1315,6 @@ public class BosClient extends AbstractBceClient {
      * @param input      The input stream containing the value to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(String bucketName, String key, InputStream input, ObjectMetadata metadata) {
@@ -1316,7 +1327,6 @@ public class BosClient extends AbstractBceClient {
      * and the file or input stream containing the data to upload.
      *
      * @param request The request object containing all the parameters to upload a new object to Bos.
-     *
      * @return A PutObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public PutObjectResponse putObject(PutObjectRequest request) {
@@ -1340,7 +1350,6 @@ public class BosClient extends AbstractBceClient {
      * @param destinationBucketName The name of the bucket in which the new object will be created.
      *                              This can be the same name as the source bucket's.
      * @param destinationKey        The key in the destination bucket under which the new object will be created.
-     *
      * @return A CopyObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public CopyObjectResponse copyObject(String sourceBucketName, String sourceKey, String destinationBucketName,
@@ -1353,7 +1362,6 @@ public class BosClient extends AbstractBceClient {
      * Copies a source object to a new destination in Bos.
      *
      * @param request The request object containing all the options for copying an Bos object.
-     *
      * @return A CopyObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public CopyObjectResponse copyObject(CopyObjectRequest request) {
@@ -1421,7 +1429,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of the bucket in which the new object will be created.
      * @param key        The key in the destination bucket under which the new object will be created.
      * @param sourceUrl  The url full path for fetching.
-     *
      * @return A FetchObjectResponse object containing the information returned by Bos for the newly fetching.
      */
     public FetchObjectResponse fetchObject(String bucketName, String key, String sourceUrl) {
@@ -1436,7 +1443,6 @@ public class BosClient extends AbstractBceClient {
      * @param key        The key in the destination bucket under which the new object will be created.
      * @param sourceUrl  The url full path for fetching.
      * @param mode       The mode path for fetching.
-     *
      * @return A FetchObjectResponse object containing the information returned by Bos for the newly fetching.
      */
     public FetchObjectResponse fetchObject(String bucketName, String key, String sourceUrl, String mode) {
@@ -1448,7 +1454,6 @@ public class BosClient extends AbstractBceClient {
      * Fetches a source object to a new destination in Bos.
      *
      * @param request The request object containing all the options for fetching url to a Bos object.
-     *
      * @return A FetchObjectResponse object containing the information returned by Bos for the newly fetching.
      */
     public FetchObjectResponse fetchObject(FetchObjectRequest request) {
@@ -1510,7 +1515,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else if (request.getObjectKeys() != null) {
             if (request.getObjectKeys().size() > 1000) {
@@ -1540,7 +1545,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else {
             checkNotNull(request, "request should not be null.");
@@ -1621,7 +1626,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else if (request.getJsonObjectAcl() != null) {
             byte[] json = null;
@@ -1631,7 +1636,7 @@ public class BosClient extends AbstractBceClient {
                 throw new BceClientException("Fail to get UTF-8 bytes", e);
             }
             internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
             internalRequest.setContent(RestartableInputStream.wrap(json));
         } else if (request.getxBceGrantRead() != null) {
             internalRequest.addHeader(Headers.BCE_ACL_GRANT_READ, request.getxBceGrantRead());
@@ -1685,7 +1690,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param bucketName The name of the Bos bucket containing the object to initiate.
      * @param key        The key of the object to initiate.
-     *
      * @return An InitiateMultipartUploadResponse from Bos.
      */
     public InitiateMultipartUploadResponse initiateMultipartUpload(String bucketName, String key) {
@@ -1700,7 +1704,6 @@ public class BosClient extends AbstractBceClient {
      * upload request.
      *
      * @param request The InitiateMultipartUploadRequest object that specifies all the parameters of this operation.
-     *
      * @return An InitiateMultipartUploadResponse from Bos.
      */
     public InitiateMultipartUploadResponse initiateMultipartUpload(InitiateMultipartUploadRequest request) {
@@ -1725,7 +1728,6 @@ public class BosClient extends AbstractBceClient {
      * upload before you can upload any part.
      *
      * @param request The UploadPartRequest object that specifies all the parameters of this operation.
-     *
      * @return An UploadPartResponse from Bos containing the part number and ETag of the new part.
      */
     public UploadPartResponse uploadPart(UploadPartRequest request) {
@@ -1794,7 +1796,6 @@ public class BosClient extends AbstractBceClient {
      * upload before you can upload any part.
      *
      * @param request The UploadPartCopyRequest object that specifies all the parameters of this operation.
-     *
      * @return An UploadPartCopyResponse from Bos containing the part number and ETag of the new part.
      */
     public UploadPartCopyResponse uploadPartCopy(UploadPartCopyRequest request) {
@@ -1835,7 +1836,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of the bucket containing the multipart upload whose parts are being listed.
      * @param key        The key of the associated multipart upload whose parts are being listed.
      * @param uploadId   The ID of the multipart upload whose parts are being listed.
-     *
      * @return Returns a ListPartsResponse from Bos.
      */
     public ListPartsResponse listParts(String bucketName, String key, String uploadId) {
@@ -1846,7 +1846,6 @@ public class BosClient extends AbstractBceClient {
      * Lists the parts that have been uploaded for a specific multipart upload.
      *
      * @param request The ListPartsRequest object that specifies all the parameters of this operation.
-     *
      * @return Returns a ListPartsResponse from Bos.
      */
     public ListPartsResponse listParts(ListPartsRequest request) {
@@ -1872,7 +1871,6 @@ public class BosClient extends AbstractBceClient {
      * @param key        The key of the multipart upload to complete.
      * @param uploadId   The ID of the multipart upload to complete.
      * @param partETags  The list of part numbers and ETags to use when completing the multipart upload.
-     *
      * @return A CompleteMultipartUploadResponse from Bos containing the ETag for
      * the new object composed of the individual parts.
      */
@@ -1890,7 +1888,6 @@ public class BosClient extends AbstractBceClient {
      * @param partETags  The list of part numbers and ETags to use when completing the multipart upload.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return A CompleteMultipartUploadResponse from Bos containing the ETag for
      * the new object composed of the individual parts.
      */
@@ -1904,7 +1901,6 @@ public class BosClient extends AbstractBceClient {
      * Completes a multipart upload by assembling previously uploaded parts.
      *
      * @param request The CompleteMultipartUploadRequest object that specifies all the parameters of this operation.
-     *
      * @return A CompleteMultipartUploadResponse from Bos containing the ETag for
      * the new object composed of the individual parts.
      */
@@ -1945,7 +1941,7 @@ public class BosClient extends AbstractBceClient {
         }
 
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
         internalRequest.setContent(RestartableInputStream.wrap(json));
 
         CompleteMultipartUploadResponse response =
@@ -1996,7 +1992,6 @@ public class BosClient extends AbstractBceClient {
      * been initiated, using the InitiateMultipartUpload request, but has not yet been completed or aborted.
      *
      * @param bucketName The name of the bucket containing the uploads to list.
-     *
      * @return A ListMultipartUploadsResponse from Bos.
      */
     public ListMultipartUploadsResponse listMultipartUploads(String bucketName) {
@@ -2008,7 +2003,6 @@ public class BosClient extends AbstractBceClient {
      * been initiated, using the InitiateMultipartUpload request, but has not yet been completed or aborted.
      *
      * @param request The ListMultipartUploadsRequest object that specifies all the parameters of this operation.
-     *
      * @return A ListMultipartUploadsResponse from Bos.
      */
     public ListMultipartUploadsResponse listMultipartUploads(ListMultipartUploadsRequest request) {
@@ -2100,7 +2094,6 @@ public class BosClient extends AbstractBceClient {
      *
      * @param bceRequest The original request, as created by the user.
      * @param httpMethod The HTTP method to use when sending the request.
-     *
      * @return A new request object, populated with endpoint, resource path, ready for callers to populate
      * any additional headers or parameters, and execute.
      */
@@ -2274,7 +2267,6 @@ public class BosClient extends AbstractBceClient {
      * specified parameters, the specified request endpoint, etc.
      *
      * @param request The request to convert into a URL.
-     *
      * @return A new URL representing the specified request.
      */
     private URL convertRequestToUrl(InternalRequest request) {
@@ -2329,7 +2321,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param file       The appendable file containing the data to be uploaded to Bos.
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(String bucketName, String key, File file) {
@@ -2344,7 +2335,6 @@ public class BosClient extends AbstractBceClient {
      * @param file       The file containing the data to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(String bucketName, String key, File file, ObjectMetadata metadata) {
@@ -2357,7 +2347,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param value      The string containing the value to be uploaded to Bos.
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(String bucketName, String key, String value) {
@@ -2376,7 +2365,6 @@ public class BosClient extends AbstractBceClient {
      * @param value      The string containing the value to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(String bucketName, String key, String value, ObjectMetadata metadata) {
@@ -2393,7 +2381,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param value      The bytes containing the value to be uploaded to Bos.
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(String bucketName, String key, byte[] value) {
@@ -2408,7 +2395,6 @@ public class BosClient extends AbstractBceClient {
      * @param value      The bytes containing the value to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(
@@ -2427,7 +2413,6 @@ public class BosClient extends AbstractBceClient {
      * @param bucketName The name of an existing bucket, to which you have Write permission.
      * @param key        The key under which to store the specified file.
      * @param input      The input stream containing the value to be uploaded to Bos.
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(String bucketName, String key, InputStream input) {
@@ -2442,7 +2427,6 @@ public class BosClient extends AbstractBceClient {
      * @param input      The input stream containing the value to be uploaded to Bos.
      * @param metadata   Additional metadata instructing Bos how to handle the uploaded data
      *                   (e.g. custom user metadata, hooks for specifying content type, etc.).
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(
@@ -2456,7 +2440,6 @@ public class BosClient extends AbstractBceClient {
      * and the file or input stream containing the data to upload.
      *
      * @param request The request object containing all the parameters to upload a new appendable object to Bos.
-     *
      * @return An AppendObjectResponse object containing the information returned by Bos for the newly created object.
      */
     public AppendObjectResponse appendObject(AppendObjectRequest request) {
@@ -2477,13 +2460,334 @@ public class BosClient extends AbstractBceClient {
     }
 
     /**
+     * Restore an archive object to the specified Bos bucket
+     *
+     * @param request The request object containing all the parameters to restore an archive object
+     */
+    public void restoreObject(RestoreObjectRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getKey(), "object key should not be null or empty");
+        if (request.getRestoreDays() != null && request.getRestoreDays() <= 0) {
+            throw new BceClientException("invalid restore days");
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter("restore", null);
+        if (request.getRestoreDays() != null) {
+            internalRequest.addHeader(Headers.BCE_RESTORE_DAYS, Integer.toString(request.getRestoreDays()));
+        }
+        if (request.getRestoreTier() != null) {
+            internalRequest.addHeader(Headers.BCE_RESTORE_TIER, request.getRestoreTier());
+        }
+        this.setZeroContentLength(internalRequest);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /** Set bucket encryption
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param encryption The encryption of bucket
+     */
+    public void setBucketEncryption(String bucketName, BucketEncryption encryption) {
+        this.setBucketEncryption(new SetBucketEncryptionRequest(bucketName, encryption));
+    }
+
+    /**
+     *
+     * Set bucket encryption
+     */
+    public void setBucketEncryption(SetBucketEncryptionRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter(Constants.ENCRYPTION, null);
+
+        if (request.getJsonBucketEncryption() != null) {
+            byte[] json = null;
+            try {
+                json = request.getJsonBucketEncryption().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        } else {
+            byte[] json = null;
+            StringWriter writer = new StringWriter();
+            try {
+                JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+                jsonGenerator.writeStartObject();
+                if (request.getBucketEncryption() != null) {
+                    jsonGenerator.writeStringField("encryptionAlgorithm", request.getBucketEncryption().
+                            getEncryptionAlgorithm());
+                }
+                jsonGenerator.writeEndObject();
+                jsonGenerator.close();
+            } catch (IOException e) {
+                throw new BceClientException("Fail to generate json", e);
+            }
+            try {
+                json = writer.toString().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        }
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**Get Bucket Encryption
+     *
+     * @param bucketName The name of an existing bucket
+     * @return
+     */
+    public GetBucketEncryptionResponse getBucketEncryption(String bucketName) {
+        return this.getBucketEncryption(new GetBucketEncryptionRequest(bucketName));
+    }
+
+    /**
+     * Get Bucket Encryption
+     * @param request
+     * @return
+     */
+    public GetBucketEncryptionResponse getBucketEncryption(GetBucketEncryptionRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter(Constants.ENCRYPTION, null);
+        GetBucketEncryptionResponse response = this.invokeHttpClient(internalRequest,
+                GetBucketEncryptionResponse.class);
+        return response;
+    }
+
+    /** Delete Bucket Encryption
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     */
+    public void deleteBucketEncryption(String bucketName) {
+        this.deleteBucketEncryption(new DeleteBucketEncryptionRequest(bucketName));
+    }
+
+    /**
+     * Delete Bucket Encryption
+     * @param request
+     */
+    public void deleteBucketEncryption(DeleteBucketEncryptionRequest request) {
+        checkNotNull(request, "request should not be null");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter(Constants.ENCRYPTION, null);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+
+    }
+
+    /** Set bucket website
+     *
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param index The index page for staticwebsite
+     * @param notfound The notFound page for staticwebsite
+     */
+    public void setBucketStaticWebSite(String bucketName, String index, String notfound) {
+        this.setBucketStaticWebSite(new SetBucketStaticWebsiteRequest(bucketName, index, notfound));
+    }
+
+    /**
+     * Set bucket website
+      * @param request
+     */
+    public void setBucketStaticWebSite(SetBucketStaticWebsiteRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter(Constants.WEBSITE, null);
+        if (request.getJsonBucketStaticWebsite() != null) {
+            byte[] json = null;
+            try {
+                json = request.getJsonBucketStaticWebsite().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        } else {
+            byte[] json = null;
+            StringWriter writer = new StringWriter();
+            try {
+                JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+                jsonGenerator.writeStartObject();
+                if (request.getIndex() != null) {
+                    jsonGenerator.writeStringField("index", request.getIndex());
+                }
+                if (request.getNotFound() != null) {
+                    jsonGenerator.writeStringField("notFound", request.getNotFound());
+                }
+                jsonGenerator.writeEndObject();
+                jsonGenerator.close();
+            } catch (IOException e) {
+                throw new BceClientException("Fail to generate json", e);
+            }
+            try {
+                json = writer.toString().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        }
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Get bucket static website
+     * @param bucketName The name of an existing bucket, to which you have Read permission.
+     * @return
+     */
+    public GetBucketStaticWebsiteResponse getBucketStaticWebsite(String bucketName) {
+        return this.getBucketStaticWebsite(new GetBucketStaticWebsiteRequest(bucketName));
+    }
+
+    /**
+     * Get bucket static website
+     * @param request
+     * @return
+     */
+    public GetBucketStaticWebsiteResponse getBucketStaticWebsite(GetBucketStaticWebsiteRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter(Constants.WEBSITE, null);
+        GetBucketStaticWebsiteResponse response = this.invokeHttpClient(internalRequest,
+                GetBucketStaticWebsiteResponse.class);
+        return response;
+    }
+
+    /**
+     * Delete bucket static website
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     */
+    public void deleteBucketStaticWebSite(String bucketName) {
+        this.deleteBucketStaticWebSite(new DeleteBucketStaticWebsiteRequest(bucketName));
+    }
+
+    /**
+     * Delete bucket static website
+     * @param request
+     * @return
+     */
+    public void deleteBucketStaticWebSite(DeleteBucketStaticWebsiteRequest request) {
+        checkNotNull(request, "request should not be null");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter(Constants.WEBSITE, null);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Set bucket CopyrightProtection
+     * @param bucketName The name of an existing bucket, to which you have Write permission
+     * @param resources The resourceList of Bucket CopyrightProtection
+     */
+    public void setBucketCopyrightProtection(String bucketName, List<String> resources) {
+        this.setBucketCopyrightProtection(new SetBucketCopyrightProtectionRequest(bucketName, resources));
+    }
+
+    /**
+     * Set bucket CopyrightProtection
+     */
+    public void setBucketCopyrightProtection(SetBucketCopyrightProtectionRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter(Constants.COPYRIGHTPROTECTION, null);
+        if (request.getJsonBucketCopyrightProtection() != null) {
+            byte[] json = null;
+            try {
+                json = request.getJsonBucketCopyrightProtection().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        } else {
+            byte[] json = null;
+            StringWriter writer = new StringWriter();
+            List<String> resources = request.getResource();
+            try {
+                JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeArrayFieldStart("resource");
+                if (resources != null) {
+                    for (String resource : resources) {
+                        jsonGenerator.writeString(resource);
+                    }
+                }
+                jsonGenerator.writeEndArray();
+                jsonGenerator.writeEndObject();
+                jsonGenerator.close();
+            } catch (IOException e) {
+                throw new BceClientException("Fail to generate json", e);
+            }
+            try {
+                json = writer.toString().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        }
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Get bucket copyrightprotection
+     * @param bucketName The name of an existing bucket, to which you have Read permission
+     * @return
+     */
+    public GetBucketCopyrightProtectionResponse getBucketCopyrightProtection(String bucketName) {
+        return this.getBucketCopyrightProtection(new GetBucketCopyrightProtectionRequest(bucketName));
+    }
+
+    /**
+     * Get bucket copyrightprotection
+     * @param request
+     * @return
+     */
+    public GetBucketCopyrightProtectionResponse getBucketCopyrightProtection(GetBucketCopyrightProtectionRequest
+                                                                                     request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter(Constants.COPYRIGHTPROTECTION, null);
+        GetBucketCopyrightProtectionResponse response = this.invokeHttpClient(internalRequest,
+                GetBucketCopyrightProtectionResponse.class);
+        return response;
+    }
+
+    /**
+     * Delete Bucket copyrightprotection
+     * @param bucketName The name of an existing bucket, to which you have Write permission
+     */
+    public void deleteBucketCopyrightProtection(String bucketName) {
+        this.deleteBucketCopyrightProtection(new DeleteBucketCopyrightProtectionRequest(bucketName));
+    }
+
+    /**
+     * Delete Bucket copyrightprotection
+     * @param request
+     */
+    public void deleteBucketCopyrightProtection(DeleteBucketCopyrightProtectionRequest request) {
+        checkNotNull(request, "request should not be null");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter(Constants.COPYRIGHTPROTECTION, null);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
      * Uploads a object to Bos bucket. The PutObjcetRequest contains all the details of the request.The internalRequest
      * represents a request being send to a BCE Service.
      *
      * @param request         The request object containing all the parameters to upload a new appendable object to Bos.
      * @param internalRequest Represents a request being sent to a BCE Service, including the parameters being
      *                        sent as part of the request, the endpoint to which the request should be sent, etc.
-     *
      * @return A BosResponse object containing the bos-metadata information returned by Bos for the newly created
      * object
      */
@@ -2573,4 +2877,237 @@ public class BosClient extends AbstractBceClient {
         }
         return response;
     }
+
+    /**
+     * The Encapsulation of three-step upload when put Super Object from file
+     *
+     * @param file super object
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param objectKey  The key under which to store the specified file.
+     * @return
+     */
+    public  boolean putSuperObjectFromFile(File file, String bucketName, String objectKey) {
+        int processors = Runtime.getRuntime().availableProcessors();
+        return putSuperObjectFromFile(new PutSuperObjectRequest(bucketName, objectKey, file, CHUNK_SIZE, processors));
+    }
+
+    /**
+     * The Encapsulation of three-step upload when put Super Object from file
+     *
+     * @param file super object
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param objectKey The key under which to store the specified file.
+     * @param chunksize the part size when upload super object file
+     * @return
+     */
+    public  boolean putSuperObjectFromFile(File file, String bucketName, String objectKey, long chunksize) {
+        int processors = Runtime.getRuntime().availableProcessors();
+        return putSuperObjectFromFile(new PutSuperObjectRequest(bucketName, objectKey, file, chunksize, processors));
+    }
+
+    /**
+     * The Encapsulation of three-step upload when put Super Object from file
+     *
+     * @param file   super object
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param objectKey  The key under which to store the specified file.
+     * @param nThreads   The num of threads in thread pool
+     * @return
+     */
+    public  boolean putSuperObjectFromFile(File file, String bucketName, String objectKey,
+                                           int nThreads) {
+        return putSuperObjectFromFile(new PutSuperObjectRequest(bucketName, objectKey, file, CHUNK_SIZE, nThreads));
+    }
+
+    /**
+     * The Encapsulation of three-step upload when put Super Object from file
+     *
+     * @param file  super object
+     * @param bucketName The name of an existing bucket, to which you have Write permission.
+     * @param objectKey The key under which to store the specified file.
+     * @param chunksize the part size when upload super object file
+     * @param nThreads  The num of threads in thread pool
+     * @return
+     */
+    public  boolean putSuperObjectFromFile(File file, String bucketName, String objectKey, long chunksize,
+                                           int nThreads) {
+        return putSuperObjectFromFile(new PutSuperObjectRequest(bucketName, objectKey, file, chunksize, nThreads));
+    }
+
+    public boolean  putSuperObjectFromFile(PutSuperObjectRequest putSuperObjectRequest) {
+        boolean success = true;
+        File file = putSuperObjectRequest.getFile();
+        long chunksize = putSuperObjectRequest.getChunkSize();
+        if (chunksize <= 0) {
+            throw new BceClientException("the chunksize must be greater than 0");
+        }
+        String bucketName = putSuperObjectRequest.getBucketName();
+        String objectKey = putSuperObjectRequest.getKey();
+        int nThreads = putSuperObjectRequest.getnThreads();
+        AtomicBoolean isSuperObjectUploadCanced = putSuperObjectRequest.getIsSuperObjectUploadCanced();
+        long fileLength = file.length();
+        int parts = (int) (fileLength / chunksize);
+        if (fileLength % chunksize > 0) {
+            parts++;
+        }
+        if (parts > Constants.MAX_PARTS) {
+            throw new BceClientException("Total parts count should not exceed 10000");
+        }
+        // Get upload id
+        String uploadId = initiateMultipartUpload(bucketName, objectKey).getUploadId();
+        putSuperObjectRequest.setUploadId(uploadId);
+        ExecutorService pool = Executors.newFixedThreadPool(nThreads);
+        List<Future<Boolean>> futures = new ArrayList<Future<Boolean>>();
+        List<PartETag> partETags = Collections.synchronizedList(new ArrayList<PartETag>());
+        for (int i = 0; i < parts; i++) {
+            futures.add(pool.submit(new UploadPartTask(this, putSuperObjectRequest, i, partETags)));
+        }
+        // wait all part completed
+        for (int i = 0; i < futures.size(); i++) {
+            Future<Boolean> future = futures.get(i);
+            try {
+                if (future.get()) {
+                    logger.info("The upload task [ " + i + "] completed.");
+                } else {
+                    logger.error("The upload task [ " + i + "] failed.");
+                    success = false;
+                    break;
+                }
+            } catch (Exception e) {
+                success = false;
+                break;
+            }
+        }
+        pool.shutdown();
+        try {
+            if (!pool.awaitTermination(500, TimeUnit.MILLISECONDS)) {
+                pool.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            throw new BceClientException("close thread pool fail exception", e);
+        }
+        if (isSuperObjectUploadCanced.get() || partETags.size() != parts)  {
+            success = false;
+        }
+        if (success) {
+            Collections.sort(partETags, new Comparator<PartETag>() {
+                @Override
+                public int compare(PartETag a, PartETag b) {
+                    return a.getPartNumber() - b.getPartNumber();
+                }
+            });
+            CompleteMultipartUploadRequest completeMultipartUploadRequest =
+                    new CompleteMultipartUploadRequest(bucketName, objectKey, uploadId, partETags);
+            CompleteMultipartUploadResponse response = completeMultipartUpload(completeMultipartUploadRequest);
+            logger.info("Success to upload file: " + file.getAbsolutePath() + " to BOS with ETag: "
+                    + response.getETag());
+        } else {
+            AbortMultipartUploadRequest abortMultipartUploadRequest =
+                    new AbortMultipartUploadRequest(bucketName, objectKey, uploadId);
+            abortMultipartUpload(abortMultipartUploadRequest);
+            logger.info("Failed to upload file: " + file.getAbsolutePath());
+        }
+        return success;
+    }
+
+    public boolean uploadFilePart(PutSuperObjectRequest putSuperObjectRequest, int partNum, List<PartETag> partETags) {
+        int tryCount = 3;
+        File file = putSuperObjectRequest.getFile();
+        long chunksize = putSuperObjectRequest.getChunkSize();
+        String bucketName = putSuperObjectRequest.getBucketName();
+        String objectKey = putSuperObjectRequest.getKey();
+        String uploadId = putSuperObjectRequest.getUploadId();
+        AtomicBoolean isCancel = putSuperObjectRequest.getIsSuperObjectUploadCanced();
+        while (tryCount > 0) {
+            if (isCancel.get()) {
+                break;
+            }
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(file);
+                long skipBytes = chunksize * partNum;
+                fis.skip(skipBytes);
+                long partSize = (chunksize < file.length() - skipBytes) ? chunksize : file.length() - skipBytes;
+                UploadPartRequest uploadPartRequest = new UploadPartRequest();
+                uploadPartRequest.setBucketName(bucketName);
+                uploadPartRequest.setKey(objectKey);
+                uploadPartRequest.setUploadId(uploadId);
+                uploadPartRequest.setInputStream(fis);
+                uploadPartRequest.setPartSize(partSize);
+                uploadPartRequest.setPartNumber(partNum + 1);
+                if (isCancel.get()) {  // if exist threads to uploadPart, may the uploadId is invalid
+                    break;
+                }
+                UploadPartResponse uploadPartResponse = uploadPart(uploadPartRequest);
+                partETags.add(uploadPartResponse.getPartETag());
+                logger.info("Complete upload with ETag: " + uploadPartResponse.getPartETag());
+            } catch (IOException e) {
+                logger.error("Failed to upload the part " + partNum + " [tryCount] = " + tryCount);
+                tryCount--;
+                continue;
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                }
+            }
+            if (tryCount > 0) {
+                break;
+            }
+        }
+        if (isCancel.get()) {
+            logger.info("Request is canceled");
+        } else if (tryCount == 0) {
+            logger.error("Failed to upload the part " + partNum);
+        } else {
+            logger.info("Success to upload the part " + partNum);
+        }
+        return (tryCount > 0 && !isCancel.get());
+    }
+
+    private static class UploadPartTask implements Callable<Boolean> {
+        BosClient client;
+        PutSuperObjectRequest putSuperObjectRequest;
+        int partNum;
+        List<PartETag> partETags;
+
+        UploadPartTask(BosClient client, PutSuperObjectRequest putSuperObjectRequest, int partNum,
+                       List<PartETag> partETags) {
+            this.client = client;
+            this.putSuperObjectRequest = putSuperObjectRequest;
+            this.partNum = partNum;
+            this.partETags = partETags;
+        }
+
+        @Override
+        public Boolean call() {
+            return client.uploadFilePart(putSuperObjectRequest, partNum, partETags);
+        }
+    }
+
+    public SelectObjectResponse selectObject(SelectObjectRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getKey(), "object key should not be null or empty");
+        assertStringNotNullOrEmpty(request.getSelectType(), "selectType should not be null or empty");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter("select", null);
+        internalRequest.addParameter("type", request.getSelectType());
+        // compose request body
+        byte[] json;
+        json = request.buildBody();
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+        internalRequest.setContent(RestartableInputStream.wrap(json));
+        SelectObjectResponse response = this.invokeHttpClient(internalRequest, SelectObjectResponse.class);;
+        if (request.getOutputValue(Constants.RECORD_DELIMITER) != null) {
+            response.setRecordDelimiter(request.getOutputValue(Constants.RECORD_DELIMITER));
+        }
+        // Parsing query results
+        response.initMessages(response.getObject());
+        return response;
+    }
+
 }

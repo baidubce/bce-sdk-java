@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ *  Copyright 2014-2019 Baidu, Inc.  All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -111,5 +111,15 @@ public interface Headers {
     public static final String BCE_OBJECT_TYPE = "x-bce-object-type";
 
     public static final String BCE_STORAGE_CLASS = "x-bce-storage-class";
+
+    public static final String BCE_RESTORE_TIER = "x-bce-restore-tier";
+
+    public static final String BCE_RESTORE_DAYS = "x-bce-restore-days";
+
+    /*
+     * CFC HTTP Headers
+     */
+
+    public static final String BCE_LOG_RESULT = "X-Bce-Log-Result";
 
 }

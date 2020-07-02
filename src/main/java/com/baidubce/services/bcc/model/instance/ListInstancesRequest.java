@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -33,6 +33,16 @@ public class ListInstancesRequest extends ListRequest {
      * the name of available zone
      */
     private String zoneName;
+
+    /**
+     * The id of the keypair
+     */
+    private String keypairId;
+
+    /**
+     * whether the instance is auto renew or not
+     */
+    private boolean autoRenew;
 
     public String getInternalIp() {
         return internalIp;
@@ -102,6 +112,43 @@ public class ListInstancesRequest extends ListRequest {
     @Override
     public ListInstancesRequest withMaxKeys(int maxKeys) {
         this.setMaxKeys(maxKeys);
+        return this;
+    }
+
+    public String getKeypairId() {
+        return keypairId;
+    }
+
+    public void setKeypairId(String keypairId) {
+        this.keypairId = keypairId;
+    }
+
+    /**
+     * Configure the request with specified keypairId.
+     * @param keypairId The specified keypair id.
+     * @return ListInstancesRequest with specified keypairId.
+     */
+    public ListInstancesRequest withKeypairId(String keypairId) {
+        this.keypairId = keypairId;
+        return this;
+    }
+
+    public boolean isAutoRenew() {
+        return autoRenew;
+    }
+
+    public void setAutoRenew(boolean autoRenew) {
+        this.autoRenew = autoRenew;
+    }
+
+    /**
+     * Configure the request with specified autoRenew.
+     * @param autoRenew Whether the instance is auto renew or not. If <code>true<code/>, it means the instance
+     *                  is auto renew.
+     * @return ListInstancesRequest with specified autoRenew.
+     */
+    public ListInstancesRequest withAutoRenew(boolean autoRenew) {
+        this.autoRenew = autoRenew;
         return this;
     }
 

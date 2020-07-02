@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 
 /**
- * Response for query vehicle history
+ *  Response for query vehicle history
  */
 public class HistoryInfoQueryResponse extends AbstractBceResponse {
     private boolean truncated;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -11,6 +11,8 @@
  * specific language governing permissions and limitations under the License.
  */
 package com.baidubce.services.bcc.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
@@ -67,6 +69,28 @@ public class SnapshotModel {
      * The time when the snapshot will be expired.
      */
     private Date expireTime;
+
+    /**
+     * The snapId of the instance.
+     */
+    private String insnapId;
+
+    /**
+     * Whether the image is big or not. The default value is false. If <code>true</code>, it means it is the big image.
+     */
+    @JsonProperty("package")
+    private boolean packaged;
+
+    /**
+     * The id of image which is defined by user.
+     */
+    @JsonProperty("templateId")
+    private String imageId;
+
+    /**
+     * Whether the snapshot is encrypted.
+     */
+    private boolean encrypted;
 
     public String getId() {
         return id;
@@ -140,6 +164,38 @@ public class SnapshotModel {
         this.expireTime = expireTime;
     }
 
+    public String getInsnapId() {
+        return insnapId;
+    }
+
+    public void setInsnapId(String insnapId) {
+        this.insnapId = insnapId;
+    }
+
+    public boolean isPackaged() {
+        return packaged;
+    }
+
+    public void setPackaged(boolean packaged) {
+        this.packaged = packaged;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+    public boolean isEncrypted() {
+        return encrypted;
+    }
+
+    public void setEncrypted(boolean encrypted) {
+        this.encrypted = encrypted;
+    }
+
     @Override
     public String toString() {
         return "SnapshotModel{"
@@ -152,6 +208,10 @@ public class SnapshotModel {
                 + ", volumeId='" + volumeId + '\''
                 + ", desc='" + desc + '\''
                 + ", expireTime='" + expireTime + '\''
+                + ", insnapId='" + insnapId + '\''
+                + ", package='" + packaged + '\''
+                + ", templateId='" + imageId + '\''
+                + ", encrypted='" + encrypted + '\''
                 + '}';
     }
 }

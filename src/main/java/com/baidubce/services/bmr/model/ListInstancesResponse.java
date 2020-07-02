@@ -12,13 +12,13 @@
  */
 package com.baidubce.services.bmr.model;
 
-import com.baidubce.model.AbstractBceResponse;
-
 import java.util.List;
+
+import com.baidubce.model.AbstractBceResponse;
 
 /**
  * Represent the response of ListInstancesRequest.
- *
+ * <p>
  * The response contains an array of BMR Instance objects.
  */
 public class ListInstancesResponse extends AbstractBceResponse {

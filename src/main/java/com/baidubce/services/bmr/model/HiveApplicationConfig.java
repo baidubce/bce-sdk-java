@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent a Hive application.
- *
+ * <p>
  * A Hive application can be configured with properties such as:
  * version, meta-store, host, port, database, username, password
  */
@@ -34,12 +34,13 @@ public class HiveApplicationConfig extends ApplicationConfig {
     /**
      * Configure the version of Hive.
      * The reference version is as follows:
-     *
-     *     image type |  image version | hive version supported
-     *      hadoop    |    0.1.0       |    0.13.0
-     *      hadoop    |    0.2.0       |    0.14.0
+     * <p>
+     * image type |  image version | hive version supported
+     * hadoop    |    0.1.0       |    0.13.0
+     * hadoop    |    0.2.0       |    0.14.0
      *
      * @param version The version of Hive.
+     *
      * @return HiveApplicationConfig
      */
     public HiveApplicationConfig withVersion(String version) {
@@ -54,6 +55,7 @@ public class HiveApplicationConfig extends ApplicationConfig {
      * database name, the username and password for accessing MySQL database.
      *
      * @param metastore The type of metastore. Use "default" or "mysql".
+     *
      * @return HiveApplicationConfig
      */
     public HiveApplicationConfig withMetastore(String metastore) {
@@ -66,6 +68,7 @@ public class HiveApplicationConfig extends ApplicationConfig {
      * This configuration is needed only if the metastore is "mysql".
      *
      * @param host The host on which the MySQL service runs.
+     *
      * @return HiveApplicationConfig
      */
     public HiveApplicationConfig withHost(String host) {
@@ -79,6 +82,7 @@ public class HiveApplicationConfig extends ApplicationConfig {
      * This configuration is needed only if the metastore is "mysql".
      *
      * @param port The port on which the MySQL service listens.
+     *
      * @return HiveApplicationConfig
      */
     public HiveApplicationConfig withPort(int port) {
@@ -91,6 +95,7 @@ public class HiveApplicationConfig extends ApplicationConfig {
      * This configuration is needed only if the metastore is "mysql".
      *
      * @param database The database's name for Hive metastore.
+     *
      * @return HiveApplicationConfig
      */
     public HiveApplicationConfig withDatabase(String database) {
@@ -103,6 +108,7 @@ public class HiveApplicationConfig extends ApplicationConfig {
      * This configuration is needed only if the metastore is "mysql".
      *
      * @param username The username for accessing MySQL database.
+     *
      * @return HiveApplicationConfig
      */
     public HiveApplicationConfig withUserName(String username) {
@@ -115,6 +121,7 @@ public class HiveApplicationConfig extends ApplicationConfig {
      * This configuration is needed only if the metastore is "mysql".
      *
      * @param password The password for accessing MySQL database.
+     *
      * @return HiveApplicationConfig
      */
     public HiveApplicationConfig withPassword(String password) {

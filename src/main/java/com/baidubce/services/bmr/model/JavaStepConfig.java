@@ -14,7 +14,7 @@ package com.baidubce.services.bmr.model;
 
 /**
  * Represent configuration for a custom jar step.
- *
+ * <p>
  * A custom jar step can be configured with name, actionOnFailure, jar, main class and arguments.
  * The essential options are jar, main class and actionOnFailure,
  * and the optional ones are name and arguments.
@@ -33,6 +33,7 @@ public class JavaStepConfig extends StepConfig {
      * Configure the BOS path for step's .jar file.
      *
      * @param jar The BOS path for the step's .jar file.
+     *
      * @return JavaStepConfig
      */
     public JavaStepConfig withJar(String jar) {
@@ -44,6 +45,7 @@ public class JavaStepConfig extends StepConfig {
      * Configure the main class for the step.
      *
      * @param mainClass The main class for the step.
+     *
      * @return JavaStepConfig
      */
     public JavaStepConfig withMainClass(String mainClass) {
@@ -55,6 +57,7 @@ public class JavaStepConfig extends StepConfig {
      * Configure the arguments for the step.
      *
      * @param arguments The arguments for the step.
+     *
      * @return JavaStepConfig
      */
     public JavaStepConfig withArguments(String arguments) {
@@ -65,11 +68,12 @@ public class JavaStepConfig extends StepConfig {
     /**
      * Configure the action on failure for the java step.
      * This property is set to enum value:
-     *     "Continue": continue to execute other steps.
-     *     "TerminateCluster": terminate the cluster when this step fails.
-     *     "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
+     * "Continue": continue to execute other steps.
+     * "TerminateCluster": terminate the cluster when this step fails.
+     * "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
      *
      * @param actionOnFailure The action on step's failure.
+     *
      * @return JavaStepConfig
      */
     public JavaStepConfig withActionOnFailure(String actionOnFailure) {
@@ -81,6 +85,7 @@ public class JavaStepConfig extends StepConfig {
      * Configure the name of the step.
      *
      * @param name The name of the step.
+     *
      * @return JavaStepConfig
      */
     public JavaStepConfig withName(String name) {
@@ -92,7 +97,8 @@ public class JavaStepConfig extends StepConfig {
      * Configure the additional file for the step.
      *
      * @param remote The remote file of the additional file.
-     * @param local The local file of the additional file.
+     * @param local  The local file of the additional file.
+     *
      * @return JavaStepConfig
      */
     public JavaStepConfig withAdditionalFile(String remote, String local) {

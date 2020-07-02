@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2019-2020 Baidu. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.baidubce.services.tsdb;
 
 import java.io.ByteArrayOutputStream;
@@ -36,10 +48,11 @@ import com.baidubce.util.JsonUtils;
  */
 public abstract class AbstractTsdbBceClient extends AbstractBceClient {
 
+    protected static final String CONTENT_TYPE = "application/json;charset=UTF-8";
+
     private static final String VERSION = "v1";
     private static final String[] HEADERS_TO_SIGN = { Headers.HOST };
     private static final String DEFAULT_ENCODING = "UTF-8";
-    private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
     private static final String GZIP = "gzip";
     private static final String UTF8 = "UTF-8";
 

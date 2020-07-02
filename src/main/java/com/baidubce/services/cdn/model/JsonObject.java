@@ -23,7 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class JsonObject {
     /**
      * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     public String toString() {
         try {

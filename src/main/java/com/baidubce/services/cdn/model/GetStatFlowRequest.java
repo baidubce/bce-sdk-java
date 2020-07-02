@@ -13,11 +13,12 @@
 
 package com.baidubce.services.cdn.model;
 
-import java.util.Date;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.util.Date;
 
 /**
  * @author yixing
@@ -144,7 +145,7 @@ public class GetStatFlowRequest extends AbstractBceRequest {
 
     /**
      * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

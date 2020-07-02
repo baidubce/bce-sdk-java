@@ -12,8 +12,13 @@ package com.baidubce.services.dugo;
 
 import static com.baidubce.util.Validate.checkIsTrue;
 import static com.baidubce.util.Validate.checkNotNull;
+import static com.baidubce.util.Validate.checkPattern;
 import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.baidubce.util.Validate.checkValidValue;
 
+import com.baidubce.services.dugo.map.DeviceStatusInfoResponse;
+import com.baidubce.services.dugo.map.GetDeviceInfoRequest;
+import com.baidubce.services.dugo.map.QueryDeviceLogResponse;
 import com.baidubce.services.dugo.project.GetBatchListResponse;
 import com.baidubce.services.dugo.project.GetProjectByIdResponse;
 import com.baidubce.services.dugo.project.GetProjectListResponse;
@@ -96,8 +101,33 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.dugo.core.protocol.http.BceIotHttpClient;
+import com.baidubce.services.dugo.video.AlarmInfoByTimeRequest;
+import com.baidubce.services.dugo.video.AlarmInfoByVehicleIdListRequest;
+import com.baidubce.services.dugo.video.AlarmInfoListResponse;
+import com.baidubce.services.dugo.video.AlarmVideoInfoByVehicleIdListRequest;
+import com.baidubce.services.dugo.video.AlarmVideoInfoByVehicleIdRequest;
+import com.baidubce.services.dugo.video.AlarmVideoInfoListResponse;
+import com.baidubce.services.dugo.video.FileNameRequest;
+import com.baidubce.services.dugo.video.FileUploadResponse;
+import com.baidubce.services.dugo.video.GetDownloadUrlResponse;
+import com.baidubce.services.dugo.video.GetMediaInfoListResponse;
+import com.baidubce.services.dugo.video.GetMediaInfoResponse;
+import com.baidubce.services.dugo.video.GetPlayUrlResponse;
+import com.baidubce.services.dugo.video.GetTaskStatusResponse;
+import com.baidubce.services.dugo.video.MediaInfoByTimeRequest;
+import com.baidubce.services.dugo.video.ParameterSettingRequest;
+import com.baidubce.services.dugo.video.PlaybackRequest;
+import com.baidubce.services.dugo.video.RealTimeRequest;
+import com.baidubce.services.dugo.video.TrackAlarmMediaInfoRequest;
+import com.baidubce.services.dugo.video.TrackAlarmVideoInfoResponse;
+import com.baidubce.services.dugo.video.UploadTaskListRequest;
+import com.baidubce.services.dugo.video.UploadTaskListResponse;
+import com.baidubce.services.dugo.video.model.RealDataType;
+import com.baidubce.services.dugo.video.model.RealStreamType;
+import com.baidubce.services.dugo.video.model.VideoType;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -106,6 +136,8 @@ import org.apache.commons.lang3.StringUtils;
 public class DuGoClient extends AbstractBceClient {
     private static final String ENDPOINT = "https://ivc.gz.baidubce.com";
     private static final String PREFIX_VERSION1 = "/v1/ivc/data";
+    private static final String PREFIX_VIDEO_VERSION1 = "/v1/video";
+    private static final String PREFIX_REMOTE_DIAGNOSIS_VERSION1 = "/v1/ivc/remote-diagnosis/api";
     private static final String REQUEST = "request";
     private static final String PROJECT_ID = "projectId";
     private static final String BATCH_ID = "batchId";
@@ -123,6 +155,7 @@ public class DuGoClient extends AbstractBceClient {
     private static final String PAGE_SIZE = "pageSize";
     private static final String START_TIME = "startTime";
     private static final String END_TIME = "endTime";
+    private static final String FILE_NAME = "fileName";
 
     private static HttpResponseHandler[] handlers = new HttpResponseHandler[]{
             new BceMetadataResponseHandler(),
@@ -438,6 +471,7 @@ public class DuGoClient extends AbstractBceClient {
 
     /**
      * Query shadow for a group of devices
+     *
      * @param groupId
      * @param needUpdateTime
      * @param pageNo
@@ -478,8 +512,47 @@ public class DuGoClient extends AbstractBceClient {
         isNullCheck(request.getEnd(), "end");
 
         InternalRequest internalRequest =
-                buildInternalRequest(PREFIX_VERSION1 + "/device/history", HttpMethodName.POST, request);
+                buildInternalRequest("/v1/device/history", HttpMethodName.POST, request);
         return this.invokeHttpClient(internalRequest, QueryDeviceHistoryResponse.class);
+    }
+
+    /**
+     * Query device log
+     *
+     * @param deviceId
+     * @param startHour
+     * @param endHour
+     * @return
+     */
+    public QueryDeviceLogResponse queryDeviceLog(String deviceId, String startHour, String endHour) {
+        isEmptyCheck(deviceId, DEVICE_ID);
+        isEmptyCheck(startHour, "startHour");
+        isEmptyCheck(endHour, "endHour");
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(DEVICE_ID, deviceId);
+        params.put("startHour", startHour);
+        params.put("endHour", endHour);
+        InternalRequest internalRequest = buildInternalRequest(PREFIX_REMOTE_DIAGNOSIS_VERSION1 + "/log/release",
+                HttpMethodName.GET, null, params);
+        return this.invokeHttpClient(internalRequest, QueryDeviceLogResponse.class);
+    }
+
+    /**
+     * Query device status info
+     *
+     * @param deviceId
+     * @param request
+     * @return
+     */
+    public DeviceStatusInfoResponse queryDeviceStatusInfo(String deviceId, GetDeviceInfoRequest request) {
+        isEmptyCheck(deviceId, DEVICE_ID);
+        isNullCheck(request.getFields(), "fields");
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(DEVICE_ID, deviceId);
+        InternalRequest internalRequest = buildInternalRequest(PREFIX_REMOTE_DIAGNOSIS_VERSION1 + "/info/query",
+                HttpMethodName.POST, request, params);
+        return this.invokeHttpClient(internalRequest, DeviceStatusInfoResponse.class);
+
     }
 
     /**
@@ -1179,6 +1252,450 @@ public class DuGoClient extends AbstractBceClient {
         return this.invokeHttpClient(internalRequest, MonitoredVehicleListResponse.class);
     }
 
+    /**
+     * start real-time play
+     *
+     * @param vehicleId
+     * @param channel
+     * @param request
+     * @return
+     */
+    public GetPlayUrlResponse realTimePlay(String vehicleId, Integer channel, RealTimeRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(channel, "channel");
+        isNullCheck(request, REQUEST);
+        isEnumValue(request.getDataType(), "dataType", RealDataType.class);
+        isEnumValue(request.getStreamType(), "streamType", RealStreamType.class);
+        isEnumValue(request.getVideoType(), "videoType", VideoType.class);
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/real-time/" + vehicleId + "/" + channel,
+                        HttpMethodName.POST, request);
+        return this.invokeHttpClient(internalRequest, GetPlayUrlResponse.class);
+    }
+
+    /**
+     * end real-time play
+     *
+     * @param vehicleId
+     * @param channel
+     */
+    public void endRealTimePlay(String vehicleId, Integer channel) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(channel, "channel");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("close", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/real-time/" + vehicleId + "/" + channel,
+                        HttpMethodName.PUT, null, param);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * start history playback
+     *
+     * @param vehicleId
+     * @param request
+     * @return
+     */
+    public GetPlayUrlResponse historyPlayback(String vehicleId, PlaybackRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getFileName(), "fileName");
+        isEnumValue(request.getVideoType(), "videoType", VideoType.class);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("open", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/playback/" + vehicleId,
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, GetPlayUrlResponse.class);
+    }
+
+    /**
+     * end history playback
+     *
+     * @param vehicleId
+     * @param fileName
+     */
+    public void endHistoryPlayback(String vehicleId, String fileName) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isEmptyCheck(fileName, FILE_NAME);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put(FILE_NAME, fileName);
+        param.put("close", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/playback/" + vehicleId,
+                        HttpMethodName.PUT, null, param);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * upload video by name
+     *
+     * @param vehicleId
+     * @param request
+     * @return
+     */
+    public FileUploadResponse videoUploadByName(String vehicleId, FileNameRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getFileName(), "fileName");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("name", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/upload/" + vehicleId,
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, FileUploadResponse.class);
+    }
+
+    /**
+     * cancel upload task
+     *
+     * @param taskUuid
+     */
+    public void videoUploadCancel(String taskUuid) {
+        isEmptyCheck(taskUuid, "taskUuid");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("cancel", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/upload/tasks/" + taskUuid,
+                        HttpMethodName.PUT, null, param);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * get status of upload task
+     *
+     * @param taskUuid
+     * @return
+     */
+    public GetTaskStatusResponse getTaskStatus(String taskUuid) {
+        isEmptyCheck(taskUuid, "taskUuid");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("status", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/playback/tasks/" + taskUuid,
+                        HttpMethodName.GET, null, param);
+        return this.invokeHttpClient(internalRequest, GetTaskStatusResponse.class);
+    }
+
+    /**
+     * get upload task list
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param request
+     * @return
+     */
+    public UploadTaskListResponse getUploadTaskList(Integer pageNum, Integer pageSize, UploadTaskListRequest request) {
+        isNullCheck(pageNum, PAGE_NUM);
+        isNullCheck(pageSize, PAGE_SIZE);
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getVehicleId(), VEHICLE_ID);
+        isNullCheck(request.getStartTime(), START_TIME);
+        isNullCheck(request.getEndTime(), END_TIME);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put(PAGE_NUM, String.valueOf(pageNum));
+        param.put(PAGE_SIZE, String.valueOf(pageSize));
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/upload/tasks",
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, UploadTaskListResponse.class);
+    }
+
+    /**
+     * get play url by upload task
+     *
+     * @param taskUuid
+     * @return
+     */
+    public GetPlayUrlResponse getPlayUrlByTask(String taskUuid) {
+        isEmptyCheck(taskUuid, "taskUuid");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("url", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/playback/tasks/" + taskUuid,
+                        HttpMethodName.GET, null, param);
+        return this.invokeHttpClient(internalRequest, GetPlayUrlResponse.class);
+    }
+
+    /**
+     * get play url by video name
+     *
+     * @param vehicleId
+     * @param request
+     * @return
+     */
+    public GetPlayUrlResponse getPlayUrlByName(String vehicleId, FileNameRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getFileName(), "fileName");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("name", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/playback/" + vehicleId,
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, GetPlayUrlResponse.class);
+    }
+
+    /**
+     * get video download url
+     *
+     * @param vehicleId
+     * @param request
+     * @return
+     */
+    public GetDownloadUrlResponse getVideoDownloadUrl(String vehicleId, FileNameRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getFileName(), "fileName");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("video", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/download/" + vehicleId,
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, GetDownloadUrlResponse.class);
+    }
+
+    /**
+     * get image download url
+     *
+     * @param vehicleId
+     * @param request
+     * @return
+     */
+    public GetDownloadUrlResponse getImageDownloadUrl(String vehicleId, FileNameRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getFileName(), "fileName");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("image", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/download/" + vehicleId,
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, GetDownloadUrlResponse.class);
+    }
+
+    /**
+     * set param of principle
+     *
+     * @param vehicleId
+     * @param request
+     */
+    public void setParam(String vehicleId, ParameterSettingRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(request, REQUEST);
+        isMatchPattern(request.getParamHex(), "paramHex", "^[A-Fa-f0-9]{1,210}$");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/param-setting/" + vehicleId,
+                        HttpMethodName.PUT, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * get media list by time
+     *
+     * @param vehicleId
+     * @param request
+     * @return
+     */
+    public GetMediaInfoListResponse getVideoInfoByTime(String vehicleId, MediaInfoByTimeRequest request) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isNullCheck(request, REQUEST);
+        isNullCheck(request.getStartTime(), START_TIME);
+        isNullCheck(request.getEndTime(), END_TIME);
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/media/" + vehicleId,
+                        HttpMethodName.POST, request);
+        return this.invokeHttpClient(internalRequest, GetMediaInfoListResponse.class);
+    }
+
+    /**
+     * get media by file name
+     *
+     * @param vehicleId
+     * @param fileName
+     * @return
+     */
+    public GetMediaInfoResponse getMediaInfoByFileName(String vehicleId, String fileName) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isEmptyCheck(fileName, "fileName");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("fileName", fileName);
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/media/" + vehicleId + "/filename",
+                        HttpMethodName.GET, null, param);
+        return this.invokeHttpClient(internalRequest, GetMediaInfoResponse.class);
+    }
+
+    /**
+     * get media list by alarm
+     *
+     * @param alarmUuid
+     * @return
+     */
+    public GetMediaInfoListResponse getMediaInfoByAlarmUuid(String alarmUuid) {
+        isEmptyCheck(alarmUuid, "alarmUuid");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("alarmUuid", alarmUuid);
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/media/alarm-uuid",
+                        HttpMethodName.GET, null, param);
+        return this.invokeHttpClient(internalRequest, GetMediaInfoListResponse.class);
+    }
+
+    /**
+     * get media list by alarmRefKey
+     *
+     * @param vehicleId
+     * @param alarmRefKey
+     * @return
+     */
+    public GetMediaInfoListResponse getMediaInfoByAlarmRefKey(String vehicleId, String alarmRefKey) {
+        isEmptyCheck(vehicleId, VEHICLE_ID);
+        isEmptyCheck(alarmRefKey, "alarmRefKey");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("alarmRefKey", alarmRefKey);
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/media/" + vehicleId + "/alarm-ref-key",
+                        HttpMethodName.GET, null, param);
+        return this.invokeHttpClient(internalRequest, GetMediaInfoListResponse.class);
+    }
+
+    /**
+     * get alarm list by vehicle list
+     *
+     * @param request
+     * @return
+     */
+    public AlarmInfoListResponse getAlarmInfoByVehicleIdList(AlarmInfoByVehicleIdListRequest request) {
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getVehicleIdList(), "vehicleIdList");
+        isNullCheck(request.getStartTime(), START_TIME);
+        isNullCheck(request.getEndTime(), END_TIME);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("id", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/alarm",
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, AlarmInfoListResponse.class);
+    }
+
+    /**
+     * get alarm list by time
+     *
+     * @param request
+     * @return
+     */
+    public AlarmInfoListResponse getAlarmInfoByTime(AlarmInfoByTimeRequest request) {
+        isNullCheck(request, REQUEST);
+        isNullCheck(request.getStartTime(), START_TIME);
+        isNullCheck(request.getEndTime(), END_TIME);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("time", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/alarm",
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, AlarmInfoListResponse.class);
+    }
+
+    /**
+     * get alarm & media list by vehicle
+     *
+     * @param request
+     * @return
+     */
+    public AlarmVideoInfoListResponse getAlarmVideoInfoByVehicleId(AlarmVideoInfoByVehicleIdRequest request) {
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getVehicleId(), VEHICLE_ID);
+        isNullCheck(request.getStartTime(), START_TIME);
+        isNullCheck(request.getEndTime(), END_TIME);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("id", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/alarm/video",
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, AlarmVideoInfoListResponse.class);
+    }
+
+    /**
+     * get alarm & media list by vehicle
+     *
+     * @param request
+     * @return
+     */
+    public AlarmVideoInfoListResponse getAlarmVideoInfoByVehicleIdList(AlarmVideoInfoByVehicleIdListRequest request) {
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getVehicleIdList(), "vehicleIdList");
+        isNullCheck(request.getStartTime(), START_TIME);
+        isNullCheck(request.getEndTime(), END_TIME);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("ids", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/alarm/video",
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, AlarmVideoInfoListResponse.class);
+    }
+
+    /**
+     * get track point & alarm & media list by vehicle
+     *
+     * @param request
+     * @return
+     */
+    public TrackAlarmVideoInfoResponse getTrackAlarmMediaInfoListByVehicleId(TrackAlarmMediaInfoRequest request) {
+        isNullCheck(request, REQUEST);
+        isEmptyCheck(request.getVehicleId(), VEHICLE_ID);
+        isNullCheck(request.getStartTime(), START_TIME);
+        isNullCheck(request.getEndTime(), END_TIME);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("id", "");
+
+        InternalRequest internalRequest =
+                buildInternalRequest(PREFIX_VIDEO_VERSION1 + "/query" + "/track",
+                        HttpMethodName.POST, request, param);
+        return this.invokeHttpClient(internalRequest, TrackAlarmVideoInfoResponse.class);
+    }
+
     private void isEmptyCheck(String keyValue, String keyName) {
         checkStringNotEmpty(keyValue, keyName + " should not be empty");
     }
@@ -1195,5 +1712,13 @@ public class DuGoClient extends AbstractBceClient {
 
     private void isNullCheck(Object keyValue, String keyName) {
         checkNotNull(keyValue, keyName + " should not be null");
+    }
+
+    private void isMatchPattern(String keyValue, String keyName, String pattern) {
+        checkPattern(keyValue, pattern, keyName + " format should be " + pattern);
+    }
+
+    private void isEnumValue(String keyValue, String keyName, Class<?> enumCls) {
+        checkValidValue(keyValue, enumCls, "the value of " + keyName + " is not valid");
     }
 }

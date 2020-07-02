@@ -21,6 +21,7 @@ public class SparkStepConfig extends StepConfig {
      * Configure the BOS path for step's .jar file.
      *
      * @param jar The BOS path for the step's .jar file.
+     *
      * @return SparkStepConfig
      */
     public SparkStepConfig withJar(String jar) {
@@ -32,6 +33,7 @@ public class SparkStepConfig extends StepConfig {
      * Configure the submit options for the step.
      *
      * @param submitOptions The main class for the step.
+     *
      * @return SparkStepConfig
      */
     public SparkStepConfig withSubmitOptions(String submitOptions) {
@@ -43,6 +45,7 @@ public class SparkStepConfig extends StepConfig {
      * Configure the arguments for the step.
      *
      * @param arguments The arguments for the step.
+     *
      * @return SparkStepConfig
      */
     public SparkStepConfig withArguments(String arguments) {
@@ -58,6 +61,7 @@ public class SparkStepConfig extends StepConfig {
      * "CancelAndWait": cancel the other pending steps and set the cluster's status to WAITING.
      *
      * @param actionOnFailure The action on step's failure.
+     *
      * @return SparkStepConfig
      */
     public SparkStepConfig withActionOnFailure(String actionOnFailure) {
@@ -69,6 +73,7 @@ public class SparkStepConfig extends StepConfig {
      * Configure the name of the step.
      *
      * @param name The name of the step.
+     *
      * @return SparkStepConfig
      */
     public SparkStepConfig withName(String name) {
@@ -80,7 +85,8 @@ public class SparkStepConfig extends StepConfig {
      * Configure the additional file for the step.
      *
      * @param remote The remote file of the additional file.
-     * @param local The local file of the additional file.
+     * @param local  The local file of the additional file.
+     *
      * @return SparkStepConfig
      */
     public SparkStepConfig withAdditionalFile(String remote, String local) {

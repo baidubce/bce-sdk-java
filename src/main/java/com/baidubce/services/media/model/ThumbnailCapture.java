@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Baidu, Inc.
+ * Copyright 2015-2020 Baidu, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -13,6 +13,14 @@
 
 package com.baidubce.services.media.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+
+/**
+ * The model which will be used to set capture info in creating thumbnail job
+ */
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ThumbnailCapture {
 
     private String mode = null;
@@ -24,6 +32,12 @@ public class ThumbnailCapture {
     private Integer intervalInSecond = null;
 
     private Integer frameNumber = null;
+
+    private Boolean skipBlackFrame = null;
+
+    private HighlightOutputCfg highlightOutputCfg = null;
+
+    private SpriteOutputCfg spriteOutputCfg = null;
 
     public String getMode() {
         return mode;
@@ -38,25 +52,9 @@ public class ThumbnailCapture {
         return this;
     }
 
-    public Integer getStartTimeInSecond() {
-        return startTimeInSecond;
-    }
-
-    public void setStartTimeInSecond(Integer startTimeInSecond) {
-        this.startTimeInSecond = startTimeInSecond;
-    }
-
     public ThumbnailCapture withStartTimeInSecond(Integer startTimeInSecond) {
         this.startTimeInSecond = startTimeInSecond;
         return this;
-    }
-
-    public Integer getEndTimeInSecond() {
-        return endTimeInSecond;
-    }
-
-    public void setEndTimeInSecond(Integer endTimeInSecond) {
-        this.endTimeInSecond = endTimeInSecond;
     }
 
     public ThumbnailCapture withEndTimeInSecond(Integer endTimeInSecond) {
@@ -64,25 +62,9 @@ public class ThumbnailCapture {
         return this;
     }
 
-    public Integer getIntervalInSecond() {
-        return intervalInSecond;
-    }
-
-    public void setIntervalInSecond(Integer intervalInSecond) {
-        this.intervalInSecond = intervalInSecond;
-    }
-    
     public ThumbnailCapture withIntervalInSecond(Integer intervalInSecond) {
         this.intervalInSecond = intervalInSecond;
         return this;
-    }
-
-    public Integer getFrameNumber() {
-        return frameNumber;
-    }
-
-    public void setFrameNumber(Integer frameNumber) {
-        this.frameNumber = frameNumber;
     }
 
     public ThumbnailCapture withFrameNumber(Integer frameNumber) {
@@ -90,10 +72,27 @@ public class ThumbnailCapture {
         return this;
     }
 
+    public ThumbnailCapture withSkipBlackFrame(Boolean skipBlackFrame) {
+        this.skipBlackFrame = skipBlackFrame;
+        return this;
+    }
+
+    public ThumbnailCapture withHighlightOutputCfg(HighlightOutputCfg highlightOutputCfg) {
+        this.highlightOutputCfg = highlightOutputCfg;
+        return this;
+    }
+
+    public ThumbnailCapture withSpriteOutputCfg(SpriteOutputCfg spriteOutputCfg) {
+        this.spriteOutputCfg = spriteOutputCfg;
+        return this;
+    }
+
+
     @Override
     public String toString() {
         return "ThumbnailCapture [mode=" + mode + ", startTimeInSecond=" + startTimeInSecond + ", endTimeInSecond="
-                + endTimeInSecond + ", intervalInSecond=" + intervalInSecond + ", frameNumber=" + frameNumber + "]";
+                + endTimeInSecond + ", intervalInSecond=" + intervalInSecond
+                + ", frameNumber=" + frameNumber +  ", skipBlackFrame=" + skipBlackFrame + "]";
     }
 
 }

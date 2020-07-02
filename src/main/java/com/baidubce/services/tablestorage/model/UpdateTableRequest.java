@@ -60,15 +60,15 @@ public class UpdateTableRequest extends AbstractTableStorageRequest {
         }
 
         long timeToLive = tableOption.getTimeToLive();
-        if (timeToLive >= 0) {
+        if (timeToLive >= TableStorageConstants.MIN_VALID_LIVE_TIME
+                || timeToLive == TableStorageConstants.FORERVER_LIVE_TIME) {
             buffer.append(",\"ttl\":");
             buffer.append(tableOption.getTimeToLive());
         } else if (timeToLive != TableStorageConstants.DEFAULT_LIVE_TIME) {
-            throw new BceClientException("The timeToLive's value cannot be a negative number other than "
-                    + "DEFAULT_LIVE_TIME " + TableStorageConstants.DEFAULT_LIVE_TIME
-                    + ". timeToLive=" + timeToLive + ".");
+            throw new BceClientException("The timeToLive's value must be "
+                    + TableStorageConstants.DEFAULT_LIVE_TIME + " or greater than "
+                    + TableStorageConstants.MIN_VALID_LIVE_TIME + ". timeToLive=" + timeToLive + ".");
         }
-
 
         int maxVersions = tableOption.getMaxVersions();
         if (maxVersions > 0) {

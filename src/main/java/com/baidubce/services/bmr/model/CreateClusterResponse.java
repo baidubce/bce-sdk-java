@@ -16,7 +16,7 @@ import com.baidubce.model.AbstractBceResponse;
 
 /**
  * Represent the response for the CreateClusterRequest.
- *
+ * <p>
  * The response contains the ID of the newly created cluster.
  */
 public class CreateClusterResponse extends AbstractBceResponse {

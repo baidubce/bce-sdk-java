@@ -12,7 +12,6 @@
  */
 package com.baidubce.services.bmr.model;
 
-
 /*
  *  description of Cloud Disk
  */
@@ -28,6 +27,12 @@ public class CdsItem {
         this.sizeInGB = sizeInGB;
     }
 
+    /**
+     * @param sizeInGB disk size
+     *
+     * @return CdsItem
+     */
+
     public CdsItem withSizeInGB(int sizeInGB) {
         this.sizeInGB = sizeInGB;
         return this;
@@ -41,6 +46,11 @@ public class CdsItem {
         this.mediumType = mediumType;
     }
 
+    /**
+     * @param mediumType for example ssd
+     *
+     * @return CdsItem
+     */
     public CdsItem withMediumType(String mediumType) {
         this.mediumType = mediumType;
         return this;

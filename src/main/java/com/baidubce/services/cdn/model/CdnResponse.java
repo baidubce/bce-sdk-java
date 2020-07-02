@@ -12,8 +12,8 @@
  */
 package com.baidubce.services.cdn.model;
 
-import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.BceResponseMetadata;
+import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -34,7 +34,7 @@ public class CdnResponse extends AbstractBceResponse {
     
     /**
      * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

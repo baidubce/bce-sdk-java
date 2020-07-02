@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright (c) 2014-2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -29,12 +29,14 @@ import com.baidubce.services.sms.model.QueryQuotaResponse;
 import com.baidubce.services.sms.model.SendMessageRequest;
 import com.baidubce.services.sms.model.SendMessageResponse;
 import com.baidubce.services.sms.model.SendMessageV2Request;
+import com.baidubce.services.sms.model.SendMessageV3Request;
 import com.baidubce.services.sms.model.SendMessageV2Response;
+import com.baidubce.services.sms.model.SendMessageV3Response;
 import com.baidubce.services.sms.model.SmsRequest;
 import com.baidubce.services.sms.model.SmsResponse;
 import com.baidubce.services.sms.model.StatReceiverRequest;
-import com.baidubce.services.sms.model.StatReceiverResponse;
-import com.baidubce.util.JsonUtils;
+import com.baidubce.services.sms.model.StatReceiverResponse;import com.baidubce.util.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <B>The entrance class for all client access to the API of SMS(Baidu message Service).</B>
@@ -54,7 +56,7 @@ public class SmsClient extends SmsClientSupport {
      * Constructs a new <code>SmsClient</code> instance with the specified configuration.
      *
      * @param config the specified configuration, default inherit super class
-     * <code>com.baidubce.BceClientConfiguration</code>
+     *               <code>com.baidubce.BceClientConfiguration</code>
      * @see com.baidubce.services.sms.SmsClientConfiguration
      */
     public SmsClient(SmsClientConfiguration config) {
@@ -74,7 +76,9 @@ public class SmsClient extends SmsClientSupport {
      * @return The response object which includes the id of message and the statistics of sending result
      * @see com.baidubce.services.sms.model.SendMessageRequest
      * @see com.baidubce.services.sms.model.SendMessageResponse
+     * @deprecated This method is deprecated and will be removed from sdk in the future when SMS3.0 is officially released, we suggest you to use sendMessage(SendMessageV3Request) instead.
      */
+    @Deprecated
     public SendMessageResponse sendMessage(SendMessageRequest request) {
         checkNotNull(request, "object request should not be null.");
         assertStringNotNullOrEmpty(request.getTemplateId(),
@@ -96,6 +100,11 @@ public class SmsClient extends SmsClientSupport {
         return this.invokeHttpClient(internalRequest, SendMessageResponse.class);
     }
 
+    /**
+     * Send message with parameter SendMessageV2Request
+     * @deprecated This method is deprecated and will be removed from sdk in the future when SMS3.0 is officially released, we suggest you to use sendMessage(SendMessageV3Request) instead.
+     */
+    @Deprecated
     public SendMessageV2Response sendMessage(SendMessageV2Request request) {
         checkNotNull(request, "request is required.");
         assertStringNotNullOrEmpty(request.getInvokeId(), "invokeId is required.");
@@ -108,6 +117,39 @@ public class SmsClient extends SmsClientSupport {
             response = this.invokeHttpClient(internalRequest, SendMessageV2Response.class);
         } catch (BceServiceException exception) {
             response = new SendMessageV2Response();
+            response.setCode(exception.getErrorCode());
+            response.setMessage(exception.getErrorMessage());
+            response.setRequestId(exception.getRequestId());
+        }
+        return response;
+    }
+
+    /**
+     * Send message
+     * <p>
+     * The interface of sending message by SMS3.0.
+     * To send message, you have to specify a template and a signature which are created by yourself.
+     * </p>
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.SendMessageV3Request</code>
+     * @return refer to <code>com.baidubce.services.sms.model.SendMessageV3Response</code>
+     */
+    public SendMessageV3Response sendMessage(SendMessageV3Request request) {
+        checkNotNull(request, "request is required.");
+        assertStringNotNullOrEmpty(request.getMobile(), "mobile is required.");
+        assertStringNotNullOrEmpty(request.getSignatureId(), "signatureId is required.");
+        assertStringNotNullOrEmpty(request.getTemplate(), "template is required.");
+        assertMapNotNullOrEmpty(request.getContentVar(), "contentVar is required.");
+        InternalRequest internalRequest = this.createGeneralRequest("api/v3/sendsms", request, HttpMethodName.POST);
+        if (!StringUtils.isBlank(request.getClientToken())) {
+            internalRequest.addParameter("clientToken", request.getClientToken());
+        }
+        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
+        SendMessageV3Response response;
+        try {
+            response = this.invokeHttpClient(internalRequest, SendMessageV3Response.class);
+        } catch (BceServiceException exception) {
+            response = new SendMessageV3Response();
             response.setCode(exception.getErrorCode());
             response.setMessage(exception.getErrorMessage());
             response.setRequestId(exception.getRequestId());

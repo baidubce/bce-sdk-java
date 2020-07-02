@@ -28,6 +28,15 @@ public class Cluster {
     private ClusterStatus status;
     private boolean serviceHaEnabled;
     private boolean safeModeEnabled;
+    private String templateType;
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
 
     public String getId() {
         return id;
@@ -93,11 +102,19 @@ public class Cluster {
         this.applications = applications;
     }
 
-    public Boolean getServiceHaEnabled() { return serviceHaEnabled; }
+    public Boolean getServiceHaEnabled() {
+        return serviceHaEnabled;
+    }
 
-    public void setServiceHaEnabled(Boolean serviceHaEnabled) { this.serviceHaEnabled = serviceHaEnabled; }
+    public void setServiceHaEnabled(Boolean serviceHaEnabled) {
+        this.serviceHaEnabled = serviceHaEnabled;
+    }
 
-    public Boolean getSafeModeEnabled() { return safeModeEnabled; }
+    public Boolean getSafeModeEnabled() {
+        return safeModeEnabled;
+    }
 
-    public void setSafeModeEnabled(Boolean safeModeEnabled) { this.safeModeEnabled = safeModeEnabled; }
+    public void setSafeModeEnabled(Boolean safeModeEnabled) {
+        this.safeModeEnabled = safeModeEnabled;
+    }
 }

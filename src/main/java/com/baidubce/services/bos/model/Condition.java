@@ -38,6 +38,11 @@ public class Condition {
     private List<String> ipAddress;
 
     /**
+     * the secureTransport of Bucket Acl
+     */
+    private boolean secureTransport;
+
+    /**
      * Gets time of Bucket Lifecycle.
      * @return time of Bucket Lifecycle.
      */
@@ -113,6 +118,33 @@ public class Condition {
         this.setReferer(referer);
         return this;
     }
+
+    /**
+     * Gets secureTransport of Bucket Acl.
+     * @return secureTransport of Bucket Acl
+     */
+    public boolean isSecureTransport() {
+        return secureTransport;
+    }
+
+    /**
+     * Sets secureTransport of Bucket Acl.
+     * @param secureTransport
+     */
+    public void setSecureTransport(boolean secureTransport) {
+        this.secureTransport = secureTransport;
+    }
+
+    /**
+     * Sets secureTransport of Bucket Acl.
+     * @param secureTransport The secureTransport of Bucket Acl
+     * @return this object.
+     */
+    public Condition withSecureTransport(boolean secureTransport) {
+        this.setSecureTransport(secureTransport);
+        return this;
+    }
+
 
     @Override
     public String toString() {

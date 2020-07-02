@@ -17,27 +17,27 @@ public class Instance {
     private String privateIpAddress;
     private String publicIpAddress;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return this.id;
     }
 
-    public void setPrivateIpAddress(String privateIpAddress) {
-        this.privateIpAddress = privateIpAddress;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPrivateIpAddress() {
         return this.privateIpAddress;
     }
 
-    public void setPublicIpAddress(String publicIpAddress) {
-        this.publicIpAddress = publicIpAddress;
+    public void setPrivateIpAddress(String privateIpAddress) {
+        this.privateIpAddress = privateIpAddress;
     }
 
     public String getPublicIpAddress() {
         return this.publicIpAddress;
+    }
+
+    public void setPublicIpAddress(String publicIpAddress) {
+        this.publicIpAddress = publicIpAddress;
     }
 }
