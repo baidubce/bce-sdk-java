@@ -24,6 +24,8 @@ import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.finance.SupervisorBalanceQueryRequest;
+import com.baidubce.services.billing.model.finance.SupervisorBalanceResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
@@ -38,6 +40,8 @@ import com.baidubce.services.billing.model.price.PricingQueryResponse;
 import com.baidubce.services.billing.model.renew.RenewResourceListRequest;
 import com.baidubce.services.billing.model.renew.RenewResourceResponse;
 import com.baidubce.services.billing.model.renew.ResourceAutoRenewRequest;
+import com.baidubce.util.JsonUtils;
+import com.google.common.collect.Lists;
 
 /**
  * examples for billing open api
@@ -47,6 +51,8 @@ public class BillingExample {
     private static final String ACCESS_KEY_ID = "ak ";
     private static final String SECRET_ACCESS_KEY = "sk ";
     private static final String ENDPOINT = "https://billing endpoint";
+    private static final String TEST_ACCOUNT_ID = "test id";
+
 
     public static void main(String[] args) {
         sampleForQueryRenewResourceList();
@@ -56,6 +62,7 @@ public class BillingExample {
         sampleForQueryOrderList();
         sampleForgetSpecificCptPrice();
         sampleForgetSpecificCpcPrice();
+        sampleForCashBalanceQuery();
     }
 
     private static void sampleForQueryRenewResourceList() {
@@ -270,6 +277,24 @@ public class BillingExample {
         System.out.println("    pagesize:  " + response.getPageSize());
         System.out.println("    size:  " + response.getTotalCount());
         System.out.println("    result:  " + response.getResult());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForCashBalanceQuery() {
+
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        SupervisorBalanceQueryRequest request = new SupervisorBalanceQueryRequest();
+        request.setAccountIds(Lists.newArrayList(TEST_ACCOUNT_ID));
+
+        SupervisorBalanceResponse response = client.balanceQuery(request);
+
+        System.out.println("==================================");
+        System.out.println("SupervisorBalance response result:");
+        System.out.println("    result:  " + JsonUtils.toJsonString(response.getResult()));
         System.out.println("==================================");
     }
 }

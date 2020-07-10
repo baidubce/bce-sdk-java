@@ -114,7 +114,7 @@ public class VolumeModel {
     /**
      * Whether to encrypt
      */
-    private String encrypted;
+    private boolean encrypted;
 
     public String getId() {
         return id;
@@ -252,11 +252,11 @@ public class VolumeModel {
         this.tags = tags;
     }
 
-    public String getEncrypted() {
+    public boolean isEncrypted() {
         return encrypted;
     }
 
-    public void setEncrypted(String encrypted) {
+    public void setEncrypted(boolean encrypted) {
         this.encrypted = encrypted;
     }
 
@@ -280,7 +280,7 @@ public class VolumeModel {
                 ", sourceSnapshotId='" + sourceSnapshotId + '\'' +
                 ", autoSnapshotPolicy=" + autoSnapshotPolicy +
                 ", tags=" + tags +
-                ", encrypted='" + encrypted + '\'' +
+                ", encrypted=" + encrypted +
                 '}';
     }
 }

@@ -120,6 +120,9 @@ import com.baidubce.services.lss.model.RecordingClipRequest;
 import com.baidubce.services.lss.model.RecordingClipResponse;
 import com.baidubce.services.lss.model.RefreshSessionRequest;
 import com.baidubce.services.lss.model.RefreshSessionResponse;
+import com.baidubce.services.lss.model.ResetDomainStreamRequest;
+import com.baidubce.services.lss.model.ResetDomainStreamRequestBody;
+import com.baidubce.services.lss.model.ResetDomainStreamResponse;
 import com.baidubce.services.lss.model.ResumeAppStreamRequest;
 import com.baidubce.services.lss.model.ResumeAppStreamResponse;
 import com.baidubce.services.lss.model.ResumeDomainStreamRequest;
@@ -220,6 +223,11 @@ public class LssClient extends AbstractBceClient {
      * Parameter for list live session with status.
      */
     private static final String STATUS = "status";
+
+    /**
+     * Parameter for reseting live session.
+     */
+    private static final String RESET = "reset";
 
     /**
      * Parameter for pausing live session.
@@ -1559,6 +1567,60 @@ public class LssClient extends AbstractBceClient {
         return getStream(request);
     }
 
+
+    /**
+     * reset domain's stream in the live stream service.
+     *
+     * @param request The request object containing all options for reset a domain's stream
+     * @return the response
+     */
+    public ResetDomainStreamResponse resetDomainStream(ResetDomainStreamRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "Domain should NOT be empty.");
+        checkStringNotEmpty(request.getApp(), "App should NOT be empty.");
+        checkStringNotEmpty(request.getStream(), "Stream should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+                request, LIVE_DOMAIN, request.getDomain(),
+                LIVE_APP, request.getApp(),
+                LIVE_STREAM, request.getStream());
+        internalRequest.addParameter(RESET, null);
+        if (request.getResumeTimeInSecond() != null) {
+            fillRequestPayload(internalRequest, new ResetDomainStreamRequestBody(request.getResumeTimeInSecond()));
+        }
+        return invokeHttpClient(internalRequest, ResetDomainStreamResponse.class);
+    }
+
+    /**
+     * reset domain's stream in the live stream service.
+     *
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream to reset
+     * @return the response
+     */
+    public ResetDomainStreamResponse resetDomainStream(String domain, String app, String stream) {
+        ResetDomainStreamRequest request = new ResetDomainStreamRequest();
+        request.withDomain(domain).withApp(app).withStream(stream);
+        return resetDomainStream(request);
+    }
+
+    /**
+     * reset domain's stream in the live stream service with resume timestamp.
+     *
+     * @param domain The requested domain which the specific stream belongs to
+     * @param app The requested app which the specific stream belongs to
+     * @param stream The requested stream to reset
+     * @param resumeTimeInSecond The timestamp to resume stream, timeunit : second
+     * @return the response
+     */
+    public ResetDomainStreamResponse resetDomainStream(String domain, String app, String stream,
+                                                       Long resumeTimeInSecond) {
+        ResetDomainStreamRequest request = new ResetDomainStreamRequest();
+        request.withDomain(domain).withApp(app).withStream(stream).withResumeTimeInSecond(resumeTimeInSecond);
+        return resetDomainStream(request);
+    }
 
     /**
      * pause domain's stream in the live stream service.

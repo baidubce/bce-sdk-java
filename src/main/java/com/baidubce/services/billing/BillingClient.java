@@ -43,6 +43,8 @@ import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.finance.SupervisorBalanceQueryRequest;
+import com.baidubce.services.billing.model.finance.SupervisorBalanceResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
@@ -332,6 +334,22 @@ public class BillingClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, FINANCE, SUPERVISOR,
                 CASH, TRANSACTION);
         return invokeHttpClient(internalRequest, SupervisorTransactionResponse.class);
+    }
+
+    /**
+     * get balance info
+     *
+     * @param request request contain accountIds param
+     * @return balance result
+     */
+    public SupervisorBalanceResponse balanceQuery(SupervisorBalanceQueryRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkNotNull(request.getAccountIds(), "The parameter accountIds should NOT be null");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, FINANCE, SUPERVISOR,
+                CASH, BALANCE);
+        return invokeHttpClient(internalRequest, SupervisorBalanceResponse.class);
     }
 
     /**
