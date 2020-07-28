@@ -23,33 +23,38 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.kms.model.EncryptedRsaKey;
+import com.baidubce.services.kms.model.KmsResponse;
+import com.baidubce.services.kms.model.ImportAsymmetricKeyRequest;
+import com.baidubce.services.kms.model.ImportKeyRequest;
+import com.baidubce.services.kms.model.CreateKeyResponse;
+import com.baidubce.services.kms.model.CreateKeyRequest;
+import com.baidubce.services.kms.model.GetParametersForImportResponse;
+import com.baidubce.services.kms.model.GetParametersForImportRequest;
+import com.baidubce.services.kms.model.Constants;
+import com.baidubce.services.kms.model.ListKeysRequest;
+import com.baidubce.services.kms.model.ListKeysResponse;
+import com.baidubce.services.kms.model.EncryptRequest;
+import com.baidubce.services.kms.model.EncryptResponse;
+import com.baidubce.services.kms.model.DecryptRequest;
+import com.baidubce.services.kms.model.DecryptResponse;
+import com.baidubce.services.kms.model.GenerateDataKeyRequest;
+import com.baidubce.services.kms.model.GenerateDataKeyResponse;
+import com.baidubce.services.kms.model.EnableKeyRequest;
+import com.baidubce.services.kms.model.DisableKeyRequest;
+import com.baidubce.services.kms.model.ScheduleKeyDeletionRequest;
+import com.baidubce.services.kms.model.ScheduleKeyDeletionResponse;
+import com.baidubce.services.kms.model.CancelKeyDeletionRequest;
+import com.baidubce.services.kms.model.DescribeKeyRequest;
+import com.baidubce.services.kms.model.DescribeKeyResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.baidubce.services.kms.model.CancelKeyDeletionRequest;
-import com.baidubce.services.kms.model.Constants;
-import com.baidubce.services.kms.model.CreateKeyRequest;
-import com.baidubce.services.kms.model.CreateKeyResponse;
-import com.baidubce.services.kms.model.DecryptRequest;
-import com.baidubce.services.kms.model.DecryptResponse;
-import com.baidubce.services.kms.model.DescribeKeyRequest;
-import com.baidubce.services.kms.model.DescribeKeyResponse;
-import com.baidubce.services.kms.model.DisableKeyRequest;
-import com.baidubce.services.kms.model.EnableKeyRequest;
-import com.baidubce.services.kms.model.EncryptRequest;
-import com.baidubce.services.kms.model.EncryptResponse;
-import com.baidubce.services.kms.model.GenerateDataKeyRequest;
-import com.baidubce.services.kms.model.GenerateDataKeyResponse;
-import com.baidubce.services.kms.model.ListKeysRequest;
-import com.baidubce.services.kms.model.ListKeysResponse;
-import com.baidubce.services.kms.model.ScheduleKeyDeletionRequest;
-import com.baidubce.services.kms.model.ScheduleKeyDeletionResponse;
-import com.baidubce.services.kms.model.KmsResponse;
 
 /**
  * Provides the client for accessing the Key Manager Service.
@@ -94,16 +99,15 @@ public class KmsClient extends AbstractBceClient {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeStringField(Constants.FIELD_DESCRIPTION, request.getDescription());
             jsonGenerator.writeStringField(Constants.FIELD_KEYUSAGE, request.getKeyUsage());
+            jsonGenerator.writeStringField(Constants.FIELD_KEYSPEC, request.getKeySpec());
+            jsonGenerator.writeStringField(Constants.FIELD_PROTECTEDBY, request.getProtectedBy());
+            jsonGenerator.writeStringField(Constants.FIELD_ORIGIN, request.getOrigin());
             jsonGenerator.writeEndObject();
         } catch (IOException e) {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -146,11 +150,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -185,11 +185,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -218,17 +214,14 @@ public class KmsClient extends AbstractBceClient {
         try {
             jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
             jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField(Constants.FIELD_KEYID, request.getKeyId());
             jsonGenerator.writeStringField(Constants.FIELD_CIPHERTEXT, request.getCiphertext());
             jsonGenerator.writeEndObject();
         } catch (IOException e) {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -265,11 +258,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -301,11 +290,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -337,11 +322,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -375,11 +356,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
 
@@ -412,11 +389,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
         
@@ -449,11 +422,7 @@ public class KmsClient extends AbstractBceClient {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
         } finally {
             if (jsonGenerator != null) {
-                try {
-                    jsonGenerator.close();
-                } catch (IOException e) {
-                    throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
-                }
+                jsonGenerator.close();
             }
         }
         
@@ -461,6 +430,119 @@ public class KmsClient extends AbstractBceClient {
         DescribeKeyResponse response = this.invokeHttpClient(internalRequest, DescribeKeyResponse.class);
         return response;
     }
+
+    public GetParametersForImportResponse getParametersForImport(GetParametersForImportRequest request)
+            throws Exception {
+        checkNotNull(request, Constants.REQUEST_SHOULD_NOT_BE_NULL);
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter(Constants.ACTION, "GetParametersForImport");
+
+        StringWriter writer = new StringWriter();
+        JsonGenerator jsonGenerator = null;
+        try {
+            jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField(Constants.FIELD_KEYID, request.getKeyId());
+            jsonGenerator.writeStringField(Constants.FIELD_WRAPPINGALGORITHM, request.getWrappingAlgorithm());
+            jsonGenerator.writeStringField(Constants.FIELD_WRAPPINGKEYSPEC, request.getWrappingKeySpec());
+            jsonGenerator.writeStringField(Constants.FIELD_PUBLICKEYENCODING, request.getPublicKeyEncoding());
+            jsonGenerator.writeEndObject();
+        } catch (IOException e) {
+            throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
+        } finally {
+            if (jsonGenerator != null) {
+                jsonGenerator.close();
+            }
+        }
+
+        setInternalRequest(internalRequest, writer);
+        GetParametersForImportResponse response = this.invokeHttpClient(internalRequest,
+                GetParametersForImportResponse.class);
+        return response;
+    }
+
+    public KmsResponse importKey(ImportKeyRequest request) throws Exception {
+        checkNotNull(request, Constants.REQUEST_SHOULD_NOT_BE_NULL);
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter(Constants.ACTION, "ImportKey");
+
+        StringWriter writer = new StringWriter();
+        JsonGenerator jsonGenerator = null;
+        try {
+            jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField(Constants.FIELD_KEYID, request.getKeyId());
+            jsonGenerator.writeStringField(Constants.FIELD_IMPORTTOKEN, request.getImportToken());
+            jsonGenerator.writeStringField(Constants.FIELD_ENCRYPTEDKEY, request.getEncryptedKey());
+            jsonGenerator.writeStringField(Constants.FIELD_KEYSPEC, request.getKeySpec());
+            jsonGenerator.writeStringField(Constants.FIELD_KEYUSAGE, request.getKeyUsage());
+            jsonGenerator.writeEndObject();
+        } catch (IOException e) {
+            throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
+        } finally {
+            if (jsonGenerator != null) {
+                jsonGenerator.close();
+            }
+        }
+
+        setInternalRequest(internalRequest, writer);
+        KmsResponse response = this.invokeHttpClient(internalRequest, KmsResponse.class);
+        return response;
+    }
+
+    public KmsResponse importAsymmetricKey(ImportAsymmetricKeyRequest request) throws Exception {
+        checkNotNull(request, Constants.REQUEST_SHOULD_NOT_BE_NULL);
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter(Constants.ACTION, "ImportAsymmetricKey");
+
+        StringWriter writer = new StringWriter();
+        JsonGenerator jsonGenerator = null;
+        try {
+            jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField(Constants.FIELD_KEYID, request.getKeyId());
+            jsonGenerator.writeStringField(Constants.FIELD_IMPORTTOKEN, request.getImportToken());
+            jsonGenerator.writeStringField(Constants.FIELD_ASYMMETRICKEYSPEC, request.getAsymmetricKeySpec());
+            jsonGenerator.writeStringField(Constants.FIELD_ASYMMETRICKEYUSAGE, request.getAsymmetricKeyUsage());
+            jsonGenerator.writeStringField(Constants.FIELD_ENCRYPTEDKEYENCRYPTIONKEY,
+                    request.getEncryptedKeyEncryptionKey());
+            if (request.getEncryptedRsaKey() != null) {
+                EncryptedRsaKey rsaKey = request.getEncryptedRsaKey();
+                jsonGenerator.writeObjectFieldStart(Constants.FIELD_ENCRYPTEDRSAKEY);
+                jsonGenerator.writeStringField("publicKeyDer", rsaKey.getPublicKeyDer());
+                jsonGenerator.writeStringField("encryptedD", rsaKey.getEncryptedD());
+                jsonGenerator.writeStringField("encryptedP", rsaKey.getEncryptedP());
+                jsonGenerator.writeStringField("encryptedQ", rsaKey.getEncryptedQ());
+                jsonGenerator.writeStringField("encryptedDp", rsaKey.getEncryptedDp());
+                jsonGenerator.writeStringField("encryptedDq", rsaKey.getEncryptedDq());
+                jsonGenerator.writeStringField("encryptedQinv", rsaKey.getEncryptedQinv());
+                jsonGenerator.writeEndObject();
+            }
+            if (request.getEncryptedSm2Key() != null) {
+                throw new BceClientException(Constants.FAIL_TO_SUPPORT, new Exception());
+                // EncryptedSm2Key sm2Key = request.getEncryptedSm2Key();
+                // jsonGenerator.writeObjectFieldStart(Constants.FIELD_ENCRYPTEDSM2KEY);
+                // jsonGenerator.writeStringField("publicKeyDer", sm2Key.getPublicKeyDer());
+                // jsonGenerator.writeStringField("encryptedPrivateKey", sm2Key.getEncryptedPrivateKey());
+                // jsonGenerator.writeEndObject();
+            }
+            jsonGenerator.writeEndObject();
+        } catch (IOException e) {
+            throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
+        } finally {
+            if (jsonGenerator != null) {
+                jsonGenerator.close();
+            }
+        }
+
+        setInternalRequest(internalRequest, writer);
+        KmsResponse response = this.invokeHttpClient(internalRequest, KmsResponse.class);
+        return response;
+    }
+
 
     /**
      * set InternalRequest with StringWriter

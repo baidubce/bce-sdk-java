@@ -21,14 +21,23 @@ public class CreateKeyRequest extends GenericKmsRequest {
 
     private String description;
 
+    private String protectedBy;
+
+    private String keySpec;
+
     private String keyUsage;
+
+    private String origin;
 
     public CreateKeyRequest() {
     }
 
-    public CreateKeyRequest(String description, String keyUsage) {
+    public CreateKeyRequest(String description, String protectedBy, String keyUsage, String keySpec, String origin) {
         this.setDescription(description);
+        this.setProtectedBy(protectedBy);
+        this.setKeySpec(keySpec);
         this.setKeyUsage(keyUsage);
+        this.setOrigin(origin);
     }
     
     /**
@@ -53,6 +62,29 @@ public class CreateKeyRequest extends GenericKmsRequest {
 
     public String getKeyUsage() {
         return keyUsage;
+    }
+
+    public String getProtectedBy() {
+        return protectedBy;
+    }
+
+    public void setProtectedBy(String protectedBy) {
+        this.protectedBy = protectedBy;
+    }
+    public String getKeySpec() {
+        return keySpec;
+    }
+
+    public void setKeySpec(String keySpec) {
+        this.keySpec = keySpec;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 }
 // vim: et tw=100 ts=4 sw=4 cc=120

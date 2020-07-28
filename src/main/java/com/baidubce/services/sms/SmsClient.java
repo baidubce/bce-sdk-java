@@ -35,8 +35,22 @@ import com.baidubce.services.sms.model.SendMessageV3Response;
 import com.baidubce.services.sms.model.SmsRequest;
 import com.baidubce.services.sms.model.SmsResponse;
 import com.baidubce.services.sms.model.StatReceiverRequest;
-import com.baidubce.services.sms.model.StatReceiverResponse;import com.baidubce.util.JsonUtils;
+import com.baidubce.services.sms.model.StatReceiverResponse;
+import com.baidubce.services.sms.model.v3.CreateSignatureRequest;
+import com.baidubce.services.sms.model.v3.CreateSignatureResponse;
+import com.baidubce.services.sms.model.v3.DeleteSignatureRequest;
+import com.baidubce.services.sms.model.v3.GetSignatureRequest;
+import com.baidubce.services.sms.model.v3.GetSignatureResponse;
+import com.baidubce.services.sms.model.v3.GetTemplateRequest;
+import com.baidubce.services.sms.model.v3.GetTemplateResponse;
+import com.baidubce.services.sms.model.v3.ModifySignatureRequest;
+import com.baidubce.services.sms.model.v3.ModifyTemplateRequest;
+import com.baidubce.services.sms.model.v3.QueryQuotaRateResponse;
+import com.baidubce.services.sms.model.v3.UpdateQuotaRateRequest;
+import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.UUID;
 
 /**
  * <B>The entrance class for all client access to the API of SMS(Baidu message Service).</B>
@@ -102,6 +116,7 @@ public class SmsClient extends SmsClientSupport {
 
     /**
      * Send message with parameter SendMessageV2Request
+     *
      * @deprecated This method is deprecated and will be removed from sdk in the future when SMS3.0 is officially released, we suggest you to use sendMessage(SendMessageV3Request) instead.
      */
     @Deprecated
@@ -139,7 +154,6 @@ public class SmsClient extends SmsClientSupport {
         assertStringNotNullOrEmpty(request.getMobile(), "mobile is required.");
         assertStringNotNullOrEmpty(request.getSignatureId(), "signatureId is required.");
         assertStringNotNullOrEmpty(request.getTemplate(), "template is required.");
-        assertMapNotNullOrEmpty(request.getContentVar(), "contentVar is required.");
         InternalRequest internalRequest = this.createGeneralRequest("api/v3/sendsms", request, HttpMethodName.POST);
         if (!StringUtils.isBlank(request.getClientToken())) {
             internalRequest.addParameter("clientToken", request.getClientToken());
@@ -210,6 +224,26 @@ public class SmsClient extends SmsClientSupport {
     }
 
     /**
+     * Create the template
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.CreateTemplateRequest</code>
+     * @return The response object which indicates the detail of newly created template, refer to
+     * <code>com.baidubce.services.sms.model.v3.CreateTemplateResponse</code>
+     */
+    public com.baidubce.services.sms.model.v3.CreateTemplateResponse createTemplate(
+            com.baidubce.services.sms.model.v3.CreateTemplateRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getContent(), "content should not be null or empty");
+        assertStringNotNullOrEmpty(request.getCountryType(), "countryType should not be null or empty");
+        assertStringNotNullOrEmpty(request.getName(), "name should not be null or empty");
+        assertStringNotNullOrEmpty(request.getSmsType(), "smsType should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest("/sms/v3/template", request, HttpMethodName.POST);
+        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
+        internalRequest.addParameter("clientToken", UUID.randomUUID().toString());
+        return this.invokeHttpClient(internalRequest, com.baidubce.services.sms.model.v3.CreateTemplateResponse.class);
+    }
+
+    /**
      * Delete message template
      *
      * @param request The request object which includes the id of template which is ready to be deleted
@@ -225,6 +259,20 @@ public class SmsClient extends SmsClientSupport {
     }
 
     /**
+     * Delete the template
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.DeleteTemplateRequest</code>
+     */
+    public void deleteTemplate(
+            com.baidubce.services.sms.model.v3.DeleteTemplateRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getTemplateId(), "templateId should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest("/sms/v3/template",
+                request, HttpMethodName.DELETE, request.getTemplateId());
+        this.invokeHttpClient(internalRequest, SmsResponse.class);
+    }
+
+    /**
      * Get the detail of message template
      *
      * @param request The request object which includes the id of template which is ready to be get
@@ -232,7 +280,9 @@ public class SmsClient extends SmsClientSupport {
      * <code>com.baidubce.services.sms.model.GetTemplateDetailResponse</code>
      * @see com.baidubce.services.sms.model.GetTemplateDetailRequest
      * @see com.baidubce.services.sms.model.GetTemplateDetailResponse
+     * @deprecated This method is deprecated and will be removed from sdk in the future when SMS3.0 is officially released, we suggest you to use this.getTemplate(com.baidubce.services.sms.model.v3.GetTemplateRequest) instead.
      */
+    @Deprecated
     public GetTemplateDetailResponse getTemplateDetail(GetTemplateDetailRequest request) {
         checkNotNull(request, "object request should not be null.");
         assertStringNotNullOrEmpty(request.getTemplateId(), "object templateId should not be null or empty.");
@@ -264,6 +314,7 @@ public class SmsClient extends SmsClientSupport {
      * @return The response object which includes the detail of sending quota, refer to
      * <code>com.baidubce.services.sms.model.QueryQuotaResponse</code>
      * @see com.baidubce.services.sms.model.QueryQuotaResponse
+     * @deprecated This method is deprecated and will be removed from sdk in the future when SMS3.0 is officially released, we suggest you to use this.queryQuotaRate() instead.
      */
     public QueryQuotaResponse queryQuota(SmsRequest request) {
         checkNotNull(request, "object request should not be null.");
@@ -289,4 +340,124 @@ public class SmsClient extends SmsClientSupport {
         return this.invokeHttpClient(internalRequest, StatReceiverResponse.class);
     }
 
+    /**
+     * Create the signature
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.CreateSignatureRequest</code>
+     * @return The response object which indicates the detail of newly created signature, refer to <code>com.baidubce.services.sms.model.v3.CreateSignatureResponse</code>
+     */
+    public CreateSignatureResponse createSignature(CreateSignatureRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getContent(), "content should not be null or empty");
+        assertStringNotNullOrEmpty(request.getContentType(), "contentType should not be null or empty");
+        assertStringNotNullOrEmpty(request.getCountryType(), "countryType should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/signatureApply", request, HttpMethodName.POST);
+        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
+        internalRequest.addParameter("clientToken", UUID.randomUUID().toString());
+        return this.invokeHttpClient(internalRequest, CreateSignatureResponse.class);
+    }
+
+    /**
+     * Delete the signature
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.DeleteSignatureRequest</code>
+     */
+    public void deleteSignature(DeleteSignatureRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getSignatureId(), "signatureId should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/signatureApply", request, HttpMethodName.DELETE, request.getSignatureId());
+        this.invokeHttpClient(internalRequest, SmsResponse.class);
+    }
+
+    /**
+     * Modify the signature when audit failure
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.ModifySignatureRequest</code>
+     */
+    public void modifySignature(ModifySignatureRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getSignatureId(), "signatureId should not be null or empty");
+        assertStringNotNullOrEmpty(request.getContent(), "content should not be null or empty");
+        assertStringNotNullOrEmpty(request.getContentType(), "contentType should not be null or empty");
+        assertStringNotNullOrEmpty(request.getCountryType(), "countryType should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/signatureApply", request, HttpMethodName.PUT, request.getSignatureId());
+        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
+        this.invokeHttpClient(internalRequest, SmsResponse.class);
+    }
+
+    /**
+     * Get signature detail info
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.GetSignatureRequest</code>
+     * @return The response object which includes the signature detail info, refer to
+     * <code>com.baidubce.services.sms.model.v3.GetSignatureResponse</code>
+     */
+    public GetSignatureResponse getSignature(GetSignatureRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getSignatureId(), "signatureId should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/signatureApply", request, HttpMethodName.GET, request.getSignatureId());
+        return this.invokeHttpClient(internalRequest, GetSignatureResponse.class);
+    }
+
+    /**
+     * Modify the template when audit failure
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.ModifyTemplateRequest</code>
+     */
+    public void modifyTemplate(ModifyTemplateRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getTemplateId(), "templateId should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest("/sms/v3/template",
+                request, HttpMethodName.PUT, request.getTemplateId());
+        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
+        this.invokeHttpClient(internalRequest, SmsResponse.class);
+    }
+
+    /**
+     * Get template detail info
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.GetTemplateRequest</code>
+     * @return The response object which includes the template detail info, refer to
+     * <code>com.baidubce.services.sms.model.v3.GetTemplateResponse</code>
+     */
+    public GetTemplateResponse getTemplate(GetTemplateRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getTemplateId(), "templateId should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/template", request, HttpMethodName.GET, request.getTemplateId());
+        return this.invokeHttpClient(internalRequest, GetTemplateResponse.class);
+    }
+
+    /**
+     * Update quota and rate-limit
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.UpdateQuotaRateRequest</code>
+     */
+    public void updateQuotaRate(UpdateQuotaRateRequest request) {
+        checkNotNull(request, "object request should not be null");
+        checkNotNull(request.getQuotaPerDay(), "quotaPerDay should not be null or empty");
+        checkNotNull(request.getQuotaPerMonth(), "quotaPerMonth should not be null or empty");
+        checkNotNull(request.getRateLimitPerDay(), "rateLimitPerDay should not be null or empty");
+        checkNotNull(request.getRateLimitPerHour(), "rateLimitPerHour should not be null or empty");
+        checkNotNull(request.getRateLimitPerMinute(), "rateLimitPerMinute should not be null or empty");
+        InternalRequest internalRequest = this.createGeneralRequest("/sms/v3/quota", request, HttpMethodName.PUT);
+        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
+        this.invokeHttpClient(internalRequest, SmsResponse.class);
+    }
+
+    /**
+     * Query quota and rate-limit detail
+     *
+     * @return The response object which includes the detail quota and rate-limit info, refer to <code>com.baidubce.services.sms.model.v3.QueryQuotaRateResponse</code>
+     */
+    public QueryQuotaRateResponse queryQuotaRate() {
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/quota", new SmsRequest(), HttpMethodName.GET);
+        internalRequest.addParameter("userQuery", "");
+        return this.invokeHttpClient(internalRequest, QueryQuotaRateResponse.class);
+    }
 }

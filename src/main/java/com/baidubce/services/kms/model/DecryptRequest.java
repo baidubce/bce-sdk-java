@@ -19,13 +19,16 @@ import com.baidubce.auth.BceCredentials;
  */
 public class DecryptRequest extends GenericKmsRequest {
 
+    private String keyId;
+
     private String ciphertext;
 
     public DecryptRequest() {
     }
 
-    public DecryptRequest(String ciphertext) {
-        this.setCiphertext(ciphertext);
+    public DecryptRequest(String keyId, String ciphertext) {
+        this.keyId = keyId;
+        this.ciphertext = ciphertext;
     }
 
     /**
@@ -42,6 +45,14 @@ public class DecryptRequest extends GenericKmsRequest {
 
     public String getCiphertext() {
         return ciphertext;
+    }
+
+    public String getKeyId() {
+        return keyId;
+    }
+
+    public void setKeyId(String keyId) {
+        this.keyId = keyId;
     }
 }
 // vim: et tw=100 ts=4 sw=4 cc=120

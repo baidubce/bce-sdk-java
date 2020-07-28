@@ -31,6 +31,10 @@ public class Constants {
     
     public static final String FIELD_KEYSPEC = "keySpec";
 
+    public static final String FIELD_PROTECTEDBY = "protectedBy";
+
+    public static final String FIELD_ORIGIN = "origin";
+
     public static final String FIELD_NUMBEROFBYTES = "numberOfBytes";
 
     public static final String FIELD_CIPHERTEXT = "ciphertext";
@@ -41,6 +45,26 @@ public class Constants {
 
     public static final String FIELD_MARKER = "marker";
 
+    public static final String FIELD_WRAPPINGALGORITHM = "wrappingAlgorithm";
+
+    public static final String FIELD_WRAPPINGKEYSPEC = "wrappingKeySpec";
+
+    public static final String FIELD_PUBLICKEYENCODING = "publicKeyEncoding";
+
+    public static final String FIELD_IMPORTTOKEN = "importToken";
+
+    public static final String FIELD_ENCRYPTEDKEY = "encryptedKey";
+
+    public static final String FIELD_ASYMMETRICKEYSPEC = "asymmetricKeySpec";
+
+    public static final String FIELD_ASYMMETRICKEYUSAGE = "asymmetricKeyUsage";
+
+    public static final String FIELD_ENCRYPTEDRSAKEY = "encryptedRsaKey";
+
+    public static final String FIELD_ENCRYPTEDSM2KEY = "encryptedSm2Key";
+
+    public static final String FIELD_ENCRYPTEDKEYENCRYPTIONKEY = "encryptedKeyEncryptionKey";
+
     public static final String REQUEST_SHOULD_NOT_BE_NULL = "request should not be null";
 
     public static final String FAIL_TO_GENERATE_JSON = "Fail to generate json";
@@ -49,11 +73,21 @@ public class Constants {
 
     public static final String FAIL_TO_GET_UTF8_BYTES = "Fail to get UTF-8 bytes";
 
+    public static final String FAIL_TO_SUPPORT = "Sorry, don't support";
+
+
     public enum KeySpec {
+        BAIDU_ASE_256("BAIDU_ASE_256"),
 
         AES_128("AES_128"),
 
-        AES_256("AES_256");
+        AES_256("AES_256"),
+
+        RSA_1024("RSA_1024"),
+
+        RSA_2048("RSA_2048"),
+
+        RSA_4096("RSA_4096");
 
         private final String specific;
 
@@ -62,6 +96,59 @@ public class Constants {
         }
 
         @Override 
+        public String toString() {
+            return this.specific;
+        }
+    }
+
+    public enum Origin {
+        BAIDU_KMS("BAIDU_KMS"),
+
+        EXTERNAL("EXTERNAL");
+
+        private final String specific;
+
+        private Origin(String specific) {
+            this.specific = specific;
+        }
+
+        @Override
+        public String toString() {
+            return this.specific;
+        }
+    }
+
+    public enum ProtectedBy {
+        HSM("HSM"),
+
+        SOFTWARE("SOFTWARE");
+
+        private final String specific;
+
+        private ProtectedBy(String specific) {
+            this.specific = specific;
+        }
+
+        @Override
+        public String toString() {
+            return this.specific;
+        }
+    }
+
+    public enum PublicKeyEncoding {
+        RAW_HEX("RAW_HEX"),
+
+        BASE64("BASE64"),
+
+        PEM("PEM");
+
+        private final String specific;
+
+        private PublicKeyEncoding(String specific) {
+            this.specific = specific;
+        }
+
+        @Override
         public String toString() {
             return this.specific;
         }

@@ -50,7 +50,22 @@ public class KeyMetadata {
      */ 
     private String keyUsage = null;
 
+    /**
+     * The region of master key
+     */
     private String region = null;
+
+    /**
+     * The origin of master key
+     */
+    private String origin = null;
+
+    /**
+     *The keySpec of master key
+     */
+    private String keySpec = null;
+
+    private String protectedBy = null;
 
     public void setKeyId(String keyId) {
         this.keyId = keyId;
@@ -111,6 +126,30 @@ public class KeyMetadata {
 
     public String getDeletionDate() {
         return deletionDate;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getKeySpec() {
+        return keySpec;
+    }
+
+    public void setKeySpec(String keySpec) {
+        this.keySpec = keySpec;
+    }
+
+    public String getProtectedBy() {
+        return protectedBy;
+    }
+
+    public void setProtectedBy(String protectedBy) {
+        this.protectedBy = protectedBy;
     }
 }
 // vim: et tw=100 ts=4 sw=4 cc=120
