@@ -84,5 +84,10 @@ public enum  InstanceAction {
     /**
      * The action to change instance to be prepaid.
      */
-    toPrepay
+    toPrepay,
+
+    /**
+     * The action to change the hostname of the instance.
+     */
+    changeHostname
 }

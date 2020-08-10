@@ -13,18 +13,50 @@
 
 package com.baidubce.services.media.model;
 
-
+/**
+ * Thumbnail job target configuration.
+ */
 public class ThumbnailTarget {
 
+    /**
+     * The target key prefix of thumbnails.
+     */
     private String keyPrefix = null;
-    
+ 
+    /**
+     * The file format of the thumbnails, can be jpg, png, mp4, gif or webp.
+     */   
     private String format = null;
-    
+
+    /**
+     * The display frame rate of thumbnails, only support in gif, webp, mp4 format, 0.01 - 30.0.
+     */
+    private Double frameRate = null;
+
+    /**
+     * The quality of gif, only support in gif format, can be medium or high.
+     */
+    private String gifQuality = null;
+
+    /**
+     * The sizing Policy of thumbnail, can be keep, shrinkToFit or stretch.
+     */ 
     private String sizingPolicy = null;
     
+    /**
+     * The expected with of thumbnail, 10 - 2000.
+     */
     private Integer widthInPixel = null;
     
+    /**
+     * The expected height of thumbnail, 10 - 2000.
+     */
     private Integer heightInPixel = null;
+
+    /**
+     * Thumbnail sprite output configuration.
+     */
+    private SpriteOutputCfg spriteOutputCfg = null;
 
     public String getKeyPrefix() {
         return keyPrefix;
@@ -49,6 +81,32 @@ public class ThumbnailTarget {
 
     public ThumbnailTarget withFormat(String format) {
         this.format = format;
+        return this;
+    }
+
+    public Double getFrameRate() {
+        return frameRate;
+    }
+
+    public void setFrameRate(Double frameRate) {
+        this.frameRate = frameRate;
+    }
+
+    public ThumbnailTarget withFrameRate(Double frameRate) {
+        this.frameRate = frameRate;
+        return this;
+    }
+
+    public String getGifQuality() {
+        return gifQuality;
+    }
+
+    public void setGifQuality(String gifQuality) {
+        this.gifQuality = gifQuality;
+    }
+
+    public ThumbnailTarget withGifQuality(String gifQuality) {
+        this.gifQuality = gifQuality;
         return this;
     }
 
@@ -91,5 +149,17 @@ public class ThumbnailTarget {
         return this;
     }
 
+    public SpriteOutputCfg getSpriteOutputCfg() {
+        return spriteOutputCfg;
+    }
+
+    public SpriteOutputCfg setSpriteOutputCfg(SpriteOutputCfg spriteOutputCfg) {
+        return this.spriteOutputCfg = spriteOutputCfg;
+    }
+
+    public ThumbnailTarget withSpriteOutputCfg(SpriteOutputCfg spriteOutputCfg) {
+        this.spriteOutputCfg = spriteOutputCfg;
+        return this;
+    }
 
 }

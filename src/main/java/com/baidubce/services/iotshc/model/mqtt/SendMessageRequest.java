@@ -13,18 +13,23 @@
 package com.baidubce.services.iotshc.model.mqtt;
 
 import com.baidubce.model.GenericAccountRequest;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * send message to device by mqtt request
  */
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SendMessageRequest extends GenericAccountRequest {
 
     private String fc;
     private String pk;
     private String ak;
     private String message;
+    @JsonProperty("trannum")
+    private Integer tranNum;
 }

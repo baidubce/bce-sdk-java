@@ -37,6 +37,7 @@ public class ProductKeyInfo extends AbstractBceResponse {
     private String unitServiceId;
     private String unitUsid;
     private String kafka;
+    private String asrKafka;
     private boolean enableDelete;
     private String unitContext;
     private String createTime;

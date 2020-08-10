@@ -130,6 +130,16 @@ public class CreateInstanceRequest extends AbstractBceRequest {
     private String name;
 
     /**
+     * The optional parameter to desc the hostname of instance that will be created.
+     */
+    private String hostname;
+
+    /**
+     * Indicates whether automatic generation of ordered suffixes
+     */
+    private boolean autoSeqSuffix;
+
+    /**
      * The optional parameter to specify the password for the instance.
      *
      * If specify the adminPass,the adminPass must be a 8-16 characters String which must
@@ -470,6 +480,32 @@ public class CreateInstanceRequest extends AbstractBceRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public CreateInstanceRequest withHostname(String hostname) {
+        this.hostname = hostname;
+        return this;
+    }
+
+    public boolean isAutoSeqSuffix() {
+        return autoSeqSuffix;
+    }
+
+    public void setAutoSeqSuffix(boolean autoSeqSuffix) {
+        this.autoSeqSuffix = autoSeqSuffix;
+    }
+
+    public CreateInstanceRequest withAutoSeqSuffix(boolean autoSeqSuffix) {
+        this.autoSeqSuffix = autoSeqSuffix;
+        return this;
     }
 
     /**

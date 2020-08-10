@@ -36,10 +36,26 @@ public class Target {
     private String presetName = null;
 
     /**
+     * auto delogo
+     */
+    private Boolean autoDelogo;
+
+    /**
+     * delogo mode, can be Normal, Inpainting
+     */
+    private String delogoMode;
+
+    /**
      * delogo area
+     * use delogoAreas instead.
      **/
+    @Deprecated
     private Area delogoArea = null;
 
+    /**
+     * delogo areas
+     **/
+    private List<Area> delogoAreas = null;
 
     /**
      * enable auto crop
@@ -73,8 +89,32 @@ public class Target {
         return this;
     }
 
+    public Target withAutoDelogo(Boolean autoDelogo) {
+        this.autoDelogo = autoDelogo;
+        return this;
+    }
+
+    public Target withDelogoMode(String delogoMode) {
+        this.delogoMode = delogoMode;
+        return this;
+    }
+
+    @Deprecated
     public Target withDelogoArea(Area delogoArea) {
         this.delogoArea = delogoArea;
+        return this;
+    }
+
+    public Target withDelogoAreas(List<Area> delogoAreas) {
+        this.delogoAreas = delogoAreas;
+        return this;
+    }
+
+    public Target addDelogoArea(Area delogoArea) {
+        if (this.delogoAreas == null) {
+            delogoAreas = new ArrayList<Area>();
+        }
+        delogoAreas.add(delogoArea);
         return this;
     }
 

@@ -94,6 +94,7 @@ import com.baidubce.services.bcc.model.instance.ListInstancesRequest;
 import com.baidubce.services.bcc.model.instance.ListInstancesResponse;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceAttributesRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceDescRequest;
+import com.baidubce.services.bcc.model.instance.ModifyInstanceHostnameRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstancePasswordRequest;
 import com.baidubce.services.bcc.model.instance.PurchaseReservedInstanceRequeset;
 import com.baidubce.services.bcc.model.instance.RebootInstanceRequest;
@@ -178,6 +179,7 @@ import java.util.UUID;
 
 import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
 import static com.baidubce.util.Validate.checkIsTrue;
+import static com.baidubce.util.Validate.checkNotNull;
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -987,6 +989,27 @@ public class BccClient extends AbstractBceClient {
         } catch (GeneralSecurityException e) {
             throw new BceClientException("Encryption procedure exception", e);
         }
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void modifyInstanceHostname(String instanceId, String hostname, boolean isReboot) throws BceClientException {
+        this.modifyInstanceHostname(new ModifyInstanceHostnameRequest()
+                .withInstanceId(instanceId).withHostname(hostname).withIsReboot(isReboot));
+    }
+
+    /**
+     * Modifying the hostname to new value of the instance.
+     *
+     * @param request The request containing all options for modifying the instance hostname.
+     */
+    public void modifyInstanceHostname(ModifyInstanceHostnameRequest request) throws BceClientException {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getHostname(), checkEmptyExceptionMessageFormat(ADMINPASS_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
+        internalRequest.addParameter(InstanceAction.changeHostname.name(), null);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }

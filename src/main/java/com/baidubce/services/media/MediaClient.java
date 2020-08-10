@@ -42,8 +42,12 @@ import com.baidubce.services.media.model.CreatePipelineRequest;
 import com.baidubce.services.media.model.CreatePipelineResponse;
 import com.baidubce.services.media.model.CreatePresetRequest;
 import com.baidubce.services.media.model.CreatePresetResponse;
+import com.baidubce.services.media.model.CreateSubtitleJobRequest;
+import com.baidubce.services.media.model.CreateSubtitleJobResponse;
 import com.baidubce.services.media.model.CreateThumbnailJobRequest;
 import com.baidubce.services.media.model.CreateThumbnailJobResponse;
+import com.baidubce.services.media.model.CreateThumbnailPresetRequest;
+import com.baidubce.services.media.model.CreateThumbnailPresetResponse;
 import com.baidubce.services.media.model.CreateTranscodingJobRequest;
 import com.baidubce.services.media.model.CreateTranscodingJobResponse;
 import com.baidubce.services.media.model.CreateWaterMarkRequest;
@@ -53,6 +57,7 @@ import com.baidubce.services.media.model.DeleteNotificationResponse;
 import com.baidubce.services.media.model.DeletePipelineRequest;
 import com.baidubce.services.media.model.DeletePresetRequest;
 import com.baidubce.services.media.model.DeletePresetResponse;
+import com.baidubce.services.media.model.DeleteThumbnailPresetRequest;
 import com.baidubce.services.media.model.DeleteWaterMarkRequest;
 import com.baidubce.services.media.model.DeleteWaterMarkResponse;
 import com.baidubce.services.media.model.Encryption;
@@ -67,8 +72,12 @@ import com.baidubce.services.media.model.GetPipelineRequest;
 import com.baidubce.services.media.model.GetPipelineResponse;
 import com.baidubce.services.media.model.GetPresetRequest;
 import com.baidubce.services.media.model.GetPresetResponse;
+import com.baidubce.services.media.model.GetSubtitleJobRequest;
+import com.baidubce.services.media.model.GetSubtitleJobResponse;
 import com.baidubce.services.media.model.GetThumbnailJobRequest;
 import com.baidubce.services.media.model.GetThumbnailJobResponse;
+import com.baidubce.services.media.model.GetThumbnailPresetRequest;
+import com.baidubce.services.media.model.GetThumbnailPresetResponse;
 import com.baidubce.services.media.model.GetTranscodingJobRequest;
 import com.baidubce.services.media.model.GetTranscodingJobResponse;
 import com.baidubce.services.media.model.GetWaterMarkRequest;
@@ -82,8 +91,12 @@ import com.baidubce.services.media.model.ListPipelinesRequest;
 import com.baidubce.services.media.model.ListPipelinesResponse;
 import com.baidubce.services.media.model.ListPresetsRequest;
 import com.baidubce.services.media.model.ListPresetsResponse;
+import com.baidubce.services.media.model.ListSubtitleJobsRequest;
+import com.baidubce.services.media.model.ListSubtitleJobsResponse;
 import com.baidubce.services.media.model.ListThumbnailJobsRequest;
 import com.baidubce.services.media.model.ListThumbnailJobsResponse;
+import com.baidubce.services.media.model.ListThumbnailPresetsRequest;
+import com.baidubce.services.media.model.ListThumbnailPresetsResponse;
 import com.baidubce.services.media.model.ListTranscodingJobsRequest;
 import com.baidubce.services.media.model.ListTranscodingJobsResponse;
 import com.baidubce.services.media.model.ListWaterMarkRequest;
@@ -91,8 +104,12 @@ import com.baidubce.services.media.model.ListWaterMarkResponse;
 import com.baidubce.services.media.model.PipelineConfig;
 import com.baidubce.services.media.model.Source;
 import com.baidubce.services.media.model.SourceClip;
+import com.baidubce.services.media.model.SubtitleSource;
+import com.baidubce.services.media.model.SubtitleTarget;
 import com.baidubce.services.media.model.Target;
 import com.baidubce.services.media.model.ThumbnailCapture;
+import com.baidubce.services.media.model.ThumbnailPresetCapture;
+import com.baidubce.services.media.model.ThumbnailPresetTarget;
 import com.baidubce.services.media.model.ThumbnailSource;
 import com.baidubce.services.media.model.ThumbnailTarget;
 import com.baidubce.services.media.model.Timeline;
@@ -101,6 +118,8 @@ import com.baidubce.services.media.model.UpdatePipelineRequest;
 import com.baidubce.services.media.model.UpdatePipelineResponse;
 import com.baidubce.services.media.model.UpdatePresetRequest;
 import com.baidubce.services.media.model.UpdatePresetResponse;
+import com.baidubce.services.media.model.UpdateThumbnailPresetRequest;
+import com.baidubce.services.media.model.UpdateThumbnailPresetResponse;
 import com.baidubce.services.media.model.Video;
 import com.baidubce.services.media.model.Watermarks;
 
@@ -140,6 +159,11 @@ public class MediaClient extends AbstractBceClient {
      * The common URI prefix for preset services.
      */
     private static final String PRESET = "preset";
+    
+    /**
+     * The common URI prefix for thumbnail preset services.
+     */
+    private static final String THUMBNAIL_PRESET = "preset/thumbnail";
 
     /**
      * The common URI prefix for media-info services.
@@ -152,9 +176,14 @@ public class MediaClient extends AbstractBceClient {
     private static final String WATER_MARK = "watermark";
 
     /**
-     * The common URI prefix for water mark services.
+     * The common URI prefix for thumbnail services.
      */
     private static final String THUMBNAIL = "job/thumbnail";
+
+    /**
+     * The common URI prefix for subtitle services.
+     */
+    private static final String SUBTITLE = "job/subtitle";
 
     /**
      * The common URI prefix for notification services.
@@ -1382,6 +1411,87 @@ public class MediaClient extends AbstractBceClient {
      * Creates a thumbnail job and return job ID.
      *
      * @param pipelineName The name of a pipeline.
+     * @param presetName The name of a thumbnail preset.
+     * @param sourceKey The key of source object.
+     * @param targetKeyPrefix The property container of target object.
+     *
+     * @return the unique ID of the new thumbnail job.
+     */
+    public CreateThumbnailJobResponse createThumbnailJob(String pipelineName, String presetName, String sourceKey, 
+            String targetKeyPrefix) {
+        
+        ThumbnailSource source = new ThumbnailSource();
+        source.setKey(sourceKey);
+
+        ThumbnailTarget target = new ThumbnailTarget();
+        target.setKeyPrefix(targetKeyPrefix);
+        
+        CreateThumbnailJobRequest request =
+                new CreateThumbnailJobRequest().withPipelineName(pipelineName).withPresetName(presetName)
+                        .withSource(source).withTarget(target);
+
+        return createThumbnailJob(request);
+    }
+
+    /**
+     * Creates a thumbnail job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
+     * @param presetName The name of a thumbnail preset.
+     * @param sourceKey The key of source object.
+     * @param targetKeyPrefix The property container of target object.
+     * @param delogoArea The property container of delogo Area.
+     *
+     * @return the unique ID of the new thumbnail job.
+     */
+    public CreateThumbnailJobResponse createThumbnailJob(String pipelineName, String presetName, String sourceKey, 
+            String targetKeyPrefix, Area delogoArea) {
+        
+        ThumbnailSource source = new ThumbnailSource();
+        source.setKey(sourceKey);
+
+        ThumbnailTarget target = new ThumbnailTarget();
+        target.setKeyPrefix(targetKeyPrefix);
+        
+        CreateThumbnailJobRequest request =
+                new CreateThumbnailJobRequest().withPipelineName(pipelineName).withPresetName(presetName)
+                        .withSource(source).withTarget(target).withDelogoArea(delogoArea);
+
+        return createThumbnailJob(request);
+    }
+
+    /**
+     * Creates a thumbnail job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
+     * @param presetName The name of a thumbnail preset.
+     * @param sourceKey The key of source object.
+     * @param targetKeyPrefix The property container of target object.
+     * @param delogoArea The property container of delogo Area.
+     * @param crop The property container of crop Area.
+     *
+     * @return the unique ID of the new thumbnail job.
+     */
+    public CreateThumbnailJobResponse createThumbnailJob(String pipelineName, String presetName, String sourceKey, 
+            String targetKeyPrefix, Area delogoArea, Area crop) {
+        
+        ThumbnailSource source = new ThumbnailSource();
+        source.setKey(sourceKey);
+
+        ThumbnailTarget target = new ThumbnailTarget();
+        target.setKeyPrefix(targetKeyPrefix);
+        
+        CreateThumbnailJobRequest request =
+                new CreateThumbnailJobRequest().withPipelineName(pipelineName).withPresetName(presetName)
+                        .withSource(source).withTarget(target).withDelogoArea(delogoArea).withCrop(crop);
+        
+        return createThumbnailJob(request);
+    }
+
+    /**
+     * Creates a thumbnail job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
      * @param sourceKey The key of source object.
      * @param target The property container of target object.
      * @param capture The property container of thumbnail generating policies.
@@ -1643,5 +1753,279 @@ public class MediaClient extends AbstractBceClient {
         return internalRequest;
     }
 
+    /**
+     * Create a thumbnail preset which help to convert video files to be pictures.
+     * 
+     * @param presetName  The name of the new preset.
+     * @param description The description of the new preset
+     * @param target      The output config of the preset.
+     * @param capture     The capture mode of the preset;
+     */
+    public CreateThumbnailPresetResponse createThumbnailPreset(String presetName, String description, 
+            ThumbnailPresetTarget target, ThumbnailPresetCapture capture) {
+        return createThumbnailPreset(new CreateThumbnailPresetRequest()
+                .withDescription(description)
+                .withPresetName(presetName)
+                .withTarget(target)
+                .withCapture(capture));
+    }
 
+    /**
+     * Create a thumbnail preset which help to convert video files to be pictures.
+     * 
+     * @param request The request object containing all options for presets.
+     */
+    public CreateThumbnailPresetResponse createThumbnailPreset(CreateThumbnailPresetRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.POST, request, THUMBNAIL_PRESET);
+
+        return invokeHttpClient(internalRequest, CreateThumbnailPresetResponse.class);
+    }
+
+    /**
+     * Delete a thumbnail preset with specified name.
+     *
+     * @param presetName The name of a preset.
+     * 
+     */
+    public void deleteThumbnailPreset(String presetName) {
+        DeleteThumbnailPresetRequest request = new DeleteThumbnailPresetRequest();
+        request.setPresetName(presetName);
+        deleteThumbnailPreset(request);
+    }
+
+    /**
+     * Delete a thumbnail preset with specified name.
+     *
+     * @param request The request object containing all options for deleting a preset.
+     * 
+     */
+    public void deleteThumbnailPreset(DeleteThumbnailPresetRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPresetName(),
+                checkEmptyExceptionMessageFormat(PRESETNAME_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.DELETE, request, THUMBNAIL_PRESET, request.getPresetName());
+
+        invokeHttpClient(internalRequest, DeletePresetResponse.class);
+
+    }
+
+    /**
+     * Get a thumbnail preset with specified name.
+     *
+     * @param presetName The name of a preset.
+     * 
+     * @return The information of the preset. 
+     */
+    public GetThumbnailPresetResponse getThumbnailPreset(String presetName) {
+        GetThumbnailPresetRequest request = new GetThumbnailPresetRequest();
+        request.setPresetName(presetName);
+        return getThumbnailPreset(request);
+    }
+
+    /**
+     * Get a thumbnail preset with specified name.
+     *
+     * @param request The request object containing all options for getting a thumbnail preset.
+     * 
+     * @return The information of the thumbnail preset. 
+     */
+    public GetThumbnailPresetResponse getThumbnailPreset(GetThumbnailPresetRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getPresetName(),
+                checkEmptyExceptionMessageFormat(PRESETNAME_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, THUMBNAIL_PRESET, 
+                request.getPresetName());
+
+        return invokeHttpClient(internalRequest, GetThumbnailPresetResponse.class);
+    }
+
+    /**
+     * Update a thumbnail preset.
+     *
+     * @param request The request object containing all options for updating presets.
+     */
+    public UpdateThumbnailPresetResponse updateThumbnailPreset(UpdateThumbnailPresetRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+                request, THUMBNAIL_PRESET, request.getPresetName());
+        return invokeHttpClient(internalRequest, UpdateThumbnailPresetResponse.class);
+    }
+
+    /**
+     * List all user's thumbnail preset.
+     *
+     * @return The list of all available thumbnail preset. 
+     */
+    public ListThumbnailPresetsResponse listThumbnailPresets() {
+        ListThumbnailPresetsRequest request = new ListThumbnailPresetsRequest();
+        return listThumbnailPresets(request);
+    }
+
+    /**
+     * List all user's thumbnail preset.
+     * 
+     * @param request The request object containing all options for listing presets.
+     *
+     * @return The list of all available thumbnail preset. 
+     */
+    public ListThumbnailPresetsResponse listThumbnailPresets(ListThumbnailPresetsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, THUMBNAIL_PRESET);
+        return invokeHttpClient(internalRequest, ListThumbnailPresetsResponse.class);
+    }
+
+    /**
+     * Creates a subtitle job and return job ID.
+     *
+     * @param request The request object containing all options for creating new subtitle job.
+     *
+     * @return the unique ID of the new subtitle job.
+     */
+    public CreateSubtitleJobResponse createSubtitleJob(CreateSubtitleJobRequest request) {
+        checkStringNotEmpty(request.getPipelineName(),
+                checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
+        checkNotNull(request.getSource(),  checkEmptyExceptionMessageFormat(SOURCE_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSource().getKey(),
+                checkEmptyExceptionMessageFormat(SOURCEKEY_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, request, SUBTITLE);
+        
+        return invokeHttpClient(internalRequest, CreateSubtitleJobResponse.class);
+    }
+
+    /**
+     * Creates a subtitle job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
+     * @param sourceKey The key of source object.
+     * @param targetKeyPrefix The key prefix of target subtitle file in bos.
+     *
+     * @return the unique ID of the new subtitle job.
+     */
+    public CreateSubtitleJobResponse createSubtitleJob(
+            String pipelineName, String sourceKey, String targetKeyPrefix) {
+        
+        SubtitleSource source = new SubtitleSource();
+        source.setKey(sourceKey);
+
+        SubtitleTarget target = new SubtitleTarget();
+        target.setKeyPrefix(targetKeyPrefix);
+        
+        CreateSubtitleJobRequest request =
+                new CreateSubtitleJobRequest().withPipelineName(pipelineName).withSource(source).withTarget(target);
+        
+        return createSubtitleJob(request);
+    }
+
+    /**
+     * Creates a subtitle job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
+     * @param sourceKey The key of source object.
+     * @param targetKeyPrefix The key prefix of target subtitle file in bos.
+     * @param format The format of subtitle file, can be json / srt.
+     *
+     * @return the unique ID of the new subtitle job.
+     */
+    public CreateSubtitleJobResponse createSubtitleJob(
+            String pipelineName, String sourceKey, String targetKeyPrefix, String format) {
+        
+        SubtitleSource source = new SubtitleSource();
+        source.setKey(sourceKey);
+
+        SubtitleTarget target = new SubtitleTarget();
+        target.setKeyPrefix(targetKeyPrefix);
+        target.addFormat(format);
+        
+        CreateSubtitleJobRequest request =
+                new CreateSubtitleJobRequest().withPipelineName(pipelineName).withSource(source).withTarget(target);
+        
+        return createSubtitleJob(request);
+    }
+
+    /**
+     * Creates a subtitle job and return job ID.
+     *
+     * @param pipelineName The name of a pipeline.
+     * @param sourceKey The key of source object.
+     * @param targetKeyPrefix The key prefix of target subtitle file in bos.
+     * @param formats The format of subtitle file, can be json / srt.
+     *
+     * @return the unique ID of the new subtitle job.
+     */
+    public CreateSubtitleJobResponse createSubtitleJob(
+            String pipelineName, String sourceKey, String targetKeyPrefix, List<String> formats) {
+        
+        SubtitleSource source = new SubtitleSource();
+        source.setKey(sourceKey);
+
+        SubtitleTarget target = new SubtitleTarget();
+        target.setKeyPrefix(targetKeyPrefix);
+        target.setFormats(formats);
+        
+        CreateSubtitleJobRequest request =
+                new CreateSubtitleJobRequest().withPipelineName(pipelineName).withSource(source).withTarget(target);
+        
+        return createSubtitleJob(request);
+    }
+
+
+    /**
+     * Get information of subtitle job.
+     *
+     * @param jobId The unique ID of subtitle job.
+     *
+     * @return The information of the subtitle job.
+     */
+    public GetSubtitleJobResponse getSubtitleJob(String jobId) {
+        GetSubtitleJobRequest request = new GetSubtitleJobRequest().withJobId(jobId);
+        
+        return getSubtitleJob(request);
+    }
+    
+    /**
+     * Get information of subtitle job.
+     *
+     * @param request The request object containing all options for getting a subtitle job.
+     *
+     * @return The information of the subtitle job.
+     */
+    public GetSubtitleJobResponse getSubtitleJob(GetSubtitleJobRequest request) {
+        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, request, SUBTITLE, request.getJobId());
+        
+        return invokeHttpClient(internalRequest, GetSubtitleJobResponse.class);
+    }
+
+
+    /**
+     * List subtitle jobs for a given pipeline.
+     *
+     * @param pipelineName The name of a pipeline.
+     *
+     * @return List of subtitle jobs.
+     */
+    public ListSubtitleJobsResponse listSubtitleJobs(String pipelineName) {
+        ListSubtitleJobsRequest request = new ListSubtitleJobsRequest().withPipeline(pipelineName);
+        
+        return listSubtitleJobs(request);
+    }
+    
+    /**
+     * List subtitle jobs for a given pipeline.
+     *
+     * @param request The request object containing all options for getting subtitle jobs.
+     *
+     * @return List of subtitle jobs.
+     */
+    public ListSubtitleJobsResponse listSubtitleJobs(ListSubtitleJobsRequest request) {
+        checkStringNotEmpty(request.getPipeline(), checkEmptyExceptionMessageFormat(PIPELINENAME_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request, SUBTITLE);
+        internalRequest.addParameter(PIPELINENAME_MESSAGE_KEY, request.getPipeline());
+        return invokeHttpClient(internalRequest, ListSubtitleJobsResponse.class);
+    }
 }

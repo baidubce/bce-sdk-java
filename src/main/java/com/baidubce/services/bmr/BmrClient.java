@@ -82,6 +82,8 @@ import com.baidubce.services.bmr.model.TerminateClusterRequest;
 import com.baidubce.services.bmr.model.UpdateSchedulePlanRequest;
 import com.baidubce.services.bmr.model.AmbariRequest;
 import com.baidubce.services.bmr.model.AmbariResponse;
+import com.baidubce.services.bmr.model.ListClusterHostsRequest;
+import com.baidubce.services.bmr.model.ListClusterHostsResponse;
 import org.apache.commons.codec.binary.Hex;
 
 import com.baidubce.AbstractBceClient;
@@ -1656,5 +1658,19 @@ public class BmrClient extends AbstractBceClient {
         internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
         internalRequest.setContent(RestartableInputStream.wrap(json));
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * List host info for a cluster
+     *
+     * @param clusterId cluster uuid
+     */
+    public ListClusterHostsResponse listClusterHosts(String clusterId) {
+        checkNotNull(clusterId, "cluster id  should not be null.");
+        ListClusterHostsRequest request = new ListClusterHostsRequest().withClusterId(clusterId);
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.GET, CLUSTER, request.getClusterId(), "hosts");
+        return this.invokeHttpClient(internalRequest, ListClusterHostsResponse.class);
     }
 }

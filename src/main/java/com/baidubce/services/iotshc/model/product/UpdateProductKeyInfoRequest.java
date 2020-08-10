@@ -28,5 +28,6 @@ public class UpdateProductKeyInfoRequest extends GenericAccountRequest {
     private String devSku = null;
     private String devType = null;
     private String kafka = null;
+    private String asrKafka = null;
     private String description = null;
 }

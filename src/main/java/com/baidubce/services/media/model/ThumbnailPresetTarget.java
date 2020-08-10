@@ -1,18 +1,26 @@
+/*
+ * Copyright 2020 Baidu, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
 package com.baidubce.services.media.model;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Thumbnail preset target configuration.
+ */
+public class ThumbnailPresetTarget {
 
-public class ThumbnailTargetStatus {
-
-    /**
-     * The target key prefix of thumbnails.
-     */
-    private String keyPrefix = null;
- 
     /**
      * The file format of the thumbnails, can be jpg, png, mp4, gif or webp.
-     */   
+     */
     private String format = null;
 
     /**
@@ -24,17 +32,17 @@ public class ThumbnailTargetStatus {
      * The quality of gif, only support in gif format, can be medium or high.
      */
     private String gifQuality = null;
-
+    
     /**
      * The sizing Policy of thumbnail, can be keep, shrinkToFit or stretch.
-     */ 
+     */
     private String sizingPolicy = null;
     
     /**
      * The expected with of thumbnail, 10 - 2000.
      */
     private Integer widthInPixel = null;
-    
+
     /**
      * The expected height of thumbnail, 10 - 2000.
      */
@@ -45,19 +53,6 @@ public class ThumbnailTargetStatus {
      */
     private SpriteOutputCfg spriteOutputCfg = null;
 
-    public String getKeyPrefix() {
-        return keyPrefix;
-    }
-
-    public void setKeyPrefix(String keyPrefix) {
-        this.keyPrefix = keyPrefix;
-    }
-
-    public ThumbnailTargetStatus withKeyPrefix(String keyPrefix) {
-        this.keyPrefix = keyPrefix;
-        return this;
-    }
-
     public String getFormat() {
         return format;
     }
@@ -66,7 +61,7 @@ public class ThumbnailTargetStatus {
         this.format = format;
     }
 
-    public ThumbnailTargetStatus withFormat(String format) {
+    public ThumbnailPresetTarget withFormat(String format) {
         this.format = format;
         return this;
     }
@@ -79,7 +74,7 @@ public class ThumbnailTargetStatus {
         this.frameRate = frameRate;
     }
 
-    public ThumbnailTargetStatus withFrameRate(Double frameRate) {
+    public ThumbnailPresetTarget withFrameRate(Double frameRate) {
         this.frameRate = frameRate;
         return this;
     }
@@ -92,7 +87,7 @@ public class ThumbnailTargetStatus {
         this.gifQuality = gifQuality;
     }
 
-    public ThumbnailTargetStatus withGifQuality(String gifQuality) {
+    public ThumbnailPresetTarget withGifQuality(String gifQuality) {
         this.gifQuality = gifQuality;
         return this;
     }
@@ -105,7 +100,7 @@ public class ThumbnailTargetStatus {
         this.sizingPolicy = sizingPolicy;
     }
 
-    public ThumbnailTargetStatus withSizingPolicy(String sizingPolicy) {
+    public ThumbnailPresetTarget withSizingPolicy(String sizingPolicy) {
         this.sizingPolicy = sizingPolicy;
         return this;
     }
@@ -118,7 +113,7 @@ public class ThumbnailTargetStatus {
         this.widthInPixel = widthInPixel;
     }
 
-    public ThumbnailTargetStatus withWidthInPixel(Integer widthInPixel) {
+    public ThumbnailPresetTarget withWidthInPixel(Integer widthInPixel) {
         this.widthInPixel = widthInPixel;
         return this;
     }
@@ -131,7 +126,7 @@ public class ThumbnailTargetStatus {
         this.heightInPixel = heightInPixel;
     }
 
-    public ThumbnailTargetStatus withHeightInPixel(Integer heightInPixel) {
+    public ThumbnailPresetTarget withHeightInPixel(Integer heightInPixel) {
         this.heightInPixel = heightInPixel;
         return this;
     }
@@ -144,32 +139,9 @@ public class ThumbnailTargetStatus {
         return this.spriteOutputCfg = spriteOutputCfg;
     }
 
-    public ThumbnailTargetStatus withSpriteOutputCfg(SpriteOutputCfg spriteOutputCfg) {
+    public ThumbnailPresetTarget withSpriteOutputCfg(SpriteOutputCfg spriteOutputCfg) {
         this.spriteOutputCfg = spriteOutputCfg;
         return this;
-    }
-
-    private List<String> keys = new ArrayList<String>();
-
-    public List<String> getKeys() {
-        return keys;
-    }
-
-    public void setKeys(List<String> keys) {
-        this.keys = keys;
-    }
-    
-    public ThumbnailTargetStatus withKeys(List<String> keys) {
-        this.keys = keys;
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "ThumbnailTargetStatus [keyPrefix=" + keyPrefix 
-                + ", format=" + format +  ", frameRate=" + frameRate + ", gifQuality=" + gifQuality
-                + ", sizingPolicy=" + sizingPolicy + ", widthInPixel=" + widthInPixel
-                + ", heightInPixel=" + heightInPixel + ", keys=" + keys + "]";
     }
 
 }

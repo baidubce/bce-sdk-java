@@ -82,6 +82,7 @@ public class IotShcClient extends AbstractBceClient {
     private static final String MQTT = "mqtt";
 
     private static final String SEND = "send";
+    private static final String BROADCAST = "broadcast";
 
     private static final String UNIT = "unit";
     private static final String TTS = "tts";
@@ -247,10 +248,24 @@ public class IotShcClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, CommonResponse.class);
     }
 
+    public CommonResponse broadcastMqttMessage(SendMessageRequest request) {
+        InternalRequest internalRequest = createRequest(
+                request, HttpMethodName.POST,
+                MESSAGE, BROADCAST);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
     public CommonResponse sendTtsMessage(SendMessageRequest request) {
         InternalRequest internalRequest = createRequest(
                 request, HttpMethodName.POST,
                 MESSAGE, TTS, SEND);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public CommonResponse broadcastTtsMessage(SendMessageRequest request) {
+        InternalRequest internalRequest = createRequest(
+                request, HttpMethodName.POST,
+                MESSAGE, TTS, BROADCAST);
         return invokeHttpClient(internalRequest, CommonResponse.class);
     }
 

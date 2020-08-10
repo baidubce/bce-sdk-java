@@ -28,6 +28,11 @@ public class CreateThumbnailJobRequest extends AbstractBceRequest {
     private ThumbnailSource source = null;
 
     /**
+     * the preset name of the thumbnail job
+     **/
+    private String presetName = null;
+
+    /**
      * the target information of the  thumbnail job
      **/
     private ThumbnailTarget target = null;
@@ -70,6 +75,19 @@ public class CreateThumbnailJobRequest extends AbstractBceRequest {
 
     public CreateThumbnailJobRequest withSource(ThumbnailSource source) {
         this.source = source;
+        return this;
+    }
+
+    public String getPresetName() {
+        return presetName;
+    }
+
+    public void setPresetName(String presetName) {
+        this.presetName = presetName;
+    }
+
+    public CreateThumbnailJobRequest withPresetName(String presetName) {
+        this.presetName = presetName;
         return this;
     }
 
@@ -126,7 +144,7 @@ public class CreateThumbnailJobRequest extends AbstractBceRequest {
     }
 
     @Override
-    public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
+    public CreateThumbnailJobRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }

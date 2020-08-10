@@ -37,6 +37,11 @@ public class GetThumbnailJobResponse extends AbstractBceResponse {
     private ThumbnailSource source = null;
 
     /**
+     * the preset name of the thumbnail job
+     **/
+    private String presetName = null;
+
+    /**
      * the target information of the  thumbnail job
      **/
     private ThumbnailTargetStatus target = null;
@@ -91,6 +96,14 @@ public class GetThumbnailJobResponse extends AbstractBceResponse {
 
     public void setSource(ThumbnailSource source) {
         this.source = source;
+    }
+    
+    public String getPresetName() {
+        return presetName;
+    }
+
+    public void setPresetName(String presetName) {
+        this.presetName = presetName;
     }
 
     public ThumbnailTargetStatus getTarget() {
