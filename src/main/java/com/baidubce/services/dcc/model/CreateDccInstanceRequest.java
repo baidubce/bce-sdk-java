@@ -124,6 +124,16 @@ public class CreateDccInstanceRequest extends AbstractBceRequest {
     private String name;
 
     /**
+     * The optional parameter to desc the hostname of instance that will be created.
+     */
+    private String hostname;
+
+    /**
+     * Indicates whether automatic generation of ordered suffixes
+     */
+    private boolean autoSeqSuffix;
+
+    /**
      * Specified the password of dcc
      */
     private String adminPass;
@@ -290,6 +300,22 @@ public class CreateDccInstanceRequest extends AbstractBceRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public boolean isAutoSeqSuffix() {
+        return autoSeqSuffix;
+    }
+
+    public void setAutoSeqSuffix(boolean autoSeqSuffix) {
+        this.autoSeqSuffix = autoSeqSuffix;
     }
 
     public String getAdminPass() {

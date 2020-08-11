@@ -31,6 +31,11 @@ public class InstanceModel {
     private String name;
 
     /**
+     * The hostname of the instance.
+     */
+    private String hostname;
+
+    /**
      * The status of the instance,
      * see more detail on <a href = "https://bce.baidu.com/doc/BCC/API.html#InstanceStatus">BCE API doc</>
      */
