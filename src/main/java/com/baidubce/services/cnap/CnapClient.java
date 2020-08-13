@@ -28,6 +28,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baidubce.services.cnap.model.workspace.GetWorkspaceNameRequest;
+import com.baidubce.services.cnap.model.workspace.GetWorkspaceNameResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -151,10 +153,14 @@ public class CnapClient extends AbstractBceClient {
     private static final String ACCESS_PREFIX = "accesses";
     private static final String RELEASE_RECORD_PREFIX = "releaseRecords";
     private static final String MONITORING_PREFIX = "monitoring";
+    private static final String BILLING_PREFIX = "billing";
+    private static final String BILLING_WORKSPACE_PREFIX = "billingWorkspaces";
 
     /**
      * Exception messages.
      */
+    private static final String USER_ID_MESSAGE_KEY = "user id";
+
     private static final String REQUEST_NULL_ERROR_MESSAGE = "request should not be null.";
     private static final String REQUEST_WORKSPACE_INFO_NULL_ERROR_MESSAGE
             = "request workspace info should not be null.";
@@ -219,6 +225,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Constructs a new cnap client using the client configuration to access cnap.
+     *
      * @param clientConfiguration The cnap client configuration options controlling how this client
      *                            connects to cnap.
      */
@@ -231,8 +238,8 @@ public class CnapClient extends AbstractBceClient {
      * Creates and initializes a new request object for the specified bcc resource. This method is responsible
      * for determining the right way to address resources.
      *
-     * @param bceRequest The original request, as created by the user.
-     * @param httpMethod The HTTP method to use when sending the request.
+     * @param bceRequest    The original request, as created by the user.
+     * @param httpMethod    The HTTP method to use when sending the request.
      * @param pathVariables The optional variables used in the URI path.
      * @return A new request object, populated with endpoint, resource path, ready for callers to populate
      * any additional headers or parameters, and execute.
@@ -255,19 +262,18 @@ public class CnapClient extends AbstractBceClient {
     }
 
 
-
     /**
      * Creates and initializes a new request object for the specified bcc resource. This method is responsible
      * for determining the right way to address resources.
      *
-     * @param bceRequest The original request, as created by the user.
-     * @param httpMethod The HTTP method to use when sending the request.
+     * @param bceRequest    The original request, as created by the user.
+     * @param httpMethod    The HTTP method to use when sending the request.
      * @param pathVariables The optional variables used in the URI path.
      * @return A new request object, populated with endpoint, resource path, ready for callers to populate
      * any additional headers or parameters, and execute.
      */
     private InternalRequest createRequestWithCustomPath(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
-                                          String... pathVariables) {
+                                                        String... pathVariables) {
         List<String> path = new ArrayList<String>();
 
         if (pathVariables != null) {
@@ -287,8 +293,8 @@ public class CnapClient extends AbstractBceClient {
      * Only support HttpMethodName.POST or HttpMethodName.PUT
      *
      * @param internalRequest A request object, populated with endpoint, resource path, ready for callers to populate
-     * any additional headers or parameters, and execute.
-     * @param bceRequest The original request, as created by the user.
+     *                        any additional headers or parameters, and execute.
+     * @param bceRequest      The original request, as created by the user.
      */
     private void fillPayload(InternalRequest internalRequest, AbstractBceRequest bceRequest) {
         if (internalRequest.getHttpMethod() == HttpMethodName.POST
@@ -308,6 +314,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Create workspace.
+     *
      * @param request CreateWorkspaceRequest
      * @return CreateWorkspaceResponse
      */
@@ -335,6 +342,24 @@ public class CnapClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, GetWorkspaceResponse.class);
     }
 
+
+    /**
+     * Query name of billing workspace.
+     *
+     * @param request GetWorkspaceNameRequest
+     * @return GetWorkspaceNameResponse
+     */
+    public GetWorkspaceNameResponse getWorkspaceName(GetWorkspaceNameRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getWorkspaceID(), checkEmptyExceptionMessageFormat(WORKSPACE_ID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getUserID(), checkEmptyExceptionMessageFormat(USER_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequestWithCustomPath
+                (request, HttpMethodName.GET, BILLING_PREFIX, "v1", BILLING_WORKSPACE_PREFIX,
+                        request.getWorkspaceID(), "users", request.getUserID(), "workspaceName");
+        return invokeHttpClient(internalRequest, GetWorkspaceNameResponse.class);
+    }
+
+
     /**
      * Update information of workspace.
      *
@@ -354,6 +379,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Delete workspace
+     *
      * @param request DeleteWorkspaceRequest
      * @return DeleteWorkspaceResponse
      */
@@ -370,6 +396,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List workspace
+     *
      * @param request ListWorkspaceRequest
      * @return ListWorkspaceResponse
      */
@@ -399,6 +426,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Create Environment.
+     *
      * @param request CreateEnvironmentRequest
      * @return CreateEnvironmentResponse
      */
@@ -414,6 +442,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Update environment.
+     *
      * @param request UpdateEnvironmentRequest
      * @return UpdateEnvironmentResponse
      */
@@ -431,6 +460,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List Environment.
+     *
      * @param request ListEnvironmentRequest
      * @return ListEnvironmentResponse
      */
@@ -451,6 +481,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Delete Environment.
+     *
      * @param request DeleteEnvironmentRequest
      * @return DeleteEnvironmentReponse
      */
@@ -467,6 +498,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Bind cluster to environment.
+     *
      * @param request BindClusterToWorkspaceRequest
      * @return BindClusterToEnvironmentResponse
      */
@@ -483,6 +515,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Unbind cluster to environment.
+     *
      * @param request BindClusterToWorkspaceRequest
      * @return BindClusterToEnvironmentResponse
      */
@@ -500,6 +533,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Import cluster.
+     *
      * @param request ImportClusterRequest
      * @return ImportClusterResponse
      */
@@ -519,6 +553,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Release cluster.
+     *
      * @param request ReleaseClusterRequest
      * @return ReleaseClusterResponse
      */
@@ -535,6 +570,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Bind Cluster to workspace.
+     *
      * @param request BindClusterToWorkspaceRequest
      * @return BindClusterToWorkspaceResponse
      */
@@ -550,6 +586,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Unbind Cluster to workspace.
+     *
      * @param request BindClusterRequest
      * @return BindClusterResponse
      */
@@ -568,6 +605,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Create Repository.
+     *
      * @param request CreateRepositoryRequest
      * @return CreateRepositoryResponse
      */
@@ -585,6 +623,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List image.
+     *
      * @param request ListImageRequest
      * @return ListImageResponse
      */
@@ -606,6 +645,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Create access.
+     *
      * @param request CreateAccessRequest
      * @return CreateAccessResponse
      */
@@ -663,6 +703,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Delete access.
+     *
      * @param request DeleteAccessRequest
      * @return DeleteAccessResponse
      */
@@ -680,6 +721,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List access.
+     *
      * @param request ListAccessRequest
      * @return ListAccessResponse
      */
@@ -700,6 +742,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List application.
+     *
      * @param request ListApplicationRequest
      * @return ListApplicationResponse
      */
@@ -737,6 +780,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Delete application.
+     *
      * @param request DeleteApplicationRequest
      * @return DeleteApplicationResponse
      */
@@ -747,13 +791,14 @@ public class CnapClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE,
                 WORKSPACE_PREFIX, request.getWorkspaceID(), APPLICATION_PREFIX, request.getApplicationID());
         internalRequest.addParameter("ignoreUnderlayError", String.valueOf(request.getIgnoreUnderlayError()));
-        internalRequest.addParameter("skipDeleteUnderlay", String .valueOf(request.getSkipDeleteUnderlay()));
+        internalRequest.addParameter("skipDeleteUnderlay", String.valueOf(request.getSkipDeleteUnderlay()));
         return invokeHttpClient(internalRequest, DeleteApplicationResponse.class);
 
     }
 
     /**
      * Create deploy group.
+     *
      * @param request CreateDeployGroupRequest
      * @return CreateDeployGroupResponse
      */
@@ -814,6 +859,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Get deploy group.
+     *
      * @param request GetDeployGroupRequest
      * @return GetDeployGroupResponse
      */
@@ -830,6 +876,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List deploy group by page.
+     *
      * @param request ListDeployGroupByPageRequest
      * @return ListDeployGroupByPageResponse
      */
@@ -859,6 +906,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List deploy group by image.
+     *
      * @param request ListDeployGroupByImageRequest
      * @return ListDeployGroupByImageResponse
      */
@@ -883,6 +931,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Delete deploy group.
+     *
      * @param request DeleteDeployGroupRequest
      * @return DeleteDeployGroupResponse
      */
@@ -901,6 +950,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Update deploy group.
+     *
      * @param request UpdateDeployGroupRequest
      * @return UpdateDeployGroupResponse
      */
@@ -917,6 +967,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Scale deploy group.
+     *
      * @param request ScaleDeployGroupRequest
      * @return ScaleDeployGroupResponse
      */
@@ -935,6 +986,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Create release record.
+     *
      * @param request CreateReleaseRecordRequest
      * @return CreateReleaseRecordResponse
      */
@@ -944,10 +996,10 @@ public class CnapClient extends AbstractBceClient {
         checkStringNotEmpty(request.getApplicationID(), checkEmptyExceptionMessageFormat(APPLICATION_ID_MESSAGE_KEY));
         checkArgument("RdType".equals(request.getType()), "type should be RdType.");
         checkArgument(StringUtils.isNotEmpty(request.getDescription())
-                && request.getDescription().length() < MAX_DESCRIPTION_LENGTH,
+                        && request.getDescription().length() < MAX_DESCRIPTION_LENGTH,
                 "description should not be empty or greater than 140 character");
         checkArgument(CollectionUtils.isNotEmpty(request.getImages())
-                || CollectionUtils.isNotEmpty(request.getConfigs()),
+                        || CollectionUtils.isNotEmpty(request.getConfigs()),
                 "images info or config info shoud not be empty.");
         checkArgument(CollectionUtils.isNotEmpty(request.getTasks()), "task info should not be empty.");
         List<TaskReqModel> taskReqModelList = request.getTasks();
@@ -964,6 +1016,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Rollback release record.
+     *
      * @param request RollbackReleaseRecordRequest
      * @return RollbackReleaseRecordResponse
      */
@@ -991,6 +1044,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List release record.
+     *
      * @param request ListReleaseRecordRequest
      * @return ListReleaseRecordResponse
      */
@@ -1033,6 +1087,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Get release record progress.
+     *
      * @param request GetReleaseRecordProgressRequest
      * @return GetReleaseRecordProgressResponse
      */
@@ -1050,6 +1105,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Create application.
+     *
      * @param request CreateApplicationRequest
      * @return CreateApplicationResponse
      */
@@ -1072,6 +1128,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Create alert rule.
+     *
      * @param request CreateAlertRulesRequest
      * @return CreateAlertRulesResponse
      */
@@ -1091,6 +1148,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Update alert rule.
+     *
      * @param request UpdateAlertRulesRequest
      * @return UpdateAlertRulesResponse
      */
@@ -1109,6 +1167,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Delete alert rules.
+     *
      * @param request DeleteAlertRulesRequest
      * @return DeleteAlertRulesResponse
      */
@@ -1122,6 +1181,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List alert rules.
+     *
      * @param request ListAlertRulesRequest
      * @return ListAlertRulesResponse
      */
@@ -1145,6 +1205,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * List alert record.
+     *
      * @param request ListAlertsRequest
      * @return ListAlertResponse
      */
@@ -1174,6 +1235,7 @@ public class CnapClient extends AbstractBceClient {
 
     /**
      * Get monitor data.
+     *
      * @param request GetMonitorDataRequest
      * @return GetMonitorDataResponse
      */

@@ -388,6 +388,14 @@ public class InstanceModel {
         this.ipv6 = ipv6;
     }
 
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
     @Override
     public String toString() {
         return "InstanceModel{"
@@ -413,12 +421,13 @@ public class InstanceModel {
                 + ", instanceType='" + instanceType + '\''
                 + ", gpuCard='" + gpuCard + '\''
                 + ", fpgaCard='" + fpgaCard + '\''
-                + ", cardCount=" + cardCount + '\''
-                + ", keypairId=" + keypairId + '\''
-                + ", keypairName=" + keypairName + '\''
-                + ", dedicatedHostId=" + dedicatedHostId + '\''
-                + ", autoRenew=" + autoRenew + '\''
-                + ", ipv6=" + ipv6
+                + ", cardCount=" + cardCount
+                + ", keypairId='" + keypairId + '\''
+                + ", keypairName='" + keypairName + '\''
+                + ", dedicatedHostId='" + dedicatedHostId + '\''
+                + ", autoRenew=" + autoRenew
+                + ", ipv6='" + ipv6 + '\''
+                + ", hostname='" + hostname + '\''
                 + '}';
     }
 }
