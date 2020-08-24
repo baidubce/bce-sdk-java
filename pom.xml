@@ -57,6 +57,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.baidu.bce</groupId>
+            <artifactId>gateway-manager-cloud-sdk</artifactId>
+            <version>1.27.18.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3-version}</version>

@@ -29,6 +29,10 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bvw.model.common.ListByPageResponse;
+import com.baidubce.services.bvw.model.matlib.MaterialGetRequest;
+import com.baidubce.services.bvw.model.matlib.MaterialGetResponse;
+import com.baidubce.services.bvw.model.matlib.MatlibUploadRequest;
+import com.baidubce.services.bvw.model.matlib.MatlibUploadResponse;
 import com.baidubce.services.bvw.model.media.MediaBaseRequest;
 import com.baidubce.services.bvw.model.media.MediaBaseResponse;
 import com.baidubce.services.bvw.model.media.MediaBatchDeleteRequest;
@@ -78,6 +82,8 @@ public class BvwClient extends AbstractBceClient {
     private static final String INSTANCE = "instance";
     private static final String TASK = "task";
     private static final String NOTIFICATION = "notification";
+    private static final String MATLIB = "matlib";
+    private static final String MATERIAL_LIBRARY = "materialLibrary";
 
     /**
      * The request queries.
@@ -105,6 +111,7 @@ public class BvwClient extends AbstractBceClient {
     private static final String NOTIFICATION_LIST_STATUS = "status";
     private static final String NOTIFICATION_ENABLE = "enable";
     private static final String NOTIFICATION_DISABLE = "disable";
+    private static final String MATLIB_UPLOAD = "upload";
 
     /**
      * Responsible for handling httpResponses from all Bos service calls.
@@ -791,6 +798,30 @@ public class BvwClient extends AbstractBceClient {
     public NotificationBaseResponse deleteNotification(String name) {
         NotificationBaseRequest deleteRequest = NotificationBaseRequest.of(name);
         return deleteNotification(deleteRequest);
+    }
+
+    /**
+     * Upload media to material library.
+     *
+     * @param matlibUploadRequest The uploading request
+     * @return A uploading response
+     */
+    public MatlibUploadResponse upload2Material(MatlibUploadRequest matlibUploadRequest) {
+        InternalRequest request = this.createRequest(matlibUploadRequest, HttpMethodName.POST, MATLIB);
+        request.addParameter(MATLIB_UPLOAD, null);
+        return this.invokeHttpClient(request, MatlibUploadResponse.class);
+    }
+
+    /**
+     * Get material from material library.
+     * @param materialId The material id
+     * @return A getting material response
+     */
+    public MaterialGetResponse getMaterial(String materialId) {
+        MaterialGetRequest materialGetRequest = new MaterialGetRequest(materialId);
+        InternalRequest request = this.createRequest(materialGetRequest, HttpMethodName.GET, MATERIAL_LIBRARY,
+                materialId);
+        return invokeHttpClient(request, MaterialGetResponse.class);
     }
 
 }
