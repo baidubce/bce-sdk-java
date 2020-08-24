@@ -6,7 +6,7 @@
 
     <groupId>com.baidubce</groupId>
     <artifactId>bce-java-sdk</artifactId>
-    <version>0.10.123</version>
+    <version>0.10.124</version>
     <name>bce-sdk-java</name>
     <description>The BCE SDK for Java provides Java APIs for all of BCE services.</description>
     <url>http://bce.baidu.com/sdk/index.html</url>
@@ -56,11 +56,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.baidu.bce</groupId>
-            <artifactId>gateway-manager-cloud-sdk</artifactId>
-            <version>1.27.18.2</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
