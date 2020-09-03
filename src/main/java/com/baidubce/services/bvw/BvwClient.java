@@ -71,7 +71,6 @@ import com.baidubce.services.bvw.model.workflow.task.TaskGetResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -884,69 +883,16 @@ public class BvwClient extends AbstractBceClient {
     }
 
     /**
-     * The method to fill the internalRequest's content field with bceRequest.
-     * Only support HttpMethodName.POST or HttpMethodName.PUT
-     *
-     * @param internalRequest A request object, populated with endpoint, resource path, ready for callers to populate
-     *                        any additional headers or parameters, and execute.
-     * @param bceRequest      The original request, as created by the user.
-     */
-    private void fillEditPayload(InternalRequest internalRequest, AbstractBceRequest bceRequest) {
-        if (internalRequest.getHttpMethod() == HttpMethodName.POST
-                || internalRequest.getHttpMethod() == HttpMethodName.PUT) {
-            String strJson = new JSONObject(bceRequest).toString();
-            byte[] requestJson;
-            try {
-                requestJson = strJson.getBytes(DEFAULT_ENCODING);
-            } catch (UnsupportedEncodingException e) {
-                throw new BceClientException("Unsupported encode.", e);
-            }
-            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(requestJson.length));
-            internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
-            internalRequest.setContent(RestartableInputStream.wrap(requestJson));
-        }
-    }
-
-    /**
-     * Creates and initializes a new request object for the specified bcc resource. This method is responsible
-     * for determining the right way to address resources.
-     *
-     * @param bceRequest    The original request, as created by the user.
-     * @param httpMethod    The HTTP method to use when sending the request.
-     * @param pathVariables The optional variables used in the URI path.
-     * @return A new request object, populated with endpoint, resource path, ready for callers to populate
-     * any additional headers or parameters, and execute.
-     */
-    private InternalRequest createEditRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
-                                          String... pathVariables) {
-        List<String> path = new ArrayList<String>();
-        path.add(VERSION);
-        if (pathVariables != null) {
-            for (String pathVariable : pathVariables) {
-                path.add(pathVariable);
-            }
-        }
-        URI uri = HttpUtils.appendUri(this.getEndpoint(), path.toArray(new String[path.size()]));
-        InternalRequest request = new InternalRequest(httpMethod, uri);
-        request.setCredentials(bceRequest.getRequestCredentials());
-        if (httpMethod == HttpMethodName.POST
-                || httpMethod == HttpMethodName.PUT) {
-            fillEditPayload(request, bceRequest);
-        }
-        return request;
-    }
-
-    /**
      * create a task of video edit
      * The cmd Object in VideoEditCreateRequest
-     * 1> do not need to modify it by your self, you only put the json string to JSONObject to it(From web FE)
-     * 2> if you want to construct it by yourself, make object by JSONObject (Like Map)
+     * 1> do not need to modify it by your self, you only put the json string to Map<String, Object> to it(From web FE)
+     * 2> if you want to construct it by yourself, make object by Map<String, Object>
      *
      * @param videoEditCreateRequest
      * @return A response of job create result
      */
     public VideoEditCreateResponse createVideoEdit(VideoEditCreateRequest videoEditCreateRequest) {
-        InternalRequest request = this.createEditRequest(videoEditCreateRequest, HttpMethodName.POST, VIDEO_EDIT,
+        InternalRequest request = this.createRequest(videoEditCreateRequest, HttpMethodName.POST, VIDEO_EDIT,
                 VIDEO_EDIT_CREATE);
         return invokeHttpClient(request, VideoEditCreateResponse.class);
     }
@@ -959,7 +905,7 @@ public class BvwClient extends AbstractBceClient {
      */
     public VideoEditPollingResponse pollingVideoEdit(long editId) {
         VideoEditPollingRequest videoEditPollingRequest = new VideoEditPollingRequest(editId);
-        InternalRequest request = this.createEditRequest(videoEditPollingRequest, HttpMethodName.GET,
+        InternalRequest request = this.createRequest(videoEditPollingRequest, HttpMethodName.GET,
                 VIDEO_EDIT, VIDEO_EDIT_POLLING, String.format("%d", editId));
         return invokeHttpClient(request, VideoEditPollingResponse.class);
     }

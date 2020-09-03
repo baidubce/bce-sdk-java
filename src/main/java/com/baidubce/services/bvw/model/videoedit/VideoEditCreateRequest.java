@@ -12,9 +12,11 @@
  */
 package com.baidubce.services.bvw.model.videoedit;
 
+import com.baidubce.BceClientException;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import org.json.JSONObject;
+
+import java.util.Map;
 
 public class VideoEditCreateRequest extends AbstractBceRequest {
     private static final long DefaultTaskId = 1;
@@ -48,32 +50,44 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
     /**
      * request body
      */
-    private JSONObject cmd;
+    private Map<String, Object> cmd;
+
+    public String getString(Object object) {
+        if (object instanceof String) {
+            return (String) object;
+        }
+        throw new BceClientException("bucket/title not a string.");
+    }
 
     public VideoEditCreateRequest() {
     }
 
-    public VideoEditCreateRequest(JSONObject jsonObject) {
-        this.cmd = jsonObject.has(CmdKey) ? jsonObject.getJSONObject(CmdKey) : null;
-        this.bucket = jsonObject.has(BucketKey) ? jsonObject.getString(BucketKey) : null;
-        this.title = jsonObject.has(TitleKey) ? jsonObject.getString(TitleKey) : null;
-        this.taskId = jsonObject.has(TaskIdKey) ? jsonObject.getLong(TaskIdKey) : DefaultTaskId;
+    public VideoEditCreateRequest(Map<String, Object> jsonObject) {
+        this.cmd = jsonObject.containsKey(CmdKey) ? (Map<String, Object>) jsonObject.get(CmdKey) : null;
+        this.bucket = jsonObject.containsKey(BucketKey) ? getString(jsonObject.get(BucketKey)) : null;
+        this.title = jsonObject.containsKey(TitleKey) ? getString(jsonObject.get(TitleKey)) : null;
+        this.taskId = jsonObject.containsKey(TaskIdKey) ?
+                Long.parseLong(String.valueOf(jsonObject.get(TaskIdKey))) : DefaultTaskId;
         this.referer = RefererType.baidu.name();
     }
 
-    public VideoEditCreateRequest(JSONObject jsonObject, RefererType refererType) {
-        this.cmd = jsonObject.has(CmdKey) ? jsonObject.getJSONObject(CmdKey) : null;
-        this.bucket = jsonObject.has(BucketKey) ? jsonObject.getString(BucketKey) : null;
-        this.title = jsonObject.has(TitleKey) ? jsonObject.getString(TitleKey) : null;
-        this.taskId = jsonObject.has(TaskIdKey) ? jsonObject.getLong(TaskIdKey) : DefaultTaskId;
+    public VideoEditCreateRequest(
+            Map<String, Object> jsonObject, RefererType refererType) {
+        this.cmd = jsonObject.containsKey(CmdKey) ? (Map<String, Object>) jsonObject.get(CmdKey) : null;
+        this.bucket = jsonObject.containsKey(BucketKey) ? getString(jsonObject.get(BucketKey)) : null;
+        this.title = jsonObject.containsKey(TitleKey) ? getString(jsonObject.get(TitleKey)) : null;
+        this.taskId = jsonObject.containsKey(TaskIdKey) ?
+                Long.parseLong(String.valueOf(jsonObject.get(TaskIdKey))) : DefaultTaskId;
         this.referer = refererType.name();
     }
 
-    public VideoEditCreateRequest(JSONObject jsonObject, RefererType refererType, String notification) {
-        this.cmd = jsonObject.has(CmdKey) ? jsonObject.getJSONObject(CmdKey) : null;
-        this.bucket = jsonObject.has(BucketKey) ? jsonObject.getString(BucketKey) : null;
-        this.title = jsonObject.has(TitleKey) ? jsonObject.getString(TitleKey) : null;
-        this.taskId = jsonObject.has(TaskIdKey) ? jsonObject.getLong(TaskIdKey) : DefaultTaskId;
+    public VideoEditCreateRequest(
+            Map<String, Object> jsonObject, RefererType refererType, String notification) {
+        this.cmd = jsonObject.containsKey(CmdKey) ? (Map<String, Object>) jsonObject.get(CmdKey) : null;
+        this.bucket = jsonObject.containsKey(BucketKey) ? getString(jsonObject.get(BucketKey)) : null;
+        this.title = jsonObject.containsKey(TitleKey) ? getString(jsonObject.get(TitleKey)) : null;
+        this.taskId = jsonObject.containsKey(TaskIdKey) ?
+                Long.parseLong(String.valueOf(jsonObject.get(TaskIdKey))) : DefaultTaskId;
         this.referer = refererType.name();
         this.notification = notification;
     }
@@ -102,7 +116,7 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
         return notification;
     }
 
-    public JSONObject getCmd() {
+    public Map<String, Object> getCmd() {
         return cmd;
     }
 
@@ -126,7 +140,7 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
         this.notification = notification;
     }
 
-    public void setCmd(JSONObject cmd) {
+    public void setCmd(Map<String, Object> cmd) {
         this.cmd = cmd;
     }
 
