@@ -49,6 +49,16 @@ public class BceResponseMetadata implements Serializable {
 
     private String location;
 
+    public String getSymlinkTarget() {
+        return symlinkTarget;
+    }
+
+    public void setSymlinkTarget(String symlinkTarget) {
+        this.symlinkTarget = symlinkTarget;
+    }
+
+    private String symlinkTarget;
+
     public String getBceRequestId() {
         return this.bceRequestId;
     }

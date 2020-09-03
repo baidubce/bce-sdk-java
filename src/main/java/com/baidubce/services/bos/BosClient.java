@@ -713,6 +713,137 @@ public class BosClient extends AbstractBceClient {
     }
 
     /**
+     * Sets the replication for the specified Bos bucket with specified replicationId.
+     * @param request
+     */
+    public void setBucketReplication(SetBucketReplicationRequest request) {
+        checkNotNull(request.getId(), "the replication id should not be null.");
+        checkNotNull(request.getStatus(), "the replication status should not be null");
+        checkNotNull(request.getResource(), "the replication source should not be null");
+        checkNotNull(request.getDestination(), "the replication destination should not be null");
+        checkNotNull(request.getDestination().getBucket(), "the replication dest bucket shoule not be null");
+        checkNotNull(request.getReplicateDeletes(), "the replication deletes should not be null");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("replication", null);
+        internalRequest.addParameter("id", request.getId());
+        if (request.getJsonBucketReplication() != null) {
+            byte[] json = null;
+            try {
+                json = request.getJsonBucketReplication().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        } else if (request.getId() != null) {
+            byte[] json = null;
+            StringWriter writer = new StringWriter();
+            try {
+                JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+                jsonGenerator.writeStartObject();
+                // set status
+                jsonGenerator.writeStringField("status", request.getStatus());
+                // set resource
+                jsonGenerator.writeArrayFieldStart("resource");
+                for (String resource : request.getResource()) {
+                    jsonGenerator.writeString(resource);
+                }
+                jsonGenerator.writeEndArray();
+                // set destination
+                jsonGenerator.writeObjectFieldStart("destination");
+                jsonGenerator.writeStringField("bucket", request.getDestination().getBucket());
+                if (request.getDestination().getStorageClass() != null) {
+                    jsonGenerator.writeStringField("storageClass", request.getDestination().getStorageClass());
+                }
+                jsonGenerator.writeEndObject();
+                // set replicateHistory
+                if (request.getReplicateHistory() != null) {
+                    jsonGenerator.writeObjectFieldStart("replicateHistory");
+                    if (request.getReplicateHistory().getStorageClass() != null) {
+                        jsonGenerator.writeObjectField("storageClass", request.getReplicateHistory().getStorageClass());
+                    }
+                    jsonGenerator.writeEndObject();
+                }
+
+                // set replicateDeletes
+                if (request.getReplicateDeletes() != null) {
+                    jsonGenerator.writeStringField("replicateDeletes", request.getReplicateDeletes());
+                }
+                // set id
+                jsonGenerator.writeStringField("id", request.getId());
+                jsonGenerator.writeEndObject();
+                jsonGenerator.close();
+
+            } catch (IOException e) {
+                throw new BceClientException("Fail to generate json", e);
+            }
+            try {
+                json = writer.toString().getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        } else {
+            checkNotNull(request, "request should not be null.");
+        }
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Gets the replication for the specified Bos bucket with specified replicationId.
+     */
+    public GetBucketReplicationResponse getBucketReplication(GetBucketReplicationRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("replication", null);
+        internalRequest.addParameter("id", request.getId());
+        GetBucketReplicationResponse response = this.invokeHttpClient(internalRequest,
+                GetBucketReplicationResponse.class);
+        return response;
+    }
+
+    /**
+     * Deletes the replication for the specified Bos bucket with specified replicationId.
+     */
+    public void deleteBucketReplication(DeleteBucketReplicationRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getId(), "replication id should not be null");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter("replication", null);
+        internalRequest.addParameter("id", request.getId());
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Gets the bucket replication progress for the specified Bos bucket with specified replicationId
+     */
+    public BucketReplicationProgress getBucketReplicationProgress(GetBucketReplicationProgressRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("replicationProgress", null);
+        internalRequest.addParameter("id", request.getId());
+        BucketReplicationProgress response = this.invokeHttpClient(internalRequest, BucketReplicationProgress.class);
+        return response;
+    }
+
+    /**
+     * List all bucket replication
+     */
+    public ListBucketReplicationResponse listBucketReplication(ListBucketReplicationRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("replication", null);
+        internalRequest.addParameter("list", null);
+        ListBucketReplicationResponse response = this.invokeHttpClient(internalRequest,
+                ListBucketReplicationResponse.class);
+        return response;
+    }
+
+    /**
      * Sets the Lifecycle for the specified Bos bucket.
      *
      * @param request The request object containing the Lifecycle to set into specified bucket.
@@ -1499,6 +1630,91 @@ public class BosClient extends AbstractBceClient {
     }
 
     /**
+     * Set the specified object symlink in the specified bucket.
+     * @param bucketName The name of the Bos bucket containing the object
+     * @param key The object's symlink name
+     * @param symlinkTarget The target object of the symlink
+     * @return
+     */
+    public SetObjectSymlinkResponse setObjectSymlink(String bucketName, String key, String symlinkTarget) {
+        return this.setObjectSymlink(new SetObjectSymlinkRequest(bucketName, key, symlinkTarget));
+    }
+
+    /**
+     * Set the specified object symlink in the specified bucket.
+     * @param request  The request object containing all options for setting a symlink of target object.
+     * @return
+     */
+    public SetObjectSymlinkResponse setObjectSymlink(SetObjectSymlinkRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getSymlinkTarget(), "object key should not be null or empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("symlink", null);
+
+        internalRequest.addHeader(Headers.BCE_SYMLINK_TARGET, request.getSymlinkTarget());
+        if (request.isForbidOverwrite() == false) {
+            internalRequest.addHeader(Headers.BCE_FORBID_OVERWRITE, "false");
+        } else {
+            internalRequest.addHeader(Headers.BCE_FORBID_OVERWRITE, "true");
+        }
+        if (request.getStorageClass() != null) {
+            internalRequest.addHeader(Headers.BCE_STORAGE_CLASS, request.getStorageClass());
+        }
+        Map<String, String> userMetadata = request.getUserMetadata();
+        if (userMetadata != null) {
+            for (Entry<String, String> entry : userMetadata.entrySet()) {
+                String key = entry.getKey();
+                if (key == null) {
+                    continue;
+                }
+                String value = entry.getValue();
+                if (value == null) {
+                    value = "";
+                }
+                if (key.length() + value.length() > 1024 * 32) {
+                    throw new BceClientException("MetadataTooLarge");
+                }
+                internalRequest.addHeader(Headers.BCE_USER_METADATA_PREFIX + HttpUtils.normalize(key.trim()),
+                        HttpUtils.normalize(value));
+            }
+        }
+
+        this.setZeroContentLength(internalRequest);
+        BosResponse response = this.invokeHttpClient(internalRequest, BosResponse.class);
+        SetObjectSymlinkResponse result = new SetObjectSymlinkResponse();
+        result.setETag(response.getMetadata().getETag());
+        return result;
+    }
+
+    /**
+     * Gets the specified object symlink in the specified bucket
+     * @param bucketName The name of the Bos bucket containing the symlink object
+     * @param key The symlink name
+     * @return The symlink target Object
+     */
+    public GetObjectSymlinkResponse getObjectSymlink(String bucketName, String key) {
+        return this.getObjectSymlink(new GetObjectSymlinkRequest(bucketName, key));
+    }
+
+    /**
+     * Gets the specified object symlink in the specified bucket
+     * @param request The request object containing all options for getting a symlink of target object.
+     * @return The symlink target Object
+     */
+    public GetObjectSymlinkResponse getObjectSymlink(GetObjectSymlinkRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getBucketName(), "bucketName should not be null or empty");
+        assertStringNotNullOrEmpty(request.getKey(), "object key should not be null or empty");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("symlink", null);
+
+        BosResponse response = this.invokeHttpClient(internalRequest, BosResponse.class);
+        GetObjectSymlinkResponse result = new GetObjectSymlinkResponse();
+        result.setSymlinkTarget(response.getMetadata().getSymlinkTarget());
+        return result;
+    }
+    /**
      * Deletes the multiple specified objects in the specified bucket.
      *
      * @param request The request object containing all options for deleting a Bos multiple objects.
@@ -2066,6 +2282,9 @@ public class BosClient extends AbstractBceClient {
         }
         if (metadata.getStorageClass() != null) {
             request.addHeader(Headers.BCE_STORAGE_CLASS, metadata.getStorageClass());
+        }
+        if (metadata.getxBceAcl() != null) {
+            request.addHeader(Headers.BCE_ACL, String.valueOf(metadata.getxBceAcl()));
         }
 
         Map<String, String> userMetadata = metadata.getUserMetadata();

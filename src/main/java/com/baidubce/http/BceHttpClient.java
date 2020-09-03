@@ -152,6 +152,7 @@ public class BceHttpClient {
         this.requestConfigBuilder = RequestConfig.custom();
         this.requestConfigBuilder.setConnectTimeout(config.getConnectionTimeoutInMillis());
         this.requestConfigBuilder.setStaleConnectionCheckEnabled(true);
+        this.requestConfigBuilder.setRedirectsEnabled(config.isRedirectsEnabled());
         if (config.getLocalAddress() != null) {
             this.requestConfigBuilder.setLocalAddress(config.getLocalAddress());
         }

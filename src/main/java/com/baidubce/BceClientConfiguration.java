@@ -155,6 +155,12 @@ public class BceClientConfiguration {
      */
     private BceCredentials credentials = null;
 
+    /**
+     * determines whether redirects should be handled automatically
+     * @return
+     */
+    private boolean redirectsEnabled = true;
+
     // Initialize DEFAULT_USER_AGENT
     static {
         String language = System.getProperty("user.language");
@@ -203,6 +209,7 @@ public class BceClientConfiguration {
         this.endpoint = other.endpoint;
         this.region = other.region;
         this.credentials = other.credentials;
+        this.redirectsEnabled = other.redirectsEnabled;
     }
 
     /**
@@ -232,6 +239,7 @@ public class BceClientConfiguration {
         this.socketBufferSizeInBytes = other.socketBufferSizeInBytes;
         this.region = other.region;
         this.credentials = other.credentials;
+        this.redirectsEnabled = other.redirectsEnabled;
     }
 
     /**
@@ -368,6 +376,32 @@ public class BceClientConfiguration {
         return this;
     }
 
+
+    /**
+     * Gets the flag of http redirection
+     * @return
+     */
+    public boolean isRedirectsEnabled() {
+        return redirectsEnabled;
+    }
+
+    /**
+     * Sets the flag of http redirection
+     * @param redirectsEnabled
+     */
+    public void setRedirectsEnabled(boolean redirectsEnabled) {
+        this.redirectsEnabled = redirectsEnabled;
+    }
+
+    /**
+     * Sets the flag of http redirection
+     * @param redirectsEnabled
+     * @return the updated configuration instance.
+     */
+    public BceClientConfiguration withRedirectsEnabled(boolean redirectsEnabled) {
+        this.setRedirectsEnabled(redirectsEnabled);
+        return this;
+    }
     /**
      * Returns the optional proxy host the client will connect through.
      *

@@ -12,11 +12,6 @@
  */
 package com.baidubce.services.bvw;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -31,8 +26,13 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bvw.model.common.ListByPageResponse;
 import com.baidubce.services.bvw.model.matlib.MaterialGetRequest;
 import com.baidubce.services.bvw.model.matlib.MaterialGetResponse;
+import com.baidubce.services.bvw.model.matlib.MatlibConfigBaseRequest;
+import com.baidubce.services.bvw.model.matlib.MatlibConfigBaseResponse;
+import com.baidubce.services.bvw.model.matlib.MatlibConfigGetResponse;
 import com.baidubce.services.bvw.model.matlib.MatlibUploadRequest;
 import com.baidubce.services.bvw.model.matlib.MatlibUploadResponse;
+import com.baidubce.services.bvw.model.matlib.Text2AudioRequest;
+import com.baidubce.services.bvw.model.matlib.Text2AudioResponse;
 import com.baidubce.services.bvw.model.media.MediaBaseRequest;
 import com.baidubce.services.bvw.model.media.MediaBaseResponse;
 import com.baidubce.services.bvw.model.media.MediaBatchDeleteRequest;
@@ -52,6 +52,10 @@ import com.baidubce.services.bvw.model.notification.NotificationListRequest;
 import com.baidubce.services.bvw.model.notification.NotificationListResponse;
 import com.baidubce.services.bvw.model.notification.NotificationStatus;
 import com.baidubce.services.bvw.model.notification.NotificationUpdateRequest;
+import com.baidubce.services.bvw.model.videoedit.VideoEditCreateRequest;
+import com.baidubce.services.bvw.model.videoedit.VideoEditCreateResponse;
+import com.baidubce.services.bvw.model.videoedit.VideoEditPollingRequest;
+import com.baidubce.services.bvw.model.videoedit.VideoEditPollingResponse;
 import com.baidubce.services.bvw.model.workflow.WorkflowBaseRequest;
 import com.baidubce.services.bvw.model.workflow.WorkflowBaseResponse;
 import com.baidubce.services.bvw.model.workflow.WorkflowCreateRequest;
@@ -67,6 +71,12 @@ import com.baidubce.services.bvw.model.workflow.task.TaskGetResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides the client for accessing the Baidu VideoWorks(BVW).
@@ -84,6 +94,9 @@ public class BvwClient extends AbstractBceClient {
     private static final String NOTIFICATION = "notification";
     private static final String MATLIB = "matlib";
     private static final String MATERIAL_LIBRARY = "materialLibrary";
+    private static final String VIDEO_EDIT = "videoEdit";
+    private static final String VIDEO_EDIT_CREATE = "createNewVideo";
+    private static final String VIDEO_EDIT_POLLING = "pollingVideo";
 
     /**
      * The request queries.
@@ -112,6 +125,8 @@ public class BvwClient extends AbstractBceClient {
     private static final String NOTIFICATION_ENABLE = "enable";
     private static final String NOTIFICATION_DISABLE = "disable";
     private static final String MATLIB_UPLOAD = "upload";
+    private static final String MATLIB_CONFIG = "config";
+    private static final String MATLIB_SPEECH = "speech";
 
     /**
      * Responsible for handling httpResponses from all Bos service calls.
@@ -822,6 +837,131 @@ public class BvwClient extends AbstractBceClient {
         InternalRequest request = this.createRequest(materialGetRequest, HttpMethodName.GET, MATERIAL_LIBRARY,
                 materialId);
         return invokeHttpClient(request, MaterialGetResponse.class);
+    }
+
+    /**
+     * Create matlib config.
+     *
+     * @param baseRequest The creating matlib config request.
+     * @return A creating matlib config response.
+     */
+    public MatlibConfigBaseResponse createMatlibConfig(MatlibConfigBaseRequest baseRequest) {
+        InternalRequest request = this.createRequest(baseRequest, HttpMethodName.POST, MATLIB, MATLIB_CONFIG);
+        return invokeHttpClient(request, MatlibConfigBaseResponse.class);
+    }
+
+    /**
+     * Update matlib config.
+     * @param baseRequest The updating matlib config request.
+     * @return A updating matlib config response.
+     */
+    public MatlibConfigBaseResponse updateMatlibConfig(MatlibConfigBaseRequest baseRequest) {
+        InternalRequest request = this.createRequest(baseRequest, HttpMethodName.PUT, MATLIB, MATLIB_CONFIG);
+        return invokeHttpClient(request, MatlibConfigBaseResponse.class);
+    }
+
+    /**
+     * Get matlib config.
+     *
+     * @return A matlib config response.
+     */
+    public MatlibConfigGetResponse getMatlibConfig() {
+        InternalRequest request = this.createRequest(new MatlibConfigBaseRequest(), HttpMethodName.GET, MATLIB,
+                MATLIB_CONFIG);
+        return invokeHttpClient(request, MatlibConfigGetResponse.class);
+    }
+
+    /**
+     * Transfer a list of text to audio.
+     * If you want to use this function, please set matlib bucket config first,
+     *
+     * @param text2AudioRequest The text to audio request
+     * @return A text to audio response
+     */
+    public Text2AudioResponse text2Audio(Text2AudioRequest text2AudioRequest) {
+        InternalRequest request = this.createRequest(text2AudioRequest, HttpMethodName.POST, MATLIB, MATLIB_SPEECH);
+        return invokeHttpClient(request, Text2AudioResponse.class);
+    }
+
+    /**
+     * The method to fill the internalRequest's content field with bceRequest.
+     * Only support HttpMethodName.POST or HttpMethodName.PUT
+     *
+     * @param internalRequest A request object, populated with endpoint, resource path, ready for callers to populate
+     *                        any additional headers or parameters, and execute.
+     * @param bceRequest      The original request, as created by the user.
+     */
+    private void fillEditPayload(InternalRequest internalRequest, AbstractBceRequest bceRequest) {
+        if (internalRequest.getHttpMethod() == HttpMethodName.POST
+                || internalRequest.getHttpMethod() == HttpMethodName.PUT) {
+            String strJson = new JSONObject(bceRequest).toString();
+            byte[] requestJson;
+            try {
+                requestJson = strJson.getBytes(DEFAULT_ENCODING);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Unsupported encode.", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(requestJson.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+            internalRequest.setContent(RestartableInputStream.wrap(requestJson));
+        }
+    }
+
+    /**
+     * Creates and initializes a new request object for the specified bcc resource. This method is responsible
+     * for determining the right way to address resources.
+     *
+     * @param bceRequest    The original request, as created by the user.
+     * @param httpMethod    The HTTP method to use when sending the request.
+     * @param pathVariables The optional variables used in the URI path.
+     * @return A new request object, populated with endpoint, resource path, ready for callers to populate
+     * any additional headers or parameters, and execute.
+     */
+    private InternalRequest createEditRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
+                                          String... pathVariables) {
+        List<String> path = new ArrayList<String>();
+        path.add(VERSION);
+        if (pathVariables != null) {
+            for (String pathVariable : pathVariables) {
+                path.add(pathVariable);
+            }
+        }
+        URI uri = HttpUtils.appendUri(this.getEndpoint(), path.toArray(new String[path.size()]));
+        InternalRequest request = new InternalRequest(httpMethod, uri);
+        request.setCredentials(bceRequest.getRequestCredentials());
+        if (httpMethod == HttpMethodName.POST
+                || httpMethod == HttpMethodName.PUT) {
+            fillEditPayload(request, bceRequest);
+        }
+        return request;
+    }
+
+    /**
+     * create a task of video edit
+     * The cmd Object in VideoEditCreateRequest
+     * 1> do not need to modify it by your self, you only put the json string to JSONObject to it(From web FE)
+     * 2> if you want to construct it by yourself, make object by JSONObject (Like Map)
+     *
+     * @param videoEditCreateRequest
+     * @return A response of job create result
+     */
+    public VideoEditCreateResponse createVideoEdit(VideoEditCreateRequest videoEditCreateRequest) {
+        InternalRequest request = this.createEditRequest(videoEditCreateRequest, HttpMethodName.POST, VIDEO_EDIT,
+                VIDEO_EDIT_CREATE);
+        return invokeHttpClient(request, VideoEditCreateResponse.class);
+    }
+
+    /**
+     * get edit job status
+     *
+     * @param editId
+     * @return A job desc of this editId
+     */
+    public VideoEditPollingResponse pollingVideoEdit(long editId) {
+        VideoEditPollingRequest videoEditPollingRequest = new VideoEditPollingRequest(editId);
+        InternalRequest request = this.createEditRequest(videoEditPollingRequest, HttpMethodName.GET,
+                VIDEO_EDIT, VIDEO_EDIT_POLLING, String.format("%d", editId));
+        return invokeHttpClient(request, VideoEditPollingResponse.class);
     }
 
 }

@@ -116,6 +116,11 @@ public interface Headers {
 
     public static final String BCE_RESTORE_DAYS = "x-bce-restore-days";
 
+    public static final String BCE_SYMLINK_TARGET = "x-bce-symlink-target";
+
+    public static final String BCE_FORBID_OVERWRITE = "x-bce-forbid-overwrite";
+
+    public static final String BCE_RESTORE = "x-bce-restore";
     /*
      * CFC HTTP Headers
      */

@@ -104,6 +104,16 @@ public class ObjectMetadata {
      */
     private String xBceCrc;
 
+    /**
+     * The archive object restore status
+     */
+    private String restore;
+
+    /**
+     * The canned acl of the object, private or public-read
+     */
+    private String xBceAcl;
+
     public ObjectMetadata() {
     }
 
@@ -126,6 +136,8 @@ public class ObjectMetadata {
         this.setCacheControl(other.getCacheControl());
         this.setStorageClass(other.getStorageClass());
         this.setxBceCrc(other.getxBceCrc());
+        this.setRestore(other.getRestore());
+        this.setxBceAcl(other.getxBceAcl());
     }
 
     /**
@@ -445,6 +457,15 @@ public class ObjectMetadata {
         if (this.xBceCrc != null) {
             builder.append(", xBceCrc=").append(this.xBceCrc);
         }
+        if (this.objectType != null) {
+            builder.append(", objectType=").append(this.objectType);
+        }
+        if (this.restore != null) {
+            builder.append(", restore=").append(this.restore);
+        }
+        if (this.xBceAcl != null) {
+            builder.append(", xBceAcl=").append(this.xBceAcl);
+        }
         builder.append(']');
         return builder.toString();
     }
@@ -503,5 +524,36 @@ public class ObjectMetadata {
      */
     public void setxBceCrc(String xBceCrc) {
         this.xBceCrc = xBceCrc;
+    }
+
+    /**
+     *  Gets archive object restore status
+     * @return
+     */
+    public String getRestore() {
+        return restore;
+    }
+
+    /**
+     *  Sets archive object restore status
+     * @param restore
+     */
+    public void setRestore(String restore) {
+            this.restore = restore;
+    }
+
+    /**
+     * Get the canned acl of object.
+     * @return the canned acl of object.
+     */
+    public String getxBceAcl() {
+        return xBceAcl;
+    }
+
+    /**
+     * Set the canned acl of object.
+     */
+    public void setxBceAcl(String xBceAcl) {
+        this.xBceAcl = xBceAcl;
     }
 }

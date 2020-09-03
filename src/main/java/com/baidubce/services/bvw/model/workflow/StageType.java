@@ -60,6 +60,11 @@ public enum StageType {
     /**
      * The stage of vca job.
      */
-    VCA
+    VCA,
+
+    /**
+     * The stage of subtitle job in mct
+     */
+    SUBTITLE
 
 }
