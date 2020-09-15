@@ -48,6 +48,8 @@ import com.baidubce.services.iotshc.model.product.ProductKeyInfoListRequest;
 import com.baidubce.services.iotshc.model.product.ProductKeyInfoListResponse;
 import com.baidubce.services.iotshc.model.product.ProductKeyTypeListResponse;
 import com.baidubce.services.iotshc.model.product.UpdateProductKeyInfoRequest;
+import com.baidubce.services.iotshc.model.token.GetTokenRequest;
+import com.baidubce.services.iotshc.model.token.GetTokenResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -78,6 +80,7 @@ public class IotShcClient extends AbstractBceClient {
     private static final String DELETE_BATCH_DEVICE = "delete/batch";
     private static final String DISABLE_DEVICE = "disable";
     private static final String ENABLE_DEVICE = "enable";
+    private static final String TOKEN = "token";
 
     private static final String MQTT = "mqtt";
 
@@ -232,6 +235,14 @@ public class IotShcClient extends AbstractBceClient {
             internalRequest.addParameter("order", request.getOrder());
         }
         return invokeHttpClient(internalRequest, DeviceInfoListResponse.class);
+    }
+
+    public GetTokenResponse getToken(int tokenLifeSpanInDays) {
+        GetTokenRequest request = new GetTokenRequest(tokenLifeSpanInDays);
+        InternalRequest internalRequest = createRequest(
+                request, HttpMethodName.POST,
+                MANAGE, DEVICE, TOKEN);
+        return invokeHttpClient(internalRequest, GetTokenResponse.class);
     }
 
     public GetMqttInfoResponse getMqttInfo(GetMqttInfoRequest request) {

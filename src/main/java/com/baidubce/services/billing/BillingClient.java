@@ -43,6 +43,8 @@ import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.bill.ResourceBillListQueryRequest;
+import com.baidubce.services.billing.model.bill.ResourceBillListQueryResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceQueryRequest;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
@@ -187,6 +189,30 @@ public class BillingClient extends AbstractBceClient {
         }
 
         return invokeHttpClient(internalRequest, PrepayShareBillResponse.class);
+    }
+
+    /**
+     * Query the resource bill list
+     *
+     * @param request The request containing all options for getting the resource info.
+     * @return detailed resource bill list.
+     */
+    public ResourceBillListQueryResponse getResourceBillList(ResourceBillListQueryRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkIsTrue(!StringUtils.isEmpty(request.getBeginTime()) || !StringUtils.isEmpty(request.getEndTime())
+                        || !StringUtils.isEmpty(request.getBillMonth()),
+                "Parameters billMonth , beginTime and endTime cannot all be empty!");
+        checkIsTrue(!(StringUtils.isEmpty(request.getBeginTime()) && !StringUtils.isEmpty(request.getEndTime())),
+                "If parameter endTime is not empty, parameter beginTime cannot be empty!");
+        checkIsTrue(!(!StringUtils.isEmpty(request.getBeginTime()) && StringUtils.isEmpty(request.getEndTime())),
+                "If parameter beginTime is not empty, parameter endTime cannot be empty!");
+        checkStringNotEmpty(request.getProductType(), "The parameter productType should NOT be null");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, BILL, RESOURCE, LIST);
+
+        return invokeHttpClient(internalRequest, ResourceBillListQueryResponse.class);
+
     }
 
     /**

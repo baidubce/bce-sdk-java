@@ -24,6 +24,8 @@ import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.bill.ResourceBillListQueryRequest;
+import com.baidubce.services.billing.model.bill.ResourceBillListQueryResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceQueryRequest;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
@@ -53,8 +55,8 @@ public class BillingExample {
     private static final String ENDPOINT = "https://billing endpoint";
     private static final String TEST_ACCOUNT_ID = "test id";
 
-
     public static void main(String[] args) {
+        sampleForQueryResourceBillList();
         sampleForQueryRenewResourceList();
         // sampleForSetRenewResourceRule();
         sampleForQueryPrepayShareBill();
@@ -109,6 +111,29 @@ public class BillingExample {
         System.out.println("    region:  " + request.getRegion());
         System.out.println("    renewTime:  " + request.getRenewTime());
         System.out.println("    renewTimeUnit:  " + request.getRenewTimeUnit());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForQueryResourceBillList() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        ResourceBillListQueryRequest request = new ResourceBillListQueryRequest();
+        request.setBillMonth("2020-08");
+        request.setProductType("prepay");
+        request.setPageNo(1);
+        request.setPageSize(10);
+
+        ResourceBillListQueryResponse response = client.getResourceBillList(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForQueryResourceBillList ResourceBillListQueryResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    month:  " + response.getBillMonth());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    bills:  " + response.getBills());
         System.out.println("==================================");
     }
 

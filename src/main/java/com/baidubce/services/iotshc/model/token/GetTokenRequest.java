@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Baidu, Inc.
+ * Copyright (C) 2020 Baidu, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -10,14 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.baidubce;
+package com.baidubce.services.iotshc.model.token;
+
+import com.baidubce.model.GenericAccountRequest;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
- * Common constants used by the whole SDK.
+ * get token request
  */
-public class BceConstants {
-    public static final String VERSION = "0.10.127";
+@Data
+@AllArgsConstructor
+public class GetTokenRequest extends GenericAccountRequest {
 
-    public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    public static final String DEFAULT_TIME_ZONE = "UTC";
+    private int tokenLifeSpanInDays;
 }
