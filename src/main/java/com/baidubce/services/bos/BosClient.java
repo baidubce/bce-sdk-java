@@ -3329,4 +3329,43 @@ public class BosClient extends AbstractBceClient {
         return response;
     }
 
+    public StateSummaryResponse stateSummary(String bucketName) {
+        return stateSummary(new StateSummaryRequest(bucketName));
+    }
+
+    public StateSummaryResponse stateSummary(String bucketName, String prefix) {
+        return stateSummary((new StateSummaryRequest(bucketName, prefix)));
+    }
+
+    public StateSummaryResponse stateSummary(StateSummaryRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getBucketName(), "BucketName should not be null or empty");
+
+        long[] summary = new long[]{0L, 0L, 0L}; // length, objectCount, fileCount
+        String prefix = request.getPrefix();
+        String priorLastKey = null;
+        String bucketName = request.getBucketName();
+
+        ListObjectsRequest r = new ListObjectsRequest(bucketName);
+        r.setDelimiter(null);
+        r.setPrefix(prefix);
+        ListObjectsResponse objects = null;
+
+        // list objects
+        do {
+            r.setMarker(priorLastKey);
+            objects = this.listObjects(r);
+            for (BosObjectSummary object : objects.getContents()) {
+                if (object.getKey() != null && object.getKey().length() > 0) {
+                    summary[0] += object.getSize();                          // size
+                    summary[1] += 1;                                         // objectsCount
+                    summary[2] += object.getKey().endsWith("/") ? 0 : 1;     // filesCount
+                }
+            }
+            priorLastKey = objects.getNextMarker();
+        } while (priorLastKey != null && priorLastKey.length() > 0);
+
+        return new StateSummaryResponse(bucketName, prefix, summary[0], summary[1], summary[2]);
+    }
+
 }

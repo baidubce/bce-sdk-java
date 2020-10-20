@@ -51,6 +51,8 @@ import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequ
 import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
 import com.baidubce.services.billing.model.finance.TransferResultResponse;
+import com.baidubce.services.billing.model.finance.UserBalanceQueryRequest;
+import com.baidubce.services.billing.model.finance.UserBalanceQueryResponse;
 import com.baidubce.services.billing.model.order.OrderListRequest;
 import com.baidubce.services.billing.model.order.OrderListResponse;
 import com.baidubce.services.billing.model.price.CpcPricingRequest;
@@ -376,6 +378,17 @@ public class BillingClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, FINANCE, SUPERVISOR,
                 CASH, BALANCE);
         return invokeHttpClient(internalRequest, SupervisorBalanceResponse.class);
+    }
+
+    /**
+     * get user balance info
+     *
+     * @return user balance result
+     */
+    public UserBalanceQueryResponse userBalanceQuery() {
+        InternalRequest internalRequest = createRequest(new UserBalanceQueryRequest(), HttpMethodName.POST, VERSION_V1,
+                FINANCE, CASH, BALANCE);
+        return invokeHttpClient(internalRequest, UserBalanceQueryResponse.class);
     }
 
     /**

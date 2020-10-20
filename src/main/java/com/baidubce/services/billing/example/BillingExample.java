@@ -32,6 +32,7 @@ import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequ
 import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
 import com.baidubce.services.billing.model.finance.TransferResultResponse;
+import com.baidubce.services.billing.model.finance.UserBalanceQueryResponse;
 import com.baidubce.services.billing.model.order.OrderListRequest;
 import com.baidubce.services.billing.model.order.OrderListResponse;
 import com.baidubce.services.billing.model.price.ChargeItem;
@@ -65,6 +66,7 @@ public class BillingExample {
         sampleForgetSpecificCptPrice();
         sampleForgetSpecificCpcPrice();
         sampleForCashBalanceQuery();
+        sampleForUserBalanceQuery();
     }
 
     private static void sampleForQueryRenewResourceList() {
@@ -321,5 +323,20 @@ public class BillingExample {
         System.out.println("SupervisorBalance response result:");
         System.out.println("    result:  " + JsonUtils.toJsonString(response.getResult()));
         System.out.println("==================================");
+    }
+
+    private static void sampleForUserBalanceQuery() {
+
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        UserBalanceQueryResponse response = client.userBalanceQuery();
+
+        System.out.println("============================");
+        System.out.println("UserBalance response result:");
+        System.out.println("    result:  " + JsonUtils.toJsonString(response.getCashBalance()));
+        System.out.println("============================");
     }
 }

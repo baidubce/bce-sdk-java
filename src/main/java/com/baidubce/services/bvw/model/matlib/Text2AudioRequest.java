@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * The request of text to audio.
  */
-public class Text2AudioRequest  extends AbstractBceRequest {
+public class Text2AudioRequest extends AbstractBceRequest {
 
     /**
      * 文字内容，支持多段文字，最多100段文字，每段文字最大长度2048
@@ -42,6 +42,14 @@ public class Text2AudioRequest  extends AbstractBceRequest {
      * 发音人类型
      */
     private Per per;
+    /**
+     * 保存的bucket，若不填默认使用MatlibConfig的bucket
+     */
+    private String bucket;
+    /**
+     * 试听，true表示为试听请求，将直接返回音频base64，不做存储
+     */
+    private boolean audition;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -103,6 +111,22 @@ public class Text2AudioRequest  extends AbstractBceRequest {
 
     public void setPer(Per per) {
         this.per = per;
+    }
+
+    public String getBucket() {
+        return bucket;
+    }
+
+    public void setBucket(String bucket) {
+        this.bucket = bucket;
+    }
+
+    public boolean isAudition() {
+        return audition;
+    }
+
+    public void setAudition(boolean audition) {
+        this.audition = audition;
     }
 
 }

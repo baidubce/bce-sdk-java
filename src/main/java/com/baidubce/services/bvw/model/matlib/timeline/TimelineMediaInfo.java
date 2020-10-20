@@ -125,6 +125,11 @@ public class TimelineMediaInfo {
     private String mediaId = "";
 
     /**
+     *  offstandard is true when material has not been preprocessed
+     */
+    private boolean offstandard;
+
+    /**
      * Calculate url for BOS object of material mediainfo.
      *
      * @param bosClient User's BOS client.
@@ -134,7 +139,7 @@ public class TimelineMediaInfo {
         sourceUrl = "";
         audioUrl = "";
         if (!StringUtils.isBlank(bucket) && !StringUtils.isBlank(key)) {
-            String tmpKey = addResolutionPrefix(fileType,  key);
+            String tmpKey = addResolutionPrefix(fileType,  key, offstandard);
             sourceUrl = bosClient.generatePresignedUrl(bucket, tmpKey, 7200).toString();
             if (StringUtils.isBlank(audioKey)) {
                 audioKey = addResolutionPrefix("audio", key);
@@ -160,6 +165,20 @@ public class TimelineMediaInfo {
             int index = thumbnailList.size() * 2 / 3;
             coverImage = thumbnailList.get(index);
         }
+    }
+
+    /**
+     * add prefix for object name
+     *
+     * @param type file type.
+     * @param key object key.
+     * @param offstandard whether or not been preprocessed.
+     */
+    private String addResolutionPrefix(String type, String key, Boolean offstandard) {
+        if (offstandard) {
+            return key;
+        }
+        return addResolutionPrefix(type, key);
     }
 
     /**

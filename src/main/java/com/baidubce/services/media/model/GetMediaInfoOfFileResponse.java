@@ -16,18 +16,57 @@ package com.baidubce.services.media.model;
 import com.baidubce.model.AbstractBceResponse;
 
 public class GetMediaInfoOfFileResponse extends AbstractBceResponse {
+
+    /**
+     * 文件所在的BOS的Bucket
+     **/
     private String bucket = null;
+
+    /**
+     * 文件的BOS的Key
+     **/
     private String key = null;
+
+    /**
+     * 文件的大小
+     **/
     private Long fileSizeInByte = null;
 
+    /**
+     * 封装格式
+     **/
     private String  container        = null;
+
+    /**
+     * 文件时长，单位：秒
+     **/
     private Integer durationInSecond = null;
+
+    /**
+     * 文件时长，单位：毫秒
+     **/
+    private Integer durationInMillisecond = null;
 
     // public enum fileSizeInByteEnum { };
 
+    /**
+     * 文件的MD5值
+     **/
     private String etag = null;
+
+    /**
+     * 文件类型
+     **/
     private String type = null;
+
+    /**
+     * 视频流信息
+     **/
     private VideoInfo video = null;
+
+    /**
+     * 音频流信息
+     **/
     private AudioInfo audio = null;
 
     /**
@@ -85,6 +124,9 @@ public class GetMediaInfoOfFileResponse extends AbstractBceResponse {
         this.type = type;
     }
 
+    /**
+     * 视频流信息
+     **/
     public VideoInfo getVideo() {
         return video;
     }
@@ -93,6 +135,9 @@ public class GetMediaInfoOfFileResponse extends AbstractBceResponse {
         this.video = video;
     }
 
+    /**
+     * 音频流信息
+     **/
     public AudioInfo getAudio() {
         return audio;
     }
@@ -101,6 +146,9 @@ public class GetMediaInfoOfFileResponse extends AbstractBceResponse {
         this.audio = audio;
     }
 
+    /**
+     * 封装格式
+     **/
     public String getContainer() {
         return container;
     }
@@ -109,12 +157,26 @@ public class GetMediaInfoOfFileResponse extends AbstractBceResponse {
         this.container = container;
     }
 
+    /**
+     * 文件时长，单位：秒
+     **/
     public Integer getDurationInSecond() {
         return durationInSecond;
     }
 
     public void setDurationInSecond(Integer durationInSecond) {
         this.durationInSecond = durationInSecond;
+    }
+
+    /**
+     * 文件时长，单位：毫秒
+     **/
+    public Integer getDurationInMillisecond() {
+        return durationInMillisecond;
+    }
+
+    public void setDurationInMillisecond(Integer durationInMillisecond) {
+        this.durationInMillisecond = durationInMillisecond;
     }
 
     @Override
@@ -127,6 +189,7 @@ public class GetMediaInfoOfFileResponse extends AbstractBceResponse {
         sb.append("    fileSizeInByte: ").append(fileSizeInByte).append("\n");
         sb.append("    container: ").append(container).append("\n");
         sb.append("    durationInSecond: ").append(durationInSecond).append("\n");
+        sb.append("    durationInMillisecond: ").append(durationInMillisecond).append("\n");
         sb.append("    etag: ").append(etag).append("\n");
         sb.append("    type: ").append(type).append("\n");
         sb.append("    video: ").append(video).append("\n");
