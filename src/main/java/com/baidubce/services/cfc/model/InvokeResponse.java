@@ -21,7 +21,7 @@ public class InvokeResponse extends CfcResponse {
      * Represent the result of invoking the user function
      */
     @JsonProperty(value = "Payload")
-    private String Payload;
+    private byte[] Payload;
 
     /**
      * The log of invoking the user function
@@ -34,7 +34,7 @@ public class InvokeResponse extends CfcResponse {
      * @return The result of invoking the user function
      */
     @JsonProperty(value = "Payload")
-    public String getPayload() {
+    public byte[] getPayload() {
         return Payload;
     }
 
@@ -42,7 +42,7 @@ public class InvokeResponse extends CfcResponse {
      * Set the result of invoking the user function
      * @param payload The result of invoking the user function
      */
-    public void setPayload(String payload) {
+    public void setPayload(byte[] payload) {
         Payload = payload;
     }
 

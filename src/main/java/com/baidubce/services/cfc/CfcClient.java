@@ -721,7 +721,7 @@ public class CfcClient extends AbstractBceClient {
      * @return
      */
     public InvokeResponse invoke(String functionName, String invocationType, String logType, String qualifier,
-                                 Map<String, String> payload) {
+                                 byte[] payload) {
         InvokeRequest request = new InvokeRequest()
                 .withFunctionName(functionName)
                 .withInvocationType(invocationType)
@@ -752,7 +752,7 @@ public class CfcClient extends AbstractBceClient {
         if (request.getQualifier() != null) {
             internalRequest.addParameter("Qualifier", request.getQualifier());
         }
-        this.attachRequestToBody(request, internalRequest);
+        this.attachInvokeRequestToBody(internalRequest, request.getPayload());
         GetInvokeResponse response = invokeHttpClient(internalRequest, GetInvokeResponse.class);
         StringBuilder payload = new StringBuilder();
         try {
@@ -769,7 +769,13 @@ public class CfcClient extends AbstractBceClient {
         }
         InvokeResponse invokeResponse = new InvokeResponse();
         invokeResponse.setMetadata(response.getMetadata());
-        invokeResponse.setPayload(payload.toString());
+        byte[] payloadBytes;
+        try {
+            payloadBytes = JsonUtils.toJsonString(payload).getBytes(ENCODINGTYPE);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException(ENCODINGERR, e);
+        }
+        invokeResponse.setPayload(payloadBytes);
         String logResult = response.getInvoke().getObjectMetadata().getBceLogResult();
         if (logResult != "") {
             invokeResponse.setBceLogResult(logResult);
@@ -821,9 +827,22 @@ public class CfcClient extends AbstractBceClient {
         } catch (UnsupportedEncodingException e) {
             throw new BceClientException(ENCODINGERR, e);
         }
+
         httpRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(content.length));
         httpRequest.addHeader(Headers.CONTENT_TYPE, CONTENTTYPE);
         httpRequest.setContent(RestartableInputStream.wrap(content));
+
+    }
+
+    /**
+     * put invoke payload into http body for put or post request.
+     * @param httpRequest json object of rest request
+     * @param payload  http request object
+     */
+    private void attachInvokeRequestToBody(InternalRequest httpRequest, byte[] payload) {
+        httpRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(payload.length));
+        httpRequest.addHeader(Headers.CONTENT_TYPE, CONTENTTYPE);
+        httpRequest.setContent(RestartableInputStream.wrap(payload));
     }
 
 }

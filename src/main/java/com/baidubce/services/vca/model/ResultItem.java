@@ -18,6 +18,7 @@ public class ResultItem {
     private Double confidence;
     private String source;
     private List<TimeInSeconds> time;
+    private String version;
 
     public Double getConfidence() {
         return confidence;
@@ -51,6 +52,14 @@ public class ResultItem {
         this.time = time;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ResultItem{");
@@ -58,6 +67,7 @@ public class ResultItem {
         sb.append(", attribute='").append(attribute).append('\'');
         sb.append(", source='").append(source).append('\'');
         sb.append(", time='").append(time).append('\'');
+        sb.append(", version='").append(version).append('\'');
         sb.append('}');
         return sb.toString();
     }

@@ -59,7 +59,7 @@ public class InvokeRequest extends AbstractBceRequest {
      * Will call the function as input parameter
      */
     @JsonProperty(value = "Payload")
-    private Map<String, String> Payload;
+    private byte[] Payload;
 
     /**
      * Get the function name
@@ -140,7 +140,7 @@ public class InvokeRequest extends AbstractBceRequest {
      * @return The payload
      */
     @JsonProperty(value = "Payload")
-    public Map<String, String> getPayload() {
+    public byte[] getPayload() {
         return this.Payload;
     }
 
@@ -148,7 +148,7 @@ public class InvokeRequest extends AbstractBceRequest {
      * Set the payload
      * @param payload The payload
      */
-    public void setPayload(Map<String, String> payload) {
+    public void setPayload(byte[] payload) {
         this.Payload = payload;
     }
 
@@ -173,7 +173,7 @@ public class InvokeRequest extends AbstractBceRequest {
         return this;
     }
 
-    public InvokeRequest withPayload(Map<String, String> payload) {
+    public InvokeRequest withPayload(byte[] payload) {
         this.setPayload(payload);
         return this;
     }
