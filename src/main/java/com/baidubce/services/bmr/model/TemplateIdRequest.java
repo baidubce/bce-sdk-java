@@ -5,7 +5,7 @@ import com.baidubce.model.AbstractBceRequest;
 
 public class TemplateIdRequest extends AbstractBceRequest {
     private String templateId;
-    private String adminPassword = "bmrtest@123";
+    private String adminPassword;
 
     public String getAdminPassword() {
         return adminPassword;
