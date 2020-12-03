@@ -1,11 +1,11 @@
 /**
  * Copyright 2020 Baidu, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
@@ -13,6 +13,7 @@
 package com.baidubce.services.bes.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,17 +22,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *  @Description:  Response to query for cluster details
+ *  @Description: Response to query for cluster details
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BesClusterDetailResponse extends AbstractBceResponse implements Serializable {
-
+public class BesGetClusterDetailResponse extends AbstractBceResponse implements Serializable {
     @JsonProperty
     private Boolean success;
-
     @JsonProperty
     private int status;
-
     @JsonProperty
     ClusterDetail result;
 
@@ -63,55 +61,43 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
     public static class ClusterDetail {
         @JsonProperty
         private String clusterId;
-
         @JsonProperty
         private String clusterName;
-
         @JsonProperty
         private String adminUsername;
-
         @JsonProperty
-        private String status;
-
+        private String actualStatus;
         @JsonProperty
         private String desireStatus;
-
         @JsonProperty
         private String esUrl;
-
         @JsonProperty
         private String kibanaUrl;
-
         @JsonProperty
         private String esEip;
-
         @JsonProperty
         private String kibanaEip;
-
         @JsonProperty
         private List<ModuleInfoResponse> modules;
-
         @JsonProperty
         private List<InstanceInfoResponse> instances;
-
+        @JsonFormat(
+                shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                timezone = "UTC"
+        )
         @JsonProperty
         private Date expireTime;
-
         @JsonProperty
         private String region;
-
         @JsonProperty
         private String vpc;
-
         @JsonProperty
         private String subnet;
-
         @JsonProperty
         private String availableZone;
-
         @JsonProperty
         private String securityGroup;
-
         @JsonProperty
         private BesClusterBillingResponse billing;
 
@@ -155,12 +141,12 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
             this.adminUsername = adminUsername;
         }
 
-        public String getStatus() {
-            return status;
+        public String getActualStatus() {
+            return actualStatus;
         }
 
-        public void setStatus(String status) {
-            this.status = status;
+        public void setActualStatus(String actualStatus) {
+            this.actualStatus = actualStatus;
         }
 
         public String getDesireStatus() {
@@ -262,25 +248,12 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
         public static class InstanceInfoResponse {
             @JsonProperty
             private String instanceId;
-
             @JsonProperty
             private String status;
-
-            @JsonProperty
-            private String displayActualStatus;
-
             @JsonProperty
             private String moduleType;
-
-            @JsonProperty
-            private String moduleDisplayName;
-
             @JsonProperty
             private String moduleVersion;
-
-            @JsonProperty
-            private String displayDecommissionStatus;
-
             @JsonProperty
             private String hostIp;
 
@@ -300,14 +273,6 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
                 this.status = status;
             }
 
-            public String getDisplayActualStatus() {
-                return displayActualStatus;
-            }
-
-            public void setDisplayActualStatus(String displayActualStatus) {
-                this.displayActualStatus = displayActualStatus;
-            }
-
             public String getModuleType() {
                 return moduleType;
             }
@@ -316,28 +281,12 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
                 this.moduleType = moduleType;
             }
 
-            public String getModuleDisplayName() {
-                return moduleDisplayName;
-            }
-
-            public void setModuleDisplayName(String moduleDisplayName) {
-                this.moduleDisplayName = moduleDisplayName;
-            }
-
             public String getModuleVersion() {
                 return moduleVersion;
             }
 
             public void setModuleVersion(String moduleVersion) {
                 this.moduleVersion = moduleVersion;
-            }
-
-            public String getDisplayDecommissionStatus() {
-                return displayDecommissionStatus;
-            }
-
-            public void setDisplayDecommissionStatus(String displayDecommissionStatus) {
-                this.displayDecommissionStatus = displayDecommissionStatus;
             }
 
             public String getHostIp() {
@@ -352,33 +301,14 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
         public static class ModuleInfoResponse {
             @JsonProperty
             private String type;
-
-            @JsonProperty
-            private String productVersion;
-
-            @JsonProperty
-            private String moduleDisplayName;
-
             @JsonProperty
             private String version;
-
             @JsonProperty
             private String slotType;
-
-            @JsonProperty
-            private String moduleDescription;
-
             @JsonProperty
             private String slotDescription;
-
             @JsonProperty
             private int actualInstanceNum;
-
-            @JsonProperty
-            private int desireInstanceNum;
-
-            @JsonProperty
-            private boolean isDisplay;
 
             public String getType() {
                 return type;
@@ -386,22 +316,6 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
 
             public void setType(String type) {
                 this.type = type;
-            }
-
-            public String getProductVersion() {
-                return productVersion;
-            }
-
-            public void setProductVersion(String productVersion) {
-                this.productVersion = productVersion;
-            }
-
-            public String getModuleDisplayName() {
-                return moduleDisplayName;
-            }
-
-            public void setModuleDisplayName(String moduleDisplayName) {
-                this.moduleDisplayName = moduleDisplayName;
             }
 
             public String getVersion() {
@@ -420,14 +334,6 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
                 this.slotType = slotType;
             }
 
-            public String getModuleDescription() {
-                return moduleDescription;
-            }
-
-            public void setModuleDescription(String moduleDescription) {
-                this.moduleDescription = moduleDescription;
-            }
-
             public String getSlotDescription() {
                 return slotDescription;
             }
@@ -443,16 +349,6 @@ public class BesClusterDetailResponse extends AbstractBceResponse implements Ser
             public void setActualInstanceNum(int actualInstanceNum) {
                 this.actualInstanceNum = actualInstanceNum;
             }
-
-            public int getDesireInstanceNum() {
-                return desireInstanceNum;
-            }
-
-            public void setDesireInstanceNum(int desireInstanceNum) {
-                this.desireInstanceNum = desireInstanceNum;
-            }
-
         }
     }
 }
-

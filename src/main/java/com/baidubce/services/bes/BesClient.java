@@ -1,11 +1,11 @@
 /**
  * Copyright 2020 Baidu, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
@@ -25,15 +25,24 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
-import com.baidubce.services.bes.model.BesClusterDetailRequest;
-import com.baidubce.services.bes.model.BesClusterDetailResponse;
-import com.baidubce.services.bes.model.BesConfigTuple;
+import com.baidubce.services.bes.model.BesCreateAutoRenewRuleRequest;
+import com.baidubce.services.bes.model.BesCreateAutoRenewRuleResponse;
 import com.baidubce.services.bes.model.BesCreateClusterRequest;
 import com.baidubce.services.bes.model.BesCreateClusterResponse;
+import com.baidubce.services.bes.model.BesDeleteAutoRenewRuleRequest;
+import com.baidubce.services.bes.model.BesDeleteAutoRenewRuleResponse;
 import com.baidubce.services.bes.model.BesDeleteClusterRequest;
 import com.baidubce.services.bes.model.BesDeleteClusterResponse;
-import com.baidubce.services.bes.model.BesListClusterRequest;
-import com.baidubce.services.bes.model.BesListClusterResponse;
+import com.baidubce.services.bes.model.BesGetAutoRenewRuleListRequest;
+import com.baidubce.services.bes.model.BesGetAutoRenewRuleListResponse;
+import com.baidubce.services.bes.model.BesGetClusterDetailRequest;
+import com.baidubce.services.bes.model.BesGetClusterDetailResponse;
+import com.baidubce.services.bes.model.BesGetClusterListRequest;
+import com.baidubce.services.bes.model.BesGetClusterListResponse;
+import com.baidubce.services.bes.model.BesGetRenewListRequest;
+import com.baidubce.services.bes.model.BesGetRenewListResponse;
+import com.baidubce.services.bes.model.BesRenewClusterRequest;
+import com.baidubce.services.bes.model.BesRenewClusterResponse;
 import com.baidubce.services.bes.model.BesResizeClusterRequest;
 import com.baidubce.services.bes.model.BesStartClusterRequest;
 import com.baidubce.services.bes.model.BesStartClusterResponse;
@@ -43,6 +52,8 @@ import com.baidubce.services.bes.model.BesStopClusterRequest;
 import com.baidubce.services.bes.model.BesStopClusterResponse;
 import com.baidubce.services.bes.model.BesStopInstanceRequest;
 import com.baidubce.services.bes.model.BesStopInstanceResponse;
+import com.baidubce.services.bes.model.BesUpdateAutoRenewRuleRequest;
+import com.baidubce.services.bes.model.BesUpdateAutoRenewRuleResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -69,18 +80,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class BesClient extends AbstractBceClient {
     private static final String[] HEADERS_TO_SIGN = {"host", "x-bce-date"};
 
-    private static final String STOP_CLUSTER_URL = "api/bes/cluster/stop";
-    private static final String START_CLUSTER_URL = "api/bes/cluster/start";
-    private static final String DELETE_CLUSTER_URL = "api/bes/cluster/delete";
-    private static final String CLUSTER_LIST_URL = "api/bes/cluster/list";
-    private static final String CLUSTER_DETAIL_URL = "api/bes/cluster/detail";
-    private static final String CREATE_CLUSTER_URL = "api/bes/cluster/create";
-    private static final String RESIZE_CLUSTER_URL = "api/bes/cluster/resize";
-    private static final String START_CLUSTER_INSTANCE_URL = "api/bes/cluster/instance/start";
-    private static final String STOP_CLUSTER_INSTANCE_URL = "api/bes/cluster/instance/stop";
+    private static final String BASE_PATH = "/api/bes/cluster";
+    private static final String STOP =  "/stop";
+    private static final String START =  "/start";
+    private static final String DELETE = "/delete";
+    private static final String LIST = "/list";
+    private static final String DETAIL = "/detail";
+    private static final String CREATE = "/create";
+    private static final String RESIZE = "/resize";
+    private static final String UPDATE = "/update";
+    private static final String INSTANCE = "/instance";
+    private static final String RENEW = "/renew";
+    private static final String AUTO_RENEW_RULE = "/auto_renew_rule";
     private static final String X_REGION = "X-Region";
-    private String region = "";
-
+    private static final String BES_SERVICE_TYPE = "BES";
+    private String region;
     /**
      * Responsible for handling HttpResponse from all BES service calls.
      */
@@ -90,21 +104,24 @@ public class BesClient extends AbstractBceClient {
             new BceJsonResponseHandler()
     };
 
-    /**
-     * Constructs a new client to invoke service methods on BES.
-     */
     public BesClient() {
         this(new BceClientConfiguration());
     }
 
     /**
-     * Constructs a new BES client using the client configuration to access BES.
-     *
      * @param clientConfiguration The BCE client configuration options.
      */
     public BesClient(BceClientConfiguration clientConfiguration) {
         super(clientConfiguration, BES_HANDLERS);
-        region = getRegion(clientConfiguration.getEndpoint());
+    }
+
+    /**
+     * @param clientConfiguration The BCE client configuration options.
+     * @param region client configuration options Defaults to bj
+     */
+    public BesClient(BceClientConfiguration clientConfiguration, String region) {
+        super(clientConfiguration, BES_HANDLERS);
+        this.region = region;
     }
 
     /**
@@ -120,31 +137,17 @@ public class BesClient extends AbstractBceClient {
         checkStringNotEmpty(besStopClusterRequest.getClusterId(),
                 "The parameter clusterId should not be null or empty string.");
 
-        StringWriter writer = new StringWriter();
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("clusterId", besStopClusterRequest.getClusterId());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = besStopClusterRequest.toJson();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
 
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
-
         InternalRequest internalRequest = this.createRequest(
-                besStopClusterRequest, HttpMethodName.POST, STOP_CLUSTER_URL);
+                besStopClusterRequest, HttpMethodName.POST, BASE_PATH, STOP);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
 
         BesStopClusterResponse besStopClusterResponse =
                 this.invokeHttpClient(internalRequest, BesStopClusterResponse.class);
@@ -164,31 +167,17 @@ public class BesClient extends AbstractBceClient {
         checkStringNotEmpty(besStartClusterRequest.getClusterId(),
                 "The parameter clusterId should not be null or empty string.");
 
-        StringWriter writer = new StringWriter();
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("clusterId", besStartClusterRequest.getClusterId());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = besStartClusterRequest.toJson();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
 
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
-
         InternalRequest internalRequest = this.createRequest(
-                besStartClusterRequest, HttpMethodName.POST, START_CLUSTER_URL);
+                besStartClusterRequest, HttpMethodName.POST, BASE_PATH, START);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
 
         BesStartClusterResponse besStartClusterResponse =
                 this.invokeHttpClient(internalRequest, BesStartClusterResponse.class);
@@ -208,31 +197,17 @@ public class BesClient extends AbstractBceClient {
         checkStringNotEmpty(besDeleteClusterRequest.getClusterId(), "" +
                 "The parameter clusterId should not be null or empty string.");
 
-        StringWriter writer = new StringWriter();
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("clusterId", besDeleteClusterRequest.getClusterId());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = besDeleteClusterRequest.toJson();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
 
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
-
         InternalRequest internalRequest = this.createRequest(
-                besDeleteClusterRequest, HttpMethodName.POST, DELETE_CLUSTER_URL);
+                besDeleteClusterRequest, HttpMethodName.POST, BASE_PATH, DELETE);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
 
         BesDeleteClusterResponse besDeleteClusterResponse =
                 this.invokeHttpClient(internalRequest, BesDeleteClusterResponse.class);
@@ -244,39 +219,27 @@ public class BesClient extends AbstractBceClient {
      * Users must authenticate with a valid BCE Access Key ID, and the response
      * contains all the BES clusters owned by the user.
      *
-     * @param besListClusterRequest
+     * @param besGetClusterListRequest
      * @return The response containing a list of the BES clusters owned by the authenticated sender of the request.
      */
-    public BesListClusterResponse clusterList(BesListClusterRequest besListClusterRequest) {
-        checkNotNull(besListClusterRequest, "request should not be null.");
-        StringWriter writer = new StringWriter();
+    public BesGetClusterListResponse getClusterList(BesGetClusterListRequest besGetClusterListRequest) {
+        checkNotNull(besGetClusterListRequest, "request should not be null.");
+
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeNumberField("pageNo", besListClusterRequest.getPageNo());
-            jsonGenerator.writeNumberField("pageSize", besListClusterRequest.getPageSize());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = besGetClusterListRequest.toJson();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
 
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
         InternalRequest internalRequest = this.createRequest(
-                besListClusterRequest, HttpMethodName.POST, CLUSTER_LIST_URL);
+                besGetClusterListRequest, HttpMethodName.POST, BASE_PATH, LIST);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
 
-        BesListClusterResponse deployResponse = this.invokeHttpClient(internalRequest, BesListClusterResponse.class);
-        return deployResponse;
+        BesGetClusterListResponse besGetClusterListResponse =
+                this.invokeHttpClient(internalRequest, BesGetClusterListResponse.class);
+        return besGetClusterListResponse;
     }
 
     /**
@@ -284,43 +247,29 @@ public class BesClient extends AbstractBceClient {
      * Users must authenticate with a valid BCE Access Key ID, and the response
      * contains all the BES clusters owned by the user.
      *
-     * @param besClusterDetailRequest
+     * @param besGetClusterDetailRequest
      * @return Get cluster information or error code
      */
-    public BesClusterDetailResponse clusterDetail(BesClusterDetailRequest besClusterDetailRequest) {
-        checkNotNull(besClusterDetailRequest, "request should not be null.");
-        checkStringNotEmpty(besClusterDetailRequest.getClusterId(),
+    public BesGetClusterDetailResponse getClusterDetail(BesGetClusterDetailRequest besGetClusterDetailRequest) {
+        checkNotNull(besGetClusterDetailRequest, "request should not be null.");
+        checkStringNotEmpty(besGetClusterDetailRequest.getClusterId(),
                 "The parameter clusterId should not be null or empty string.");
 
-        StringWriter writer = new StringWriter();
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("clusterId", besClusterDetailRequest.getClusterId());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = besGetClusterDetailRequest.toJson();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
 
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
-
         InternalRequest internalRequest = this.createRequest(
-                besClusterDetailRequest, HttpMethodName.POST, CLUSTER_DETAIL_URL);
+                besGetClusterDetailRequest, HttpMethodName.POST, BASE_PATH, DETAIL);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
 
-        BesClusterDetailResponse deployResponse =
-                this.invokeHttpClient(internalRequest, BesClusterDetailResponse.class);
-        return deployResponse;
+        BesGetClusterDetailResponse besGetClusterDetailResponse =
+                this.invokeHttpClient(internalRequest, BesGetClusterDetailResponse.class);
+        return besGetClusterDetailResponse;
     }
 
     /**
@@ -333,52 +282,19 @@ public class BesClient extends AbstractBceClient {
      */
     public BesCreateClusterResponse createCluster(BesCreateClusterRequest request) {
         checkNotNull(request, "request should not be null.");
-        StringWriter writer = new StringWriter();
+
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("name", request.getName());
-            jsonGenerator.writeStringField("password", request.getPassword());
-            jsonGenerator.writeArrayFieldStart("modules");
-            for (BesCreateClusterRequest.ModuleInfo modules : request.getModules()) {
-                jsonGenerator.writeStartObject();
-                jsonGenerator.writeStringField("type", modules.getType());
-                jsonGenerator.writeNumberField("instanceNum", modules.getInstanceNum());
-                jsonGenerator.writeEndObject();
-            }
-            jsonGenerator.writeEndArray();
-            BesCreateClusterRequest.ClusterBilling billing = request.getBilling();
-            jsonGenerator.writeObjectFieldStart("billing");
-            jsonGenerator.writeStringField("payment", billing.getPayment());
-            jsonGenerator.writeNumberField("time", billing.getTime());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.writeStringField("version", request.getVersion());
-            jsonGenerator.writeStringField("slotType", request.getSlotType());
-            jsonGenerator.writeBooleanField("isOpenService", request.isOpenService());
-            jsonGenerator.writeStringField("availableZone", request.getAvailableZone());
-            jsonGenerator.writeStringField("securityGroupId", request.getSecurityGroupId());
-            jsonGenerator.writeStringField("subnetUuid", request.getSubnetUuid());
-            jsonGenerator.writeStringField("vpcId", request.getVpcId());
-            jsonGenerator.writeStringField("serviceType", request.getServiceType());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = request.toJson();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
 
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.POST, CREATE_CLUSTER_URL);
+                request, HttpMethodName.POST, BASE_PATH, CREATE);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
+
         BesCreateClusterResponse deployResponse =
                 this.invokeHttpClient(internalRequest, BesCreateClusterResponse.class);
         return deployResponse;
@@ -394,51 +310,20 @@ public class BesClient extends AbstractBceClient {
      */
     public BesCreateClusterResponse resizeCluster(BesResizeClusterRequest request) {
         checkNotNull(request, "request should not be null.");
-        StringWriter writer = new StringWriter();
+
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("deployId", request.getDeployId());
-            jsonGenerator.writeStringField("name", request.getName());
-            jsonGenerator.writeStringField("region", request.getRegion());
-            jsonGenerator.writeStringField("productType", request.getProductType());
-            jsonGenerator.writeArrayFieldStart("modules");
-            for (BesResizeClusterRequest.ModuleDesc module : request.getModules()) {
-                jsonGenerator.writeStartObject();
-                jsonGenerator.writeStringField("slot_type", module.getSlotType());
-                jsonGenerator.writeNumberField("desireInstanceNum", module.getDesireInstanceNum());
-                jsonGenerator.writeStringField("version", module.getVersion());
-                jsonGenerator.writeStringField("type", module.getType());
-                jsonGenerator.writeEndObject();
-            }
-            jsonGenerator.writeEndArray();
-            jsonGenerator.writeArrayFieldStart("configs");
-            for (BesConfigTuple config : request.getConfigs()) {
-                jsonGenerator.writeStartObject();
-                jsonGenerator.writeStringField("id", config.getId());
-                jsonGenerator.writeStringField("value", config.getValue());
-                jsonGenerator.writeEndObject();
-            }
-            jsonGenerator.writeEndArray();
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = request.toJson(region);
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
-        InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.POST, RESIZE_CLUSTER_URL);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, BASE_PATH, RESIZE);
+
         internalRequest.addParameter("orderType", "RESIZE");
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
+
         BesCreateClusterResponse deployResponse =
                 this.invokeHttpClient(internalRequest, BesCreateClusterResponse.class);
         return deployResponse;
@@ -456,33 +341,18 @@ public class BesClient extends AbstractBceClient {
         checkNotNull(request, "request should not be null.");
         checkStringNotEmpty(request.getClusterId(),
                 "The parameter clusterId should not be null or empty string.");
-
-        StringWriter writer = new StringWriter();
+        String json = null;
         try {
-            JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("instanceId", request.getInstanceId());
-            jsonGenerator.writeStringField("clusterId", request.getClusterId());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
+            json = request.toJson();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
 
-        byte[] json = null;
-        try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
-        }
 
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.POST, START_CLUSTER_INSTANCE_URL);
+                request, HttpMethodName.POST, BASE_PATH, INSTANCE, START);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
 
         BesStartInstanceResponse besStartInstanceResponse =
                 this.invokeHttpClient(internalRequest, BesStartInstanceResponse.class);
@@ -501,36 +371,198 @@ public class BesClient extends AbstractBceClient {
         checkNotNull(request, "request should not be null.");
         checkStringNotEmpty(request.getClusterId(),
                 "The parameter clusterId should not be null or empty string.");
+        String json = null;
+        try {
+            json = request.toJson();
+        } catch (IOException e) {
+            throw new BceClientException("Fail to generate json", e);
+        }
+
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, BASE_PATH, INSTANCE, STOP);
+
+        addCommonHeader(internalRequest, json);
+
+        BesStopInstanceResponse besStopInstanceResponse =
+                this.invokeHttpClient(internalRequest, BesStopInstanceResponse.class);
+        return besStopInstanceResponse;
+    }
+
+    /**
+     *  Get BES renew list owned by the authenticated user.
+     *  Users must authenticate with a valid BCE Access Key ID, and the response
+     *  contains all the BES clusters owned by the user.
+     *
+     * @param request
+     * @return Returns a request response code or error message
+     */
+    public BesGetRenewListResponse getRenewList(BesGetRenewListRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        String json = null;
+        try {
+            json = request.toJson();
+        } catch (IOException e) {
+            throw new BceClientException("Fail to generate json", e);
+        }
+
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, BASE_PATH, RENEW, LIST);
+
+        addCommonHeader(internalRequest, json);
+
+        BesGetRenewListResponse besGetRenewListResponse =
+                this.invokeHttpClient(internalRequest, BesGetRenewListResponse.class);
+        return besGetRenewListResponse;
+    }
+
+    /**
+     *  Renew cluster owned by the authenticated user.
+     *  Users must authenticate with a valid BCE Access Key ID, and the response
+     *  contains all the BES clusters owned by the user.
+     *
+     * @param request
+     * @return Returns a request response code or error message
+     */
+    public BesRenewClusterResponse renewCluster(BesRenewClusterRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getClusterId(),
+                "The parameter clusterId should not be null or empty string.");
+        String json = null;
+        try {
+            json = request.toJson();
+        } catch (IOException e) {
+            throw new BceClientException("Fail to generate json", e);
+        }
+
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, BASE_PATH, RENEW);
+
+        internalRequest.addParameter("orderType", "RENEW");
+        addCommonHeader(internalRequest, json);
+
+        BesRenewClusterResponse besRenewClusterResponse =
+                this.invokeHttpClient(internalRequest, BesRenewClusterResponse.class);
+        return besRenewClusterResponse;
+    }
+
+    /**
+     *  Get BES auto renew list owned by the authenticated user.
+     *  Users must authenticate with a valid BCE Access Key ID, and the response
+     *  contains all the BES clusters owned by the user.
+     *
+     * @return Returns a request response code or error message
+     */
+    public BesGetAutoRenewRuleListResponse getAutoRenewRuleList() {
+        BesGetAutoRenewRuleListRequest besGetAutoRenewRuleListRequest = new BesGetAutoRenewRuleListRequest();
+        besGetAutoRenewRuleListRequest.setServiceType(BES_SERVICE_TYPE);
         StringWriter writer = new StringWriter();
         try {
             JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("instanceId", request.getInstanceId());
-            jsonGenerator.writeStringField("clusterId", request.getClusterId());
+            jsonGenerator.writeStringField("serviceType", BES_SERVICE_TYPE);
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
         } catch (IOException e) {
             throw new BceClientException("Fail to generate json", e);
         }
 
-        byte[] json = null;
+        InternalRequest internalRequest = this.createRequest(
+                besGetAutoRenewRuleListRequest, HttpMethodName.POST, BASE_PATH, AUTO_RENEW_RULE, LIST);
+
+        addCommonHeader(internalRequest, writer.toString());
+
+        BesGetAutoRenewRuleListResponse besGetAutoRenewRuleResponse =
+                this.invokeHttpClient(internalRequest, BesGetAutoRenewRuleListResponse.class);
+        return besGetAutoRenewRuleResponse;
+    }
+
+    /**
+     *  Create auto renew rule by the authenticated user.
+     *  Users must authenticate with a valid BCE Access Key ID, and the response
+     *  contains all the BES clusters owned by the user.
+     *
+     * @param request
+     * @return Returns a request response code or error message
+     */
+    public BesCreateAutoRenewRuleResponse createAutoRenewRule(BesCreateAutoRenewRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getClusterIds(),
+                "The parameter clusterIds should not be null or empty string.");
+        String json = null;
         try {
-            json = writer.toString().getBytes(DEFAULT_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new BceClientException("Fail to get UTF-8 bytes", e);
+            json = request.toJson(region);
+        } catch (IOException e) {
+            throw new BceClientException("Fail to generate json", e);
         }
 
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.POST, STOP_CLUSTER_INSTANCE_URL);
+                request, HttpMethodName.POST, BASE_PATH, AUTO_RENEW_RULE, CREATE);
 
-        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
-        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
-        internalRequest.addHeader(X_REGION, region);
-        internalRequest.setContent(RestartableInputStream.wrap(json));
+        addCommonHeader(internalRequest, json);
 
-        BesStopInstanceResponse besStopInstanceResponse =
-                this.invokeHttpClient(internalRequest, BesStopInstanceResponse.class);
-        return besStopInstanceResponse;
+        BesCreateAutoRenewRuleResponse besCreateAutoRenewRuleResponse =
+                this.invokeHttpClient(internalRequest, BesCreateAutoRenewRuleResponse.class);
+        return besCreateAutoRenewRuleResponse;
+    }
+
+    /**
+     *  Update auto renew rule owned by the authenticated user.
+     *  Users must authenticate with a valid BCE Access Key ID, and the response
+     *  contains all the BES clusters owned by the user.
+     *
+     * @param request
+     * @return Returns a request response code or error message
+     */
+    public BesUpdateAutoRenewRuleResponse updateAutoRenewRule(BesUpdateAutoRenewRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getClusterId(),
+                "The parameter clusterIds should not be null or empty string.");
+
+        String json = null;
+        try {
+            json = request.toJson();
+        } catch (IOException e) {
+            throw new BceClientException("Fail to generate json", e);
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, BASE_PATH, AUTO_RENEW_RULE, UPDATE);
+
+        addCommonHeader(internalRequest, json);
+
+        BesUpdateAutoRenewRuleResponse besUpdateAutoRenewRuleResponse =
+                this.invokeHttpClient(internalRequest, BesUpdateAutoRenewRuleResponse.class);
+        return besUpdateAutoRenewRuleResponse;
+    }
+
+    /**
+     *  Delete auto renew rule owned by the authenticated user.
+     *  Users must authenticate with a valid BCE Access Key ID, and the response
+     *  contains all the BES clusters owned by the user.
+     *
+     * @param request
+     * @return Returns a request response code or error message
+     */
+    public BesDeleteAutoRenewRuleResponse deleteAutoRenewRule(BesDeleteAutoRenewRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getClusterId(),
+                "The parameter clusterIds should not be null or empty string.");
+
+        String json = null;
+        try {
+            json = request.toJson();
+        } catch (IOException e) {
+            throw new BceClientException("Fail to generate json", e);
+        }
+
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, BASE_PATH, AUTO_RENEW_RULE, DELETE);
+
+        addCommonHeader(internalRequest, json);
+
+        BesDeleteAutoRenewRuleResponse besDeleteAutoRenewRuleResponse =
+                this.invokeHttpClient(internalRequest, BesDeleteAutoRenewRuleResponse.class);
+        return besDeleteAutoRenewRuleResponse;
     }
 
     /**
@@ -588,14 +620,23 @@ public class BesClient extends AbstractBceClient {
     }
 
     /**
-     *  Gets the region and adds it to the request header
+     * Add the common request header to the request object
      *
-     * @param endpoint
-     * @return region
+     * @param internalRequest A new request object populated with endpoint, resource path and specific
+     * parameters to send.
+     * @param json Json transmission of the request body
      */
-    private String getRegion(String endpoint) {
-        String region = endpoint.split("\\.")[1];
-        return region;
-    }
+    private void addCommonHeader(InternalRequest internalRequest, String json) {
+        byte[] bytes = null;
+        try {
+            bytes = json.getBytes(DEFAULT_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get UTF-8 bytes", e);
+        }
 
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(bytes.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, "application/json");
+        internalRequest.addHeader(X_REGION, region);
+        internalRequest.setContent(RestartableInputStream.wrap(bytes));
+    }
 }

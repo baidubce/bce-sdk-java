@@ -36,9 +36,8 @@ public class Datapoint {
     private Map<String, String> tags;
 
     /**
-     * Optional.
+     * Required.
      * Represent the second element's type in {@see #values}'s inner list.
-     * If not set, the value type is specified by self's JsonNode type.
      * And Bytes type is special, it represents the string value is a base64 encoded byte array.
      */
     private String type;
@@ -108,8 +107,7 @@ public class Datapoint {
      * @return Datapoint
      */
     public Datapoint addLongValue(long time, long value) {
-        initialValues();
-        checkType(TsdbConstants.TYPE_LONG);
+        initialValues(TsdbConstants.TYPE_LONG);
 
         values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new LongNode(value)));
         return this;
@@ -123,8 +121,7 @@ public class Datapoint {
      * @return Datapoint
      */
     public Datapoint addDoubleValue(long time, double value) {
-        initialValues();
-        checkType(TsdbConstants.TYPE_DOUBLE);
+        initialValues(TsdbConstants.TYPE_DOUBLE);
 
         values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new DoubleNode(value)));
         return this;
@@ -138,20 +135,15 @@ public class Datapoint {
      * @return Datapoint
      */
     public Datapoint addStringValue(long time, String value) {
-        initialValues();
-        checkType(TsdbConstants.TYPE_STRING);
+        initialValues(TsdbConstants.TYPE_STRING);
 
         values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new TextNode(value)));
         return this;
     }
 
     public Datapoint addBytesValue(long time, byte[] value) {
-        initialValues();
-        if (values != null && !values.isEmpty() && (type == null || !type.equals(TsdbConstants.TYPE_BYTES))) {
-            throw new IllegalStateException("There is already another type in datapoint, "
-                    + "could not add byte array type again");
-        }
-        type = TsdbConstants.TYPE_BYTES;
+        initialValues(TsdbConstants.TYPE_BYTES);
+
         values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new BinaryNode(value)));
         return this;
     }
@@ -169,23 +161,21 @@ public class Datapoint {
         return this;
     }
 
-    private void initialValues() {
+    private void initialValues(String inputType) {
         if (values == null) {
             values = Lists.newArrayList();
-            type = null;
+            type = inputType;
+            return;
+        }
+        if (!type.equals(inputType)) {
+            throw new IllegalStateException("There is already " + type
+                    + " type in datapoint, could not add " + inputType + " type again");
         }
     }
 
     private void initialTags() {
         if (tags == null) {
             tags = Maps.newHashMap();
-        }
-    }
-
-    private void checkType(String currentType) {
-        if (type != null && !type.equals(currentType)) {
-            throw new IllegalStateException("There is already " + type
-                    + " type in datapoint, could not add " + currentType + " type again");
         }
     }
 

@@ -8,7 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class CdnRequest extends AbstractBceRequest {
 
     /**
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     *
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
      */
     @Override
@@ -18,7 +19,8 @@ public class CdnRequest extends AbstractBceRequest {
     }
 
     /**
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

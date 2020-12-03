@@ -12,7 +12,12 @@
  */
 package com.baidubce.services.bes.model;
 
+import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
+
+import java.io.IOException;
+import java.io.StringWriter;
 
 /**
  *  @Description:  Request to stop a cluster
@@ -28,5 +33,17 @@ public class BesStopClusterRequest extends AbstractBesRequest {
 
     public void setClusterId(String clusterId) {
         this.clusterId = clusterId;
+    }
+
+    public String toJson() throws IOException {
+        StringWriter stringWriter = new StringWriter();
+
+        JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(stringWriter);
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("clusterId", clusterId);
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
+
+        return stringWriter.toString();
     }
 }

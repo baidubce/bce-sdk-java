@@ -90,6 +90,11 @@ public class RefererACL extends JsonObject {
      */
     public void setAllowEmpty(boolean allowEmpty) {
         this.allowEmpty = allowEmpty;
-    }    
+    }
+
+    public RefererACL withAllowEmpty(boolean allowEmpty) {
+        setAllowEmpty(allowEmpty);
+        return this;
+    }
     
 }

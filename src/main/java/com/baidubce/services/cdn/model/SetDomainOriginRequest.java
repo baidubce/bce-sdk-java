@@ -25,16 +25,25 @@ import java.util.List;
  * update by changxing01 on 19/8/28
  */
 public class SetDomainOriginRequest extends AbstractBceRequest {
-    
+
     private List<OriginPeer> origin;
     private String domain;
     private String defaultHost;
+    private boolean follow302;
 
     /**
      * @return defaultHost
      */
     public String getDefaultHost() {
         return defaultHost;
+    }
+
+    public boolean isFollow302() {
+        return follow302;
+    }
+
+    public void setFollow302(boolean follow302) {
+        this.follow302 = follow302;
     }
 
     /**
@@ -54,33 +63,42 @@ public class SetDomainOriginRequest extends AbstractBceRequest {
     }
 
     /**
+     * @param follow302 default back source host
+     * @return this object
+     */
+    public SetDomainOriginRequest withFollow302(boolean follow302) {
+        this.follow302 = follow302;
+        return this;
+    }
+
+    /**
      * @return domain
      */
     public String getDomain() {
         return domain;
     }
-    
+
     /**
      * @param domain the domain name
      */
     public void setDomain(String domain) {
         this.domain = domain;
     }
-    
+
     /**
      * @return origin
      */
     public List<OriginPeer> getOrigin() {
         return origin;
     }
-    
+
     /**
      * @param origin
      */
     public void setOrigin(List<OriginPeer> origin) {
         this.origin = origin;
     }
-    
+
     /**
      * @param domain the domain name
      * @return returns this object
@@ -89,7 +107,7 @@ public class SetDomainOriginRequest extends AbstractBceRequest {
         setDomain(domain);
         return this;
     }
-    
+
     /**
      * @param origin
      * @return returns this object
@@ -98,9 +116,10 @@ public class SetDomainOriginRequest extends AbstractBceRequest {
         setOrigin(origin);
         return this;
     }
-    
+
     /**
      * (non-Javadoc)
+     *
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
      */
     @Override
@@ -111,6 +130,7 @@ public class SetDomainOriginRequest extends AbstractBceRequest {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

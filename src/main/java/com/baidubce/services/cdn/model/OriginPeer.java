@@ -15,31 +15,30 @@ package com.baidubce.services.cdn.model;
 
 /**
  * @author yixing
- *
  */
 public class OriginPeer extends JsonObject {
     private String peer;
     private String host;
     private boolean backup;
-    private boolean follow302;
-    
+    private int weight;
+
     public OriginPeer withPeer(String peer) {
         this.peer = peer;
         return this;
     }
-    
+
     public OriginPeer withHost(String host) {
         this.host = host;
         return this;
     }
-    
+
     public OriginPeer withBackup(boolean backup) {
         this.backup = backup;
         return this;
     }
-    
-    public OriginPeer withFollow302(boolean follow302) {
-        this.follow302 = follow302;
+
+    public OriginPeer withWeight(int weight) {
+        this.weight = weight;
         return this;
     }
 
@@ -67,11 +66,12 @@ public class OriginPeer extends JsonObject {
         this.backup = backup;
     }
 
-    public boolean isFollow302() {
-        return follow302;
+    public int getWeight() {
+        return weight;
     }
 
-    public void setFollow302(boolean follow302) {
-        this.follow302 = follow302;
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
+
 }

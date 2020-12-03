@@ -15,6 +15,9 @@ package com.baidubce.services.cdn.model.domain;
 
 import com.baidubce.services.cdn.model.JsonObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * update by changxing01 on 19/8/28
  */
@@ -23,11 +26,24 @@ public class HttpsConfig extends JsonObject {
     private String certId;
     private boolean httpRedirect;
     private boolean httpOrigin;
-    private String sslVersion;
     private int httpRedirectCode;
     private boolean httpsRedirect;
     private int httpsRedirectCode;
     private boolean http2Enabled;
+    private String sslVersion;
+    private List<String> sslProtocols;
+
+    /**
+     * @param protocol
+     * @return
+     */
+    public HttpsConfig addSslProtocols(String protocol) {
+        if (sslProtocols == null) {
+            sslProtocols = new ArrayList<String>();
+        }
+        sslProtocols.add(protocol);
+        return this;
+    }
 
     /**
      * @param httpRedirectCode http redirect code
@@ -109,35 +125,35 @@ public class HttpsConfig extends JsonObject {
         this.sslVersion = sslVersion;
         return this;
     }
-    
+
     public boolean isEnabled() {
         return enabled;
     }
-    
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    
+
     public String getCertId() {
         return certId;
     }
-    
+
     public void setCertId(String certId) {
         this.certId = certId;
     }
-    
+
     public boolean isHttpRedirect() {
         return httpRedirect;
     }
-    
+
     public void setHttpRedirect(boolean httpRedirect) {
         this.httpRedirect = httpRedirect;
     }
-    
+
     public boolean isHttpOrigin() {
         return httpOrigin;
     }
-    
+
     public void setHttpOrigin(boolean httpOrigin) {
         this.httpOrigin = httpOrigin;
     }
@@ -180,5 +196,13 @@ public class HttpsConfig extends JsonObject {
 
     public void setHttp2Enabled(boolean http2Enabled) {
         this.http2Enabled = http2Enabled;
+    }
+
+    public List<String> getSslProtocols() {
+        return sslProtocols;
+    }
+
+    public void setSslProtocols(List<String> sslProtocols) {
+        this.sslProtocols = sslProtocols;
     }
 }

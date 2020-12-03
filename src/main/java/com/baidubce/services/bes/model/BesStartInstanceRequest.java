@@ -12,7 +12,12 @@
  */
 package com.baidubce.services.bes.model;
 
+import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
+
+import java.io.IOException;
+import java.io.StringWriter;
 
 /**
  *  @Description:  Request to start a node in a cluster
@@ -36,4 +41,17 @@ public class BesStartInstanceRequest extends AbstractBesRequest {
     public String getInstanceId() { return instanceId; }
 
     public void setInstanceId(String instanceId) { this.instanceId = instanceId; }
+
+    public String toJson() throws IOException {
+        StringWriter stringWriter = new StringWriter();
+
+        JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(stringWriter);
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("instanceId", instanceId);
+        jsonGenerator.writeStringField("clusterId", clusterId);
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
+
+        return stringWriter.toString();
+    }
 }

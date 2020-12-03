@@ -1,20 +1,24 @@
 /**
  * Copyright 2020 Baidu, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
 package com.baidubce.services.bes.model;
 
+import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -34,12 +38,6 @@ public class BesCreateClusterRequest extends AbstractBesRequest {
     private String version;
 
     @JsonProperty
-    private String slotType;
-
-    @JsonProperty
-    private boolean isOpenService;
-
-    @JsonProperty
     private String availableZone;
 
     @JsonProperty
@@ -50,19 +48,17 @@ public class BesCreateClusterRequest extends AbstractBesRequest {
 
     @JsonProperty
     private String vpcId;
-
-    @JsonProperty
-    private String serviceType;
-
     @JsonProperty
     private ClusterBilling billing;
+    @JsonProperty
+    private boolean isOldPackage;
 
-    public String getServiceType() {
-        return serviceType;
+    public boolean isOldPackage() {
+        return isOldPackage;
     }
 
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
+    public void setOldPackage(boolean oldPackage) {
+        isOldPackage = oldPackage;
     }
 
     public ClusterBilling getBilling() {
@@ -105,22 +101,6 @@ public class BesCreateClusterRequest extends AbstractBesRequest {
         this.version = version;
     }
 
-    public String getSlotType() {
-        return slotType;
-    }
-
-    public void setSlotType(String slotType) {
-        this.slotType = slotType;
-    }
-
-    public boolean isOpenService() {
-        return isOpenService;
-    }
-
-    public void setOpenService(boolean openService) {
-        isOpenService = openService;
-    }
-
     public String getAvailableZone() {
         return availableZone;
     }
@@ -158,12 +138,36 @@ public class BesCreateClusterRequest extends AbstractBesRequest {
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ModuleInfo {
-
         @JsonProperty
         private String type;
-
         @JsonProperty
         private int instanceNum;
+
+        @JsonProperty
+        private String slotType;
+
+        @JsonProperty
+        private DiskSlotInfo diskSlotInfo;
+
+        public String getSlotType() {
+            return slotType;
+        }
+
+        public void setSlotType(SlotType slotType) {
+            setSlotType(slotType.getSlotType());
+        }
+
+        public void setSlotType(String slotType) {
+            this.slotType = slotType;
+        }
+
+        public DiskSlotInfo getDiskSlotInfo() {
+            return diskSlotInfo;
+        }
+
+        public void setDiskSlotInfo(DiskSlotInfo diskSlotInfo) {
+            this.diskSlotInfo = diskSlotInfo;
+        }
 
         public int getInstanceNum() {
             return instanceNum;
@@ -177,6 +181,10 @@ public class BesCreateClusterRequest extends AbstractBesRequest {
             return type;
         }
 
+        public void setType(ModuleType type) {
+            setType(type.getModuleType());
+        }
+
         public void setType(String type) {
             this.type = type;
         }
@@ -187,19 +195,21 @@ public class BesCreateClusterRequest extends AbstractBesRequest {
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ClusterBilling {
-
         @JsonProperty
-        private String payment;
-
+        private String paymentType;
         @JsonProperty
         private int time;
 
-        public String getPayment() {
-            return payment;
+        public String getPaymentType() {
+            return paymentType;
         }
 
-        public void setPayment(String payment) {
-            this.payment = payment;
+        public void setPaymentType(PaymentType paymentType) {
+            setPaymentType(paymentType.getPaymentType());
+        }
+
+        public void setPaymentType(String paymentType) {
+            this.paymentType = paymentType;
         }
 
         public int getTime() {
@@ -210,4 +220,45 @@ public class BesCreateClusterRequest extends AbstractBesRequest {
             this.time = time;
         }
     }
+
+    public String toJson() throws IOException {
+        StringWriter stringWriter = new StringWriter();
+
+        JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(stringWriter);
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("name", name);
+        jsonGenerator.writeStringField("password", password);
+        jsonGenerator.writeArrayFieldStart("modules");
+        for (BesCreateClusterRequest.ModuleInfo module : modules) {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField("type", module.getType());
+            jsonGenerator.writeNumberField("instanceNum", module.getInstanceNum());
+            jsonGenerator.writeStringField("slotType", module.getSlotType());
+            if (module.getDiskSlotInfo() != null) {
+                jsonGenerator.writeObjectFieldStart("diskSlotInfo");
+                jsonGenerator.writeStringField("type", module.getDiskSlotInfo().getType());
+                jsonGenerator.writeNumberField("size", module.getDiskSlotInfo().getSize());
+                jsonGenerator.writeEndObject();
+            }
+            jsonGenerator.writeEndObject();
+        }
+        jsonGenerator.writeEndArray();
+        jsonGenerator.writeObjectFieldStart("billing");
+        jsonGenerator.writeStringField("paymentType", billing.getPaymentType());
+        jsonGenerator.writeNumberField("time", billing.getTime());
+        jsonGenerator.writeEndObject();
+        jsonGenerator.writeStringField("version", version);
+        jsonGenerator.writeBooleanField("isOpenService", false);
+        jsonGenerator.writeBooleanField("isOldPackage", isOldPackage);
+        jsonGenerator.writeStringField("availableZone", availableZone);
+        jsonGenerator.writeStringField("securityGroupId", securityGroupId);
+        jsonGenerator.writeStringField("subnetUuid", subnetUuid);
+        jsonGenerator.writeStringField("vpcId", vpcId);
+        jsonGenerator.writeStringField("serviceType", "BES");
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
+
+        return stringWriter.toString();
+    }
+
 }

@@ -71,6 +71,10 @@ import com.baidubce.services.cdn.model.cache.GetCacheDetailRequest;
 import com.baidubce.services.cdn.model.cache.GetCacheRecordsResponse;
 import com.baidubce.services.cdn.model.cache.GetPrefetchStatusResponse;
 import com.baidubce.services.cdn.model.cache.PrefetchTask;
+import com.baidubce.services.cdn.model.certificate.DelDomainCertResponse;
+import com.baidubce.services.cdn.model.certificate.GetDomainCertResponse;
+import com.baidubce.services.cdn.model.certificate.SetDomainCertRequest;
+import com.baidubce.services.cdn.model.certificate.SetDomainCertResponse;
 import com.baidubce.services.cdn.model.domain.CheckDomainValidResponse;
 import com.baidubce.services.cdn.model.domain.CommonResponse;
 import com.baidubce.services.cdn.model.domain.CreateDomainRequest;
@@ -83,6 +87,7 @@ import com.baidubce.services.cdn.model.domain.EnableDomainRequest;
 import com.baidubce.services.cdn.model.domain.EnableDomainResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainAccessLimitResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainCacheFullUrlResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainCacheShareResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainCacheTTLRequest;
 import com.baidubce.services.cdn.model.domain.GetDomainCacheTTLResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainClientIpResponse;
@@ -92,21 +97,34 @@ import com.baidubce.services.cdn.model.domain.GetDomainConfigResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainCorsResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainErrorPageResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainFileTrimResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainHSTSResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainHttpHeaderResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainIPv6DispatchResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainIpACLResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainLogRequest;
 import com.baidubce.services.cdn.model.domain.GetDomainLogResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainMediaDragResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainMobileAccessResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainOCSPSwitchResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainOfflineModeSwitchResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainOriginProtocolRequest;
+import com.baidubce.services.cdn.model.domain.GetDomainOriginProtocolResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainQUICSwitchResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainRangeSwitchResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainRefererACLResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainRetryOriginResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainSeoSwitchResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainTrafficLimitRequest;
+import com.baidubce.services.cdn.model.domain.GetDomainTrafficLimitResponse;
+import com.baidubce.services.cdn.model.domain.GetDomainUaAclRequest;
+import com.baidubce.services.cdn.model.domain.GetDomainUaAclResponse;
 import com.baidubce.services.cdn.model.domain.GetUserDomainResponse;
 import com.baidubce.services.cdn.model.domain.GetUserDomainsRequest;
 import com.baidubce.services.cdn.model.domain.HttpsConfig;
 import com.baidubce.services.cdn.model.domain.RequestAuth;
 import com.baidubce.services.cdn.model.domain.SetDomainAccessLimitRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainCacheFullUrlRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainCacheShareRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainCacheTTLRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainClientIpRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainCompressRequest;
@@ -114,13 +132,22 @@ import com.baidubce.services.cdn.model.domain.SetDomainCorsRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainErrorPageRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainFileTrimRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainFollowProtocolRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainHSTSRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainHttpHeaderRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainIPv6DispatchRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainIpACLRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainMediaDragRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainMobileAccessRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainOCSPRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainOfflineModeRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainOriginProtocolRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainQUICRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainRangeSwitchRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainRefererACLRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainRetryOriginRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainSeoSwitchRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainTrafficLimitRequest;
+import com.baidubce.services.cdn.model.domain.SetDomainUaAclRequest;
 import com.baidubce.services.cdn.model.domain.SetRequestAuthRequest;
 import com.baidubce.services.cdn.model.dsa.GetDsaDomainListResponse;
 import com.baidubce.services.cdn.model.dsa.SetDomainDsaRequest;
@@ -145,7 +172,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Client for accessing CDN Services. 
+ * Client for accessing CDN Services.
  * Created by sunyixing on 2016/1/9.
  * Update by changxing01 on 2019/10/15
  */
@@ -156,7 +183,7 @@ public class CdnClient extends AbstractBceClient {
      * The version information for Document service APIs as URI prefix.
      */
     private static final String VERSION = "v2";
-    
+
     /**
      * The common URI prefix for domain operation.
      */
@@ -166,42 +193,42 @@ public class CdnClient extends AbstractBceClient {
      * The common URI prefix for statistic services.
      */
     private static final String STAT = "stat";
-    
+
     /**
      * The common URI prefix for cache operation.
      */
     private static final String CACHE = "cache";
-    
+
     /**
      * The common URI prefix for logmodel operation.
      */
     private static final String LOG = "logmodel";
-    
+
     /**
      * The common URI prefix for utils operation.
      */
     private static final String UTILS = "utils";
 
     private static final String USER = "user";
-    
+
     /**
      * Generate signature with specified headers.
      */
     private static final String[] HEADERS_TO_SIGN = {"host", "x-bce-date"};
-    
-    private static final HttpResponseHandler[] cdnHandlers = new HttpResponseHandler[] {
+
+    private static final HttpResponseHandler[] cdnHandlers = new HttpResponseHandler[]{
             new BceMetadataResponseHandler(),
             new BceErrorResponseHandler(),
             new BceJsonResponseHandler()
     };
-    
+
     /**
      * Constructs a new Document client to invoke service methods on CDN.
      */
     public CdnClient() {
         this(new BceClientConfiguration());
     }
-      
+
     /**
      * Constructs a new client using the client configuration to access CDN services.
      *
@@ -214,7 +241,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Create a new domain acceleration.
-     * 
+     *
      * @param request The request containing user-defined domain information.
      * @return Result of the createDomain operation returned by the service.
      */
@@ -227,7 +254,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Enable an existing domain acceleration.
-     * 
+     *
      * @param domain The specified domain name.
      */
     public void enableDomain(String domain) {
@@ -236,7 +263,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Enable an existing domain acceleration.
-     * 
+     *
      * @param request The request containing user-defined domain information.
      * @return Result of the enableDomain operation returned by the service.
      */
@@ -249,7 +276,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Disable an existing domain acceleration.
-     * 
+     *
      * @param domain Name of the domain.
      */
     public void disableDomain(String domain) {
@@ -258,7 +285,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Disable an existing domain acceleration.
-     * 
+     *
      * @param request The request containing user-defined domain information.
      * @return Result of the disableDomain operation returned by the service.
      */
@@ -271,16 +298,16 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Delete an existing domain acceleration.
-     * 
+     *
      * @param domain Name of the domain.
      */
     public void deleteDomain(String domain) {
         deleteDomain(new DeleteDomainRequest().withDomain(domain));
     }
-    
+
     /**
      * Delete an existing domain acceleration
-     * 
+     *
      * @param request The request containing user-defined domain information.
      * @return Result of the deleteDomain operation returned by the service.
      */
@@ -304,7 +331,7 @@ public class CdnClient extends AbstractBceClient {
      *
      * @param request The request containing all of the options related to the listing of domains.
      * @return All of the CDN domains owned by the authenticated sender of the request.
-     */    
+     */
     public ListDomainsResponse listDomains(ListDomainsRequest request) {
         Validate.checkNotNull(request, "The parameter request should NOT be null.");
         InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, DOMAIN);
@@ -366,7 +393,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Get detailed information of a domain.
-     * 
+     *
      * @param domain Name of the domain.
      * @return getDomainConfig of the getDomainConfig operation returned by the service.
      */
@@ -376,7 +403,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Get detailed information of a domain.
-     * 
+     *
      * @param request The request containing all of the options related to the domain.
      * @return getDomainConfig of the getDomainConfig operation returned by the service.
      */
@@ -389,9 +416,9 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Update origin of specified domain acceleration.
-     * 
+     *
      * @param domain Name of the domain.
-     * @param peer The peer address of new origin.
+     * @param peer   The peer address of new origin.
      */
     public void setDomainOrigin(String domain, String peer) {
         List<OriginPeer> origin = new ArrayList<OriginPeer>();
@@ -404,7 +431,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Update origin of specified domain acceleration.
-     * 
+     *
      * @param request The request containing all of the options related to the domain.
      * @return Result of the setDomainOrigin operation returned by the service.
      */
@@ -412,7 +439,7 @@ public class CdnClient extends AbstractBceClient {
         Validate.checkNotNull(request, "The parameter request should NOT be null.");
         InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
                 DOMAIN, request.getDomain(), "config");
-        internalRequest.addParameter("origin","");
+        internalRequest.addParameter("origin", "");
         this.attachRequestToBody(request, internalRequest);
         return invokeHttpClient(internalRequest, CommonResponse.class);
     }
@@ -420,7 +447,7 @@ public class CdnClient extends AbstractBceClient {
     /**
      * The configuration protocol follows back to the source
      *
-     * @param domain Name of the domain.
+     * @param domain         Name of the domain.
      * @param followProtocol Whether the back source protocol is consistent with the request protocol
      * @return Result of the setDomainFollowProtocol operation returned by the service.
      */
@@ -448,7 +475,7 @@ public class CdnClient extends AbstractBceClient {
     /**
      * Update RangeSwitch of specified domain acceleration.
      *
-     * @param domain domain's name
+     * @param domain      domain's name
      * @param rangeSwitch The request containing all of the options related to the domain.
      * @return Result of the setDomainRangeSwitch operation returned by the service.
      */
@@ -591,6 +618,106 @@ public class CdnClient extends AbstractBceClient {
     }
 
     /**
+     * Update OCSP of specified domain acceleration.
+     *
+     * @param request domain and switch
+     * @return
+     */
+    public CommonResponse setDomainOCSPSwitch(SetDomainOCSPRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN,
+                request.getDomain(), "config");
+        internalRequest.addParameter("ocsp", "");
+        attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public GetDomainOCSPSwitchResponse getDomainOCSPSwitch(String domain) {
+        return getDomainOCSPSwitch(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get ipv6Dispatch config information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainOCSPSwitchResponse getDomainOCSPSwitch(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("ocsp", "");
+        return invokeHttpClient(internalRequest, GetDomainOCSPSwitchResponse.class);
+    }
+
+    /**
+     * Update QUIC of specified domain acceleration.
+     *
+     * @param domain
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainQUICSwitch(String domain, SetDomainQUICRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, domain, "config");
+        internalRequest.addParameter("quic", "");
+        attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public GetDomainQUICSwitchResponse getDomainQUICSwitch(String domain) {
+        return getDomainQUICSwitch(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get ipv6Dispatch config information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainQUICSwitchResponse getDomainQUICSwitch(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("quic", "");
+        return invokeHttpClient(internalRequest, GetDomainQUICSwitchResponse.class);
+    }
+
+
+    /**
+     * Update offline mode of specified domain acceleration.
+     *
+     * @param domain
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainOfflineModeSwitch(String domain, SetDomainOfflineModeRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, DOMAIN, domain, "config");
+        internalRequest.addParameter("offlineMode", "");
+        attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public GetDomainOfflineModeSwitchResponse getDomainOfflineModeSwitch(String domain) {
+        return getDomainOfflineModeSwitch(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get OfflineMode config information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainOfflineModeSwitchResponse getDomainOfflineModeSwitch(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("offlineMode", "");
+        return invokeHttpClient(internalRequest, GetDomainOfflineModeSwitchResponse.class);
+    }
+
+    /**
      * Get SeoSwitch of specified domain acceleration.
      *
      * @param domain Name of the domain.
@@ -598,6 +725,162 @@ public class CdnClient extends AbstractBceClient {
      */
     public GetDomainSeoSwitchResponse getDomainSeoSwitch(String domain) {
         return getDomainSeoSwitch(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * add/update certificate of specified domain
+     *
+     * @param domain
+     * @param request
+     * @return
+     */
+    public SetDomainCertResponse setDomainCert(String domain, SetDomainCertRequest request) {
+        Validate.checkStringNotEmpty(domain, "The parameter domain should NOT be empty.");
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                domain, "certificates");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, SetDomainCertResponse.class);
+    }
+
+    public DelDomainCertResponse deleteDomainCert(String domain) {
+        return deleteDomainCert(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * delete certificate of specified domain
+     *
+     * @param request
+     * @return
+     */
+    public DelDomainCertResponse deleteDomainCert(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.DELETE,
+                request.getDomain(), "certificates");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, DelDomainCertResponse.class);
+    }
+
+    public GetDomainCertResponse getDomainCert(String domain) {
+        return getDomainCert(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get Domain Cert detail information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainCertResponse getDomainCert(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                request.getDomain(), "certificates");
+        return invokeHttpClient(internalRequest, GetDomainCertResponse.class);
+    }
+
+    /**
+     * Update HSTS rules of specified domain acceleration.
+     *
+     * @param domain  domain
+     * @param request The request containing all of the options related to the update request.
+     * @return Result of the setDomainHSTS operation returned by the service.
+     */
+    public CommonResponse setDomainHSTS(String domain, SetDomainHSTSRequest request) {
+        Validate.checkStringNotEmpty(domain, "The parameter domain should NOT be empty.");
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                DOMAIN, domain, "config");
+        internalRequest.addParameter("hsts", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public GetDomainHSTSResponse getDomainHSTS(String domain) {
+        return getDomainHSTS(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get ipv6Dispatch config information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainHSTSResponse getDomainHSTS(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("hsts", "");
+        return invokeHttpClient(internalRequest, GetDomainHSTSResponse.class);
+    }
+
+    /**
+     * Update ipv6Dispatch of specified domain acceleration.
+     *
+     * @param domain
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainIPv6Dispatch(String domain, SetDomainIPv6DispatchRequest request) {
+        Validate.checkStringNotEmpty(domain, "The parameter domain should NOT be empty.");
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                DOMAIN, domain, "config");
+        internalRequest.addParameter("ipv6Dispatch", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public GetDomainIPv6DispatchResponse getDomainIPv6Dispatch(String domain) {
+        return getDomainIPv6Dispatch(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get ipv6Dispatch config information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainIPv6DispatchResponse getDomainIPv6Dispatch(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("ipv6Dispatch", "");
+        return invokeHttpClient(internalRequest, GetDomainIPv6DispatchResponse.class);
+    }
+
+    /**
+     * Update Domain cache share of specified domain acceleration.
+     *
+     * @param domain
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainCacheShare(String domain, SetDomainCacheShareRequest request) {
+        Validate.checkStringNotEmpty(domain, "The parameter domain should NOT be empty.");
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                DOMAIN, domain, "config");
+        internalRequest.addParameter("cacheShare", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public GetDomainCacheShareResponse getDomainCacheShare(String domain) {
+        return getDomainCacheShare(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get cache share config information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainCacheShareResponse getDomainCacheShare(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("cacheShare", "");
+        return invokeHttpClient(internalRequest, GetDomainCacheShareResponse.class);
     }
 
     /**
@@ -617,7 +900,7 @@ public class CdnClient extends AbstractBceClient {
     /**
      * Update FileTrim of specified domain acceleration.
      *
-     * @param domain Name of the domain.
+     * @param domain   Name of the domain.
      * @param fileTrim Whether to enable page optimization
      */
     public void setDomainFileTrim(String domain, boolean fileTrim) {
@@ -743,7 +1026,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Get cache policies of specified domain acceleration.
-     * 
+     *
      * @param domain Name of the domain.
      * @return Detailed information about cache policies.
      */
@@ -754,7 +1037,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Get cache policies of specified domain acceleration.
-     * 
+     *
      * @param request The request containing all of the options related to the domain.
      * @return Detailed information about cache policies.
      */
@@ -768,7 +1051,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Update cache policies of specified domain acceleration.
-     * 
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setDomainCacheTTL operation returned by the service.
      */
@@ -782,9 +1065,43 @@ public class CdnClient extends AbstractBceClient {
     }
 
     /**
+     * Update retry origin of specified domain acceleration.
+     *
+     * @param domain
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainRetryOrigin(String domain, SetDomainRetryOriginRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                DOMAIN, domain, "config");
+        internalRequest.addParameter("retryOrigin", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    public GetDomainRetryOriginResponse getDomainRetryOrigin(String domain) {
+        return getDomainRetryOrigin(new DomainMiddleRequest().withDomain(domain));
+    }
+
+    /**
+     * Get retry origin config information of specified domain acceleration.
+     *
+     * @param request The request containing all of the options related to the domain.
+     * @return Result of the getDomainClientIp operation returned by the service.
+     */
+    public GetDomainRetryOriginResponse getDomainRetryOrigin(DomainMiddleRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("retryOrigin", "");
+        return invokeHttpClient(internalRequest, GetDomainRetryOriginResponse.class);
+    }
+
+    /**
      * Update cache policy of specified domain acceleration.
-     * 
-     * @param domain Name of the domain.
+     *
+     * @param domain  Name of the domain.
      * @param setting For true, treat the full URL as unique cache id, otherwise
      *                ignore query string parameters.
      */
@@ -797,7 +1114,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Update cache policy of specified domain acceleration.
-     * 
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setDomainCacheFullUrl operation returned by the service.
      */
@@ -812,6 +1129,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * search domain's rule of caching filter parameter
+     *
      * @param domain Name of the domain.
      * @return domain's rule of cache filter parameter
      */
@@ -821,6 +1139,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * search domain's rule of caching filter parameter
+     *
      * @param request The request containing all of the options related to the get cache full url request.
      * @return domain's rule of cache filter parameter
      */
@@ -849,6 +1168,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * search domain's custom error page
+     *
      * @param domain Name of the domain.
      * @return custom error page info list
      */
@@ -858,6 +1178,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * search domain's custom error page
+     *
      * @param request The request containing all of the options related to the get error page request.
      * @return custom error page info list
      */
@@ -871,7 +1192,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Update RefererACL rules of specified domain acceleration.
-     * 
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setDomainRefererACL operation returned by the service.
      */
@@ -911,7 +1232,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Update IpACL rules of specified domain acceleration.
-     * 
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setDomainIpACL operation returned by the service.
      */
@@ -951,8 +1272,8 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Set the rate limit of specified domain acceleration.
-     * 
-     * @param domain Name of the domain.
+     *
+     * @param domain    Name of the domain.
      * @param limitRate The limit of downloading rate, in Bytes/s.
      */
     public void setDomainLimitRate(String domain, int limitRate) {
@@ -964,7 +1285,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Set the rate limit of specified domain acceleration.
-     * 
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setDomainLimitRate operation returned by the service.
      */
@@ -978,7 +1299,91 @@ public class CdnClient extends AbstractBceClient {
     }
 
     /**
+     * Set the traffic limit of specified domain acceleration.
+     * each response to client
+     *
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainTrafficLimit(SetDomainTrafficLimitRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest =
+                createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("trafficLimit", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    /**
+     * Get trafficLimit of specified domain acceleration.
+     * for each response
+     *
+     * @param domain
+     * @return
+     */
+    public GetDomainTrafficLimitResponse getDomainTrafficLimit(String domain) {
+        GetDomainTrafficLimitRequest request = new GetDomainTrafficLimitRequest().withDomain(domain);
+        return this.getTrafficLimit(request);
+    }
+
+    /**
+     * Get trafficLimit of specified domain acceleration.
+     * for each response
+     *
+     * @param request
+     * @return
+     */
+    public GetDomainTrafficLimitResponse getTrafficLimit(GetDomainTrafficLimitRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest =
+                createRequest(request, HttpMethodName.GET, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("trafficLimit", "");
+        return invokeHttpClient(internalRequest, GetDomainTrafficLimitResponse.class);
+    }
+
+    /**
+     * Set the UA ACL of specified domain acceleration.
+     *
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainUaAcl(SetDomainUaAclRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest =
+                createRequest(request, HttpMethodName.PUT, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("uaAcl", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    /**
+     * Get UA ACL of specified domain acceleration.
+     *
+     * @param domain
+     * @return
+     */
+    public GetDomainUaAclResponse getDomainUaAcl(String domain) {
+        GetDomainUaAclRequest request = new GetDomainUaAclRequest().withDomain(domain);
+        return this.getDomainUaAcl(request);
+    }
+
+    /**
+     * Get UA ACL of specified domain acceleration.
+     *
+     * @param request
+     * @return
+     */
+    public GetDomainUaAclResponse getDomainUaAcl(GetDomainUaAclRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest =
+                createRequest(request, HttpMethodName.GET, DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("uaAcl", "");
+        return invokeHttpClient(internalRequest, GetDomainUaAclResponse.class);
+    }
+
+    /**
      * set cors config of specified domain acceleration.
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setDomainCors operation returned by the service.
      */
@@ -1029,6 +1434,46 @@ public class CdnClient extends AbstractBceClient {
         internalRequest.addParameter("accessLimit", "");
         this.attachRequestToBody(request, internalRequest);
         return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    /**
+     * set origin protocal config of specified domain acceleration.
+     *
+     * @param request
+     * @return
+     */
+    public CommonResponse setDomainOriginProtocol(SetDomainOriginProtocolRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("originProtocol", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    /**
+     * Get origin protocol config information of specified domain acceleration.
+     *
+     * @param domain
+     * @return
+     */
+    public GetDomainOriginProtocolResponse getDomainOriginProtocol(String domain) {
+        GetDomainOriginProtocolRequest request = new GetDomainOriginProtocolRequest().withDomain(domain);
+        return this.getDomainOriginProtocol(request);
+    }
+
+    /**
+     * Get origin protocol config information of specified domain acceleration.
+     *
+     * @param request
+     * @return
+     */
+    public GetDomainOriginProtocolResponse getDomainOriginProtocol(GetDomainOriginProtocolRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("originProtocol", "");
+        return invokeHttpClient(internalRequest, GetDomainOriginProtocolResponse.class);
     }
 
     /**
@@ -1090,9 +1535,9 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Set HTTPS with certain configuration.
-     * 
+     *
      * @param domain Name of the domain.
-     * @param https The configuration of HTTPS.
+     * @param https  The configuration of HTTPS.
      */
     public void setHttpsConfig(String domain, HttpsConfig https) {
         SetHttpsConfigRequest request = new SetHttpsConfigRequest()
@@ -1103,7 +1548,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Set HTTPS with certain configuration.
-     * 
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setHTTPSAcceleration operation returned by the service.
      */
@@ -1118,8 +1563,8 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Set the request authentication.
-     * 
-     * @param domain Name of the domain.
+     *
+     * @param domain      Name of the domain.
      * @param requestAuth The configuration of authentication.
      */
     public void setRequestAuth(String domain, RequestAuth requestAuth) {
@@ -1131,7 +1576,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Set the request authentication.
-     * 
+     *
      * @param request The request containing all of the options related to the update request.
      * @return Result of the setHTTPSAcceleration operation returned by the service.
      */
@@ -1189,6 +1634,7 @@ public class CdnClient extends AbstractBceClient {
 
     /**
      * Post purge request
+     *
      * @param request The request containing all of the URLs to be purged.
      * @return Result of the purge operation returned by the service.
      */
@@ -1266,7 +1712,7 @@ public class CdnClient extends AbstractBceClient {
 
         return this.invokeHttpClient(internalRequest, GetPrefetchStatusResponse.class);
     }
-    
+
     /**
      * Get pv statistics with specified attributes.
      *
@@ -1275,31 +1721,31 @@ public class CdnClient extends AbstractBceClient {
      */
     public GetStatPvResponse getStatPv(GetStatPvRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "pv");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         if (request.isWithRegion()) {
             internalRequest.addParameter("withRegion", "");
         }
         return this.invokeHttpClient(internalRequest, GetStatPvResponse.class);
     }
-    
+
     /**
      * Get flow statistics with specified attributes.
      *
@@ -1309,31 +1755,31 @@ public class CdnClient extends AbstractBceClient {
     public GetStatFlowResponse getStatFlow(GetStatFlowRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
                 STAT, "flow");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         if (request.isWithRegion()) {
             internalRequest.addParameter("withRegion", "");
         }
         return this.invokeHttpClient(internalRequest, GetStatFlowResponse.class);
     }
-    
+
     /**
      * Get origin flow statistics with specified attributes.
      *
@@ -1343,27 +1789,28 @@ public class CdnClient extends AbstractBceClient {
     public GetStatSrcFlowResponse getStatSrcFlow(GetStatSrcFlowRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
                 STAT, "srcflow");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         return this.invokeHttpClient(internalRequest, GetStatSrcFlowResponse.class);
     }
+
     /**
      * Get hit rate statistics with specified attributes.
      *
@@ -1373,28 +1820,28 @@ public class CdnClient extends AbstractBceClient {
     public GetStatHitRateResponse getStatHitRate(GetStatHitRateRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
                 STAT, "hitrate");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         return this.invokeHttpClient(internalRequest, GetStatHitRateResponse.class);
     }
-    
+
     /**
      * Get http code statistics with specified attributes.
      *
@@ -1404,32 +1851,32 @@ public class CdnClient extends AbstractBceClient {
     public GetStatHttpCodeResponse getStatHttpCode(GetStatHttpCodeRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
                 STAT, "httpcode");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         if (request.isWithRegion()) {
             internalRequest.addParameter("withRegion", "");
         }
-        
+
         return this.invokeHttpClient(internalRequest, GetStatHttpCodeResponse.class);
     }
-    
+
     /**
      * Get top url statistics with specified attributes.
      *
@@ -1439,26 +1886,26 @@ public class CdnClient extends AbstractBceClient {
     public GetStatTopUrlResponse getStatTopUrl(GetStatTopUrlRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
                 STAT, "topn", "url");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime", DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime", DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         return this.invokeHttpClient(internalRequest, GetStatTopUrlResponse.class);
     }
-    
+
     /**
      * Get top http referer statistics with specified attributes.
      *
@@ -1468,28 +1915,28 @@ public class CdnClient extends AbstractBceClient {
     public GetStatTopRefererResponse getStatTopReferer(GetStatTopRefererRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
                 STAT, "topn", "referer");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         return this.invokeHttpClient(internalRequest, GetStatTopRefererResponse.class);
     }
-    
+
     /**
      * Get uv statistics with specified attributes.
      *
@@ -1498,28 +1945,28 @@ public class CdnClient extends AbstractBceClient {
      */
     public GetStatUvResponse getStatUv(GetStatUvRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, STAT, "uv");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         return this.invokeHttpClient(internalRequest, GetStatUvResponse.class);
     }
-    
+
     /**
      * Get average speed statistics with specified attributes.
      *
@@ -1529,25 +1976,25 @@ public class CdnClient extends AbstractBceClient {
     public GetStatAvgSpeedResponse getStatAvgSpeed(GetStatAvgSpeedRequest request) {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
                 STAT, "avgspeed");
-        
+
         if (request.getStartTime() != null) {
             internalRequest.addParameter("startTime",
                     DateUtils.formatAlternateIso8601Date(request.getStartTime()));
         }
-        
+
         if (request.getEndTime() != null) {
             internalRequest.addParameter("endTime",
                     DateUtils.formatAlternateIso8601Date(request.getEndTime()));
         }
-        
+
         if (request.getDomain() != null) {
             internalRequest.addParameter("domain", request.getDomain());
         }
-        
+
         if (request.getPeriod() != null) {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
-        
+
         return this.invokeHttpClient(internalRequest, GetStatAvgSpeedResponse.class);
     }
 
@@ -1598,7 +2045,7 @@ public class CdnClient extends AbstractBceClient {
      */
     public void setDsa(SetDsaRequest request) {
         Validate.checkNotNull(request, "The parameter request should NOT be null.");
-        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,  "dsa");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, "dsa");
         this.attachRequestToBody(request, internalRequest);
         this.invokeHttpClient(internalRequest, CommonResponse.class);
     }
@@ -1610,7 +2057,7 @@ public class CdnClient extends AbstractBceClient {
      */
     public GetDsaDomainListResponse getDsaDomainList() {
         CdnRequest request = new CdnRequest();
-        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,  "dsa", DOMAIN);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, "dsa", DOMAIN);
         return this.invokeHttpClient(internalRequest, GetDsaDomainListResponse.class);
     }
 
@@ -1698,15 +2145,14 @@ public class CdnClient extends AbstractBceClient {
         checkNotNull(request.getIp());
         internalRequest.addParameter("action", request.getAction());
         internalRequest.addParameter("ip", request.getIp());
-        
+
         return this.invokeHttpClient(internalRequest, DescribeIpResponse.class);
     }
 
     /**
      * Get statistics metric with specified attributes (stat_version_2.0).
      *
-     * @param request
-     *            The request containing all the options related to the statistics.
+     * @param request The request containing all the options related to the statistics.
      * @return Details of statistics
      */
     public GetStatMetricResponse getStatMetricData(GetStatMetricRequest request) {
@@ -1726,15 +2172,15 @@ public class CdnClient extends AbstractBceClient {
         internalRequest.setContent(RestartableInputStream.wrap(content));
         return this.invokeHttpClient(internalRequest, GetStatMetricResponse.class);
     }
-    
+
     /**
      * Creates and initializes a new request object for the specified resource.
      *
-     * @param bceRequest The original BCE request created by the user.
-     * @param httpMethod The HTTP method to use when sending the request.
+     * @param bceRequest    The original BCE request created by the user.
+     * @param httpMethod    The HTTP method to use when sending the request.
      * @param pathVariables The optional variables used in the URI path.
      * @return A new request object populated with endpoint, resource path and specific
-     *         parameters to send.
+     * parameters to send.
      */
     private InternalRequest createRequest(
             AbstractBceRequest bceRequest, HttpMethodName httpMethod, String... pathVariables) {
@@ -1756,14 +2202,12 @@ public class CdnClient extends AbstractBceClient {
 
         return request;
     }
-    
+
     /**
      * put json object into http content for put or post request.
      *
-     * @param request
-     *            json object of rest request
-     * @param httpRequest
-     *            http request object
+     * @param request     json object of rest request
+     * @param httpRequest http request object
      */
     private void attachRequestToBody(AbstractBceRequest request, InternalRequest httpRequest) {
         byte[] content;

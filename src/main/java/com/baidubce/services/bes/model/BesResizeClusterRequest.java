@@ -12,10 +12,14 @@
  */
 package com.baidubce.services.bes.model;
 
+import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
 
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -35,20 +39,20 @@ public class BesResizeClusterRequest extends AbstractBesRequest {
     private List<BesConfigTuple> configs;
 
     @JsonProperty
-    private String productType;
+    private String paymentType;
 
     @JsonProperty
-    private String deployId;
+    private String clusterId;
 
     @JsonProperty
     private String region;
 
-    public String getDeployId() {
-        return deployId;
+    public String getClusterId() {
+        return clusterId;
     }
 
-    public void setDeployId(String deployId) {
-        this.deployId = deployId;
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
     }
 
     public String getName() {
@@ -83,12 +87,16 @@ public class BesResizeClusterRequest extends AbstractBesRequest {
         this.configs = configs;
     }
 
-    public String getProductType() {
-        return productType;
+    public String getPaymentType() {
+        return paymentType;
     }
 
-    public void setProductType(String productType) {
-        this.productType = productType;
+    public void setPaymentType(PaymentType paymentType) {
+        setPaymentType(paymentType.getPaymentType());
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
     }
 
     public static class ModuleDesc {
@@ -109,6 +117,10 @@ public class BesResizeClusterRequest extends AbstractBesRequest {
             return type;
         }
 
+        public void setType(ModuleType type) {
+            setType(type.getModuleType());
+        }
+
         public void setType(String type) {
             this.type = type;
         }
@@ -125,6 +137,10 @@ public class BesResizeClusterRequest extends AbstractBesRequest {
             return slotType;
         }
 
+        public void setSlotType(SlotType slotType) {
+            setSlotType(slotType.getSlotType());
+        }
+
         public void setSlotType(String slotType) {
             this.slotType = slotType;
         }
@@ -137,4 +153,30 @@ public class BesResizeClusterRequest extends AbstractBesRequest {
             this.desireInstanceNum = desireInstanceNum;
         }
     }
+
+    public String toJson(String region) throws IOException {
+        StringWriter stringWriter = new StringWriter();
+
+        JsonGenerator jsonGenerator = JsonUtils.jsonGeneratorOf(stringWriter);
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("clusterId", clusterId);
+        jsonGenerator.writeStringField("name", name);
+        jsonGenerator.writeStringField("region", region);
+        jsonGenerator.writeStringField("paymentType", paymentType);
+        jsonGenerator.writeArrayFieldStart("modules");
+        for (BesResizeClusterRequest.ModuleDesc module : modules) {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField("slotType", module.getSlotType());
+            jsonGenerator.writeNumberField("desireInstanceNum", module.getDesireInstanceNum());
+            jsonGenerator.writeStringField("version", module.getVersion());
+            jsonGenerator.writeStringField("type", module.getType());
+            jsonGenerator.writeEndObject();
+        }
+        jsonGenerator.writeEndArray();
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
+
+        return stringWriter.toString();
+    }
+
 }

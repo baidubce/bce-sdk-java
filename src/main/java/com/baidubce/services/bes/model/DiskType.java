@@ -12,21 +12,16 @@
  */
 package com.baidubce.services.bes.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public enum DiskType {
+    SSD("ssd"), PREMIUM_SSD("premium_ssd");
 
-/**
- *  @Description:  Request for cluster details
- */
-public class BesClusterDetailRequest extends AbstractBesRequest {
+    private String diskType;
 
-    @JsonProperty
-    private String clusterId;
-
-    public String getClusterId() {
-        return clusterId;
+    DiskType(String diskType) {
+        this.diskType = diskType;
     }
 
-    public void setClusterId(String clusterId) {
-        this.clusterId = clusterId;
+    public String getDiskType() {
+        return diskType;
     }
 }

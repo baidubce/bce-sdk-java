@@ -21,7 +21,15 @@ public class AnalyzeRequest extends AbstractBceRequest {
 
     private String notification;
 
+    private Integer priority;
+
     private String title;
+
+    private String subTitle;
+
+    private String category;
+
+    private String description;
 
     @Override
     public AnalyzeRequest withRequestCredentials(BceCredentials credentials) {
@@ -49,6 +57,11 @@ public class AnalyzeRequest extends AbstractBceRequest {
         return this;
     }
 
+    public AnalyzeRequest withPriority(Integer priority) {
+        this.setPriority(priority);
+        return this;
+    }
+
     public AnalyzeRequest withTitle(String title) {
         this.setTitle(title);
         return this;
@@ -61,7 +74,11 @@ public class AnalyzeRequest extends AbstractBceRequest {
         sb.append(",auth='").append(auth).append('\'');
         sb.append(",preset='").append(preset).append('\'');
         sb.append(",notification='").append(notification).append('\'');
+        sb.append(",priority='").append(priority).append('\'');
         sb.append(",title='").append(title).append('\'');
+        sb.append(",subTitle='").append(subTitle).append('\'');
+        sb.append(",category='").append(category).append('\'');
+        sb.append(",description='").append(description).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -98,11 +115,43 @@ public class AnalyzeRequest extends AbstractBceRequest {
         this.notification = notification;
     }
 
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
