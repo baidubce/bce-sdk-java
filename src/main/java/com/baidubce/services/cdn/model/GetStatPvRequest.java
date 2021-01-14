@@ -136,7 +136,16 @@ public class GetStatPvRequest extends AbstractBceRequest {
         setPeriod(period);
         return this;
     }
-    
+
+    /**
+     * @param withRegion
+     * @return returns this object
+     */
+    public GetStatPvRequest withRegion(boolean withRegion) {
+        setWithRegion(withRegion);
+        return this;
+    }
+
     /**
      * (non-Javadoc)
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)

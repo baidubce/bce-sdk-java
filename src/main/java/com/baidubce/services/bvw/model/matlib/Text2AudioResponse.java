@@ -71,6 +71,10 @@ public class Text2AudioResponse extends AbstractBceResponse {
          * 语音时长
          */
         private Integer duration;
+        /**
+         * 语音时长(ms)
+         */
+        private Integer durationInMs;
 
         public String getText() {
             return text;
@@ -127,6 +131,13 @@ public class Text2AudioResponse extends AbstractBceResponse {
         public void setDuration(Integer duration) {
             this.duration = duration;
         }
+        public Integer getDurationInMs() {
+            return durationInMs;
+        }
+
+        public void setDurationInMs(Integer durationInMs) {
+            this.durationInMs = durationInMs;
+        }
 
         @Override
         public String toString() {
@@ -138,6 +149,7 @@ public class Text2AudioResponse extends AbstractBceResponse {
                     ", key='" + key + '\'' +
                     ", preSignUrl='" + preSignUrl + '\'' +
                     ", duration=" + duration +
+                    ", durationInMs=" + durationInMs +
                     '}';
         }
     }

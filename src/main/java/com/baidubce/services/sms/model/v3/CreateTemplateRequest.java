@@ -28,8 +28,8 @@ public class CreateTemplateRequest extends SmsRequest {
     private String content;
 
     /**
-     * The business type of the template content <br/>
-     * All the smsTypes can be obtained from cloud.baidu.com
+     * The sms type of the template content <br/>
+     * All the sms types can be obtained from cloud.baidu.com
      */
     private String smsType;
 

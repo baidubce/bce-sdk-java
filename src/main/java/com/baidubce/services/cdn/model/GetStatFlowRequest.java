@@ -30,6 +30,51 @@ public class GetStatFlowRequest extends AbstractBceRequest {
     private Date startTime;
     private Integer period;
     private boolean withRegion;
+    private String level;
+    private String prov;
+    private String isp;
+
+    /**
+     * @return prov
+     */
+    public String getProv() {
+        return prov;
+    }
+
+    /**
+     * @param prov
+     */
+    public void setProv(String prov) {
+        this.prov = prov;
+    }
+
+    /**
+     * @return isp
+     */
+    public String getIsp() {
+        return isp;
+    }
+
+    /**
+     * @param isp
+     */
+    public void setIsp(String isp) {
+        this.isp = isp;
+    }
+
+    /**
+     * @return level
+     */
+    public String getLevel() {
+        return level;
+    }
+
+    /**
+     * @param level
+     */
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
     /**
      * @return domain
@@ -132,7 +177,27 @@ public class GetStatFlowRequest extends AbstractBceRequest {
         setPeriod(period);
         return this;
     }
-    
+
+    public GetStatFlowRequest withLevel(String level) {
+        setLevel(level);
+        return this;
+    }
+
+    public GetStatFlowRequest withRegion(boolean region) {
+        setWithRegion(region);
+        return this;
+    }
+
+    public GetStatFlowRequest withProv(String prov) {
+        setProv(prov);
+        return this;
+    }
+
+    public GetStatFlowRequest withIsp(String isp) {
+        setIsp(isp);
+        return this;
+    }
+
     /**
      * (non-Javadoc)
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)

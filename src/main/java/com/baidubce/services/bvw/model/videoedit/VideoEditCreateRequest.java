@@ -19,13 +19,14 @@ import com.baidubce.model.AbstractBceRequest;
 import java.util.Map;
 
 public class VideoEditCreateRequest extends AbstractBceRequest {
-    private static final long DefaultTaskId = 1;
+    private static final long DefaultTaskId = 0;
     private static final String BucketKey = "bucket";
     private static final String TitleKey = "title";
     private static final String TaskIdKey = "taskId";
     private static final String RefererKey = "referer";
     private static final String NotificationKey = "notification";
     private static final String CmdKey = "cmd";
+    private static final String ExtInfoKey = "extInfo";
 
     /**
      * user store bucket
@@ -51,6 +52,10 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
      * request body
      */
     private Map<String, Object> cmd;
+    /**
+     * extInfo body
+     */
+    private Map<String, Object> extInfo;
 
     public String getString(Object object) {
         if (object instanceof String) {
@@ -64,6 +69,7 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
 
     public VideoEditCreateRequest(Map<String, Object> jsonObject) {
         this.cmd = jsonObject.containsKey(CmdKey) ? (Map<String, Object>) jsonObject.get(CmdKey) : null;
+        this.extInfo = jsonObject.containsKey(ExtInfoKey) ? (Map<String, Object>) jsonObject.get(ExtInfoKey) : null;
         this.bucket = jsonObject.containsKey(BucketKey) ? getString(jsonObject.get(BucketKey)) : null;
         this.title = jsonObject.containsKey(TitleKey) ? getString(jsonObject.get(TitleKey)) : null;
         this.taskId = jsonObject.containsKey(TaskIdKey) ?
@@ -74,6 +80,7 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
     public VideoEditCreateRequest(
             Map<String, Object> jsonObject, RefererType refererType) {
         this.cmd = jsonObject.containsKey(CmdKey) ? (Map<String, Object>) jsonObject.get(CmdKey) : null;
+        this.extInfo = jsonObject.containsKey(ExtInfoKey) ? (Map<String, Object>) jsonObject.get(ExtInfoKey) : null;
         this.bucket = jsonObject.containsKey(BucketKey) ? getString(jsonObject.get(BucketKey)) : null;
         this.title = jsonObject.containsKey(TitleKey) ? getString(jsonObject.get(TitleKey)) : null;
         this.taskId = jsonObject.containsKey(TaskIdKey) ?
@@ -84,6 +91,7 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
     public VideoEditCreateRequest(
             Map<String, Object> jsonObject, RefererType refererType, String notification) {
         this.cmd = jsonObject.containsKey(CmdKey) ? (Map<String, Object>) jsonObject.get(CmdKey) : null;
+        this.extInfo = jsonObject.containsKey(ExtInfoKey) ? (Map<String, Object>) jsonObject.get(ExtInfoKey) : null;
         this.bucket = jsonObject.containsKey(BucketKey) ? getString(jsonObject.get(BucketKey)) : null;
         this.title = jsonObject.containsKey(TitleKey) ? getString(jsonObject.get(TitleKey)) : null;
         this.taskId = jsonObject.containsKey(TaskIdKey) ?
@@ -120,6 +128,10 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
         return cmd;
     }
 
+    public Map<String, Object> getExtInfo() {
+        return extInfo;
+    }
+
     public void setBucket(String bucket) {
         this.bucket = bucket;
     }
@@ -144,6 +156,10 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
         this.cmd = cmd;
     }
 
+    public void setExtInfo(Map<String, Object> extInfo) {
+        this.extInfo = extInfo;
+    }
+
     @Override
     public String toString() {
         return "VideoEditCreateRequest{" +
@@ -152,6 +168,7 @@ public class VideoEditCreateRequest extends AbstractBceRequest {
                 ", taskId='" + taskId + '\'' +
                 ", referer='" + referer + '\'' +
                 ", notification='" + notification + '\'' +
+                ", extInfo='" + extInfo.toString() + '\'' +
                 ", cmd='" + cmd.toString() + '\'' +
                 '}';
     }

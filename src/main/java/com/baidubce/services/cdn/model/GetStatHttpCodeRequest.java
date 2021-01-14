@@ -136,6 +136,15 @@ public class GetStatHttpCodeRequest extends AbstractBceRequest {
     }
 
     /**
+     * @param withRegion
+     * @return returns this object
+     */
+    public GetStatHttpCodeRequest withRegion(boolean withRegion) {
+        setWithRegion(withRegion);
+        return this;
+    }
+
+    /**
      * (non-Javadoc)
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
      */

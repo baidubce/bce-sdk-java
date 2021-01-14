@@ -37,6 +37,7 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.util.DateUtils;
 import com.baidubce.util.HttpUtils;
 
 /**
@@ -85,6 +86,9 @@ public abstract class SmsClientSupport extends AbstractBceClient {
         headersToSign.add("x-bce-date");
         headersToSign.add("x-bce-request-id");
         options.setHeadersToSign(headersToSign);
+
+        String bce_date = DateUtils.formatIso8601Date(new Date());
+        request.addHeader(Headers.BCE_DATE, bce_date);
 
         new BceV1Signer().sign(request, request.getCredentials(), options);
 

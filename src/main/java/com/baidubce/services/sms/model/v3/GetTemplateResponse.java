@@ -48,7 +48,7 @@ public class GetTemplateResponse extends SmsResponse {
     private String countryType;
 
     /**
-     * The business type of the template content
+     * The sms type of the template content
      */
     private String smsType;
 

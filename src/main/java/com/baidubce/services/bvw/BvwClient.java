@@ -33,6 +33,8 @@ import com.baidubce.services.bvw.model.matlib.MatlibUploadRequest;
 import com.baidubce.services.bvw.model.matlib.MatlibUploadResponse;
 import com.baidubce.services.bvw.model.matlib.Text2AudioRequest;
 import com.baidubce.services.bvw.model.matlib.Text2AudioResponse;
+import com.baidubce.services.bvw.model.matlib.VideoGenerationRequest;
+import com.baidubce.services.bvw.model.matlib.VideoGenerationResponse;
 import com.baidubce.services.bvw.model.media.MediaBaseRequest;
 import com.baidubce.services.bvw.model.media.MediaBaseResponse;
 import com.baidubce.services.bvw.model.media.MediaBatchDeleteRequest;
@@ -93,6 +95,7 @@ public class BvwClient extends AbstractBceClient {
     private static final String NOTIFICATION = "notification";
     private static final String MATLIB = "matlib";
     private static final String MATERIAL_LIBRARY = "materialLibrary";
+    private static final String MATLIB_VIDEO_GENERATION = "videoGenerationTask";
     private static final String VIDEO_EDIT = "videoEdit";
     private static final String VIDEO_EDIT_CREATE = "createNewVideo";
     private static final String VIDEO_EDIT_POLLING = "pollingVideo";
@@ -908,6 +911,18 @@ public class BvwClient extends AbstractBceClient {
         InternalRequest request = this.createRequest(videoEditPollingRequest, HttpMethodName.GET,
                 VIDEO_EDIT, VIDEO_EDIT_POLLING, String.format("%d", editId));
         return invokeHttpClient(request, VideoEditPollingResponse.class);
+    }
+
+    /**
+     * create a video with materials and subtitles
+     *
+     * @param videoGenerationRequest videoGenerationResponse
+     * @return VideoGenerationResponse
+     */
+    public VideoGenerationResponse createVideoGenerationTask(VideoGenerationRequest videoGenerationRequest) {
+        InternalRequest request = this.createRequest(videoGenerationRequest, HttpMethodName.POST, MATLIB,
+                    MATLIB_VIDEO_GENERATION);
+        return invokeHttpClient(request, VideoGenerationResponse.class);
     }
 
 }

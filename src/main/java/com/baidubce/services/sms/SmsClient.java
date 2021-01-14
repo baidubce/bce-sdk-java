@@ -47,6 +47,9 @@ import com.baidubce.services.sms.model.v3.ModifySignatureRequest;
 import com.baidubce.services.sms.model.v3.ModifyTemplateRequest;
 import com.baidubce.services.sms.model.v3.QueryQuotaRateResponse;
 import com.baidubce.services.sms.model.v3.UpdateQuotaRateRequest;
+import com.baidubce.services.sms.model.v3.ListTemplateRequest;
+import com.baidubce.services.sms.model.v3.ListSignatureRequest;
+import com.baidubce.services.sms.model.v3.ListSignatureResponse;
 import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -299,12 +302,48 @@ public class SmsClient extends SmsClientSupport {
      * @return The response object which includes all of the detail of message template,refer to
      * <code>com.baidubce.services.sms.model.ListTemplateResponse</code>
      * @see com.baidubce.services.sms.model.ListTemplateResponse
+     * @deprecated This method is deprecated and will be removed from sdk in the future when SMS3.0 is officially released, we suggest you to use this.listTemplate(ListTemplateRequest request) instead.
      */
     public ListTemplateResponse listTemplate(SmsRequest request) {
         checkNotNull(request, "object request should not be null.");
 
         InternalRequest internalRequest = this.createRequest("template", request, HttpMethodName.GET);
         return this.invokeHttpClient(internalRequest, ListTemplateResponse.class);
+    }
+
+    /**
+     * Get the list of the templates
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.ListTemplateRequest</code>
+     * @return The response object indicates the list of the template, refer to <code>com.baidubce.services.sms.model.v3.ListTemplateResponse</code>
+     */
+    public com.baidubce.services.sms.model.v3.ListTemplateResponse listTemplate(ListTemplateRequest request) {
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/template", new SmsRequest(), HttpMethodName.GET);
+        if (request.getContent() != null && request.getContent().trim().length() > 0) {
+            internalRequest.addParameter("contentLike", request.getContent());
+        }
+        if (request.getCountryType() != null && request.getCountryType().trim().length() > 0) {
+            internalRequest.addParameter("countryType", request.getCountryType());
+        }
+        if (request.getName() != null && request.getName().trim().length() > 0) {
+            internalRequest.addParameter("nameLike", request.getName());
+        }
+        if (request.getSmsType() != null && request.getSmsType().trim().length() > 0) {
+            internalRequest.addParameter("smsType", request.getSmsType());
+        }
+        if (request.getStatus() != null && request.getSmsType().trim().length() > 0) {
+            internalRequest.addParameter("status", request.getStatus());
+        }
+        if (request.getTemplateId() != null && request.getTemplateId().trim().length() > 0) {
+            internalRequest.addParameter("templateIdLike", request.getTemplateId());
+        }
+        checkNotNull(request.getPageNo(), "Require pageNo not null");
+        checkNotNull(request.getPageSize(), "Require pageSize not null");
+        internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        internalRequest.addParameter("isIgnoreDeprecated", "true");
+        return this.invokeHttpClient(internalRequest, com.baidubce.services.sms.model.v3.ListTemplateResponse.class);
     }
 
     /**
@@ -459,5 +498,34 @@ public class SmsClient extends SmsClientSupport {
                 "/sms/v3/quota", new SmsRequest(), HttpMethodName.GET);
         internalRequest.addParameter("userQuery", "");
         return this.invokeHttpClient(internalRequest, QueryQuotaRateResponse.class);
+    }
+
+    /**
+     * Get the list of the signatures
+     *
+     * @param request refer to <code>com.baidubce.services.sms.model.v3.ListSignatureRequest</code>
+     * @return The response object indicates the list of the template, refer to <code>com.baidubce.services.sms.model.v3.ListSignatureResponse</code>
+     */
+    public ListSignatureResponse listSignature(ListSignatureRequest request) {
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/signatureApply", new SmsRequest(), HttpMethodName.GET);
+        if (request.getContent() != null && request.getContent().trim().length() > 0) {
+            internalRequest.addParameter("contentLike", request.getContent());
+        }
+        if (request.getSignatureId() != null && request.getSignatureId().trim().length() > 0) {
+            internalRequest.addParameter("signatureIdLike", request.getSignatureId());
+        }
+        if (request.getCountryType() != null && request.getCountryType().trim().length() > 0) {
+            internalRequest.addParameter("countryType", request.getCountryType());
+        }
+        if (request.getStatus() != null && request.getStatus().trim().length() > 0) {
+            internalRequest.addParameter("status", request.getStatus());
+        }
+        checkNotNull(request.getPageNo(), "Require pageNo not null");
+        checkNotNull(request.getPageSize(), "Require pageSize not null");
+        internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        internalRequest.addParameter("isIgnoreDeprecated", "true");
+        return this.invokeHttpClient(internalRequest, ListSignatureResponse.class);
     }
 }

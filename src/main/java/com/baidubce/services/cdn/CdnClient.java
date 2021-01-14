@@ -1741,7 +1741,7 @@ public class CdnClient extends AbstractBceClient {
         }
 
         if (request.isWithRegion()) {
-            internalRequest.addParameter("withRegion", "");
+            internalRequest.addParameter("withRegion", String.valueOf(request.isWithRegion()));
         }
         return this.invokeHttpClient(internalRequest, GetStatPvResponse.class);
     }
@@ -1774,8 +1774,20 @@ public class CdnClient extends AbstractBceClient {
             internalRequest.addParameter("period", String.valueOf(request.getPeriod()));
         }
 
+        if (request.getLevel() != null) {
+            internalRequest.addParameter("level", request.getLevel());
+        }
+
+        if (request.getProv() != null) {
+            internalRequest.addParameter("prov", request.getProv());
+        }
+
+        if (request.getIsp() != null) {
+            internalRequest.addParameter("isp", request.getIsp());
+        }
+
         if (request.isWithRegion()) {
-            internalRequest.addParameter("withRegion", "");
+            internalRequest.addParameter("withRegion", String.valueOf(request.isWithRegion()));
         }
         return this.invokeHttpClient(internalRequest, GetStatFlowResponse.class);
     }
@@ -1871,7 +1883,7 @@ public class CdnClient extends AbstractBceClient {
         }
 
         if (request.isWithRegion()) {
-            internalRequest.addParameter("withRegion", "");
+            internalRequest.addParameter("withRegion", String.valueOf(request.isWithRegion()));
         }
 
         return this.invokeHttpClient(internalRequest, GetStatHttpCodeResponse.class);
