@@ -23,7 +23,7 @@ public class MediaStatisticsElement {
         return playCount;
     }
 
-    public void setPlayCount(int playCount) {
+    public void setPlayCount(long playCount) {
         this.playCount = playCount;
     }
 
@@ -31,7 +31,7 @@ public class MediaStatisticsElement {
         return downstreamInBytes;
     }
 
-    public void setDownstreamInBytes(int downstreamInBytes) {
+    public void setDownstreamInBytes(long downstreamInBytes) {
         this.downstreamInBytes = downstreamInBytes;
     }
 
@@ -39,7 +39,7 @@ public class MediaStatisticsElement {
         return peakPlayCount;
     }
 
-    public void setPeakPlayCount(int peakPlayCount) {
+    public void setPeakPlayCount(long peakPlayCount) {
         this.peakPlayCount = peakPlayCount;
     }
 

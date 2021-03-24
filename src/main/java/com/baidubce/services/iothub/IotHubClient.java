@@ -77,7 +77,10 @@ import java.util.List;
 
 /**
  * Provides the client for accessing the Iothub(Internet of Things hub).
+ *
+ * @deprecated Use {@link IoTCoreClient}, IoT-hub will not be supported in the future.
  */
+@Deprecated
 public class IotHubClient extends AbstractBceClient {
 
     private static final String ENDPOINT_HOST = "iot.gz.baidubce.com";

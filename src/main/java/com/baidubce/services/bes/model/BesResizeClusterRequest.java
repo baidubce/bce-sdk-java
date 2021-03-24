@@ -113,6 +113,17 @@ public class BesResizeClusterRequest extends AbstractBesRequest {
         @JsonProperty
         private int desireInstanceNum;
 
+        @JsonProperty
+        private DiskSlotInfo diskSlotInfo;
+
+        public DiskSlotInfo getDiskSlotInfo() {
+            return diskSlotInfo;
+        }
+
+        public void setDiskSlotInfo(DiskSlotInfo diskSlotInfo) {
+            this.diskSlotInfo = diskSlotInfo;
+        }
+
         public String getType() {
             return type;
         }
@@ -170,6 +181,12 @@ public class BesResizeClusterRequest extends AbstractBesRequest {
             jsonGenerator.writeNumberField("desireInstanceNum", module.getDesireInstanceNum());
             jsonGenerator.writeStringField("version", module.getVersion());
             jsonGenerator.writeStringField("type", module.getType());
+            if (module.getDiskSlotInfo() != null) {
+                jsonGenerator.writeObjectFieldStart("diskSlotInfo");
+                jsonGenerator.writeStringField("type", module.getDiskSlotInfo().getType());
+                jsonGenerator.writeNumberField("size", module.getDiskSlotInfo().getSize());
+                jsonGenerator.writeEndObject();
+            }
             jsonGenerator.writeEndObject();
         }
         jsonGenerator.writeEndArray();

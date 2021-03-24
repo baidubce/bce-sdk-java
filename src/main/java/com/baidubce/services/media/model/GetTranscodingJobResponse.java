@@ -15,6 +15,11 @@ public class GetTranscodingJobResponse extends AbstractBceResponse {
     private MediaError     error        = null;
 
     /**
+     * job output info
+     */
+    private JobOutputInfo output = null;
+
+    /**
      * 任务的唯一标识
      **/
     public String getJobId() {
@@ -100,6 +105,10 @@ public class GetTranscodingJobResponse extends AbstractBceResponse {
         this.error = error;
     }
 
+    public JobOutputInfo getOutput() { return output; }
+
+    public void setOutput(JobOutputInfo inputInfo) { this.output = inputInfo; }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -112,6 +121,9 @@ public class GetTranscodingJobResponse extends AbstractBceResponse {
         sb.append("    jobStatus: ").append(jobStatus).append("\n");
         sb.append("    startTime: ").append(startTime).append("\n");
         sb.append("    endTime: ").append(endTime).append("\n");
+        if (output.getVideo() != null || output.getAudio() != null) {
+            sb.append("    output: ").append(output).append("\n");
+        }
         if (error != null) {
             sb.append(error).append("\n");
         }
