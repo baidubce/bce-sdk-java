@@ -72,6 +72,38 @@ public class GetWaterMarkResponse extends AbstractBceResponse {
      */
     private Boolean allowScaling = null;
     
+    /**
+     * horizontal offset in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String dx;
+
+    /**
+     * vertical offset in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String dy;
+
+    /**
+     * width of watermark in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String width;
+
+    /**
+     * height of watermark in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String height;
+
     public String getWatermarkId() {
         return watermarkId;
     }
@@ -160,6 +192,57 @@ public class GetWaterMarkResponse extends AbstractBceResponse {
         this.allowScaling = allowScaling;
     }
 
+    public String getDx() {
+        return dx;
+    }
+
+    public void setDx(String dx) {
+        this.dx = dx;
+    }
+
+    public GetWaterMarkResponse withDx(String dx) {
+        this.dx = dx;
+        return this;
+    }
+
+    public String getDy() {
+        return dy;
+    }
+
+    public void setDy(String dy) {
+        this.dy = dy;
+    }
+
+    public GetWaterMarkResponse withDy(String dy) {
+        this.dy = dy;
+        return this;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public GetWaterMarkResponse withHeight(String height) {
+        this.height = height;
+        return this;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public GetWaterMarkResponse withWidth(String width) {
+        this.width = width;
+        return this;
+    }
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -172,6 +255,10 @@ public class GetWaterMarkResponse extends AbstractBceResponse {
         sb.append("    verticalAlignment: ").append(verticalAlignment).append("\n");
         sb.append("    verticalOffsetInPixel: ").append(verticalOffsetInPixel).append("\n");
         sb.append("    horizontalOffsetInPixel: ").append(horizontalOffsetInPixel).append("\n");
+        sb.append("    dx: ").append(dx).append("\n");
+        sb.append("    dy: ").append(dy).append("\n");
+        sb.append("    width: ").append(width).append("\n");
+        sb.append("    height: ").append(height).append("\n");
         sb.append("    timeline: ").append(timeline).append("\n");
         sb.append("    repeated: ").append(repeated).append("\n");
         sb.append("    allowScaling: ").append(allowScaling).append("\n");

@@ -1268,6 +1268,62 @@ public class MediaClient extends AbstractBceClient {
      * @param key     The key name of Bos object which your want to read.
      * @param horizontalAlignment  The horizontal alignment, includes left, center, right.
      * @param verticalAlignment    The vertical alignment, includes top, center, bottom.
+     * @param dx  The horizontal offset.
+     * @param dy  The vertical offset.
+     * 
+     * @return watermarkId the unique ID of the new water mark.
+     */
+    public CreateWaterMarkResponse createWaterMark(
+            String bucket, String key, String horizontalAlignment, String verticalAlignment,
+            String dx, String dy) {
+
+        CreateWaterMarkRequest request =
+                new CreateWaterMarkRequest().withBucket(bucket).withKey(key)
+                        .withHorizontalAlignment(horizontalAlignment)
+                        .withVerticalAlignment(verticalAlignment)
+                        .withDx(dx)
+                        .withDy(dy);
+
+        return createWaterMark(request);
+    }
+
+        /**
+     * Creates a watermark and return water mark ID.
+     *
+     * @param bucket  The bucket name of Bos object which you want to read.
+     * @param key     The key name of Bos object which your want to read.
+     * @param horizontalAlignment  The horizontal alignment, includes left, center, right.
+     * @param verticalAlignment    The vertical alignment, includes top, center, bottom.
+     * @param dx  The horizontal offset.
+     * @param dy  The vertical offset.
+     * @param width  The width of watermark.
+     * @param height  The height of watermark.
+     * 
+     * @return watermarkId the unique ID of the new water mark.
+     */
+    public CreateWaterMarkResponse createWaterMark(
+            String bucket, String key, String horizontalAlignment, String verticalAlignment,
+            String dx, String dy, String width, String height) {
+
+        CreateWaterMarkRequest request =
+                new CreateWaterMarkRequest().withBucket(bucket).withKey(key)
+                        .withHorizontalAlignment(horizontalAlignment)
+                        .withVerticalAlignment(verticalAlignment)
+                        .withDx(dx)
+                        .withDy(dy)
+                        .withWidth(width)
+                        .withHeight(height);
+
+        return createWaterMark(request);
+    }
+
+    /**
+     * Creates a watermark and return water mark ID.
+     *
+     * @param bucket  The bucket name of Bos object which you want to read.
+     * @param key     The key name of Bos object which your want to read.
+     * @param horizontalAlignment  The horizontal alignment, includes left, center, right.
+     * @param verticalAlignment    The vertical alignment, includes top, center, bottom.
      * @param horizontalOffsetInPixel  The horizontal offset in pixels.
      * @param verticalOffsetInPixel    The vertical offset in pixels.
      * @param timeline    The vertical offset in pixels.
@@ -1293,6 +1349,42 @@ public class MediaClient extends AbstractBceClient {
 
         return createWaterMark(request);
     }
+
+    /**
+     * Creates a watermark and return water mark ID.
+     *
+     * @param bucket  The bucket name of Bos object which you want to read.
+     * @param key     The key name of Bos object which your want to read.
+     * @param horizontalAlignment  The horizontal alignment, includes left, center, right.
+     * @param verticalAlignment    The vertical alignment, includes top, center, bottom.
+     * @param dx  The horizontal offset.
+     * @param dy  The vertical offset.
+     * @param width  The width of watermark.
+     * @param height  The height of watermark.
+     * @param timeline    The vertical offset in pixels.
+     * @param repeated    The vertical offset in pixels.
+     *
+     * @return watermarkId the unique ID of the new water mark.
+     */
+    public CreateWaterMarkResponse createWaterMark(
+            String bucket, String key, String horizontalAlignment, String verticalAlignment,
+            String dx, String dy, String width, String height,
+            Timeline timeline, Integer repeated) {
+
+        CreateWaterMarkRequest request =
+                new CreateWaterMarkRequest().withBucket(bucket).withKey(key)
+                        .withHorizontalAlignment(horizontalAlignment)
+                        .withVerticalAlignment(verticalAlignment)
+                        .withDx(dx)
+                        .withDy(dy)
+                        .withWidth(width)
+                        .withHeight(height)
+                        .withTimeline(timeline)
+                        .withRepeated(repeated);
+
+        return createWaterMark(request);
+    }
+
 
     /**
      * Creates a water mark and return water mark ID

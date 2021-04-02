@@ -27,8 +27,44 @@ public class WaterMark {
     private Integer horizontalOffsetInPixel = null;
     private String watermarkId = null;
     private String createTime = null;
+
+    @Deprecated
     private String verticalAlignment = null;
+
+    @Deprecated
     private String horizontalAlignment = null;
+
+    /**
+     * horizontal offset in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String dx;
+
+    /**
+     * vertical offset in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String dy;
+
+    /**
+     * width of watermark in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String width;
+
+    /**
+     * height of watermark in pixel or percent
+     * example:
+     * "100" means 100 pixel
+     * "0.1" means 10%
+     **/
+    private String height;
 
     private Timeline timeline = null;
     private Integer repeated = null;
@@ -59,7 +95,8 @@ public class WaterMark {
         return "WaterMark [bucket=" + bucket + ", key=" + key + ", verticalOffsetInPixel=" + verticalOffsetInPixel
                 + ", horizontalOffsetInPixel=" + horizontalOffsetInPixel + ", watermarkId=" + watermarkId
                 + ", createTime=" + createTime + ", horizontalAlignment= " + horizontalAlignment
-                + ", verticalAlignment= " + verticalAlignment + ", timeline= " + timeline
+                + ", verticalAlignment= " + verticalAlignment + ", dx = " + dx 
+                + ", dy= " + dy + ", width= " + width + ", height= " + height + ", timeline= " + timeline
                 + ", repeated= " + repeated + ", allowScaling= " + allowScaling + "]";
     }
 }

@@ -33,6 +33,10 @@ public class VideoInfo {
 
     // public enum frameRateEnum { };
 
+    private Integer rotate;
+
+    private String dar;
+
     /**
      * 视频文件的编码规格
      **/
@@ -87,6 +91,27 @@ public class VideoInfo {
     public void setFrameRate(Integer frameRate) {
         this.frameRate = frameRate;
     }
+    /**
+     * 视频媒体的旋转角度
+     **/
+    public Integer getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(Integer rotate) {
+        this.rotate = rotate;
+    }
+
+    /**
+     * 视频媒体的显示比例
+     **/
+    public String getDar() {
+        return dar;
+    }
+
+    public void setDar(String dar) {
+        this.dar = dar;
+    }
 
     @Override
     public String toString() {
@@ -98,6 +123,8 @@ public class VideoInfo {
         sb.append("    widthInPixel: ").append(widthInPixel).append("\n");
         sb.append("    bitRateInBps: ").append(bitRateInBps).append("\n");
         sb.append("    frameRate: ").append(frameRate).append("\n");
+        sb.append("    rotate: ").append(rotate).append("\n");
+        sb.append("    dar: ").append(dar).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
