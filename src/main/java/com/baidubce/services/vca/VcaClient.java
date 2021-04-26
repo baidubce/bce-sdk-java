@@ -16,6 +16,7 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.vca.model.AnalyzeResponse;
+import com.baidubce.services.vca.model.ImageAnalyzeResponse;
 import com.baidubce.services.vca.model.QueryResultRequest;
 import com.baidubce.services.vca.model.QueryResultResponse;
 import com.baidubce.services.vca.model.AnalyzeRequest;
@@ -38,6 +39,7 @@ public class VcaClient extends AbstractBceClient {
 
     private static final String VERSION = "v2";
     private static final String MEDIA = "media";
+    private static final String IMAGE = "image";
 
     private static HttpResponseHandler[] vcaHandlers = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(),
@@ -63,6 +65,22 @@ public class VcaClient extends AbstractBceClient {
         AnalyzeRequest request = new AnalyzeRequest();
         request.setSource(source);
         return analyze(request);
+    }
+
+    /**
+     * Initiate image analyze for specified source and request image sync-interface.
+     *
+     * @param source image source path, supporting BOS, HTTP(S) URL.
+     * @return ImageAnalyzeResponse with analyze results.
+     */
+
+    public ImageAnalyzeResponse analyzeImage(String source) {
+        AnalyzeRequest request = new AnalyzeRequest();
+        request.setSource(source);
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+                request, IMAGE);
+        internalRequest.addParameter("sync", "");
+        return this.invokeHttpClient(internalRequest, ImageAnalyzeResponse.class);
     }
 
     /**
