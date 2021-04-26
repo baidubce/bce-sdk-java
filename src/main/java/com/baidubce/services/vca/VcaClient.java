@@ -68,22 +68,6 @@ public class VcaClient extends AbstractBceClient {
     }
 
     /**
-     * Initiate image analyze for specified source and request image sync-interface.
-     *
-     * @param source image source path, supporting BOS, HTTP(S) URL.
-     * @return ImageAnalyzeResponse with analyze results.
-     */
-
-    public ImageAnalyzeResponse analyzeImage(String source) {
-        AnalyzeRequest request = new AnalyzeRequest();
-        request.setSource(source);
-        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
-                request, IMAGE);
-        internalRequest.addParameter("sync", "");
-        return this.invokeHttpClient(internalRequest, ImageAnalyzeResponse.class);
-    }
-
-    /**
      * Initiate media analyze for specified source and title.
      *
      * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
@@ -107,6 +91,46 @@ public class VcaClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
                 request, MEDIA);
         return this.invokeHttpClient(internalRequest, AnalyzeResponse.class);
+    }
+
+    /**
+     * Initiate image analyze for specified source.
+     *
+     * @param source image source path, supporting BOS, HTTP(S) URL.
+     * @return ImageAnalyzeResponse with analyze results.
+     */
+
+    public ImageAnalyzeResponse analyzeImage(String source) {
+        AnalyzeRequest request = new AnalyzeRequest();
+        request.setSource(source);
+        return analyzeImage(request);
+    }
+
+    /**
+     * Initiate image analyze for specified source and title.
+     *
+     * @param source image source path, supporting BOS, HTTP(S) URL.
+     * @param title image title.
+     * @return ImageAnalyzeResponse with analyze results.
+     */
+    public ImageAnalyzeResponse analyzeImage(String source, String title) {
+        AnalyzeRequest request = new AnalyzeRequest();
+        request.setSource(source);
+        request.setTitle(title);
+        return analyzeImage(request);
+    }
+
+    /**
+     * Initiate image analyze for specified AnalyzeRequest and request image sync-interface.
+     *
+     * @param request Analyze request, including image source path.
+     * @return ImageAnalyzeResponse with analyze results.
+     */
+    public ImageAnalyzeResponse analyzeImage(AnalyzeRequest request) {
+        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+                request, IMAGE);
+        internalRequest.addParameter("sync", "");
+        return this.invokeHttpClient(internalRequest, ImageAnalyzeResponse.class);
     }
 
     /**
