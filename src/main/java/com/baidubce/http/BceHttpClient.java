@@ -38,6 +38,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -480,6 +481,8 @@ public class BceHttpClient {
             httpRequest = new HttpDelete(uri);
         } else if (request.getHttpMethod() == HttpMethodName.HEAD) {
             httpRequest = new HttpHead(uri);
+        } else if (request.getHttpMethod() == HttpMethodName.PATCH) {
+            httpRequest = new HttpPatch(uri);
         } else {
             throw new BceClientException("Unknown HTTP method name: " + request.getHttpMethod());
         }
