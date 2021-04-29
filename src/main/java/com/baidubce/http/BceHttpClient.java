@@ -482,7 +482,11 @@ public class BceHttpClient {
         } else if (request.getHttpMethod() == HttpMethodName.HEAD) {
             httpRequest = new HttpHead(uri);
         } else if (request.getHttpMethod() == HttpMethodName.PATCH) {
-            httpRequest = new HttpPatch(uri);
+            HttpPatch patchMethod = new HttpPatch(uri);
+            httpRequest = patchMethod;
+            if (request.getContent() != null) {
+                patchMethod.setEntity(new InputStreamEntity(request.getContent(), contentLength));
+            }
         } else {
             throw new BceClientException("Unknown HTTP method name: " + request.getHttpMethod());
         }
