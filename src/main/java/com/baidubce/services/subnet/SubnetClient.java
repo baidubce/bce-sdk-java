@@ -41,6 +41,7 @@ import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.subnet.model.CreateSubnetRequest;
 import com.baidubce.services.subnet.model.CreateSubnetResponse;
 import com.baidubce.services.subnet.model.DeleteSubnetRequest;
+import com.baidubce.services.subnet.model.GetSubnetDetailResponse;
 import com.baidubce.services.subnet.model.GetSubnetRequest;
 import com.baidubce.services.subnet.model.GetSubnetResponse;
 import com.baidubce.services.subnet.model.ListSubnetsRequest;
@@ -238,6 +239,7 @@ public class SubnetClient extends AbstractBceClient {
      * @param subnetId The id of the subnet.
      * @return A subnet detail model for the subnetId.
      */
+    @Deprecated
     public GetSubnetResponse getSubnet(String subnetId) {
         return getSubnet(new GetSubnetRequest().withSubnetId(subnetId));
     }
@@ -254,6 +256,19 @@ public class SubnetClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 getSubnetRequest, HttpMethodName.GET, SUBNET_PREFIX, getSubnetRequest.getSubnetId());
         return this.invokeHttpClient(internalRequest, GetSubnetResponse.class);
+    }
+
+    /**
+     * Get the detail information of specified subnet.
+     *
+     * @param subnetId The id of the subnet.
+     * @return A subnet detail model for the subnetId.
+     */
+    public GetSubnetDetailResponse getSubnetDetail(String subnetId) {
+        checkNotNull(subnetId, "request subnetId should not be null.");
+        InternalRequest internalRequest = this.createRequest(
+                new GetSubnetRequest(), HttpMethodName.GET, SUBNET_PREFIX, subnetId);
+        return this.invokeHttpClient(internalRequest, GetSubnetDetailResponse.class);
     }
 
     /**

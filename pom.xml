@@ -6,7 +6,7 @@
 
     <groupId>com.baidubce</groupId>
     <artifactId>bce-java-sdk</artifactId>
-    <version>0.10.161</version>
+    <version>0.10.162</version>
     <name>bce-sdk-java</name>
     <description>The BCE SDK for Java provides Java APIs for all of BCE services.</description>
     <url>http://bce.baidu.com/sdk/index.html</url>

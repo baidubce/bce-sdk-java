@@ -1,5 +1,9 @@
 package com.baidubce.services.subnet.model;
 
+import java.util.List;
+
+import com.baidubce.services.bcc.model.TagModel;
+
 /**
  * subnet detail info model
  */
@@ -28,6 +32,11 @@ public class Subnet {
     private String cidr;
 
     /**
+     * The IPv6 network segment of the subnet
+     */
+    private String ipv6Cidr;
+
+    /**
      * The id of vpc which this subnet belong.
      */
     private String vpcId;
@@ -44,6 +53,16 @@ public class Subnet {
      * The description of subnet.
      */
     private String description;
+
+    /**
+     * The creation time of the subnet
+     */
+    private String createdTime;
+
+    /**
+     * List of labels for subnet bindings
+     */
+    private List<TagModel> tags;
 
     public String getName() {
         return name;
@@ -101,16 +120,43 @@ public class Subnet {
         this.description = description;
     }
 
+    public String getIpv6Cidr() {
+        return ipv6Cidr;
+    }
+
+    public void setIpv6Cidr(String ipv6Cidr) {
+        this.ipv6Cidr = ipv6Cidr;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
-        return "Subnet{"
-                + "subnetId='" + subnetId + '\''
-                + ", name='" + name + '\''
-                + ", zoneName='" + zoneName + '\''
-                + ", cidr='" + cidr + '\''
-                + ", vpcId='" + vpcId + '\''
-                + ", subnetType='" + subnetType + '\''
-                + ", description='" + description + '\''
-                + '}';
+        return "Subnet{" +
+                "name='" + name + '\'' +
+                ", subnetId='" + subnetId + '\'' +
+                ", zoneName='" + zoneName + '\'' +
+                ", cidr='" + cidr + '\'' +
+                ", ipv6Cidr='" + ipv6Cidr + '\'' +
+                ", vpcId='" + vpcId + '\'' +
+                ", subnetType='" + subnetType + '\'' +
+                ", description='" + description + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                ", tags=" + tags +
+                '}';
     }
 }
