@@ -52,7 +52,7 @@
         <lombok.version>1.18.2</lombok.version>
         <mqttv3.version>1.2.1</mqttv3.version>
         <hbase-client.version>1.2.0</hbase-client.version>
-        <bouncycastle.version>1.59</bouncycastle.version>
+        <bouncycastle.version>1.67</bouncycastle.version>
     </properties>
 
     <dependencies>
