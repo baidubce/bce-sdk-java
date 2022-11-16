@@ -44,7 +44,7 @@
         <guava.version>17.0</guava.version>
         <httpasyncclient.version>4.0.2</httpasyncclient.version>
 <!--        <jackson.version>2.1.1</jackson.version>-->
-        <jackson.version>2.3.3</jackson.version>
+        <jackson.version>2.12.7.1</jackson.version>
         <joda-time.version>2.3</joda-time.version>
         <junit.version>4.11</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
