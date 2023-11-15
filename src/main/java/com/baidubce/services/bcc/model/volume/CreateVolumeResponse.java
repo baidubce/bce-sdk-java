@@ -13,30 +13,28 @@
 package com.baidubce.services.bcc.model.volume;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * The request for creating new volume.
  */
+@Data
 public class CreateVolumeResponse extends AbstractBceResponse {
     /**
      * List of the id of volumes created.
      */
     private List<String> volumeIds;
 
-    public List<String> getVolumeIds() {
-        return volumeIds;
+    private List<Volume> volumes;
+
+    @Data
+    private static class Volume {
+        private String volumeId;
+        private String volumeUuid;
+        private String name;
+        private Integer sizeGb;
     }
 
-    public void setVolumeIds(List<String> volumeIds) {
-        this.volumeIds = volumeIds;
-    }
-
-    @Override
-    public String toString() {
-        return "CreateVolumeResponse{"
-                + "volumeIds=" + volumeIds
-                + '}';
-    }
 }
