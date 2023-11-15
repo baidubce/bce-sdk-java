@@ -51,6 +51,8 @@ public class ListAccessKeyResponse extends BaseBceResponse {
         private String description;
     
         private Boolean enabled;
+
+        private Date lastUsedTime;
     
         public void setId(String id) {
             this.id = id;
@@ -83,7 +85,15 @@ public class ListAccessKeyResponse extends BaseBceResponse {
         public Boolean isEnabled() {
             return this.enabled;
         }
-    
+
+        public Date getLastUsedTime() {
+            return lastUsedTime;
+        }
+
+        public void setLastUsedTime(Date lastUsedTime) {
+            this.lastUsedTime = lastUsedTime;
+        }
+
         @Override
         public String toString() {
             return "AccessKey{"
@@ -91,6 +101,7 @@ public class ListAccessKeyResponse extends BaseBceResponse {
                     + "createTime=" + createTime + "\n"
                     + "description=" + description + "\n"
                     + "enabled=" + enabled + "\n"
+                    + "lastUsedTime=" + lastUsedTime + "\n"
                     + "}";
         }
     }

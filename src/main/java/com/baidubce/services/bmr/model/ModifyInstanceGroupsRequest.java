@@ -16,7 +16,6 @@ public class ModifyInstanceGroupsRequest extends AbstractBceRequest {
     private String clientToken;
     private String clusterId;
     private List<ModifyInstanceGroupConfig> instanceGroups;
-    private List<String> deleteClientIds;
 
     public String getClientToken() {
         return clientToken;
@@ -40,14 +39,6 @@ public class ModifyInstanceGroupsRequest extends AbstractBceRequest {
 
     public void setInstanceGroups(List<ModifyInstanceGroupConfig> instanceGroups) {
         this.instanceGroups = instanceGroups;
-    }
-
-    public List<String> getDeleteClientIds() {
-        return deleteClientIds;
-    }
-
-    public void setDeleteClientIds(List<String> deleteClientIds) {
-        this.deleteClientIds = deleteClientIds;
     }
 
     /**
@@ -113,18 +104,6 @@ public class ModifyInstanceGroupsRequest extends AbstractBceRequest {
      */
     public ModifyInstanceGroupsRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
-        return this;
-    }
-
-    /**
-     * Configure clientIdList to be deleted for the request.
-     *
-     * @param deleteClientIds clientIds to be added.
-     *
-     * @return ModifyInstanceGroupsRequest
-     */
-    public ModifyInstanceGroupsRequest withDeleteClientIds(List<String> deleteClientIds) {
-        this.setDeleteClientIds(deleteClientIds);
         return this;
     }
 

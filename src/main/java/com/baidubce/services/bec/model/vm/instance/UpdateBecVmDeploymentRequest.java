@@ -15,6 +15,7 @@ package com.baidubce.services.bec.model.vm.instance;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bec.model.vm.VolumeConfig;
+import com.baidubce.services.bec.model.vm.network.VmNetworkConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -28,6 +29,11 @@ public class UpdateBecVmDeploymentRequest extends AbstractBceRequest {
      * The id of the BEC virtual machine.
      */
     private String vmID;
+
+    /**
+     * The hostname of the BEC virtual machine.
+     */
+    private String hostname;
 
     /**
      * Update type.
@@ -68,6 +74,16 @@ public class UpdateBecVmDeploymentRequest extends AbstractBceRequest {
      * The name of the BEC virtual machine.
      */
     private String vmName;
+
+    /**
+     * Virtual machine network information configuration
+     */
+    private VmNetworkConfig networkConfig;
+
+    /**
+     * Whether IPV6 is required
+     */
+    private Boolean needIpv6PublicIp;
 
     /**
      * An ASCII string whose length is less than 64.

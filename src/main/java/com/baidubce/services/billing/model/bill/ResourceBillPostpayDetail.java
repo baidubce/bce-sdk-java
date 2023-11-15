@@ -49,4 +49,72 @@ public class ResourceBillPostpayDetail {
      */
     private List<ChargeItemBill> chargeItems;
 
+    /**
+     * 现金支付
+     */
+    private BigDecimal cash = BigDecimal.ZERO;
+
+    /**
+     * 返点支付
+     */
+    private BigDecimal rebate = BigDecimal.ZERO;
+
+    /**
+     * 帐期支付
+     */
+    private BigDecimal creditCost = BigDecimal.ZERO;
+
+    /**
+     * 账期退款
+     */
+    private BigDecimal creditRefund = BigDecimal.ZERO;
+
+    /**
+     * 欠费
+     */
+    private BigDecimal debt = BigDecimal.ZERO;
+
+    /**
+     * 代金劵
+     */
+    private BigDecimal couponPrice = BigDecimal.ZERO;
+
+    /**
+     * 折扣券
+     */
+    private BigDecimal discountCouponPrice = BigDecimal.ZERO;
+
+    /**
+     * 现金券
+     */
+    private BigDecimal cashEquivalentCouponPrice = BigDecimal.ZERO;
+
+    /**
+     * 折扣金额
+     */
+    private BigDecimal discountPrice = BigDecimal.ZERO;
+
+    /**
+     * 销账金额
+     */
+    private BigDecimal sysGold = BigDecimal.ZERO;
+
+    private BigDecimal creditRefundDeduct = BigDecimal.ZERO;
+
+    private BigDecimal deductPrice = BigDecimal.ZERO;
+
+    private BigDecimal deductCash = BigDecimal.ZERO;
+
+    private BigDecimal deductRebate = BigDecimal.ZERO;
+
+    private BigDecimal deductCreditCost = BigDecimal.ZERO;
+
+    private BigDecimal deductCouponPrice = BigDecimal.ZERO;
+
+    private BigDecimal deductDiscountCouponPrice = BigDecimal.ZERO;
+
+    private BigDecimal deductDiscountPrice = BigDecimal.ZERO;
+
+    private BigDecimal deductCashEquivalentCouponPrice = BigDecimal.ZERO;
+
 }

@@ -380,4 +380,30 @@ public class CopyObjectRequest extends GenericObjectRequest {
         this.setNoneMatchETagConstraint(noneMatchETagConstraint);
         return this;
     }
+
+    /**
+     * Gets the limit of put object speed.
+     * @return the limit of put object speed. unit: bit/s
+     */
+    public long getTrafficLimitBitPS() {
+        return trafficLimitBitPS;
+    }
+
+    /**
+     * Sets Gets the limit of put object speed. range: 819200 bit/s ~ 838860800 bit/s
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s
+     */
+    public void setTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.trafficLimitBitPS = trafficLimitBitPS;
+    }
+
+    /**
+     *
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s, range: 819200 bit/s ~ 838860800 bit/s
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public CopyObjectRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.setTrafficLimitBitPS(trafficLimitBitPS);
+        return this;
+    }
 }

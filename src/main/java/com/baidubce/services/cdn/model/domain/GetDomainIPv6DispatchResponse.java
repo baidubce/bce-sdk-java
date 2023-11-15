@@ -6,13 +6,16 @@ import com.baidubce.services.cdn.model.CdnResponse;
  * create by hansongda on 20/12/01
  */
 public class GetDomainIPv6DispatchResponse extends CdnResponse {
-    private Enable IPv6Dispatch;
+    private Enable ipv6Dispatch;
 
-    public Enable getIPv6Dispatch() {
-        return IPv6Dispatch;
+    public GetDomainIPv6DispatchResponse() {
     }
 
-    public void setIPv6Dispatch(Enable IPv6Dispatch) {
-        this.IPv6Dispatch = IPv6Dispatch;
+    public Enable getIpv6Dispatch() {
+        return ipv6Dispatch;
+    }
+
+    public void setIpv6Dispatch(Enable ipv6Dispatch) {
+        this.ipv6Dispatch = ipv6Dispatch;
     }
 }

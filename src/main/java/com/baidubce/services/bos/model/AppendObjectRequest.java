@@ -36,6 +36,11 @@ public class AppendObjectRequest extends PutObjectRequest {
     private Long offset;
 
     /**
+     * The BosProgressCallback used for get progress information
+     */
+    private BosProgressCallback progressCallback = null;
+
+    /**
      * Constructs a new AppendObjectRequest object to upload a file to the
      * specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
@@ -234,6 +239,32 @@ public class AppendObjectRequest extends PutObjectRequest {
     @Override
     public AppendObjectRequest withKey(String key) {
         this.setKey(key);
+        return this;
+    }
+
+    /**
+     * Gets the BosProgressCallback which used for Get upload progress.
+     * @return The BosProgressCallback which used for get progress information.
+     */
+    public BosProgressCallback getProgressCallback() {
+        return progressCallback;
+    }
+
+    /**
+     * Sets the BosProgressCallback which used for Get upload progress.
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     */
+    public void setProgressCallback(BosProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
+
+    /**
+     *
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     * @return This AppendObjectRequest, so that additional method calls can be chained together
+     */
+    public AppendObjectRequest withProgressCallback(BosProgressCallback progressCallback) {
+        this.setProgressCallback(progressCallback);
         return this;
     }
 }

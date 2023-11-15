@@ -157,6 +157,7 @@ public class BceClientConfiguration {
 
     /**
      * determines whether redirects should be handled automatically
+     *
      * @return
      */
     private boolean redirectsEnabled = true;
@@ -172,10 +173,10 @@ public class BceClientConfiguration {
             region = "";
         }
         DEFAULT_USER_AGENT = Joiner.on('/').join("bce-sdk-java", BceConstants.VERSION, System.getProperty("os.name"),
-                System.getProperty("os.version"),
-                System.getProperty("java.vm.name"),
-                System.getProperty("java.vm.version"),
-                System.getProperty("java.version"), language, region)
+                        System.getProperty("os.version"),
+                        System.getProperty("java.vm.name"),
+                        System.getProperty("java.vm.version"),
+                        System.getProperty("java.version"), language, region)
                 .replace(' ', '_');
     }
 
@@ -217,7 +218,7 @@ public class BceClientConfiguration {
      * This constructor is used to create a client configuration from one SDK to another SDK. e.g. from VOD to BOS.
      * In this case endpoint should be changed while other attributes keep same.
      *
-     * @param other the configuration to copy settings from.
+     * @param other    the configuration to copy settings from.
      * @param endpoint the endpoint
      */
     public BceClientConfiguration(BceClientConfiguration other, String endpoint) {
@@ -379,6 +380,7 @@ public class BceClientConfiguration {
 
     /**
      * Gets the flag of http redirection
+     *
      * @return
      */
     public boolean isRedirectsEnabled() {
@@ -387,6 +389,7 @@ public class BceClientConfiguration {
 
     /**
      * Sets the flag of http redirection
+     *
      * @param redirectsEnabled
      */
     public void setRedirectsEnabled(boolean redirectsEnabled) {
@@ -395,6 +398,7 @@ public class BceClientConfiguration {
 
     /**
      * Sets the flag of http redirection
+     *
      * @param redirectsEnabled
      * @return the updated configuration instance.
      */
@@ -402,6 +406,7 @@ public class BceClientConfiguration {
         this.setRedirectsEnabled(redirectsEnabled);
         return this;
     }
+
     /**
      * Returns the optional proxy host the client will connect through.
      *
@@ -775,7 +780,7 @@ public class BceClientConfiguration {
      *
      * @param endpoint the service endpoint URL to which the client will connect.
      * @throws IllegalArgumentException if endpoint is not a valid URL.
-     * @throws NullPointerException if endpoint is null.
+     * @throws NullPointerException     if endpoint is null.
      */
     public void setEndpoint(String endpoint) {
         checkNotNull(endpoint, "endpoint should not be null.");
@@ -789,7 +794,7 @@ public class BceClientConfiguration {
      * @param endpoint the service endpoint URL to which the client will connect.
      * @return the updated configuration instance.
      * @throws IllegalArgumentException if endpoint is not a valid URL.
-     * @throws NullPointerException if endpoint is null.
+     * @throws NullPointerException     if endpoint is null.
      */
     public BceClientConfiguration withEndpoint(String endpoint) {
         this.setEndpoint(endpoint);
@@ -871,7 +876,7 @@ public class BceClientConfiguration {
                 + ", \n  retryPolicy=" + retryPolicy + ", \n  localAddress="
                 + localAddress + ", \n  protocol=" + protocol + ", \n  proxyHost="
                 + proxyHost + ", \n  proxyPort=" + proxyPort + ", \n  proxyUsername="
-                + proxyUsername + ", \n  proxyPassword=" + proxyPassword
+                + proxyUsername + ", \n  proxyPassword=******"
                 + ", \n  proxyDomain=" + proxyDomain + ", \n  proxyWorkstation="
                 + proxyWorkstation + ", \n  proxyPreemptiveAuthenticationEnabled="
                 + proxyPreemptiveAuthenticationEnabled + ", \n  maxConnections="

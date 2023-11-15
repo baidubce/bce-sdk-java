@@ -14,8 +14,63 @@ package com.baidubce.services.bmr.model;
 
 public class Instance {
     private String id;
+    private String bccInstanceId;
+    private String instanceName;
     private String privateIpAddress;
     private String publicIpAddress;
+    private Status status;
+    private String privateDnsName;
+    private String publicDnsName;
+    private int sshPort;
+
+    public String getBccInstanceId() {
+        return bccInstanceId;
+    }
+
+    public void setBccInstanceId(String bccInstanceId) {
+        this.bccInstanceId = bccInstanceId;
+    }
+
+    public String getInstanceName() {
+        return instanceName;
+    }
+
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getPrivateDnsName() {
+        return privateDnsName;
+    }
+
+    public void setPrivateDnsName(String privateDnsName) {
+        this.privateDnsName = privateDnsName;
+    }
+
+    public String getPublicDnsName() {
+        return publicDnsName;
+    }
+
+    public void setPublicDnsName(String publicDnsName) {
+        this.publicDnsName = publicDnsName;
+    }
+
+    public int getSshPort() {
+        return sshPort;
+    }
+
+    public void setSshPort(int sshPort) {
+        this.sshPort = sshPort;
+    }
+
 
     public String getId() {
         return this.id;

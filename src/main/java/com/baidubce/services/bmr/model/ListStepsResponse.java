@@ -23,33 +23,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * The response contains a array of BMR Step objects.
  */
 public class ListStepsResponse extends AbstractBceResponse {
-    private boolean isTruncated;
-    private String marker;
-    private String nextMarker;
+    private int pageNo;
+    private int pageSize;
+    private int total;
     private List<Step> steps;
 
-    public boolean isTruncated() {
-        return this.isTruncated;
+    public int getPageNo() {
+        return pageNo;
     }
 
-    @JsonProperty("isTruncated") public void setTruncated(boolean isTruncated) {
-        this.isTruncated = isTruncated;
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
     }
 
-    public String getMarker() {
-        return marker;
+    public int getPageSize() {
+        return pageSize;
     }
 
-    public void setMarker(String marker) {
-        this.marker = marker;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
-    public String getNextMarker() {
-        return nextMarker;
+    public int getTotal() {
+        return total;
     }
 
-    public void setNextMarker(String nextMarker) {
-        this.nextMarker = nextMarker;
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public List<Step> getSteps() {

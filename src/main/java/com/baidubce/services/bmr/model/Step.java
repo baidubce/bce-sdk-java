@@ -19,14 +19,20 @@ import java.util.Map;
  * Represent a BMR step.
  */
 public class Step {
-    private String id;
-    private String actionOnFailure;
-    private String type;
-    private Map<String, String> properties;
-    private String name;
+    private String clusterId;
+    private String launcherJobId;
     private StepStatus status;
     private String logUri;
+    private String stderr;
+    private String stdout;
+    private String syslog;
+    private String id;
+    private String name;
+    private String type;
+    private String actionOnFailure;
     private List<AdditionalFile> additionalFiles;
+
+    private Map<String, String> properties;
 
     public String getId() {
         return id;

@@ -25,17 +25,27 @@ public class GetBecVmInstanceMetricsRequest extends AbstractBceRequest {
     /**
      * The id of the bec virtual machine instance.
      */
-    String vmId;
+    private String vmId;
 
     /**
      * The type of the metrics.
      */
-    String type;
+    private String type;
 
     /**
      * Offset in seconds.
      */
-    Integer offsetInSeconds;
+    private Integer offsetInSeconds;
+
+    /**
+     * ServiceProvider.
+     */
+    private String serviceProvider;
+
+    /**
+     * stepInMin
+     */
+    private Integer stepInMin;
 
     /**
      * Configure request credential for the request.

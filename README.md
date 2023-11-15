@@ -328,7 +328,13 @@ BCC Java SDK发布版本中增加了logback作为slf4j的实现，如果用户�
 参照**快速开始**，使用自己的AK、SK进行调用测试。
 
 ## 如何贡献
-本项目是维护各产品线提供的SDK集合，需要产品线自行补充完善
+本项目是维护各产品线提供的SDK集合，需要产品线自行补充完善。
+
+流程规范：[Java SDK 管理流程](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/tQvrZcAEPS/EqUK30nkdR/Tnyc_BAnFAbu9L)。
+
+发布登记：[外部发布需求登记](https://ku.baidu-int.com/knowledge/HFVrC7hq1Q/tQvrZcAEPS/EqUK30nkdR/7MLNFoqX8pum-5)。
 
 ## 讨论
 https://github.com/baidubce/bce-sdk-java/issues
+
+如流群：7240682

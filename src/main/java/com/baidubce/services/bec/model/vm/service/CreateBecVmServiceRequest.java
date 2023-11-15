@@ -15,6 +15,8 @@ package com.baidubce.services.bec.model.vm.service;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bec.model.purchase.DeploymentInstance;
+import com.baidubce.services.bec.model.vm.KeyConfig;
+import com.baidubce.services.bec.model.vm.NetworkConfig.Networks;
 import com.baidubce.services.bec.model.vm.SystemVolumeConfig;
 import com.baidubce.services.bec.model.vm.VolumeConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,10 +32,26 @@ import java.util.List;
 @Builder
 public class CreateBecVmServiceRequest extends AbstractBceRequest {
 
+
     /**
      * The name of the service.
      */
     private String serviceName;
+
+    /**
+     * The id of the service.
+     */
+    private String serviceId;
+
+    /**
+     * The name of the vm.
+     */
+    private String vmName;
+
+    /**
+     * TemplateId.
+     */
+    private String templateId;
 
     /**
      * The payment method of the service.
@@ -81,6 +99,11 @@ public class CreateBecVmServiceRequest extends AbstractBceRequest {
     private String imageId;
 
     /**
+     * The imageType of the service.
+     */
+    private String imageType;
+
+    /**
      * Data disk configuration list.
      */
     private List<VolumeConfig> dataVolumeList;
@@ -94,6 +117,41 @@ public class CreateBecVmServiceRequest extends AbstractBceRequest {
      * The password of the vm service.
      */
     private String adminPass;
+
+    /**
+     * The keyConfig of the vm service.
+     */
+    private KeyConfig keyConfig;
+
+    /**
+     * The spec of the vm service.
+     */
+    private String spec;
+
+    /**
+     * The needIpv6PublicIp of the vm service.
+     */
+    private boolean needIpv6PublicIp;
+
+    /**
+     * The hostname of the vm service.
+     */
+    private String hostname;
+
+    /**
+     * The deploysetIdList of the vm service.
+     */
+    private List<String> deploysetIdList;
+
+    /**
+     * The networksList of the vm.
+     */
+    private List<Networks> networksList;
+
+    /**
+     * The securityGroupIds of the vm.
+     */
+    private List<String> securityGroupIds;
 
     /**
      * An ASCII string whose length is less than 64.

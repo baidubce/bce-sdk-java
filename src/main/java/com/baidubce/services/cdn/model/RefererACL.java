@@ -22,9 +22,9 @@ import java.util.List;
  */
 public class RefererACL extends JsonObject {
 
-    List<String> blackList;
-    List<String> whiteList;
-    boolean allowEmpty;
+    private List<String> blackList;
+    private List<String> whiteList;
+    private boolean allowEmpty;
     
     /**
      * @return blackList

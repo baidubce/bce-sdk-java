@@ -70,6 +70,11 @@ public class CreateVolumeRequest extends AbstractBceRequest {
      */
     private String zoneName;
 
+    /**
+     * The id of cluster.
+     */
+    private String clusterId;
+
     public String getClientToken() {
         return clientToken;
     }
@@ -200,6 +205,19 @@ public class CreateVolumeRequest extends AbstractBceRequest {
 
     public CreateVolumeRequest withZoneName(String zoneName) {
         this.zoneName = zoneName;
+        return this;
+    }
+
+    public String getClusterId() {
+        return clusterId;
+    }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
+
+    public CreateVolumeRequest withClusterId(String clusterId) {
+        this.clusterId = clusterId;
         return this;
     }
 

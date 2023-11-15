@@ -60,7 +60,7 @@ public class MaterialGetResponse extends AbstractBceResponse {
     /**
      * The thumbnails preview urls of media source.
      */
-    private List<String> thumbnailUrls;
+    private List<String> thumbnailList;
     /**
      * The subtitles preview urls of media source.
      */
@@ -189,12 +189,12 @@ public class MaterialGetResponse extends AbstractBceResponse {
         this.sourceUrl360p = sourceUrl360p;
     }
 
-    public List<String> getThumbnailUrls() {
-        return thumbnailUrls;
+    public List<String> getThumbnailList() {
+        return thumbnailList;
     }
 
-    public void setThumbnailUrls(List<String> thumbnailUrls) {
-        this.thumbnailUrls = thumbnailUrls;
+    public void setThumbnailList(List<String> thumbnailList) {
+        this.thumbnailList = thumbnailList;
     }
 
     public List<String> getSubtitleUrls() {
@@ -313,7 +313,7 @@ public class MaterialGetResponse extends AbstractBceResponse {
                 ", title='" + title + '\'' +
                 ", sourceUrl='" + sourceUrl + '\'' +
                 ", sourceUrl360p='" + sourceUrl360p + '\'' +
-                ", thumbnailUrls=" + thumbnailUrls +
+                ", thumbnailList=" + thumbnailList +
                 ", subtitleUrls=" + subtitleUrls +
                 ", createTime='" + createTime + '\'' +
                 ", updateTime='" + updateTime + '\'' +

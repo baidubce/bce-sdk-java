@@ -48,6 +48,16 @@ public class GetBecBlbResourceMetricsRequest extends AbstractBceRequest {
     private String port;
 
     /**
+     * ServiceProvider.
+     */
+    private String serviceProvider;
+
+    /**
+     * stepInMin
+     */
+    private Integer stepInMin;
+
+    /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.

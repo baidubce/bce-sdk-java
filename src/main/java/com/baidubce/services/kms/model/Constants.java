@@ -35,6 +35,8 @@ public class Constants {
 
     public static final String FIELD_ORIGIN = "origin";
 
+    public static final String FIELD_ROTATECYCLE = "rotateCycle";
+
     public static final String FIELD_NUMBEROFBYTES = "numberOfBytes";
 
     public static final String FIELD_CIPHERTEXT = "ciphertext";
@@ -83,11 +85,17 @@ public class Constants {
 
         AES_256("AES_256"),
 
+        SM1_128("SM1_128"),
+
+        SM4_128("SM4_128"),
+
         RSA_1024("RSA_1024"),
 
         RSA_2048("RSA_2048"),
 
-        RSA_4096("RSA_4096");
+        RSA_4096("RSA_4096"),
+
+        SM2_256("SM2_256");
 
         private final String specific;
 

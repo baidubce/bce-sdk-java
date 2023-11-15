@@ -6,7 +6,16 @@ import com.baidubce.services.cdn.model.JsonObject;
  * create by changxing01 on 19/8/27
  */
 public class AccessLimit extends JsonObject {
+    /**
+     * true表示开启IP单节点访问限频，false表示取消限频
+     * 必选
+     */
     private boolean enabled;
+
+    /**
+     * 1秒内单个IP节点请求次数上限，enabled为true时此项默认为1000，enabled为false此项无意义
+     * 可选
+     */
     private int limit;
 
     /**

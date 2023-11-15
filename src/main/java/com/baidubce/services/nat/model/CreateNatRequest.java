@@ -17,6 +17,7 @@ import java.util.List;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bcc.model.Billing;
+import com.baidubce.services.bcc.model.TagModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -60,6 +61,11 @@ public class CreateNatRequest extends AbstractBceRequest {
      * The billing of nat that will be created.
      */
     private Billing billing;
+
+    /**
+     * the list of tags which will be bound to nat instance
+     */
+    private List<TagModel> tags;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -168,5 +174,13 @@ public class CreateNatRequest extends AbstractBceRequest {
 
     public void setBilling(Billing billing) {
         this.billing = billing;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

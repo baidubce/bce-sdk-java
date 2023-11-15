@@ -1,11 +1,9 @@
 package com.baidubce.services.cdn.model.domain;
 
-import com.baidubce.services.cdn.model.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class RetryOrigin extends JsonObject {
+public class RetryOrigin {
     private List<Integer> codes;
 
     public RetryOrigin(List<Integer> codes) {

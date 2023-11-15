@@ -12,6 +12,8 @@
  */
 package com.baidubce.internal;
 
+import com.baidubce.services.bos.model.BosProgressCallback;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -53,6 +55,12 @@ public class RestartableMultiByteArrayInputStream extends RestartableInputStream
         this.length = length;
     }
 
+    public RestartableMultiByteArrayInputStream(List<byte[]> byteArrayList, long length,
+                                                BosProgressCallback progressCallback) {
+        this(byteArrayList, length);
+        super.setProgressCallback(progressCallback);
+    }
+
     @Override
     public void restart() {
         this.pos = 0;
@@ -82,6 +90,8 @@ public class RestartableMultiByteArrayInputStream extends RestartableInputStream
             len -= copyLength;
             count += copyLength;
         }
+        super.doProgressCallback(count);
+
         return count;
     }
 
@@ -93,6 +103,7 @@ public class RestartableMultiByteArrayInputStream extends RestartableInputStream
         int index = (int) (this.pos / this.blockSize);
         int offset = (int) (this.pos % this.blockSize);
         ++this.pos;
+        super.doProgressCallback(1);
         return this.byteArrayList.get(index)[offset] & 0xff;
     }
 }

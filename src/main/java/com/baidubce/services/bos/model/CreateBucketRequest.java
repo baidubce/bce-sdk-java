@@ -19,6 +19,8 @@ import com.baidubce.auth.BceCredentials;
  */
 public class CreateBucketRequest extends GenericBucketRequest {
 
+    private String bucketTags = null;
+
     /**
      * Constructs a new {@link CreateBucketRequest},ready to be executed to create the specified bucket.
      *
@@ -35,6 +37,19 @@ public class CreateBucketRequest extends GenericBucketRequest {
 
     public CreateBucketRequest withBucketName(String bucketName) {
         this.setBucketName(bucketName);
+        return this;
+    }
+
+    public String getBucketTags() {
+        return bucketTags;
+    }
+
+    public void setBucketTags(String bucketTags) {
+        this.bucketTags = bucketTags;
+    }
+
+    public CreateBucketRequest withBucketTags(String bucketTags) {
+        this.setBucketTags(bucketTags);
         return this;
     }
 }

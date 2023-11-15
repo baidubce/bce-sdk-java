@@ -32,6 +32,11 @@ public class ModifySubnetAttributesRequest extends AbstractBceRequest {
     private String name;
 
     /**
+     * whether assign subnet Ipv6 cidr
+     */
+    private Boolean enableIpv6;
+
+    /**
      * The new value description of subnet.
      */
     private String description;
@@ -114,6 +119,14 @@ public class ModifySubnetAttributesRequest extends AbstractBceRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getEnableIpv6() {
+        return enableIpv6;
+    }
+
+    public void setEnableIpv6(Boolean enableIpv6) {
+        this.enableIpv6 = enableIpv6;
     }
 
     /**

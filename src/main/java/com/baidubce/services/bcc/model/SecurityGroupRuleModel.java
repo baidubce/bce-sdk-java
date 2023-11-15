@@ -76,6 +76,11 @@ public class SecurityGroupRuleModel {
      */
     private String securityGroupId;
 
+    /**
+     * The id of the specified security group rule
+     */
+    private String securityGroupRuleId;
+
     public String getRemark() {
         return remark;
     }
@@ -198,6 +203,14 @@ public class SecurityGroupRuleModel {
 
     public void setSecurityGroupId(String securityGroupId) {
         this.securityGroupId = securityGroupId;
+    }
+
+    public String getSecurityGroupRuleId() {
+        return this.securityGroupRuleId;
+    }
+
+    public void setSecurityGroupRuleId(String securityGroupRuleId) {
+        this.securityGroupRuleId = securityGroupRuleId;
     }
 
     public SecurityGroupRuleModel withSecurityGroupId(String securityGroupId) {

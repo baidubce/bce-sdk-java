@@ -30,12 +30,15 @@ import com.baidubce.services.iam.model.CreateRoleRequest;
 import com.baidubce.services.iam.model.CreateRoleResponse;
 import com.baidubce.services.iam.model.CreateUserRequest;
 import com.baidubce.services.iam.model.CreateUserResponse;
+import com.baidubce.services.iam.model.CreateVsAccountRequest;
+import com.baidubce.services.iam.model.CreateVsAccountResponse;
 import com.baidubce.services.iam.model.DisableAccessKeyResponse;
 import com.baidubce.services.iam.model.GetGroupResponse;
 import com.baidubce.services.iam.model.GetLoginProfileResponse;
 import com.baidubce.services.iam.model.GetPolicyResponse;
 import com.baidubce.services.iam.model.GetRoleResponse;
 import com.baidubce.services.iam.model.GetUserResponse;
+import com.baidubce.services.iam.model.GetVsAccountResponse;
 import com.baidubce.services.iam.model.ListAccessKeyResponse;
 import com.baidubce.services.iam.model.ListGroupResponse;
 import com.baidubce.services.iam.model.ListGroupsForUserResponse;
@@ -47,6 +50,8 @@ import com.baidubce.services.iam.model.ListRoleResponse;
 import com.baidubce.services.iam.model.ListUserResponse;
 import com.baidubce.services.iam.model.ListUsersInGroupResponse;
 import com.baidubce.services.iam.model.EnableAccessKeyResponse;
+import com.baidubce.services.iam.model.ListVsAccountsRequest;
+import com.baidubce.services.iam.model.ListVsAccountsResponse;
 import com.baidubce.services.iam.model.UpdateGroupRequest;
 import com.baidubce.services.iam.model.UpdateGroupResponse;
 import com.baidubce.services.iam.model.UpdateLoginProfileRequest;
@@ -671,8 +676,8 @@ public class IamClient extends BaseBceClient {
     /**
      * UpdateLoginProfile
      *
-     * @param userName 
-     * @param body 
+     * @param userName
+     * @param body
      * @return UpdateLoginProfileResponse
      */
     public UpdateLoginProfileResponse updateLoginProfile(String userName, UpdateLoginProfileRequest body) {
@@ -687,8 +692,8 @@ public class IamClient extends BaseBceClient {
     /**
      * UpdateRole
      *
-     * @param roleName 
-     * @param body 
+     * @param roleName
+     * @param body
      * @return UpdateRoleResponse
      */
     public UpdateRoleResponse updateRole(String roleName, UpdateRoleRequest body) {
@@ -703,8 +708,8 @@ public class IamClient extends BaseBceClient {
     /**
      * UpdateUser
      *
-     * @param userName 
-     * @param body 
+     * @param userName
+     * @param body
      * @return UpdateUserResponse
      */
     public UpdateUserResponse updateUser(String userName, UpdateUserRequest body) {
@@ -714,6 +719,48 @@ public class IamClient extends BaseBceClient {
         InternalRequest internalRequest = createRequest(apiInfo.getMethod(), apiPath, apiInfo.getQueries(),
                 apiInfo.getHeaders(), body);
         return invokeHttpClient(internalRequest, UpdateUserResponse.class);
+    }
+
+    /**
+     * CreateVirtualStoreAccount
+     *
+     * @param body
+     * @return
+     */
+    public CreateVsAccountResponse createVsAccount(CreateVsAccountRequest body) {
+        ApiInfo apiInfo = new ApiInfo(IAM_APIS.get("createVsAccount"));
+        String apiPath = apiInfo.getPath().get();
+        InternalRequest internalRequest = createRequest(apiInfo.getMethod(), apiPath, apiInfo.getQueries(),
+                apiInfo.getHeaders(), body);
+        return invokeHttpClient(internalRequest, CreateVsAccountResponse.class);
+    }
+
+    /**
+     * GetVirtualStoreAccount
+     *
+     * @param userId
+     * @return
+     */
+    public GetVsAccountResponse getVsAccount(String userId) {
+        ApiInfo apiInfo = new ApiInfo(IAM_APIS.get("getVsAccount"));
+        String apiPath = apiInfo.getPath().withPathParameter("userId", userId).get();
+        InternalRequest internalRequest = createRequest(apiInfo.getMethod(), apiPath, apiInfo.getQueries(),
+                apiInfo.getHeaders(), null);
+        return invokeHttpClient(internalRequest, GetVsAccountResponse.class);
+    }
+
+    /**
+     * list Virtual store account
+     *
+     * @param body
+     * @return
+     */
+    public ListVsAccountsResponse listVsAccounts(ListVsAccountsRequest body) {
+        ApiInfo apiInfo = new ApiInfo(IAM_APIS.get("listVsAccount"));
+        String apiPath = apiInfo.getPath().get();
+        InternalRequest internalRequest = createRequest(apiInfo.getMethod(), apiPath, apiInfo.getQueries(),
+                apiInfo.getHeaders(), body);
+        return invokeHttpClient(internalRequest, ListVsAccountsResponse.class);
     }
 
 }

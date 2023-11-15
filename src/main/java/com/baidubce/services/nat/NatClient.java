@@ -21,6 +21,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.baidubce.services.nat.model.BindDnatEipRequest;
+import com.baidubce.services.nat.model.BindEipRequest;
+import com.baidubce.services.nat.model.CreateDnatRuleRequest;
+import com.baidubce.services.nat.model.CreateNatRequest;
+import com.baidubce.services.nat.model.CreateNatResponse;
+import com.baidubce.services.nat.model.CreateNatRuleResponse;
+import com.baidubce.services.nat.model.CreateSnatRuleRequest;
+import com.baidubce.services.nat.model.DeleteNatRuleRequest;
+import com.baidubce.services.nat.model.GetNatRequest;
+import com.baidubce.services.nat.model.GetNatResponse;
+import com.baidubce.services.nat.model.ListDnatRuleResponse;
+import com.baidubce.services.nat.model.ListNatRequest;
+import com.baidubce.services.nat.model.ListNatResponse;
+import com.baidubce.services.nat.model.ListNatRuleRequest;
+import com.baidubce.services.nat.model.ListSnatRuleResponse;
+import com.baidubce.services.nat.model.ModifyNatRequest;
+import com.baidubce.services.nat.model.PurchaseReservedNatRequest;
+import com.baidubce.services.nat.model.ReleaseNatRequest;
+import com.baidubce.services.nat.model.UpdateDnatRuleRequest;
+import com.baidubce.services.nat.model.UpdateSnatRuleRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,16 +57,6 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
-import com.baidubce.services.nat.model.BindEipRequest;
-import com.baidubce.services.nat.model.CreateNatRequest;
-import com.baidubce.services.nat.model.CreateNatResponse;
-import com.baidubce.services.nat.model.GetNatRequest;
-import com.baidubce.services.nat.model.GetNatResponse;
-import com.baidubce.services.nat.model.ListNatRequest;
-import com.baidubce.services.nat.model.ListNatResponse;
-import com.baidubce.services.nat.model.ModifyNatRequest;
-import com.baidubce.services.nat.model.PurchaseReservedNatRequest;
-import com.baidubce.services.nat.model.ReleaseNatRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -60,6 +70,9 @@ public class NatClient extends AbstractBceClient {
 
     private static final String VERSION = "v1";
     private static final String NAT_PREFIX = "nat";
+    private static final String CLIENT_TOKEN = "clientToken";
+    private static final String SNAT_RULE_PREFIX = "snatRule";
+    private static final String DNAT_RULE_PREFIX = "dnatRule";
 
     /**
      * Responsible for handling httpResponses from all network service calls.
@@ -319,5 +332,253 @@ public class NatClient extends AbstractBceClient {
         internalRequest.addParameter("purchaseReserved", null);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Bind eips in the specified dnat.
+     *
+     * @param request The request containing all the parameters for binding the eips in the specified dnat.
+     */
+    public void bindDnatEip(BindDnatEipRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkNotNull(request.getDnatEips(), "dnatEips should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, NAT_PREFIX, request.getNatId());
+        internalRequest.addParameter("bind", null);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Unbind eips in the specified dnat.
+     *
+     * @param request The request containing all the parameters for unbinding the eips in the specified dnat.
+     */
+    public void unbindDnatEip(BindDnatEipRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkNotNull(request.getDnatEips(), "dnatEips should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, NAT_PREFIX, request.getNatId());
+        internalRequest.addParameter("unbind", null);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Create a snat rule for the specified snat.
+     *
+     * @param request The request contains all parameters for creating a snat rule.
+     * @return the nat rule id newly created
+     */
+    public CreateNatRuleResponse createSnatRule(CreateSnatRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkStringNotEmpty(request.getRuleName(), "ruleName should not be empty.");
+        checkStringNotEmpty(request.getSourceCIDR(), "sourceCIDR should not be empty.");
+        checkNotNull(request.getPublicIpsAddress(), "publicIpsAddress should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.POST,
+                NAT_PREFIX,
+                request.getNatId(),
+                SNAT_RULE_PREFIX);
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateNatRuleResponse.class);
+    }
+
+    /**
+     * Delete a snat rule via the snat rule id in the specified snat.
+     *
+     * @param request The request contains the natId and ruleId for deleting a snat rule.
+     */
+    public void deleteSnatRule(DeleteNatRuleRequest request){
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkStringNotEmpty(request.getRuleId(), "ruleId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.DELETE,
+                NAT_PREFIX,
+                request.getNatId(),
+                SNAT_RULE_PREFIX,
+                request.getRuleId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Update a snat rule via the snat rule id in the specified snat.
+     *
+     * @param request The request contains all parameters for updating a snat rule.
+     */
+    public void updateSnatRule(UpdateSnatRuleRequest request){
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkStringNotEmpty(request.getRuleId(), "ruleId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.PUT,
+                NAT_PREFIX,
+                request.getNatId(),
+                SNAT_RULE_PREFIX,
+                request.getRuleId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * List the information of snat rules in one specified snat.
+     *
+     * @param natId The id of the snat.
+     * @return All rule information in one specified snat.
+     */
+    public ListSnatRuleResponse listSnatRule(String natId) {
+        checkStringNotEmpty(natId, "natId should not be empty.");
+        return listSnatRule(new ListNatRuleRequest().withNatId(natId));
+    }
+
+    /**
+     * List the information of snat rules in one specified snat.
+     *
+     * @param request The request contains natId, marker and maxKeys for getting all snat rules.
+     * @return All rule information in one specified snat.
+     */
+    public ListSnatRuleResponse listSnatRule (ListNatRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty");
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.GET,
+                NAT_PREFIX,
+                request.getNatId(),
+                SNAT_RULE_PREFIX);
+        if (StringUtils.isNotBlank(request.getMarker())) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        return invokeHttpClient(internalRequest, ListSnatRuleResponse.class);
+    }
+
+    /**
+     * Create a dnat rule for the specified dnat.
+     *
+     * @param request The request contains all parameters for creating a dnat rule.
+     * @return the nat rule id newly created
+     */
+    public CreateNatRuleResponse createDnatRule(CreateDnatRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkStringNotEmpty(request.getPublicIpAddress(), "publicIpAddress should not be empty.");
+        checkStringNotEmpty(request.getPrivateIpAddress(), "privateIpAddress should not be empty.");
+        checkStringNotEmpty(request.getProtocol(), "protocol should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.POST,
+                NAT_PREFIX,
+                request.getNatId(),
+                DNAT_RULE_PREFIX);
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateNatRuleResponse.class);
+    }
+
+    /**
+     * Delete a dnat rule via the dnat rule id in the specified dnat.
+     *
+     * @param request The request contains the natId and ruleId for deleting a dnat rule.
+     */
+    public void deleteDnatRule(DeleteNatRuleRequest request){
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkStringNotEmpty(request.getRuleId(), "ruleId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.DELETE,
+                NAT_PREFIX,
+                request.getNatId(),
+                DNAT_RULE_PREFIX,
+                request.getRuleId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Update a dnat rule via the dnat rule id in the specified dnat.
+     *
+     * @param request The request contains all parameters for updating a dnat rule.
+     */
+    public void updateDnatRule(UpdateDnatRuleRequest request){
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        checkStringNotEmpty(request.getRuleId(), "ruleId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.PUT,
+                NAT_PREFIX,
+                request.getNatId(),
+                DNAT_RULE_PREFIX,
+                request.getRuleId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * List the information of dnat rules in one specified dnat.
+     *
+     * @param natId The id of the dnat.
+     * @return All rule information in one specified dnat.
+     */
+    public ListDnatRuleResponse listDnatRule(String natId) {
+        checkStringNotEmpty(natId, "natId should not be empty.");
+        return listDnatRule(new ListNatRuleRequest().withNatId(natId));
+    }
+
+    /**
+     * List the information of dnat rules in one specified dnat.
+     *
+     * @param request The request contains natId, marker and maxKeys for getting all dnat rules.
+     * @return All rule information in one specified dnat.
+     */
+    public ListDnatRuleResponse listDnatRule (ListNatRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty");
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.GET,
+                NAT_PREFIX,
+                request.getNatId(),
+                DNAT_RULE_PREFIX);
+        if (StringUtils.isNotBlank(request.getMarker())) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        return invokeHttpClient(internalRequest, ListDnatRuleResponse.class);
     }
 }

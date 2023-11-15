@@ -1,8 +1,8 @@
 package com.baidubce.services.subnet.model;
 
-import java.util.List;
-
 import com.baidubce.services.bcc.model.TagModel;
+
+import java.util.List;
 
 /**
  * subnet detail info model

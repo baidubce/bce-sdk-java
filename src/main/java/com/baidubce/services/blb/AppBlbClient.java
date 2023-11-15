@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019 Baidu.com, Inc. All Rights Reserved
+ * Copyright (c) 2020 Baidu.com, Inc. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -24,7 +24,12 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.blb.model.AppBackendPolicyRequest;
 import com.baidubce.services.blb.model.AppBackendServer;
+import com.baidubce.services.blb.model.AppIgRequest;
+import com.baidubce.services.blb.model.AppIgResponse;
+import com.baidubce.services.blb.model.AppIpGroupMember;
+import com.baidubce.services.blb.model.AppIpGroupMemberRequest;
 import com.baidubce.services.blb.model.AppPolicy;
 import com.baidubce.services.blb.model.AppPolicyRequest;
 import com.baidubce.services.blb.model.AppRsRequest;
@@ -34,6 +39,7 @@ import com.baidubce.services.blb.model.AppSgRequest;
 import com.baidubce.services.blb.model.AppSgResponse;
 import com.baidubce.services.blb.model.BlbListenerAction;
 import com.baidubce.services.blb.model.BlbListenerRequest;
+import com.baidubce.services.blb.model.CreateAppPolicyResponse;
 import com.baidubce.services.blb.model.CreateBlbRequest;
 import com.baidubce.services.blb.model.CreateBlbResponse;
 import com.baidubce.services.blb.model.DeleteAppPolicyRequest;
@@ -41,6 +47,10 @@ import com.baidubce.services.blb.model.DeleteBlbRequest;
 import com.baidubce.services.blb.model.DeleteListenerRequest;
 import com.baidubce.services.blb.model.HttpListener;
 import com.baidubce.services.blb.model.HttpsListener;
+import com.baidubce.services.blb.model.ListAppIgRequest;
+import com.baidubce.services.blb.model.ListAppIgResponse;
+import com.baidubce.services.blb.model.ListAppIpGroupMemberRequest;
+import com.baidubce.services.blb.model.ListAppIpGroupMemberResponse;
 import com.baidubce.services.blb.model.ListAppPolicyRequest;
 import com.baidubce.services.blb.model.ListAppPolicyResponse;
 import com.baidubce.services.blb.model.ListAppRsRequest;
@@ -497,6 +507,37 @@ public class AppBlbClient extends AbstractBceClient {
     }
 
     /**
+     * Add member to the specified blb appIpGroup.
+     *
+     * @param blbId  The id of blb to add ipGroup member.
+     * @param ipGroupId  The id of blb appIpGroup to add member.
+     * @param memberList The ipGroup members to add.
+     */
+    public void createIpGroupMember(String blbId, String ipGroupId, List<AppIpGroupMember> memberList) {
+        createIpGroupMember(new AppIgRequest().withBlbId(blbId).withIpGroupId(ipGroupId).withMemberList(memberList));
+    }
+
+    /**
+     * Add member to the specified blb appIpGroup.
+     *
+     * @param appIgRequest The request containing all members for adding to the specified blb appIpGroup.
+     */
+    public void createIpGroupMember(AppIgRequest appIgRequest) {
+        checkNotNull(appIgRequest, "request should not be null.");
+        checkNotNull(appIgRequest.getBlbId(), "request blbId should not be null.");
+        checkNotNull(appIgRequest.getIpGroupId(), "request ipGroupId should not be null.");
+        checkNotNull(appIgRequest.getMemberList(), "request memberList should not be null.");
+        if (Strings.isNullOrEmpty(appIgRequest.getClientToken())) {
+            appIgRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(appIgRequest, HttpMethodName.POST, PREFIX,
+                appIgRequest.getBlbId(), "ipgroup", "member");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appIgRequest.getClientToken());
+        fillPayload(internalRequest, appIgRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
      * Return a list of healthStatus of backend servers with the specified blb and listener port.
      *
      * @param blbId        The id of the specified blb.
@@ -565,6 +606,41 @@ public class AppBlbClient extends AbstractBceClient {
             internalRequest.addParameter("maxKeys", String.valueOf(listAppSgRequest.getMaxKeys()));
         }
         return invokeHttpClient(internalRequest, ListAppSgResponse.class);
+    }
+
+    /**
+     * Return a list of appIpGroup of the specified blb.
+     *
+     * @param blbId The id of the blb.
+     * @param name The name of the appIpGroup.
+     *
+     * @return The response containing a list of backend servers of the specified blb.
+     */
+    public ListAppIgResponse listAppIpGroup(String blbId, String name) {
+        return listAppIpGroup(new ListAppIgRequest(blbId).withName(name));
+    }
+
+    /**
+     * Return a list of appIpGroup of the specified blb
+     *
+     * @param listAppIgRequest The request containing all options for listing appIpGroup.
+     *
+     * @return The response containing a list of appIpGroup of the specified blb.
+     */
+    public ListAppIgResponse listAppIpGroup(ListAppIgRequest listAppIgRequest) {
+        checkNotNull(listAppIgRequest, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(listAppIgRequest, HttpMethodName.GET, PREFIX,
+                listAppIgRequest.getBlbId(), "ipgroup");
+        if (StringUtils.isNotEmpty(listAppIgRequest.getName())) {
+            internalRequest.addParameter("name", listAppIgRequest.getName());
+        }
+        if (listAppIgRequest.getMarker() != null) {
+            internalRequest.addParameter("marker", listAppIgRequest.getMarker());
+        }
+        if (listAppIgRequest.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(listAppIgRequest.getMaxKeys()));
+        }
+        return invokeHttpClient(internalRequest, ListAppIgResponse.class);
     }
 
     /**
@@ -663,6 +739,42 @@ public class AppBlbClient extends AbstractBceClient {
 
     }
 
+    /**
+     * Return a list of member of the specified blb appIpGroup.
+     *
+     * @param blbId The id of the blb.
+     * @param ipGroupId The id of the appIpGroup.
+     *
+     * @return The response containing a list of member of the specified blb appIpGroup.
+     */
+    public ListAppIpGroupMemberResponse listIpGroupMember(String blbId, String ipGroupId) {
+        return listIpGroupMember(new ListAppIpGroupMemberRequest(blbId).withIpGroupId(ipGroupId));
+    }
+
+    /**
+     * Return a list of member of the specified blb appIpGroup
+     *
+     * @param listAppIpGroupMemberRequest The request containing all options for listing member.
+     *
+     * @return The response containing a list of member of the specified blb appIpGroup.
+     */
+    public ListAppIpGroupMemberResponse listIpGroupMember(ListAppIpGroupMemberRequest listAppIpGroupMemberRequest) {
+        checkNotNull(listAppIpGroupMemberRequest, "request should not be null.");
+        checkNotNull(listAppIpGroupMemberRequest.getBlbId(), "request blbId should not be null.");
+        checkNotNull(listAppIpGroupMemberRequest.getIpGroupId(), "request ipGroupId should not be null.");
+        InternalRequest internalRequest = this.createRequest(listAppIpGroupMemberRequest, HttpMethodName.GET, PREFIX,
+                listAppIpGroupMemberRequest.getBlbId(), "ipgroup", "member");
+        internalRequest.addParameter("ipGroupId", listAppIpGroupMemberRequest.getIpGroupId());
+        if (listAppIpGroupMemberRequest.getMarker() != null) {
+            internalRequest.addParameter("marker", listAppIpGroupMemberRequest.getMarker());
+        }
+        if (listAppIpGroupMemberRequest.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(listAppIpGroupMemberRequest.getMaxKeys()));
+        }
+        return invokeHttpClient(internalRequest, ListAppIpGroupMemberResponse.class);
+
+    }
+
 
 
 
@@ -694,6 +806,37 @@ public class AppBlbClient extends AbstractBceClient {
                 appSgRequest.getBlbId(), "blbrs");
         internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appSgRequest.getClientToken());
         fillPayload(internalRequest, appSgRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Modifying the special members of the specified blb appIpGroup.
+     *
+     * @param blbId             The id of the specified blb.
+     * @param ipGroupId         The id of blb appIpGroup.
+     * @param memberList        The ipGroup members to modifying.
+     */
+    public void modifyIpGroupMember(String blbId, String ipGroupId, List<AppIpGroupMember> memberList) {
+        modifyIpGroupMember(new AppIgRequest().withBlbId(blbId).withIpGroupId(ipGroupId).withMemberList(memberList));
+    }
+
+    /**
+     * Modifying the special members of the specified blb appIpGroup.
+     *
+     * @param appIgRequest The request containing all options for modifying members.
+     */
+    public void modifyIpGroupMember(AppIgRequest appIgRequest) {
+        checkNotNull(appIgRequest, "request should not be null.");
+        checkNotNull(appIgRequest.getBlbId(), "request blbId should not be null.");
+        checkNotNull(appIgRequest.getIpGroupId(), "request ipGroupId should not be null.");
+        checkNotNull(appIgRequest.getMemberList(), "request memberList should not be null.");
+        if (Strings.isNullOrEmpty(appIgRequest.getClientToken())) {
+            appIgRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(appIgRequest, HttpMethodName.PUT, PREFIX,
+                appIgRequest.getBlbId(), "ipgroup", "member");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appIgRequest.getClientToken());
+        fillPayload(internalRequest, appIgRequest);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -731,9 +874,43 @@ public class AppBlbClient extends AbstractBceClient {
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    /**
+     * Delete the specified member from the specified blb appIpGroup.
+     *
+     * @param blbId             The id of the blb.
+     * @param ipGroupId         The id of the appIpGroup.
+     * @param memberIdList      The id list of the member id to deleting.
+     */
+    public void deleteIpGroupMember(String blbId, String ipGroupId, List<String> memberIdList) {
+        deleteIpGroupMember(new AppIpGroupMemberRequest().withBlbId(blbId).withIpGroupId(ipGroupId)
+                .withMemberIdList(memberIdList));
+    }
 
     /**
-     * Create a appServerGroup with the specified options.
+     * Delete the specified member from the specified blb appIpGroup.
+     *
+     * @param appIpGroupMemberRequest The request containing all options for deleting member
+     *                                from the specified blb appIpGroup.
+     */
+    public void deleteIpGroupMember(AppIpGroupMemberRequest appIpGroupMemberRequest) {
+        checkNotNull(appIpGroupMemberRequest, "request should not be null.");
+        checkNotNull(appIpGroupMemberRequest.getBlbId(), "request blbId should not be null.");
+        checkNotNull(appIpGroupMemberRequest.getIpGroupId(), "request ipGroupId should not be null.");
+        checkNotNull(appIpGroupMemberRequest.getMemberIdList(), "request memberIdList should not be null.");
+        if (Strings.isNullOrEmpty(appIpGroupMemberRequest.getClientToken())) {
+            appIpGroupMemberRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(appIpGroupMemberRequest, HttpMethodName.PUT, PREFIX,
+                appIpGroupMemberRequest.getBlbId(), "ipgroup", "member");
+        internalRequest.addParameter("delete", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appIpGroupMemberRequest.getClientToken());
+        fillPayload(internalRequest, appIpGroupMemberRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * Create an appServerGroup with the specified options.
      *
      * @param blbId The id of blb
      * @param name  The name of appServerGroup
@@ -749,7 +926,7 @@ public class AppBlbClient extends AbstractBceClient {
     }
 
     /**
-     * Create a appServerGroup with the specified options.
+     * Create an appServerGroup with the specified options.
      * You must fill the field of clientToken,which is especially for keeping idempotent.
      *
      * @param appSgRequest The request containing all options for creating a appSg.
@@ -765,6 +942,43 @@ public class AppBlbClient extends AbstractBceClient {
         internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appSgRequest.getClientToken());
         fillPayload(internalRequest, appSgRequest);
         return invokeHttpClient(internalRequest, AppSgResponse.class);
+    }
+
+
+    /**
+     * Create an appIpGroup with the specified options.
+     * You must fill the field of clientToken,which is especially for keeping idempotent.
+     *
+     * @param appIgRequest The request containing all options for creating an appIg.
+     */
+    public AppIgResponse createAppIpGroup(AppIgRequest appIgRequest) {
+        checkNotNull(appIgRequest, "request should not be null.");
+        checkNotNull(appIgRequest.getBlbId(), "request blbId should not be null.");
+        if (Strings.isNullOrEmpty(appIgRequest.getClientToken())) {
+            appIgRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(appIgRequest, HttpMethodName.POST, PREFIX,
+                appIgRequest.getBlbId(), "ipgroup");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appIgRequest.getClientToken());
+        fillPayload(internalRequest, appIgRequest);
+        return invokeHttpClient(internalRequest, AppIgResponse.class);
+    }
+
+
+    /**
+     * Create an appIpGroup with the specified options.
+     *
+     * @param blbId The id of blb
+     * @param name  The name of appIpGroup
+     * @param desc  The description of appIpGroup
+     * @param memberList The backen of appIpGroup
+     *
+     * @return The response contains detail of the appIpGroup.
+     */
+    public AppIgResponse createAppIpGroup(String blbId, String name, String desc
+            , List<AppIpGroupMember> memberList) {
+        return createAppIpGroup(new AppIgRequest().withBlbId(blbId).withName(name).withDesc(desc)
+                .withMemberList(memberList));
     }
 
     /**
@@ -802,6 +1016,41 @@ public class AppBlbClient extends AbstractBceClient {
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    /**
+     * Update an appIpGroup with the specified options.
+     *
+     * @param blbId The id of blb
+     * @param ipGroupId The id of appIpGroup
+     * @param name  The name of appIpGroup
+     * @param desc  The description of appIpGroup
+     *
+     */
+    public void modifyAppIpGroupAttributes(String blbId, String ipGroupId, String name, String desc) {
+        modifyAppIpGroupAttributes(new AppIgRequest().withBlbId(blbId).withIpGroupId(ipGroupId)
+                .withName(name).withDesc(desc));
+    }
+
+
+    /**
+     * Modifying the special attribute to new appIpGroup.
+     *
+     * @param appIgRequest The request containing all options for modifying appIgRequest.
+     */
+    public void modifyAppIpGroupAttributes(AppIgRequest appIgRequest) {
+        checkNotNull(appIgRequest, "request should not be null.");
+        if (Strings.isNullOrEmpty(appIgRequest.getClientToken())) {
+            appIgRequest.setClientToken(this.generateClientToken());
+        }
+        checkNotNull(appIgRequest.getBlbId(), "blbId should not be null.");
+        checkNotNull(appIgRequest.getIpGroupId(), "ipGroupId should not be null.");
+        InternalRequest internalRequest =
+                this.createRequest(appIgRequest, HttpMethodName.PUT, PREFIX,
+                        appIgRequest.getBlbId(), "ipgroup");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appIgRequest.getClientToken());
+        fillPayload(internalRequest, appIgRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
 
 
 
@@ -834,6 +1083,115 @@ public class AppBlbClient extends AbstractBceClient {
         internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appSgRequest.getClientToken());
         internalRequest.addParameter("delete", null);
         fillPayload(internalRequest, appSgRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Delete an appIpGroup with the specified options.
+     *
+     * @param blbId The id of blb
+     * @param ipGroupId The id of appIpGroup
+     *
+     */
+    public void deleteAppIpGroup(String blbId, String ipGroupId) {
+        deleteAppIpGroup(new AppIgRequest().withBlbId(blbId).withIpGroupId(ipGroupId));
+    }
+
+
+    /**
+     * Delete the special appIpGroup.
+     *
+     * @param appIgRequest The request containing all options for deleting appIpGroup.
+     */
+    public void deleteAppIpGroup(AppIgRequest appIgRequest) {
+        checkNotNull(appIgRequest, "request should not be null.");
+        if (Strings.isNullOrEmpty(appIgRequest.getClientToken())) {
+            appIgRequest.setClientToken(this.generateClientToken());
+        }
+        checkNotNull(appIgRequest.getBlbId(), "blbId should not be null.");
+        checkNotNull(appIgRequest.getIpGroupId(), "ipGroupId should not be null.");
+        InternalRequest internalRequest = this.createRequest(appIgRequest, HttpMethodName.PUT
+                , PREFIX, appIgRequest.getBlbId(), "ipgroup");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appIgRequest.getClientToken());
+        internalRequest.addParameter("delete", null);
+        fillPayload(internalRequest, appIgRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Create an appIpGroupBackendPolicy with the specified options.
+     * You must fill the field of clientToken,which is especially for keeping idempotent.
+     *
+     * @param appBackendPolicyRequest The request containing all options for creating an appIpGroupBackendPolicy.
+     */
+    public void createAppIpGroupBackendPolicy(AppBackendPolicyRequest appBackendPolicyRequest) {
+        checkNotNull(appBackendPolicyRequest, "request should not be null.");
+        checkNotNull(appBackendPolicyRequest.getBlbId(), "request blbId should not be null.");
+        checkNotNull(appBackendPolicyRequest.getIpGroupId(), "request ipGroupId should not be null.");
+        checkNotNull(appBackendPolicyRequest.getType(), "request type should not be null.");
+        if (Strings.isNullOrEmpty(appBackendPolicyRequest.getClientToken())) {
+            appBackendPolicyRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(appBackendPolicyRequest, HttpMethodName.POST, PREFIX,
+                appBackendPolicyRequest.getBlbId(), "ipgroup", "backendpolicy");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appBackendPolicyRequest.getClientToken());
+        fillPayload(internalRequest, appBackendPolicyRequest);
+        invokeHttpClient(internalRequest, AppSgPortResponse.class);
+    }
+
+    /**
+     * Modifying the special attribute to new appIpGroupBackendPolicy.
+     *
+     * @param appBackendPolicyRequest The request containing all options for modifying appIpGroupBackendPolicy.
+     */
+    public void modifyAppIpGroupBackendPolicyAttributes(AppBackendPolicyRequest appBackendPolicyRequest) {
+        checkNotNull(appBackendPolicyRequest, "request should not be null.");
+        if (Strings.isNullOrEmpty(appBackendPolicyRequest.getClientToken())) {
+            appBackendPolicyRequest.setClientToken(this.generateClientToken());
+        }
+        checkNotNull(appBackendPolicyRequest.getBlbId(), "blbId should not be null.");
+        checkNotNull(appBackendPolicyRequest.getIpGroupId(), "ipGroupId should not be null.");
+        checkNotNull(appBackendPolicyRequest.getId(), "id should not be null.");
+        InternalRequest internalRequest =
+                this.createRequest(appBackendPolicyRequest, HttpMethodName.PUT, PREFIX,
+                        appBackendPolicyRequest.getBlbId(), "ipgroup", "backendpolicy");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appBackendPolicyRequest.getClientToken());
+        fillPayload(internalRequest, appBackendPolicyRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Delete an appIpGroupBackendPolicy with the specified options.
+     *
+     * @param blbId The id of blb
+     * @param ipGroupId The id of appServerGroup
+     * @param backendPolicyIdList The id of appIpGroupBackendPolicy list
+     *
+     */
+    public void deleteAppIpGroupBackendPolicy(String blbId, String ipGroupId, List<String> backendPolicyIdList) {
+        deleteAppIpGroupBackendPolicy(new AppBackendPolicyRequest().withBlbId(blbId)
+                .withIpGroupId(ipGroupId).withBackendPolicyIdList(backendPolicyIdList));
+    }
+
+
+    /**
+     * Delete the special AppBackendPolicy.
+     *
+     * @param appBackendPolicyRequest The request containing all options for deleting appBackendPolicy.
+     */
+    public void deleteAppIpGroupBackendPolicy(AppBackendPolicyRequest appBackendPolicyRequest) {
+        checkNotNull(appBackendPolicyRequest, "request should not be null.");
+        if (Strings.isNullOrEmpty(appBackendPolicyRequest.getClientToken())) {
+            appBackendPolicyRequest.setClientToken(this.generateClientToken());
+        }
+        checkNotNull(appBackendPolicyRequest.getBlbId(), "blbId should not be null.");
+        checkNotNull(appBackendPolicyRequest.getIpGroupId(), "ipGroupId should not be null.");
+        checkNotNull(appBackendPolicyRequest.getBackendPolicyIdList(), "backendPolicyIdList should not be null.");
+        InternalRequest internalRequest = this.createRequest(appBackendPolicyRequest, HttpMethodName.PUT
+                , PREFIX, appBackendPolicyRequest.getBlbId(), "ipgroup", "backendpolicy");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appBackendPolicyRequest.getClientToken());
+        internalRequest.addParameter("delete", null);
+        fillPayload(internalRequest, appBackendPolicyRequest);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -922,11 +1280,13 @@ public class AppBlbClient extends AbstractBceClient {
      *
      * @param blbId The id of blb
      * @param listenerPort  The listenerPort of policy
+     * @param type  The listenerType of Policy
      * @param appPolicyVos The appPolicyVos of policy
      *
      */
-    public void createPolicys(String blbId, Integer listenerPort, List<AppPolicy> appPolicyVos) {
-        createPolicys(new AppPolicyRequest().withBlbId(blbId).withListenerPort(listenerPort)
+    public CreateAppPolicyResponse createPolicys(String blbId, Integer listenerPort, String type,
+                                                 List<AppPolicy> appPolicyVos) {
+        return createPolicys(new AppPolicyRequest().withBlbId(blbId).withListenerPort(listenerPort).withType(type)
                 .withAppPolicyVos(appPolicyVos));
     }
 
@@ -936,7 +1296,7 @@ public class AppBlbClient extends AbstractBceClient {
      *
      * @param appPolicyRequest The request containing all options for creating a policy.
      */
-    public void createPolicys(AppPolicyRequest appPolicyRequest) {
+    public CreateAppPolicyResponse createPolicys(AppPolicyRequest appPolicyRequest) {
         checkNotNull(appPolicyRequest, "request should not be null.");
         checkNotNull(appPolicyRequest.getBlbId(), "request blbId should not be null.");
         checkNotNull(appPolicyRequest.getListenerPort(), "request listenerPort should not be null.");
@@ -948,7 +1308,7 @@ public class AppBlbClient extends AbstractBceClient {
                 appPolicyRequest.getBlbId(), "policys");
         internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, appPolicyRequest.getClientToken());
         fillPayload(internalRequest, appPolicyRequest);
-        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+        return invokeHttpClient(internalRequest, CreateAppPolicyResponse.class);
     }
 
 

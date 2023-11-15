@@ -1,24 +1,21 @@
 package com.baidubce.services.cdn.model.domain;
 
 import com.baidubce.services.cdn.model.CdnResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * create by changxing01 on 19/8/27
  */
 public class CheckDomainValidResponse extends CdnResponse {
+
+    @JsonProperty("isValid")
     private boolean isValid;
     private String message;
 
-    /**
-     * @return isValid
-     */
     public boolean isValid() {
         return isValid;
     }
 
-    /**
-     * @param valid available or not
-     */
     public void setValid(boolean valid) {
         isValid = valid;
     }

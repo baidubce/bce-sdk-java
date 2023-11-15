@@ -46,8 +46,10 @@ import com.baidubce.services.lss.model.DeleteSessionResponse;
 import com.baidubce.services.lss.model.DeleteStreamRequest;
 import com.baidubce.services.lss.model.Encryption;
 import com.baidubce.services.lss.model.GetAllDomainsBandwidthResponse;
+import com.baidubce.services.lss.model.GetAllDomainsBandwidthResponseV2;
 import com.baidubce.services.lss.model.GetAllDomainsPlayCountResponse;
 import com.baidubce.services.lss.model.GetAllDomainsStatisticsRequest;
+import com.baidubce.services.lss.model.GetAllDomainsStatisticsRequestV2;
 import com.baidubce.services.lss.model.GetAllDomainsTrafficResponse;
 import com.baidubce.services.lss.model.GetAppRequest;
 import com.baidubce.services.lss.model.GetAppResponse;
@@ -60,8 +62,10 @@ import com.baidubce.services.lss.model.GetDomainSummaryStatisticsResponse;
 import com.baidubce.services.lss.model.GetNotificationRequest;
 import com.baidubce.services.lss.model.GetNotificationResponse;
 import com.baidubce.services.lss.model.GetOneDomainBandwidthResponse;
+import com.baidubce.services.lss.model.GetOneDomainBandwidthResponseV2;
 import com.baidubce.services.lss.model.GetOneDomainPlayCountResponse;
 import com.baidubce.services.lss.model.GetOneDomainStatisticsRequest;
+import com.baidubce.services.lss.model.GetOneDomainStatisticsRequestV2;
 import com.baidubce.services.lss.model.GetOneDomainTrafficResponse;
 import com.baidubce.services.lss.model.GetPresetRequest;
 import com.baidubce.services.lss.model.GetPresetResponse;
@@ -134,10 +138,10 @@ import com.baidubce.services.lss.model.StartPullSessionRequest;
 import com.baidubce.services.lss.model.StartPullSessionResponse;
 import com.baidubce.services.lss.model.StartRecordingRequest;
 import com.baidubce.services.lss.model.StartRecordingResponse;
-import com.baidubce.services.lss.model.StreamingStreamRequest;
-import com.baidubce.services.lss.model.StreamingStreamResponse;
 import com.baidubce.services.lss.model.StopRecordingRequest;
 import com.baidubce.services.lss.model.StopRecordingResponse;
+import com.baidubce.services.lss.model.StreamingStreamRequest;
+import com.baidubce.services.lss.model.StreamingStreamResponse;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyInnerRequest;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyRequest;
 import com.baidubce.services.lss.model.UpdateSecurityPolicyResponse;
@@ -2111,6 +2115,54 @@ public class LssClient extends AbstractBceClient {
             internalRequest.addParameter("endTime", request.getEndTime());
         }
         return invokeHttpClient(internalRequest, GetOneDomainTrafficResponse.class);
+    }
+
+    /**
+     * get all domains' traffic statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting all domains' total traffic statistics
+     * @return the response
+     */
+    public GetAllDomainsBandwidthResponseV2 getAllDomainsBandwidthV2(GetAllDomainsStatisticsRequestV2 request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+        checkStringNotEmpty(request.getEndTime(), "endTime should NOT be null");
+        checkNotNull(request.getAllDomain(), "allDomain should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, "table", LIVE_DOMAIN, "bandwidth");
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        internalRequest.addParameter("endTime", request.getEndTime());
+        internalRequest.addParameter("allDomain", request.getAllDomain().toString());
+
+        return invokeHttpClient(internalRequest, GetAllDomainsBandwidthResponseV2.class);
+    }
+
+    /**
+     * get one domain's traffic statistics in the live stream service.
+     *
+     * @param request The request object containing all options for getting one domain's traffic statistics
+     * @return the response
+     */
+    public GetOneDomainBandwidthResponseV2 getOneDomainBandwidthV2(GetOneDomainStatisticsRequestV2 request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkStringNotEmpty(request.getDomain(), "domain should NOT be null");
+        checkStringNotEmpty(request.getTimeInterval(), "timeInterval should NOT be null");
+        checkStringNotEmpty(request.getStartTime(), "startTime should NOT be null");
+        checkStringNotEmpty(request.getEndTime(), "endTime should NOT be null");
+
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, request,
+                STATISTICS, "table", LIVE_DOMAIN, "bandwidth");
+        internalRequest.addParameter("timeInterval", request.getTimeInterval());
+        internalRequest.addParameter("startTime", request.getStartTime());
+        internalRequest.addParameter("endTime", request.getEndTime());
+        internalRequest.addParameter("domain", request.getDomain());
+
+        return invokeHttpClient(internalRequest, GetOneDomainBandwidthResponseV2.class);
     }
 
     /**

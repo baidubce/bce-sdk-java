@@ -14,6 +14,8 @@ package com.baidubce.services.bec.model.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Vm Instance Details.
  */
@@ -29,4 +31,9 @@ public class VmInstanceDetailsVo extends VmInstanceBriefVo {
      * The number of data disks.
      */
     private int dataStorage;
+
+    /**
+     * The deploysetList of the virtual machine instance.
+     */
+    private List<DeploySetVo> deploysetList;
 }

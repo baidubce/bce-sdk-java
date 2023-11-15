@@ -28,6 +28,9 @@ public class LogEntry extends JsonObject {
     private Long size;
     private Date startTime;
     private Date endTime;
+
+    private Date logTimeBegin;
+    private Date logTimeEnd;
     
     /**
      * @return url
@@ -111,5 +114,21 @@ public class LogEntry extends JsonObject {
     public LogEntry withDomain(String domain) {
         this.domain = domain;
         return this;
+    }
+
+    public Date getLogTimeBegin() {
+        return logTimeBegin;
+    }
+
+    public void setLogTimeBegin(Date logTimeBegin) {
+        this.logTimeBegin = logTimeBegin;
+    }
+
+    public Date getLogTimeEnd() {
+        return logTimeEnd;
+    }
+
+    public void setLogTimeEnd(Date logTimeEnd) {
+        this.logTimeEnd = logTimeEnd;
     }
 }

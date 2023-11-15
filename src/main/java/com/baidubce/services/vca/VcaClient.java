@@ -3,6 +3,8 @@
  */
 package com.baidubce.services.vca;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -16,12 +18,18 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.vca.model.AnalyzeResponse;
+import com.baidubce.services.vca.model.McaEmptyRequest;
+import com.baidubce.services.vca.model.McaEmptyResponse;
+import com.baidubce.services.vca.model.HighlightAnalyzeRequest;
 import com.baidubce.services.vca.model.ImageAnalyzeResponse;
 import com.baidubce.services.vca.model.QueryResultRequest;
 import com.baidubce.services.vca.model.QueryResultResponse;
 import com.baidubce.services.vca.model.AnalyzeRequest;
 import com.baidubce.services.vca.model.QuerySubTaskRequest;
 import com.baidubce.services.vca.model.QuerySubTaskResponse;
+import com.baidubce.services.vca.model.StreamAnalyzeRequest;
+import com.baidubce.services.vca.model.StreamAnalyzeResponse;
+import com.baidubce.services.vca.model.StreamStopResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 
@@ -38,8 +46,12 @@ import java.util.List;
 public class VcaClient extends AbstractBceClient {
 
     private static final String VERSION = "v2";
+    private static final String VERSION_1 = "v1";
     private static final String MEDIA = "media";
+    private static final String STREAM = "stream";
     private static final String IMAGE = "image";
+    private static final String COVER = "cover";
+    private static final String HIGHLIGHT = "highlight";
 
     private static HttpResponseHandler[] vcaHandlers = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(),
@@ -88,8 +100,78 @@ public class VcaClient extends AbstractBceClient {
      * @return Analyze response.
      */
     public AnalyzeResponse analyze(AnalyzeRequest request) {
-        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.PUT,
                 request, MEDIA);
+        return this.invokeHttpClient(internalRequest, AnalyzeResponse.class);
+    }
+
+    /**
+     * Initiate image analyze for specified AnalyzeRequest and request image sync-interface.
+     *
+     * @param request Analyze request, including image source path.
+     * @return ImageAnalyzeResponse with analyze results.
+     */
+    public StreamAnalyzeResponse analyzeStream(StreamAnalyzeRequest request) {
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.PUT,
+                request, STREAM);
+        return this.invokeHttpClient(internalRequest, StreamAnalyzeResponse.class);
+    }
+
+    public StreamAnalyzeResponse queryStream(String source) {
+        QueryResultRequest request = new QueryResultRequest();
+        request.withMediaSource(source);
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.GET, request, STREAM);
+        internalRequest.addParameter("source", request.getSource());
+        return this.invokeHttpClient(internalRequest, StreamAnalyzeResponse.class);
+    }
+
+    public void stopStream(String source) {
+        QueryResultRequest request = new QueryResultRequest();
+        request.withMediaSource(source);
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.PUT,
+                request, STREAM);
+        internalRequest.addParameter("stop", StringUtils.EMPTY);
+        this.invokeHttpClient(internalRequest, StreamStopResponse.class);
+    }
+
+    /**
+     * Initiate cover analyze for specified source.
+     *
+     * @param source Video source path, supporting BOS, HTTP(S) URL.
+     * @return AnalyzeResponse with analyze results.
+     */
+
+    public AnalyzeResponse analyzeCover(String source) {
+        AnalyzeRequest request =new AnalyzeRequest();
+        request.setSource(source);
+        InternalRequest internalRequest = createRequest(VERSION_1, HttpMethodName.PUT,
+                request, COVER);
+        return this.invokeHttpClient(internalRequest, AnalyzeResponse.class);
+    }
+
+    /**
+     * Initiate highlight analyze for specified source.
+     *
+     * @param source Video source path, supporting BOS, HTTP(S) URL.
+     * @return AnalyzeResponse with analyze results.
+     */
+
+    public AnalyzeResponse analyzeHighlight(String source) {
+        HighlightAnalyzeRequest request = new HighlightAnalyzeRequest();
+        request.setSource(source);
+        return analyzeHighlight(request);
+    }
+
+    /**
+     * Initiate highlight analyze for specified source.
+     *
+     * @param request highlight analyze request.
+     * @return AnalyzeResponse with analyze results.
+     */
+
+    public AnalyzeResponse analyzeHighlight(HighlightAnalyzeRequest request) {
+        InternalRequest internalRequest = createRequest(VERSION_1, HttpMethodName.PUT,
+                request, HIGHLIGHT);
         return this.invokeHttpClient(internalRequest, AnalyzeResponse.class);
     }
 
@@ -127,7 +209,7 @@ public class VcaClient extends AbstractBceClient {
      * @return ImageAnalyzeResponse with analyze results.
      */
     public ImageAnalyzeResponse analyzeImage(AnalyzeRequest request) {
-        InternalRequest internalRequest = createRequest(HttpMethodName.PUT,
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.PUT,
                 request, IMAGE);
         internalRequest.addParameter("sync", "");
         return this.invokeHttpClient(internalRequest, ImageAnalyzeResponse.class);
@@ -152,10 +234,54 @@ public class VcaClient extends AbstractBceClient {
      * @return Analyze result.
      */
     public QueryResultResponse queryResult(QueryResultRequest request) {
-        InternalRequest internalRequest = createRequest(HttpMethodName.GET,
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.GET,
                 request, MEDIA);
         internalRequest.addParameter("source", request.getSource());
         return this.invokeHttpClient(internalRequest, QueryResultResponse.class);
+    }
+
+    /**
+     * Query cover result for specified source.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @return cover result.
+     */
+    public QueryResultResponse queryCoverResult(String source) {
+        QueryResultRequest request = new QueryResultRequest();
+        request.setSource(source);
+        InternalRequest internalRequest = createRequest(VERSION_1, HttpMethodName.GET,
+                request, COVER);
+        internalRequest.addParameter("source", request.getSource());
+        return this.invokeHttpClient(internalRequest, QueryResultResponse.class);
+    }
+
+    /**
+     * Query highlight result for specified source.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @return highlight result.
+     */
+    public QueryResultResponse queryHighlightResult(String source) {
+        QueryResultRequest request = new QueryResultRequest();
+        request.setSource(source);
+        InternalRequest internalRequest = createRequest(VERSION_1, HttpMethodName.GET,
+                request, HIGHLIGHT);
+        internalRequest.addParameter("source", request.getSource());
+        return this.invokeHttpClient(internalRequest, QueryResultResponse.class);
+    }
+
+    /**
+     * Cancel highlight result for specified source.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @return highlight cancel result.
+     */
+    public McaEmptyResponse cancelHighlightResult(String source) {
+        InternalRequest internalRequest = createRequest(VERSION_1, HttpMethodName.PUT,
+                new McaEmptyRequest(), HIGHLIGHT);
+        internalRequest.addParameter("source", source);
+        internalRequest.addParameter("cancel", "");
+        return this.invokeHttpClient(internalRequest, McaEmptyResponse.class);
     }
 
     /**
@@ -179,7 +305,7 @@ public class VcaClient extends AbstractBceClient {
      * @return Analyze result of sub task type.
      */
     public QuerySubTaskResponse querySubTask(QuerySubTaskRequest request) {
-        InternalRequest internalRequest = createRequest(HttpMethodName.GET,
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.GET,
                 request, MEDIA, request.getSubTaskType());
         internalRequest.addParameter("source", request.getSource());
         return this.invokeHttpClient(internalRequest, QuerySubTaskResponse.class);
@@ -193,6 +319,8 @@ public class VcaClient extends AbstractBceClient {
      * <b>Note: </b> The Query parameters in URL should be specified by caller method.
      * </p>
      *
+     *
+     * @param version
      * @param httpMethod The HTTP method to use when sending the request.
      * @param request The original request, as created by the user.
      * @param pathVariables The optional variables in URI path.
@@ -201,11 +329,11 @@ public class VcaClient extends AbstractBceClient {
      * parameters, and execute.
      */
     private InternalRequest createRequest(
-            HttpMethodName httpMethod, AbstractBceRequest request, String... pathVariables) {
+            String version, HttpMethodName httpMethod, AbstractBceRequest request, String... pathVariables) {
 
         // build URL paths
         List<String> pathComponents = new ArrayList<String>();
-        pathComponents.add(VERSION);
+        pathComponents.add(version);
 
         // append resourceKeys,pathVariables,
         // For example:/resourcekey1/resourcekey2/../pathVariable1/pathVariable2

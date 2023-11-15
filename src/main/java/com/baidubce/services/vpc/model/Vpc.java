@@ -20,6 +20,11 @@ public class Vpc {
      */
     private String cidr;
 
+    /***
+     * The IPv6 cidr of this vpc
+     */
+    private String ipv6Cidr;
+
     /**
      * The description of this vpc.
      */
@@ -70,6 +75,14 @@ public class Vpc {
 
     public void setIsDefault(Boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public String getIpv6Cidr() {
+        return ipv6Cidr;
+    }
+
+    public void setIpv6Cidr(String ipv6Cidr) {
+        this.ipv6Cidr = ipv6Cidr;
     }
 
     @Override

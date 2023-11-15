@@ -13,7 +13,6 @@
 
 package com.baidubce.services.billing.model.bill;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.Data;
@@ -22,7 +21,7 @@ import lombok.Data;
  * the bill of resource
  */
 @Data
-public class ResourceBill {
+public class ResourceBill extends AmountDetail {
 
     /**
      * the name of service
@@ -53,11 +52,6 @@ public class ResourceBill {
      * the region of the resource
      */
     private String region;
-
-    /**
-     * the price of the bill
-     */
-    private BigDecimal originPrice;
 
     /**
      * the tag info of the resource

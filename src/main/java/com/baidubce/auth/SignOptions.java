@@ -15,6 +15,7 @@ package com.baidubce.auth;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -80,6 +81,11 @@ public class SignOptions {
     private int expirationInSeconds = DEFAULT_EXPIRATION_IN_SECONDS;
 
     /**
+     * The set of headers to be signed.
+     */
+    private Boolean useStsHeader = true;
+
+    /**
      * Returns the set of headers to be signed.
      *
      * @return the set of headers to be signed.
@@ -95,6 +101,18 @@ public class SignOptions {
      */
     public void setHeadersToSign(Set<String> headersToSign) {
         this.headersToSign = headersToSign;
+    }
+
+    /**
+     * Add the key of headers to be signed.
+     *
+     * @param headerKey the key of headers to be signed.
+     */
+    public void addHeadersToSign(String headerKey) {
+        if (this.headersToSign == null) {
+            headersToSign = new HashSet<String>();
+        }
+        headersToSign.add(headerKey);
     }
 
     /**
@@ -131,6 +149,24 @@ public class SignOptions {
      */
     public void setExpirationInSeconds(int expirationInSeconds) {
         this.expirationInSeconds = expirationInSeconds;
+    }
+
+    /**
+     * Get the options of whether add header(x-bce-security-token)
+     *
+     * @return The set of headers to be signed.
+     */
+    public Boolean getUseStsHeader() {
+        return useStsHeader;
+    }
+
+    /**
+     * Set stsHeader options
+     *
+     * @param useStsHeader The set of headers to be signed.
+     */
+    public void setUseStsHeader(Boolean useStsHeader) {
+        this.useStsHeader = useStsHeader;
     }
 
     @Override

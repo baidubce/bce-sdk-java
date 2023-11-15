@@ -22,8 +22,24 @@ import com.baidubce.model.AbstractBceRequest;
  */
 public class ListStepsRequest extends AbstractBceRequest {
     private String clusterId;
-    private String marker;
-    private int maxKeys = -1;
+    private int pageNo;
+    private int pageSize;
+
+    public int getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public String getClusterId() {
         return clusterId;
@@ -31,22 +47,6 @@ public class ListStepsRequest extends AbstractBceRequest {
 
     public void setClusterId(String clusterId) {
         this.clusterId = clusterId;
-    }
-
-    public String getMarker() {
-        return marker;
-    }
-
-    public void setMarker(String marker) {
-        this.marker = marker;
-    }
-
-    public int getMaxKeys() {
-        return maxKeys;
-    }
-
-    public void setMaxKeys(int maxKeys) {
-        this.maxKeys = maxKeys;
     }
 
     /**
@@ -58,33 +58,6 @@ public class ListStepsRequest extends AbstractBceRequest {
      */
     public ListStepsRequest withClusterId(String clusterId) {
         this.setClusterId(clusterId);
-        return this;
-    }
-
-    /**
-     * Configure the marker for the query request.
-     * The marker marks the starting point for the query.
-     *
-     * @param marker the marker
-     *
-     * @return ListStepsRequest
-     */
-    public ListStepsRequest withMarker(String marker) {
-        this.setMarker(marker);
-        return this;
-    }
-
-    /**
-     * Configure the max count for each response page.
-     * The max keys can not more than 1000, any number exceeding 1000 will be
-     * reset to 1000.
-     *
-     * @param maxKeys The max count for each response page.
-     *
-     * @return ListStepsRequest
-     */
-    public ListStepsRequest withMaxKeys(int maxKeys) {
-        this.setMaxKeys(maxKeys);
         return this;
     }
 

@@ -23,12 +23,30 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bvw.model.common.ListByPageResponse;
+import com.baidubce.services.bvw.model.keyframe.KeyFrameDescAddRequest;
+import com.baidubce.services.bvw.model.keyframe.KeyFrameDescGetResponse;
+import com.baidubce.services.bvw.model.keyframe.KeyFrameUrlResponse;
+import com.baidubce.services.bvw.model.matlib.DraftListRequest;
+import com.baidubce.services.bvw.model.matlib.GetDraftRequest;
+import com.baidubce.services.bvw.model.matlib.GetDraftResponse;
+import com.baidubce.services.bvw.model.matlib.MaterialBaseResponse;
 import com.baidubce.services.bvw.model.matlib.MaterialGetRequest;
 import com.baidubce.services.bvw.model.matlib.MaterialGetResponse;
+import com.baidubce.services.bvw.model.matlib.MaterialPresetGetRequest;
+import com.baidubce.services.bvw.model.matlib.MaterialPresetGetResponse;
+import com.baidubce.services.bvw.model.matlib.MaterialPresetSearchRequest;
+import com.baidubce.services.bvw.model.matlib.MaterialPresetSearchResponse;
+import com.baidubce.services.bvw.model.matlib.MaterialPresetUploadResponse;
+import com.baidubce.services.bvw.model.matlib.MaterialSearchRequest;
+import com.baidubce.services.bvw.model.matlib.MaterialSearchResponse;
 import com.baidubce.services.bvw.model.matlib.MatlibConfigBaseRequest;
 import com.baidubce.services.bvw.model.matlib.MatlibConfigBaseResponse;
 import com.baidubce.services.bvw.model.matlib.MatlibConfigGetResponse;
+import com.baidubce.services.bvw.model.matlib.MatlibTaskGetResponse;
+import com.baidubce.services.bvw.model.matlib.MatlibTaskRequest;
+import com.baidubce.services.bvw.model.matlib.MatlibTaskResponse;
 import com.baidubce.services.bvw.model.matlib.MatlibUploadRequest;
 import com.baidubce.services.bvw.model.matlib.MatlibUploadResponse;
 import com.baidubce.services.bvw.model.matlib.Text2AudioRequest;
@@ -72,6 +90,8 @@ import com.baidubce.services.bvw.model.workflow.task.TaskBaseRequest;
 import com.baidubce.services.bvw.model.workflow.task.TaskGetResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -95,7 +115,9 @@ public class BvwClient extends AbstractBceClient {
     private static final String NOTIFICATION = "notification";
     private static final String MATLIB = "matlib";
     private static final String MATERIAL_LIBRARY = "materialLibrary";
+    private static final String MATERIAL_LIBRARY_PRESET = "preset";
     private static final String MATLIB_VIDEO_GENERATION = "videoGenerationTask";
+    private static final String MATLIB_TIMELINE_RESOURCE = "draftAndTimeline";
     private static final String VIDEO_EDIT = "videoEdit";
     private static final String VIDEO_EDIT_CREATE = "createNewVideo";
     private static final String VIDEO_EDIT_POLLING = "pollingVideo";
@@ -123,12 +145,28 @@ public class BvwClient extends AbstractBceClient {
     private static final String MEDIA_LIST_ORDER_BY = "orderBy";
     private static final String MEDIA_BATCH_DELETE = "mediaIds";
     private static final String INSTANCE_TASK_URLS = "queryStageTaskUrlList";
+    private static final String INSTANCE_KEYFRAME_DESC_URLS = "queryKeyFrameDescList";
+    private static final String INSTANCE_KEYFRAME_URLS = "queryKeyFrameUrlList";
+    private static final String INSTANCE_KEYFRAME_ADD = "addKeyFrameDesc";
+    private static final String INSTANCE_PRE_SIGN_FLAG = "preSign";
     private static final String NOTIFICATION_LIST_STATUS = "status";
     private static final String NOTIFICATION_ENABLE = "enable";
     private static final String NOTIFICATION_DISABLE = "disable";
     private static final String MATLIB_UPLOAD = "upload";
     private static final String MATLIB_CONFIG = "config";
     private static final String MATLIB_SPEECH = "speech";
+    private static final String MATERIAL_TITLE_KEYWORD = "titleKeyword";
+    private static final String MATERIAL_PRESET_TYPE = "type";
+    private static final String MATERIAL_SOURCE_TYPE = "sourceType";
+    private static final String MATERIAL_INFO_TYPE = "infoType";
+    private static final String MATERIAL_MEDIA_TYPE = "mediaType";
+    private static final String MATERIAL_STATUS = "status";
+    private static final String MATERIAL_CREATETIME_BEGIN = "begin";
+    private static final String MATERIAL_CREATETIME_END = "end";
+    private static final String MATERIAL_PAGENO = "pageNo";
+    private static final String MATERIAL_SIZE = "size";
+    private static final String MATERIAL_PAGESIZE = "pageSize";
+    private static final String MATLIB_DRAFT_TIMELINE = "draftAndTimeline";
 
     /**
      * Responsible for handling httpResponses from all Bos service calls.
@@ -842,6 +880,120 @@ public class BvwClient extends AbstractBceClient {
     }
 
     /**
+     * Delete material from material library.
+     * @param materialId The material id
+     * @return A deleting material response
+     */
+    public MaterialBaseResponse deleteMaterial(String materialId) {
+        MaterialGetRequest materialGetRequest = new MaterialGetRequest(materialId);
+        InternalRequest request = this.createRequest(materialGetRequest, HttpMethodName.DELETE, MATERIAL_LIBRARY,
+                materialId);
+        return invokeHttpClient(request, MaterialBaseResponse.class);
+    }
+
+    /**
+     * Search material from material library.
+     * @param materialSearchRequest search parameters
+     * @return material list response
+     */
+    public MaterialSearchResponse searchMaterial(MaterialSearchRequest materialSearchRequest) {
+        InternalRequest request = this.createRequest(materialSearchRequest, HttpMethodName.GET, MATERIAL_LIBRARY);
+        if (null != materialSearchRequest.getInfoType()) {
+            request.addParameter(MATERIAL_INFO_TYPE, materialSearchRequest.getInfoType());
+        }
+        if (null != materialSearchRequest.getMediaType()) {
+            request.addParameter(MATERIAL_MEDIA_TYPE, materialSearchRequest.getMediaType());
+        }
+        if (null != materialSearchRequest.getSourceType()) {
+            request.addParameter(MATERIAL_SOURCE_TYPE, materialSearchRequest.getSourceType());
+        }
+        if (null != materialSearchRequest.getStatus()) {
+            request.addParameter(MATERIAL_STATUS, materialSearchRequest.getStatus());
+        }
+        if (StringUtils.isNotBlank(materialSearchRequest.getTitleKeyword())) {
+            request.addParameter(MATERIAL_TITLE_KEYWORD, materialSearchRequest.getTitleKeyword());
+        }
+        if (null != materialSearchRequest.getBegin()) {
+            request.addParameter(MATERIAL_CREATETIME_BEGIN, materialSearchRequest.getBegin());
+        }
+        if (null != materialSearchRequest.getEnd()) {
+            request.addParameter(MATERIAL_CREATETIME_END, materialSearchRequest.getEnd());
+        }
+        if (null != materialSearchRequest.getPageNo()) {
+            request.addParameter(MATERIAL_PAGENO,
+                    materialSearchRequest.getPageNo() + "");
+        }
+        if (null != materialSearchRequest.getSize()) {
+            request.addParameter(MATERIAL_SIZE,
+                    materialSearchRequest.getSize() + "");
+        }
+        return invokeHttpClient(request, MaterialSearchResponse.class);
+    }
+
+    /**
+     * Upload media preset to material library.
+     *
+     * @param matlibUploadRequest The uploading request
+     * @return A uploading response
+     */
+    public MaterialPresetUploadResponse uploadMaterialPreset(String type, MatlibUploadRequest matlibUploadRequest) {
+        InternalRequest request = this.createRequest(matlibUploadRequest, HttpMethodName.POST,
+                MATERIAL_LIBRARY, MATERIAL_LIBRARY_PRESET, type);
+        request.addParameter(MATLIB_UPLOAD, null);
+        return this.invokeHttpClient(request, MaterialPresetUploadResponse.class);
+    }
+
+    /**
+     * Get material preset from material library.
+     * @param id The material preset id
+     * @return A getting material preset response
+     */
+    public MaterialPresetGetResponse getMaterialPreset(String id) {
+        MaterialPresetGetRequest materialPresetGetRequest = new MaterialPresetGetRequest(id);
+        InternalRequest request = this.createRequest(materialPresetGetRequest, HttpMethodName.GET, MATERIAL_LIBRARY,
+                MATERIAL_LIBRARY_PRESET, id);
+        return invokeHttpClient(request, MaterialPresetGetResponse.class);
+    }
+
+    /**
+     * Delete material from material library.
+     * @param id The material preset id
+     * @return A deleting material preset response
+     */
+    public MaterialBaseResponse deleteMaterialPreset(String id) {
+        MaterialPresetGetRequest materialPresetGetRequest = new MaterialPresetGetRequest(id);
+        InternalRequest request = this.createRequest(materialPresetGetRequest, HttpMethodName.DELETE, MATERIAL_LIBRARY,
+                MATERIAL_LIBRARY_PRESET, id);
+        return invokeHttpClient(request, MaterialBaseResponse.class);
+    }
+
+    /**
+     * Search material preset from material library.
+     * @param materialPresetSearchRequest search parameters
+     * @return material list response
+     */
+    public MaterialPresetSearchResponse searchMaterialPreset(MaterialPresetSearchRequest materialPresetSearchRequest) {
+        InternalRequest request = this.createRequest(materialPresetSearchRequest, HttpMethodName.GET, MATERIAL_LIBRARY,
+                MATERIAL_LIBRARY_PRESET);
+        if (null != materialPresetSearchRequest.getSourceType()) {
+            request.addParameter(MATERIAL_SOURCE_TYPE, materialPresetSearchRequest.getSourceType());
+        }
+        if (null != materialPresetSearchRequest.getStatus()) {
+            request.addParameter(MATERIAL_STATUS, materialPresetSearchRequest.getStatus());
+        }
+        if (null != materialPresetSearchRequest.getType()) {
+            request.addParameter(MATERIAL_PRESET_TYPE, materialPresetSearchRequest.getType());
+        }
+        if (null != materialPresetSearchRequest.getPageNo()) {
+            request.addParameter(MATERIAL_PAGENO, materialPresetSearchRequest.getPageNo() + "");
+        }
+        if (null != materialPresetSearchRequest.getPageSize()) {
+            request.addParameter(MATERIAL_PAGESIZE, materialPresetSearchRequest.getPageSize() + "");
+        }
+        return invokeHttpClient(request, MaterialPresetSearchResponse.class);
+    }
+
+    /**
      * Create matlib config.
      *
      * @param baseRequest The creating matlib config request.
@@ -923,6 +1075,96 @@ public class BvwClient extends AbstractBceClient {
         InternalRequest request = this.createRequest(videoGenerationRequest, HttpMethodName.POST, MATLIB,
                     MATLIB_VIDEO_GENERATION);
         return invokeHttpClient(request, VideoGenerationResponse.class);
+    }
+
+    /**
+     * get keyframe list from the transcoding task or no transcoding task in the instance
+     * @param instanceId workflowInstanceId
+     * @return keyframe list
+     */
+    public KeyFrameDescGetResponse queryKeyFrameDescList(String instanceId) {
+        InstanceBaseRequest getRequest = InstanceBaseRequest.of(instanceId);
+        InternalRequest request = this.createRequest(getRequest, HttpMethodName.GET, INSTANCE, instanceId);
+        request.addParameter(INSTANCE_KEYFRAME_DESC_URLS, null);
+        return invokeHttpClient(request, KeyFrameDescGetResponse.class);
+    }
+
+    /**
+     * add keyframe for workflowInstance
+     * @param instanceId workflowInstanceId
+     * @param keyFrameDescAddRequest keyframe desc
+     */
+    public void addKeyFrameDesc(String instanceId, KeyFrameDescAddRequest keyFrameDescAddRequest) {
+        InternalRequest request = this.createRequest(keyFrameDescAddRequest, HttpMethodName.POST, INSTANCE,
+                instanceId);
+        request.addParameter(INSTANCE_KEYFRAME_ADD, null);
+        invokeHttpClient(request, AbstractBceResponse.class);
+    }
+
+    /**
+     * get target bos key's preSign url
+     * @param instanceId workflowInstanceId
+     * @return keyFrame info list
+     */
+    public KeyFrameUrlResponse queryKeyFrameUrlList(String instanceId) {
+        InstanceBaseRequest getRequest = InstanceBaseRequest.of(instanceId);
+        InternalRequest request = this.createRequest(getRequest, HttpMethodName.GET, INSTANCE,
+                getRequest.getInstanceId());
+        request.addParameter(INSTANCE_KEYFRAME_URLS, null);
+        request.addParameter(INSTANCE_PRE_SIGN_FLAG, String.valueOf(true));
+        return invokeHttpClient(request, KeyFrameUrlResponse.class);
+    }
+
+    /**
+     * create draft
+     * @param matlibTaskRequest
+     * @return
+     */
+    public MatlibTaskResponse createDraft(MatlibTaskRequest matlibTaskRequest) {
+        InternalRequest request = this.createRequest(matlibTaskRequest, HttpMethodName.POST, MATLIB);
+        return invokeHttpClient(request, MatlibTaskResponse.class);
+    }
+
+    /**
+     * update draft
+     * @return
+     */
+    public void updateDraft(long draftId, MatlibTaskRequest matlibTaskRequest) {
+
+        InternalRequest request = this.createRequest(matlibTaskRequest, HttpMethodName.PUT, MATLIB,
+                String.valueOf(draftId), MATLIB_TIMELINE_RESOURCE);
+        invokeHttpClient(request, AbstractBceResponse.class);
+    }
+
+    /**
+     *  List all of the draft.
+     */
+    public ListByPageResponse<MatlibTaskGetResponse> getDraftList(DraftListRequest listRequest) {
+        InternalRequest request = this.createRequest(listRequest, HttpMethodName.GET, MATLIB);
+        request.addParameter(LIST_PAGE_NO, String.valueOf(listRequest.getPageNo()));
+        request.addParameter(LIST_PAGE_SIZE, String.valueOf(listRequest.getPageSize()));
+        if (listRequest.getStatus() != null) {
+            request.addParameter(MATERIAL_STATUS, listRequest.getStatus().toString());
+        }
+        if (listRequest.getBeginTime() != null) {
+            request.addParameter(LIST_BEGIN_TIME,
+                    DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(listRequest.getBeginTime()));
+        }
+        if (listRequest.getEndTime() != null) {
+            request.addParameter(LIST_END_TIME,
+                    DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(listRequest.getEndTime()));
+        }
+        return invokeHttpClient(request, ListByPageResponse.class);
+    }
+
+    /**
+     * Get a single draft.
+     */
+    public GetDraftResponse getSingleDraft(long id) {
+        GetDraftRequest request = GetDraftRequest.of(id);
+        InternalRequest draftAndTimeline = this.createRequest(request, HttpMethodName.GET, MATLIB,
+                String.valueOf(request.getId()), MATLIB_DRAFT_TIMELINE);
+        return invokeHttpClient(draftAndTimeline, GetDraftResponse.class);
     }
 
 }

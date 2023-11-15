@@ -13,6 +13,7 @@
 package com.baidubce.internal;
 
 import com.baidubce.BceClientException;
+import com.baidubce.services.bos.model.BosProgressCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,10 +33,16 @@ public class RestartableResettableInputStream extends RestartableInputStream {
         this.input = input;
     }
 
+    public RestartableResettableInputStream(InputStream input, BosProgressCallback progressCallback) {
+        this(input);
+        super.setProgressCallback(progressCallback);
+    }
+
     @Override
     public void restart() {
         try {
             this.input.reset();
+            super.restartProgressCallback();
         } catch (IOException e) {
             throw new BceClientException("Fail to reset the underlying input stream.", e);
         }
@@ -43,12 +50,23 @@ public class RestartableResettableInputStream extends RestartableInputStream {
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        return this.input.read(b, off, len);
+        int count = this.input.read(b, off, len);
+        if (count < 0) {
+            return count;
+        }
+        super.doProgressCallback(count);
+
+        return count;
     }
 
     @Override
     public int read() throws IOException {
-        return this.input.read();
+        int count = this.input.read();
+        if (count < 0) {
+            return count;
+        }
+        super.doProgressCallback(1);
+        return count;
     }
 
     @Override

@@ -12,11 +12,12 @@
  */
 package com.baidubce.services.tsdb.model;
 
+import static com.baidubce.services.tsdb.TsdbConstants.DateFormat.DATETIME_FORMAT;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baidubce.model.AbstractBceResponse;
-import com.baidubce.services.tsdb.TsdbConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
@@ -29,7 +30,7 @@ public class RenewDatabaseResponse extends AbstractBceResponse {
 
     private BigDecimal charge;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TsdbConstants.DATETIME_FORMAT, timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_FORMAT, timezone = "UTC")
     private Date expiredTime;
 
     private String orderId;

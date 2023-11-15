@@ -66,6 +66,12 @@ import com.baidubce.services.bec.model.overview.GetBecVMSummaryRequest;
 import com.baidubce.services.bec.model.overview.GetBecVMSummaryResponse;
 import com.baidubce.services.bec.model.overview.GetBecVmMetricsRequest;
 import com.baidubce.services.bec.model.overview.GetBecVmMetricsResponse;
+import com.baidubce.services.bec.model.overview.GetBecVmNodeLevelMetricsRequest;
+import com.baidubce.services.bec.model.overview.GetBecVmNodeLevelMetricsResponse;
+import com.baidubce.services.bec.model.resource.ListBecPassThroughDiskPackagesRequest;
+import com.baidubce.services.bec.model.resource.ListBecPassThroughDiskPackagesResponse;
+import com.baidubce.services.bec.model.resource.ListBecServicePackagesRequest;
+import com.baidubce.services.bec.model.resource.ListBecServicePackagesResponse;
 import com.baidubce.services.bec.model.vm.instance.DeleteBecVmInstanceRequest;
 import com.baidubce.services.bec.model.vm.instance.DeleteBecVmInstanceResponse;
 import com.baidubce.services.bec.model.vm.instance.GetBecNodeVmInstanceListRequest;
@@ -98,6 +104,12 @@ import com.baidubce.services.bec.model.vm.service.GetBecVmServicesRequest;
 import com.baidubce.services.bec.model.vm.service.GetBecVmServicesResponse;
 import com.baidubce.services.bec.model.vm.service.UpdateBecVmServiceRequest;
 import com.baidubce.services.bec.model.vm.service.UpdateBecVmServiceResponse;
+import com.baidubce.services.bec.model.vm.template.CreateBecVmTemplateRequest;
+import com.baidubce.services.bec.model.vm.template.CreateBecVmTemplateResponse;
+import com.baidubce.services.bec.model.vm.template.GetBecVmTemplateListRequest;
+import com.baidubce.services.bec.model.vm.template.GetBecVmTemplateListResponse;
+import com.baidubce.services.bec.model.vm.template.GetBecVmTemplateRequest;
+import com.baidubce.services.bec.model.vm.template.GetBecVmTemplateResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -107,6 +119,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -125,9 +138,12 @@ public class BecClient extends AbstractBceClient {
     private static final String SUMMARY = "summary";
     private static final String CONTAINER = "container";
     private static final String BLB_PREFIX = "blb";
+    private static final String LB_PREFIX = "lb";
     private static final String VM_PREFIX = "vm";
+    private static final String NODE_PREFIX = "node";
     private static final String SERVICE = "service";
     private static final String INSTANCE = "instance";
+    private static final String TEMPLATE = "template";
     private static final String METRICS = "metrics";
     private static final String REGIONS = "regions";
     private static final String SERVICE_PROVIDER = "sps";
@@ -136,11 +152,17 @@ public class BecClient extends AbstractBceClient {
     private static final String CONFIG = "config";
     private static final String REINSTALL = "reinstall";
     private static final String MONITOR = "monitor";
+    private static final String RESOURCE = "resource";
+    private static final String PACKAGE = "package";
+    private static final String DISK = "disk";
+    private static final String PASS_THROUGH = "passthrough";
     private static final String BINDED = "binded";
     private static final String BINDING = "binding";
     private static final String BINDINGPOD = "bindingpod";
     private static final String PORT = "port";
     private static final String CLIENT_TOKEN = "clientToken";
+    private static final String CREATE = "create";
+    private static final String LIST = "list";
 
     /**
      * Exception messages.
@@ -151,6 +173,7 @@ public class BecClient extends AbstractBceClient {
     private static final String BLB_TYPE_MESSAGE_KEY = "type";
     private static final String VM_SERVICE_ID_MESSAGE_KEY = "serviceId";
     private static final String VM_ID_MESSAGE_KEY = "vmId";
+    private static final String TEMPLATE_ID_MESSAGE_KEY = "templateId";
     private static final String VM_INSTANCE_REGION_MESSAGE_KEY = "region";
     private static final String VM_INSTANCE_SPS_MESSAGE_KEY = "serviceProvider";
     private static final String VM_INSTANCE_CITY_MESSAGE_KEY = "city";
@@ -258,7 +281,6 @@ public class BecClient extends AbstractBceClient {
 
     /**
      * Create a new BEC virtual machine api.
-     * You must fill the field of clientToken,which is especially for keeping idempotent.
      *
      * @param request: The request containing all options for creating a bec virtual machine service.
      * @return: The response with id of service newly created.
@@ -269,6 +291,27 @@ public class BecClient extends AbstractBceClient {
             request.setClientToken(generateClientToken());
         }
         InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VM_PREFIX, SERVICE);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateBecVmServiceResponse.class);
+    }
+
+    /**
+     * create BEC virtual machine instances for service api
+     *
+     * @param request: The request contains all options to create a bec virtual machine for the service.
+     * @return: The response with id of service.
+     */
+    public CreateBecVmServiceResponse createBecVmServiceInstances(CreateBecVmServiceRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getServiceId()
+            , checkEmptyExceptionMessageFormat(VM_SERVICE_ID_MESSAGE_KEY));
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VM_PREFIX, SERVICE,
+            request.getServiceId(), INSTANCE);
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, CreateBecVmServiceResponse.class);
@@ -307,7 +350,7 @@ public class BecClient extends AbstractBceClient {
     }
 
     /**
-     * Update BEC virtual machine service. Within V1, we only support to update region/api provider/replicas
+     * Update BEC virtual machine service.
      *
      * @param request: The request containing all options for updating the virtual machine service.
      * @return: The response contains information about whether the service was successfully updated.
@@ -394,8 +437,7 @@ public class BecClient extends AbstractBceClient {
                 , checkEmptyExceptionMessageFormat(METRICS_TYPE_MESSAGE_KEY));
         checkNotNull(request.getOffsetInSeconds(), OFFSET_IN_SECONDS_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
-                VM_PREFIX, SERVICE, request.getServiceId(), METRICS,
-                request.getType());
+            MONITOR, SERVICE, VM_PREFIX, request.getServiceId());
         if (StringUtils.isNotEmpty(request.getServiceId())) {
             internalRequest.addParameter("serviceId", request.getServiceId());
         }
@@ -403,7 +445,18 @@ public class BecClient extends AbstractBceClient {
             internalRequest.addParameter("metricsType", request.getType());
         }
         if (request.getOffsetInSeconds() > 0) {
-            internalRequest.addParameter("offsetInSeconds", String.valueOf(request.getOffsetInSeconds()));
+            // 获取整分数据
+            long end = Calendar.getInstance().getTimeInMillis() / 1000;
+
+            long start = end - request.getOffsetInSeconds();
+            internalRequest.addParameter("start", String.valueOf(start));
+            internalRequest.addParameter("end", String.valueOf(end));
+        }
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("serviceProvider", request.getServiceProvider());
+        }
+        if (request.getStepInMin() != null && request.getStepInMin() > 0) {
+            internalRequest.addParameter("stepInMin", String.valueOf(request.getStepInMin()));
         }
         return invokeHttpClient(internalRequest, GetBecVmServiceMetricsResponse.class);
 
@@ -557,8 +610,7 @@ public class BecClient extends AbstractBceClient {
         checkStringNotEmpty(request.getVmId(), checkEmptyExceptionMessageFormat(VM_ID_MESSAGE_KEY));
         checkStringNotEmpty(request.getType(), checkEmptyExceptionMessageFormat(METRICS_TYPE_MESSAGE_KEY));
         InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
-                VM_PREFIX, INSTANCE, request.getVmId(), METRICS,
-                request.getType());
+            MONITOR, VM_PREFIX, request.getVmId());
         if (StringUtils.isNotEmpty(request.getVmId())) {
             internalRequest.addParameter("vmId", request.getVmId());
         }
@@ -566,9 +618,65 @@ public class BecClient extends AbstractBceClient {
             internalRequest.addParameter("metricsType", request.getType());
         }
         if (request.getOffsetInSeconds() > 0) {
-            internalRequest.addParameter("offsetInSeconds", String.valueOf(request.getOffsetInSeconds()));
+            // 获取整分数据
+            long end = Calendar.getInstance().getTimeInMillis() / 1000;
+
+            long start = end - request.getOffsetInSeconds();
+            internalRequest.addParameter("start", String.valueOf(start));
+            internalRequest.addParameter("end", String.valueOf(end));
+        }
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("serviceProvider", request.getServiceProvider());
+        }
+        if (request.getStepInMin() != null && request.getStepInMin() > 0) {
+            internalRequest.addParameter("stepInMin", String.valueOf(request.getStepInMin()));
         }
         return invokeHttpClient(internalRequest, GetBecVmInstanceMetricsResponse.class);
+    }
+
+    /**
+     * Get the BEC node level virtual machine instance metrics.
+     *
+     * @param request: The request containing all options for getting bec node level virtual machine instance metrics.
+     * @return: The response contains BEC node level virtual machine instance metrics.
+     */
+    public GetBecVmNodeLevelMetricsResponse getVmNodeMetrics(GetBecVmNodeLevelMetricsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getType(), checkEmptyExceptionMessageFormat(METRICS_TYPE_MESSAGE_KEY));
+        checkStringNotEmpty(request.getRegion(), checkEmptyExceptionMessageFormat(VM_INSTANCE_REGION_MESSAGE_KEY));
+        checkStringNotEmpty(request.getCity(), checkEmptyExceptionMessageFormat(VM_INSTANCE_CITY_MESSAGE_KEY));
+        checkStringNotEmpty(request.getServiceProvider(),
+            checkEmptyExceptionMessageFormat(VM_INSTANCE_SPS_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+            MONITOR, OVERVIEW, VM_PREFIX, NODE_PREFIX, request.getType());
+
+        if (request.getStart() > 0 && request.getEnd() > 0) {
+            internalRequest.addParameter("start", String.valueOf(request.getStart()));
+            internalRequest.addParameter("end", String.valueOf(request.getEnd()));
+        }
+
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("serviceProvider", request.getServiceProvider());
+        }
+
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("city", request.getCity());
+        }
+
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("region", request.getRegion());
+        }
+
+        if (StringUtils.isNotEmpty(request.getNetwork())) {
+            internalRequest.addParameter("network", request.getNetwork());
+        }
+
+        if (request.getStepInMin() != null && request.getStepInMin() > 0) {
+            internalRequest.addParameter("stepInMin", String.valueOf(request.getStepInMin()));
+        }
+
+        return invokeHttpClient(internalRequest, GetBecVmNodeLevelMetricsResponse.class);
+
     }
 
     /**
@@ -586,8 +694,70 @@ public class BecClient extends AbstractBceClient {
     }
 
     /**
+     * Create a virtual machine template.
+     * @param request: The request containing all options for creating the BEC vm template.
+     * @return: The response with id of template newly created.
+     */
+    public CreateBecVmTemplateResponse createBecVmTemplate(CreateBecVmTemplateRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VM_PREFIX, TEMPLATE, CREATE);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateBecVmTemplateResponse.class);
+    }
+
+    /**
+     * Get the list of BEC virtual machine templates.
+     *
+     * @param request: The request containing all options for getting the BEC vm template list.
+     * @return: paged template list.
+     */
+    public GetBecVmTemplateListResponse listBecVmTemplate(GetBecVmTemplateListRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VM_PREFIX, TEMPLATE, LIST);
+
+        if (StringUtils.isNotEmpty(request.getKeyword())) {
+            internalRequest.addParameter("keyword", request.getKeyword());
+        }
+
+        if (StringUtils.isNotEmpty(request.getKeywordType())) {
+            internalRequest.addParameter("keywordType", request.getKeywordType());
+        }
+
+        if (StringUtils.isNotEmpty(request.getOrder())) {
+            internalRequest.addParameter("order", request.getOrder());
+        }
+
+        if (StringUtils.isNotEmpty(request.getOrderBy())) {
+            internalRequest.addParameter("orderBy", request.getOrderBy());
+        }
+
+        if (request.getPageNo() != 0) {
+            internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        }
+
+        if (request.getPageSize() != 0) {
+            internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        }
+
+        return invokeHttpClient(internalRequest, GetBecVmTemplateListResponse.class);
+    }
+
+    /**
+     * Get BEC virtual machine template details.
+     *
+     * @param request: The request containing all options for getting the teplate details.
+     * @return: BEC virtual machine template details.
+     */
+    public GetBecVmTemplateResponse getBecVmTemplate(GetBecVmTemplateRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getTemplateId(), checkEmptyExceptionMessageFormat(TEMPLATE_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VM_PREFIX, TEMPLATE,
+            request.getTemplateId());
+        return invokeHttpClient(internalRequest, GetBecVmTemplateResponse.class);
+    }
+
+    /**
      * Create a BEC blb with the specified options.
-     * You must fill the field of clientToken,which is especially for keeping idempotent.
      *
      * @param request: The request containing all options for creating the BEC blb.
      * @return: The response contains whether the BEC blb was successfully created.
@@ -841,16 +1011,30 @@ public class BecClient extends AbstractBceClient {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
         checkStringNotEmpty(request.getType(), checkEmptyExceptionMessageFormat(BLB_TYPE_MESSAGE_KEY));
-        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, BLB_PREFIX,
-                request.getBlbId(), METRICS, request.getType());
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, MONITOR, LB_PREFIX,
+            request.getBlbId());
+        if (StringUtils.isNotEmpty(request.getIpType())) {
+            internalRequest.addParameter("metricsType", request.getType());
+        }
         if (StringUtils.isNotEmpty(request.getIpType())) {
             internalRequest.addParameter("ipType", request.getIpType());
+        }
+        if (request.getOffsetInSeconds() != 0) {
+            // 获取整分数据
+            long end = Calendar.getInstance().getTimeInMillis() / 1000;
+
+            long start = end - request.getOffsetInSeconds();
+            internalRequest.addParameter("start", String.valueOf(start));
+            internalRequest.addParameter("end", String.valueOf(end));
         }
         if (StringUtils.isNotEmpty(request.getPort())) {
             internalRequest.addParameter("port", request.getPort());
         }
-        if (request.getOffsetInSeconds() != 0) {
-            internalRequest.addParameter("offsetInSeconds", String.valueOf(request.getOffsetInSeconds()));
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("serviceProvider", request.getServiceProvider());
+        }
+        if (request.getStepInMin() != null && request.getStepInMin() > 0) {
+            internalRequest.addParameter("stepInMin", String.valueOf(request.getStepInMin()));
         }
         return invokeHttpClient(internalRequest, GetBecBlbResourceMetricsResponse.class);
     }
@@ -902,10 +1086,24 @@ public class BecClient extends AbstractBceClient {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkNotNull(request.getOffsetInSeconds(), OFFSET_IN_SECONDS_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getType(), checkEmptyExceptionMessageFormat(METRICS_TYPE_MESSAGE_KEY));
-        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, OVERVIEW,
-                METRICS, CONTAINER, request.getType());
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, MONITOR, OVERVIEW,
+                CONTAINER, request.getType());
+        if (StringUtils.isNotEmpty(request.getType())) {
+            internalRequest.addParameter("metricsType", request.getType());
+        }
         if (request.getOffsetInSeconds() != null && request.getOffsetInSeconds() > 0) {
-            internalRequest.addParameter("offsetInSeconds", String.valueOf(request.getOffsetInSeconds()));
+            // 获取整分数据
+            long end = Calendar.getInstance().getTimeInMillis() / 1000;
+
+            long start = end - request.getOffsetInSeconds();
+            internalRequest.addParameter("start", String.valueOf(start));
+            internalRequest.addParameter("end", String.valueOf(end));
+        }
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("serviceProvider", request.getServiceProvider());
+        }
+        if (request.getStepInMin() != null && request.getStepInMin() > 0) {
+            internalRequest.addParameter("stepInMin", String.valueOf(request.getStepInMin()));
         }
         return invokeHttpClient(internalRequest, GetBecContainerMetricsResponse.class);
     }
@@ -919,12 +1117,52 @@ public class BecClient extends AbstractBceClient {
     public GetBecVmMetricsResponse getBecVmMetrics(GetBecVmMetricsRequest request) {
         checkNotNull(request.getOffsetInSeconds(), OFFSET_IN_SECONDS_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getType(), checkEmptyExceptionMessageFormat(METRICS_TYPE_MESSAGE_KEY));
-        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, OVERVIEW,
-                METRICS, VM_PREFIX, request.getType());
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, MONITOR,
+                OVERVIEW, VM_PREFIX, request.getType());
+        if (StringUtils.isNotEmpty(request.getType())) {
+            internalRequest.addParameter("metricsType", request.getType());
+        }
         if (request.getOffsetInSeconds() != null && request.getOffsetInSeconds() > 0) {
-            internalRequest.addParameter("offsetInSeconds", String.valueOf(request.getOffsetInSeconds()));
+            // 获取整分数据
+            long end = Calendar.getInstance().getTimeInMillis() / 1000;
+
+            long start = end - request.getOffsetInSeconds();
+            internalRequest.addParameter("start", String.valueOf(start));
+            internalRequest.addParameter("end", String.valueOf(end));
+        }
+        if (StringUtils.isNotEmpty(request.getServiceProvider())) {
+            internalRequest.addParameter("serviceProvider", request.getServiceProvider());
+        }
+        if (request.getStepInMin() != null && request.getStepInMin() > 0) {
+            internalRequest.addParameter("stepInMin", String.valueOf(request.getStepInMin()));
         }
         return invokeHttpClient(internalRequest, GetBecVmMetricsResponse.class);
     }
+
+    /**
+     * List bec service packages.
+     *
+     * @param request: The request containing all options for listing bec service packages.
+     * @return bec service packages data
+     */
+    public ListBecServicePackagesResponse listBecServicePackages(ListBecServicePackagesRequest request) {
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, RESOURCE, PACKAGE
+            , request.getType());
+        return invokeHttpClient(internalRequest, ListBecServicePackagesResponse.class);
+    }
+
+    /**
+     * List bec passThrough disk packages.
+     *
+     * @param request: The request containing all options for listing bec passThrough disk packages.
+     * @return bec passThrough disk packages data
+     */
+    public ListBecPassThroughDiskPackagesResponse listBecPassThroughDiskPackages
+        (ListBecPassThroughDiskPackagesRequest request) {
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, RESOURCE, DISK
+            , PASS_THROUGH);
+        return invokeHttpClient(internalRequest, ListBecPassThroughDiskPackagesResponse.class);
+    }
+
 
 }

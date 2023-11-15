@@ -1,0 +1,22 @@
+package com.baidubce.services.rds.model;
+
+import com.baidubce.model.AbstractBceResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The response of rds subnet
+ */
+public class RdsSubnetResponse extends AbstractBceResponse {
+
+    private List<RdsSubnet> subnets = new ArrayList<RdsSubnet>();
+
+    public List<RdsSubnet> getSubnets() {
+        return subnets;
+    }
+
+    public void setSubnets(List<RdsSubnet> subnets) {
+        this.subnets = subnets;
+    }
+}

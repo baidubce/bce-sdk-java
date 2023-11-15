@@ -21,6 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.baidubce.services.vpc.model.CreateVpcRequest;
+import com.baidubce.services.vpc.model.CreateVpcResponse;
+import com.baidubce.services.vpc.model.DeleteVpcRequest;
+import com.baidubce.services.vpc.model.GetVpcPrivateAddressInfoResponse;
+import com.baidubce.services.vpc.model.GetVpcPrivateIpAddressInfoRequest;
+import com.baidubce.services.vpc.model.GetVpcRequest;
+import com.baidubce.services.vpc.model.GetVpcResponse;
+import com.baidubce.services.vpc.model.ListVpcRequest;
+import com.baidubce.services.vpc.model.ListVpcResponse;
+import com.baidubce.services.vpc.model.ModifyVpcAttributesRequest;
+import com.baidubce.services.vpc.model.NetworkAction;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,15 +50,6 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
-import com.baidubce.services.vpc.model.CreateVpcRequest;
-import com.baidubce.services.vpc.model.CreateVpcResponse;
-import com.baidubce.services.vpc.model.DeleteVpcRequest;
-import com.baidubce.services.vpc.model.GetVpcRequest;
-import com.baidubce.services.vpc.model.GetVpcResponse;
-import com.baidubce.services.vpc.model.ListVpcRequest;
-import com.baidubce.services.vpc.model.ListVpcResponse;
-import com.baidubce.services.vpc.model.ModifyVpcAttributesRequest;
-import com.baidubce.services.vpc.model.NetworkAction;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -59,6 +63,7 @@ public class VpcClient extends AbstractBceClient {
 
     private static final String VERSION = "v1";
     private static final String VPC_PREFIX = "vpc";
+    private static final String VPC_PRIVATE_IP_PREFIX = "privateIpAddressInfo";
 
     /**
      * Responsible for handling httpResponses from all network service calls.
@@ -299,5 +304,29 @@ public class VpcClient extends AbstractBceClient {
         internalRequest.addParameter("clientToken", modifyVpcAttributesRequest.getClientToken());
         fillPayload(internalRequest, modifyVpcAttributesRequest);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Return a list of vpc private ip address info which belongs to the corresponding vpc by vpc id.
+     *
+     * @param request The request contains vpc id, list of private ip addresses and private ip range to be queried.
+     */
+    public GetVpcPrivateAddressInfoResponse getVpcPrivateIpAddressInfo(GetVpcPrivateIpAddressInfoRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getVpcId(), "request vpcId should not be empty.");
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, VPC_PREFIX, request.getVpcId(), VPC_PRIVATE_IP_PREFIX);
+        if (CollectionUtils.isNotEmpty(request.getPrivateIpAddresses())) {
+            StringBuilder privateIpAddresses = new StringBuilder();
+            for (String privateIpAddress: request.getPrivateIpAddresses()){
+                privateIpAddresses.append(privateIpAddress).append(",");
+            }
+            privateIpAddresses.deleteCharAt(privateIpAddresses.lastIndexOf(","));
+            internalRequest.addParameter("privateIpAddresses", privateIpAddresses.toString());
+        }
+        if (StringUtils.isNotBlank(request.getPrivateIpRange())) {
+            internalRequest.addParameter("privateIpRange", request.getPrivateIpRange());
+        }
+        return this.invokeHttpClient(internalRequest, GetVpcPrivateAddressInfoResponse.class);
     }
 }

@@ -13,6 +13,9 @@
 package com.baidubce.services.peerconn.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bcc.model.TagModel;
+
+import java.util.List;
 
 /**
  * The response for get peer conn.
@@ -98,6 +101,11 @@ public class GetPeerConnResponse extends AbstractBceResponse {
      * The expiredTime of peer conn.
      */
     private String expiredTime;
+
+    /**
+     * the list of tags which are bound to peer conn instance
+     */
+    private List<TagModel> tags;
 
     public String getPeerConnId() {
         return peerConnId;
@@ -225,5 +233,13 @@ public class GetPeerConnResponse extends AbstractBceResponse {
 
     public void setExpiredTime(String expiredTime) {
         this.expiredTime = expiredTime;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

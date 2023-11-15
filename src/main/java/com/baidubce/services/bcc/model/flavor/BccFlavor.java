@@ -31,6 +31,10 @@ public class BccFlavor {
     private String networkBandwidth;
     private String networkPackage;
 
+    private Integer netEthQueueCount;
+
+    private Integer netEthMaxQueueCount;
+
     public int getCpuCount() {
         return cpuCount;
     }
@@ -159,6 +163,22 @@ public class BccFlavor {
         this.networkPackage = networkPackage;
     }
 
+    public Integer getNetEthQueueCount() {
+        return netEthQueueCount;
+    }
+
+    public void setNetEthQueueCount(Integer netEthQueueCount) {
+        this.netEthQueueCount = netEthQueueCount;
+    }
+
+    public Integer getNetEthMaxQueueCount() {
+        return netEthMaxQueueCount;
+    }
+
+    public void setNetEthMaxQueueCount(Integer netEthMaxQueueCount) {
+        this.netEthMaxQueueCount = netEthMaxQueueCount;
+    }
+
     @Override
     public String toString() {
         return "BccFlavor{" +
@@ -178,6 +198,8 @@ public class BccFlavor {
                 ", cpuGHz='" + cpuGHz + '\'' +
                 ", networkBandwidth='" + networkBandwidth + '\'' +
                 ", networkPackage='" + networkPackage + '\'' +
+                ", netEthQueueCount=" + netEthQueueCount +
+                ", netEthMaxQueueCount=" + netEthMaxQueueCount +
                 '}';
     }
 }

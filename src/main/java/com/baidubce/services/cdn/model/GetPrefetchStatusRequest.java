@@ -24,7 +24,7 @@ import java.util.Date;
  * @author yixing
  *
  */
-public class GetPrefetchStatusRequest extends AbstractBceRequest {
+public class GetPrefetchStatusRequest extends CdnRequest {
     private String marker;
     private String id;
     private String url;
@@ -137,27 +137,14 @@ public class GetPrefetchStatusRequest extends AbstractBceRequest {
         this.setEndTime(endTime);
         return this;
     }
-    
+
     /**
-     * (non-Javadoc)
-     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
+     * @param marker
+     * @return returns this object
      */
-    @Override
-    public GetPrefetchStatusRequest withRequestCredentials(BceCredentials credentials) {
-        this.setRequestCredentials(credentials);
+    public GetPrefetchStatusRequest withMarker(String marker) {
+        this.setMarker(marker);
         return this;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        try {
-            return JsonUtils.toJsonPrettyString(this);
-        } catch (JsonProcessingException e) {
-            return "";
-        }
-    }
 }

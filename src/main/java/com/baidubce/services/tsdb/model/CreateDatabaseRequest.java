@@ -12,48 +12,104 @@
  */
 package com.baidubce.services.tsdb.model;
 
+import static com.baidubce.services.tsdb.TsdbConstants.QuotaUnit.ADDITIONAL_TIMESERIES_QUOTA;
+import static com.baidubce.services.tsdb.TsdbConstants.QuotaUnit.INGEST_QUOTA_UNIT;
+import static com.baidubce.services.tsdb.TsdbConstants.QuotaUnit.QUERY_QUOTA_UNIT;
+import static com.baidubce.services.tsdb.TsdbConstants.QuotaUnit.STORAGE_QUOTA_UNIT;
+import static com.baidubce.services.tsdb.model.RenewTimeUnit.MONTH;
+import static com.baidubce.util.Validate.checkIsTrue;
+
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.tsdb.utils.QuotaCalculator;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
 
 /**
  * Represent the request for creating database.
  */
+@Data
+@Builder
 public class CreateDatabaseRequest extends AbstractBceRequest {
+
     /**
      * Required.
      * The database name which should only contain 6 to 40 lowercase letters or digits.
      */
+    @NonNull
     private String databaseName;
 
     /**
      * Optional.
      * The database's description.
      */
-    private String description = "";
+    private String description;
 
     /**
      * Required.
-     * The database quota of ingestion data points per month. unit: million.
+     * The database quota of ingestion data points per month.
+     * Must be multiple of INGEST_QUOTA_UNIT.
      */
-    private Integer ingestDataPointsMonthly;
-
-    /**
-     * Optional.
-     * The database quota of query units per month. unit：ten thousand.
-     */
-    private Integer queryUnitsMonthly;
-
-    /**
-     * Optional.
-     * The store bytes quota. unit: GB
-     */
-    private Integer storeBytesQuota;
+    private long ingestDataPointsMonthly;
 
     /**
      * Required.
-     * The purchase length.
+     * The database quota of query units per month.
+     * Must be multiple of QUERY_QUOTA_UNIT.
      */
-    private Integer purchaseLength;
+    private long queryUnitsMonthly;
+
+    /**
+     * Required.
+     * The store bytes quota.
+     * Must be multiple of STORAGE_QUOTA_UNIT.
+     */
+    private long storeBytesQuota;
+
+    /**
+     * Required.
+     * The database quota of time series. When ingest quota <= 1000 * INGEST_QUOTA_UNIT, timeSeriesQuota should be
+     * consistent with the result of the {@link QuotaCalculator}. And if ingest quota > 1000 * INGEST_QUOTA_UNIT, you
+     * can purchase additional quota by multiple of ADDITIONAL_TIMESERIES_QUOTA.
+     */
+    private long timeSeriesQuota;
+
+    /**
+     * Required.
+     * The length limit multiple quota.
+     * Default limit of String/BigDecimal value is not more than 256 characters, and Byte value should not exceed
+     * 200 bytes for free (lengthLimitMultipleQuota = 1), you can purchase additional quota by multiple.
+     */
+    private int lengthLimitMultipleQuota;
+
+    /**
+     * Required.
+     * The purchase length. Unit: month.
+     */
+    private int purchaseLength;
+
+    /**
+     * Required.
+     * Enable automatic renewal.
+     */
+    private boolean createWithAutoRenew;
+
+    /**
+     * Required.
+     * Duration of each renewal.
+     */
+    private int renewTime;
+
+    /**
+     * Required.
+     * Renewal duration unit.
+     */
+    @NonNull
+    private RenewTimeUnit renewTimeUnit;
 
     /**
      * Optional.
@@ -61,95 +117,51 @@ public class CreateDatabaseRequest extends AbstractBceRequest {
      */
     private String couponName;
 
-    public String getDescription() {
-        return description;
-    }
+    public CreateDatabaseRequest (String databaseName, String description, long ingestDataPointsMonthly,
+            long queryUnitsMonthly, long storeBytesQuota, long timeSeriesQuota, int lengthLimitMultipleQuota,
+            int purchaseLength, boolean createWithAutoRenew, int renewTime, RenewTimeUnit renewTimeUnit,
+            String couponName) {
+        checkIsTrue(ingestDataPointsMonthly > 0 && ingestDataPointsMonthly % INGEST_QUOTA_UNIT == 0,
+                "Illegal quota of ingest, must be greater than 0 and be multiple of INGEST_QUOTA_UNIT(1 million).");
+        checkIsTrue(queryUnitsMonthly >= 10 * QUERY_QUOTA_UNIT && queryUnitsMonthly % QUERY_QUOTA_UNIT == 0,
+                "Illegal quota of query, must be not less than 100 thousand and be multiple of " +
+                        "QUERY_QUOTA_UNIT(100 thousand).");
+        checkIsTrue(storeBytesQuota >= 0 && storeBytesQuota % STORAGE_QUOTA_UNIT == 0,
+                "Illegal quota of storage, must be non-negative and be multiple of STORAGE_QUOTA_UNIT(1G).");
+        // Check time series quota.
+        if (timeSeriesQuota <= 0) {
+            timeSeriesQuota = QuotaCalculator.getTimeSeriesQuota(ingestDataPointsMonthly);
+        }
+        if (ingestDataPointsMonthly < 1000 * INGEST_QUOTA_UNIT) {
+            checkIsTrue(timeSeriesQuota == QuotaCalculator.getTimeSeriesQuota(ingestDataPointsMonthly),
+                    String.format("Illegal quota of timeseries, must be consistent with the result of the " +
+                            "QuotaCalculator, excepted %s but got %s.",
+                            QuotaCalculator.getTimeSeriesQuota(ingestDataPointsMonthly), timeSeriesQuota));
+        } else {
+            checkIsTrue(timeSeriesQuota >= QuotaCalculator.getTimeSeriesQuota(ingestDataPointsMonthly) &&
+                            timeSeriesQuota % ADDITIONAL_TIMESERIES_QUOTA == 0,
+                    "Illegal quota of timeseries, must be multiple of ADDITIONAL_TIMESERIES_QUOTA(1 million).");
+        }
+        // Check length limit multiple quota.
+        if (storeBytesQuota > 0 && lengthLimitMultipleQuota == 0) {
+            lengthLimitMultipleQuota = 1;
+        }
+        checkIsTrue(storeBytesQuota == 0 && lengthLimitMultipleQuota == 0 ||
+                        storeBytesQuota > 0 && lengthLimitMultipleQuota > 0,
+                "Illegal quota of lengthLimitMultipleQuota, must be consistent with the storage bytes quota.");
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
-    }
-
-    public Integer getIngestDataPointsMonthly() {
-        return ingestDataPointsMonthly;
-    }
-
-    public void setIngestDataPointsMonthly(Integer ingestDataPointsMonthly) {
-        this.ingestDataPointsMonthly = ingestDataPointsMonthly;
-    }
-
-    public Integer getQueryUnitsMonthly() {
-        return queryUnitsMonthly;
-    }
-
-    public void setQueryUnitsMonthly(Integer queryUnitsMonthly) {
-        this.queryUnitsMonthly = queryUnitsMonthly;
-    }
-
-    public Integer getStoreBytesQuota() {
-        return storeBytesQuota;
-    }
-
-    public void setStoreBytesQuota(Integer storeBytesQuota) {
-        this.storeBytesQuota = storeBytesQuota;
-    }
-
-    public Integer getPurchaseLength() {
-        return purchaseLength;
-    }
-
-    public void setPurchaseLength(Integer purchaseLength) {
-        this.purchaseLength = purchaseLength;
-    }
-
-    public String getCouponName() {
-        return couponName;
-    }
-
-    public void setCouponName(String couponName) {
-        this.couponName = couponName;
-    }
-
-    public CreateDatabaseRequest withDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
-        return this;
-    }
-
-    public CreateDatabaseRequest withDescription(String description) {
         this.description = description;
-        return this;
-    }
-
-    public CreateDatabaseRequest withIngestDataPointsMonthly(Integer ingestDataPointsMonthly) {
         this.ingestDataPointsMonthly = ingestDataPointsMonthly;
-        return this;
-    }
-
-    public CreateDatabaseRequest withQueryUnitsMonthly(Integer queryUnitsMonthly) {
         this.queryUnitsMonthly = queryUnitsMonthly;
-        return this;
-    }
-
-    public CreateDatabaseRequest withStoreBytesQuota(Integer storeBytesQuota) {
         this.storeBytesQuota = storeBytesQuota;
-        return this;
-    }
-
-    public CreateDatabaseRequest withPurchaseLength(Integer purchaseLength) {
+        this.timeSeriesQuota = timeSeriesQuota;
+        this.lengthLimitMultipleQuota = lengthLimitMultipleQuota;
         this.purchaseLength = purchaseLength;
-        return this;
-    }
-
-    public CreateDatabaseRequest withCouponName(String couponName) {
+        this.createWithAutoRenew = createWithAutoRenew;
+        this.renewTime = Math.max(renewTime, 1);
+        this.renewTimeUnit = ObjectUtils.defaultIfNull(renewTimeUnit, MONTH);
         this.couponName = couponName;
-        return this;
     }
 
     @Override
@@ -157,4 +169,5 @@ public class CreateDatabaseRequest extends AbstractBceRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
+
 }

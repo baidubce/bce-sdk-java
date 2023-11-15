@@ -30,8 +30,6 @@ public class GetStepResponse extends AbstractBceResponse {
     private String type;
     private Map<String, String> properties;
     private StepStatus status;
-    private String logUri;
-    private List<AdditionalFile> additionalFiles;
 
     public String getId() {
         return id;
@@ -79,21 +77,5 @@ public class GetStepResponse extends AbstractBceResponse {
 
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
-    }
-
-    public String getLogUri() {
-        return this.logUri;
-    }
-
-    public void setLogUri(String logUri) {
-        this.logUri = logUri;
-    }
-
-    public List<AdditionalFile> getAdditionalFiles() {
-        return additionalFiles;
-    }
-
-    public void setAdditionalFiles(List<AdditionalFile> additionalFiles) {
-        this.additionalFiles = additionalFiles;
     }
 }

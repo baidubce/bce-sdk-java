@@ -116,6 +116,12 @@ public class VolumeModel {
      */
     private boolean encrypted;
 
+    /**
+     * The id of dedicated.
+     * If it is not empty, this volume belongs to a dedicated cluster
+     */
+    private String clusterId;
+
     public String getId() {
         return id;
     }
@@ -260,6 +266,14 @@ public class VolumeModel {
         this.encrypted = encrypted;
     }
 
+    public String getClusterId() {
+        return clusterId;
+    }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
+
     @Override
     public String toString() {
         return "VolumeModel{" +
@@ -281,6 +295,7 @@ public class VolumeModel {
                 ", autoSnapshotPolicy=" + autoSnapshotPolicy +
                 ", tags=" + tags +
                 ", encrypted=" + encrypted +
+                ", clusterId=" + clusterId +
                 '}';
     }
 }

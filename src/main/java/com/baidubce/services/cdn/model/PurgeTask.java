@@ -20,8 +20,15 @@ package com.baidubce.services.cdn.model;
 public class PurgeTask extends JsonObject {
     public static final String TYPE_FILE = "file";
     public static final String TYPE_DIRECTORY = "directory";
-    
+
+    /**
+     * 必选项，String类型，表示需要purge的URL，如果type为directory，必须以/结尾
+     */
     private String url;
+
+    /**
+     * 可选项，String类型，可选值为file/directory，默认为file。
+     */
     private String type;
 
     /**

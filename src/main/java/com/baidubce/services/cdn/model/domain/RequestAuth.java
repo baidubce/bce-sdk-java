@@ -18,14 +18,61 @@ import com.baidubce.services.cdn.model.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestAuth extends JsonObject {
+public class RequestAuth {
+
+    /**
+     * a/b/c 三种鉴权方式
+     * 必选
+     */
     private String type;
+
+    /**
+     * 主鉴权key,输入大小写字母，数字，长度6到32位
+     * 必选
+     */
     private String key1;
+
+    /**
+     * 副鉴权Key，输入大小写字母，数字，长度6到32位
+     * 可选
+     */
     private String key2;
+
+    /**
+     * 鉴权缓存时间，支持B或C方式设置该参数，单位为秒；URL鉴权的过期时间为指定“timestamp+timeout”；默认为1800。UTC时间
+     * 可选
+     */
     private Number timeout = 1800;
+
+    /**
+     * 白名单列表，在该名单中的文件名不需要鉴权
+     * 可选
+     */
     private List<String> whiteList;
+
+    /**
+     * 签名参数名，只对typeC生效
+     * 可选
+     */
     private String signArg;
+
+    /**
+     * 时间戳参数名，只对typeC生效
+     * 可选
+     */
     private String timeArg;
+
+    /**
+     * 时间格式。值为10，16或者yyyyMMDDhhmm，分别表示10进制时间格式，
+     * 16进制时间格式以及字符串类的时间格式。其中yyyyMMDDhhmm只有type为B的时候可以为该值
+     * 可选
+     */
+    private String timestampMetric;
+
+    public RequestAuth withTimestampMetric(String timestampMetric) {
+        this.timestampMetric = timestampMetric;
+        return this;
+    }
     
     public RequestAuth withType(String type) {
         this.type = type;
@@ -119,5 +166,13 @@ public class RequestAuth extends JsonObject {
     
     public void setTimeArg(String timeArg) {
         this.timeArg = timeArg;
+    }
+
+    public String getTimestampMetric() {
+        return timestampMetric;
+    }
+
+    public void setTimestampMetric(String timestampMetric) {
+        this.timestampMetric = timestampMetric;
     }
 }

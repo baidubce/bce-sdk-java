@@ -67,6 +67,10 @@ public class KeyMetadata {
 
     private String protectedBy = null;
 
+    private int rotateCycle = 0;
+
+    private String nextRotateTime = null;
+
     public void setKeyId(String keyId) {
         this.keyId = keyId;
     }
@@ -150,6 +154,22 @@ public class KeyMetadata {
 
     public void setProtectedBy(String protectedBy) {
         this.protectedBy = protectedBy;
+    }
+
+    public void setRotateCycle(int rotateCycle) {
+        this.rotateCycle = rotateCycle;
+    }
+
+    public int getRotateCycle() {
+        return this.rotateCycle;
+    }
+
+    public void setNextRotateTime(String nextRotateTime) {
+        this.nextRotateTime = nextRotateTime;
+    }
+
+    public String getNextRotateTime() {
+        return this.nextRotateTime;
     }
 }
 // vim: et tw=100 ts=4 sw=4 cc=120

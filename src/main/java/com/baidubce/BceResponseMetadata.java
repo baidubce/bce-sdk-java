@@ -49,6 +49,8 @@ public class BceResponseMetadata implements Serializable {
 
     private String location;
 
+    private String bucketType;
+
     public String getSymlinkTarget() {
         return symlinkTarget;
     }
@@ -177,6 +179,14 @@ public class BceResponseMetadata implements Serializable {
 
     public void setTransferEncoding(String transferEncoding) {
         this.transferEncoding = transferEncoding;
+    }
+
+    public String getBucketType() {
+        return bucketType;
+    }
+
+    public void setBucketType(String bucketType) {
+        this.bucketType = bucketType;
     }
 
     @Override

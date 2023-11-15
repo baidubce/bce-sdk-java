@@ -15,10 +15,16 @@ package com.baidubce.services.bos.model;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class GenericObjectRequest extends GenericBucketRequest {
-    private static final int MIN_OBJECT_KEY_LENGTH = 0;
+    private static final int MIN_OBJECT_KEY_LENGTH = 1;
     private static final int MAX_OBJECT_KEY_LENGTH = 1024;
 
     private String key;
+
+    /**
+     * The limit of put object speed. unit: bit/s
+     * range: 819200 bit/s ~ 838860800 bit/s
+     */
+    protected long trafficLimitBitPS = -1;
 
     public GenericObjectRequest() {
         super();
@@ -43,6 +49,22 @@ public abstract class GenericObjectRequest extends GenericBucketRequest {
             throw new IllegalArgumentException("Invalid objectKey:" + key + ". " +
                     "objectKey should not be greater than " + MAX_OBJECT_KEY_LENGTH + ".");
         }
+
+        //  key should not be "/////"
+        if (key.startsWith("/")) {
+            boolean isDelimiters = true;
+            for (int i = 1; i < key.length(); i++) {
+                if (key.charAt(i) != '/') {
+                    isDelimiters = false;
+                    break;
+                }
+            }
+            if (isDelimiters) {
+                throw new IllegalArgumentException("Invalid objectKey:" + key + ". " +
+                        "objectKey should not be delimiter.");
+            }
+        }
+
         this.key = key;
     }
 

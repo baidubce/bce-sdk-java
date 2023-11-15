@@ -16,6 +16,7 @@ package com.baidubce.services.media.model;
 public class Encryption {
     private String strategy = null;
     private String aesKey   = null;
+    private String keyServerUrl   = null;
 
     /**
      * Fixed-表示固定密钥加密
@@ -49,6 +50,19 @@ public class Encryption {
         return this;
     }
 
+    public String getKeyServerUrl() {
+        return keyServerUrl;
+    }
+
+    public void setKeyServerUrl(String keyServerUrl) {
+        this.keyServerUrl = keyServerUrl;
+    }
+
+    public Encryption withKeyServerUrl(String keyServerUrl) {
+        this.keyServerUrl = keyServerUrl;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -56,6 +70,7 @@ public class Encryption {
 
         sb.append("    strategy: ").append(strategy).append("\n");
         sb.append("    aesKey: ").append(aesKey).append("\n");
+        sb.append("    keyServerUrl: ").append(keyServerUrl).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

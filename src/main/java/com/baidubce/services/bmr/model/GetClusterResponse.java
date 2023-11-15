@@ -30,17 +30,80 @@ public class GetClusterResponse extends AbstractBceResponse {
     private String name;
     private boolean autoTerminate;
     private ClusterStatus status;
+    private String orderId;
     private List<Application> applications;
     private boolean serviceHaEnabled;
     private boolean safeModeEnabled;
-    private String templateType;
+    private String payType;
+    private String availabilityZone;
+    private String vpcId;
+    private String subnetId;
+    private String securityGroupId;
+    private boolean enableAutoScale;
+    private List<InstanceGroupSummary> instanceGroups;
 
-    public String getTemplateType() {
-        return templateType;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setTemplateType(String templateType) {
-        this.templateType = templateType;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<InstanceGroupSummary> getInstanceGroups() {
+        return instanceGroups;
+    }
+
+    public void setInstanceGroups(List<InstanceGroupSummary> instanceGroups) {
+        this.instanceGroups = instanceGroups;
+    }
+
+    public boolean isEnableAutoScale() {
+        return enableAutoScale;
+    }
+
+    public void setEnableAutoScale(boolean enableAutoScale) {
+        this.enableAutoScale = enableAutoScale;
+    }
+
+    public String getSecurityGroupId() {
+        return securityGroupId;
+    }
+
+    public void setSecurityGroupId(String securityGroupId) {
+        this.securityGroupId = securityGroupId;
+    }
+
+    public String getSubnetId() {
+        return subnetId;
+    }
+
+    public void setSubnetId(String subnetId) {
+        this.subnetId = subnetId;
+    }
+
+    public String getVpcId() {
+        return vpcId;
+    }
+
+    public void setVpcId(String vpcId) {
+        this.vpcId = vpcId;
+    }
+
+    public String getAvailabilityZone() {
+        return availabilityZone;
+    }
+
+    public void setAvailabilityZone(String availabilityZone) {
+        this.availabilityZone = availabilityZone;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
     }
 
     public String getId() {

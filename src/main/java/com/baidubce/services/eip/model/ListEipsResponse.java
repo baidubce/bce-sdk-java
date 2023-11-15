@@ -30,6 +30,10 @@ public class ListEipsResponse extends ListResponse {
          */
         private String eip;
         /**
+         * eip id
+         */
+        private String eipId;
+        /**
          * eip status
          * see more detail at <a href = "https://bce.baidu.com/doc/EIP/API.html#eipStatus"> BCE API doc</a>
          */
@@ -79,6 +83,14 @@ public class ListEipsResponse extends ListResponse {
 
         public void setEip(String eip) {
             this.eip = eip;
+        }
+
+        public String getEipId() {
+            return eipId;
+        }
+
+        public void setEipId(String eipId) {
+            this.eipId = eipId;
         }
 
         public String getStatus() {

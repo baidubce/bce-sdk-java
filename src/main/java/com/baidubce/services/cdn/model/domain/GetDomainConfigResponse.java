@@ -29,224 +29,134 @@ public class GetDomainConfigResponse extends CdnResponse {
     private String status;
     private String createTime;
     private String lastModifyTime;
-    private boolean isBan;
+    private Boolean isBan;
+    private String form;
     private List<OriginPeer> origin;
+    private String defaultHost;
     private List<CacheTTL> cacheTTL;
     private Integer limitRate;
-    private String form;
-    private String defaultHost;
     private RequestAuth requestAuth;
     private HttpsConfig https;
-    private boolean followProtocol;
+    private Boolean followProtocol;
     private SeoSwitch seoSwitch;
 
-    /**
-     * @return
-     */
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getCname() {
+        return cname;
+    }
+
+    public void setCname(String cname) {
+        this.cname = cname;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getLastModifyTime() {
+        return lastModifyTime;
+    }
+
+    public void setLastModifyTime(String lastModifyTime) {
+        this.lastModifyTime = lastModifyTime;
+    }
+
+    public Boolean getBan() {
+        return isBan;
+    }
+
+    public void setBan(Boolean ban) {
+        isBan = ban;
+    }
+
     public String getForm() {
         return form;
     }
 
-    /**
-     * @param form domain type
-     */
     public void setForm(String form) {
         this.form = form;
     }
 
-    /**
-     * @return defaultHost
-     */
+    public List<OriginPeer> getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(List<OriginPeer> origin) {
+        this.origin = origin;
+    }
+
     public String getDefaultHost() {
         return defaultHost;
     }
 
-    /**
-     * @param defaultHost default back source host
-     */
     public void setDefaultHost(String defaultHost) {
         this.defaultHost = defaultHost;
     }
 
-    /**
-     * @return requestAuth
-     */
+    public List<CacheTTL> getCacheTTL() {
+        return cacheTTL;
+    }
+
+    public void setCacheTTL(List<CacheTTL> cacheTTL) {
+        this.cacheTTL = cacheTTL;
+    }
+
+    public Integer getLimitRate() {
+        return limitRate;
+    }
+
+    public void setLimitRate(Integer limitRate) {
+        this.limitRate = limitRate;
+    }
+
     public RequestAuth getRequestAuth() {
         return requestAuth;
     }
 
-    /**
-     * @param requestAuth Access authentication configuration
-     */
     public void setRequestAuth(RequestAuth requestAuth) {
         this.requestAuth = requestAuth;
     }
 
-    /**
-     * @return https
-     */
     public HttpsConfig getHttps() {
         return https;
     }
 
-    /**
-     * @param https HTTPS acceleration configuration
-     */
     public void setHttps(HttpsConfig https) {
         this.https = https;
     }
 
-    /**
-     * @return followProtocol
-     */
-    public boolean isFollowProtocol() {
+    public Boolean getFollowProtocol() {
         return followProtocol;
     }
 
-    /**
-     * @param followProtocol Whether the protocol is turned back to the source
-     */
-    public void setFollowProtocol(boolean followProtocol) {
+    public void setFollowProtocol(Boolean followProtocol) {
         this.followProtocol = followProtocol;
     }
 
-    /**
-     * @return seoSwitch
-     */
     public SeoSwitch getSeoSwitch() {
         return seoSwitch;
     }
 
-    /**
-     * @param seoSwitch seo switch config
-     */
     public void setSeoSwitch(SeoSwitch seoSwitch) {
         this.seoSwitch = seoSwitch;
-    }
-
-    /**
-     * @return domain
-     */
-    public String getDomain() {
-        return domain;
-    }
-    
-    /**
-     * @param domain the domain name
-     */
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-    
-    /**
-     * @return cname
-     */
-    public String getCname() {
-        return cname;
-    }
-    
-    /**
-     * @param cname
-     */
-    public void setCname(String cname) {
-        this.cname = cname;
-    }
-    
-    /**
-     * @return status
-     */
-    public String getStatus() {
-        return status;
-    }
-    
-    /**
-     * @param status
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    
-    /**
-     * @return createTime
-     */
-    public String getCreateTime() {
-        return createTime;
-    }
-    
-    /**
-     * @param createTime
-     */
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-    
-    /**
-     * @return lastModifyTime
-     */
-    public String getLastModifyTime() {
-        return lastModifyTime;
-    }
-    
-    /**
-     * @param lastModifyTime
-     */
-    public void setLastModifyTime(String lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
-    }
-    
-    /**
-     * @return if is baned
-     */
-    public boolean isBan() {
-        return isBan;
-    }
-
-    /**
-     * @param isBan
-     */
-    public void setBan(boolean isBan) {
-        this.isBan = isBan;
-    }
-
-    /**
-     * @return origin
-     */
-    public List<OriginPeer> getOrigin() {
-        return origin;
-    }
-    
-    /**
-     * @param origin
-     */
-    public void setOrigin(List<OriginPeer> origin) {
-        this.origin = origin;
-    }
-    
-    /**
-     * @return cacheTTL
-     */
-    public List<CacheTTL> getCacheTTL() {
-        return cacheTTL;
-    }
-    
-    /**
-     * @param cacheTTL
-     */
-    public void setCacheTTL(List<CacheTTL> cacheTTL) {
-        this.cacheTTL = cacheTTL;
-    }
-    
-    /**
-     * @return limitRate
-     */
-    public Integer getLimitRate() {
-        return limitRate;
-    }
-    
-    /**
-     * @param limitRate
-     */
-    public void setLimitRate(Integer limitRate) {
-        this.limitRate = limitRate;
     }
 }

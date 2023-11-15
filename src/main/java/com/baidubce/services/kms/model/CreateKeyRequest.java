@@ -29,15 +29,29 @@ public class CreateKeyRequest extends GenericKmsRequest {
 
     private String origin;
 
+    private int rotateCycle;
+
     public CreateKeyRequest() {
     }
 
-    public CreateKeyRequest(String description, String protectedBy, String keyUsage, String keySpec, String origin) {
+    public CreateKeyRequest(String description, String protectedBy, String keyUsage, 
+        String keySpec, String origin) {
         this.setDescription(description);
         this.setProtectedBy(protectedBy);
         this.setKeySpec(keySpec);
         this.setKeyUsage(keyUsage);
         this.setOrigin(origin);
+        this.setRotateCycle(0);
+    }
+
+    public CreateKeyRequest(String description, String protectedBy, String keyUsage, 
+        String keySpec, String origin, int rotateCycle) {
+        this.setDescription(description);
+        this.setProtectedBy(protectedBy);
+        this.setKeySpec(keySpec);
+        this.setKeyUsage(keyUsage);
+        this.setOrigin(origin);
+        this.setRotateCycle(rotateCycle);
     }
     
     /**
@@ -85,6 +99,14 @@ public class CreateKeyRequest extends GenericKmsRequest {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public void setRotateCycle(int rotateCycle){
+        this.rotateCycle = rotateCycle;
+    }
+
+    public int getRotateCycle(){
+        return this.rotateCycle;
     }
 }
 // vim: et tw=100 ts=4 sw=4 cc=120

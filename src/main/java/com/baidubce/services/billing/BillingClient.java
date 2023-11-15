@@ -43,8 +43,12 @@ import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryRequest;
+import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryResponse;
 import com.baidubce.services.billing.model.bill.ResourceBillListQueryRequest;
 import com.baidubce.services.billing.model.bill.ResourceBillListQueryResponse;
+import com.baidubce.services.billing.model.bill.ShareBillRequest;
+import com.baidubce.services.billing.model.bill.ShareBillResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceQueryRequest;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
@@ -53,11 +57,18 @@ import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse
 import com.baidubce.services.billing.model.finance.TransferResultResponse;
 import com.baidubce.services.billing.model.finance.UserBalanceQueryRequest;
 import com.baidubce.services.billing.model.finance.UserBalanceQueryResponse;
+import com.baidubce.services.billing.model.order.OrderCancelRequest;
+import com.baidubce.services.billing.model.order.OrderCancelResponse;
 import com.baidubce.services.billing.model.order.OrderListRequest;
 import com.baidubce.services.billing.model.order.OrderListResponse;
+import com.baidubce.services.billing.model.order.OrderPaymentRequest;
+import com.baidubce.services.billing.model.order.OrderPaymentResponse;
+import com.baidubce.services.billing.model.order.OrderUuidQueryRequest;
 import com.baidubce.services.billing.model.price.CpcPricingRequest;
 import com.baidubce.services.billing.model.price.CptPricingRequest;
 import com.baidubce.services.billing.model.price.PricingQueryResponse;
+import com.baidubce.services.billing.model.renew.RenewResourceDetailRequest;
+import com.baidubce.services.billing.model.renew.RenewResourceDetailResponse;
 import com.baidubce.services.billing.model.renew.RenewResourceListRequest;
 import com.baidubce.services.billing.model.renew.RenewResourceResponse;
 import com.baidubce.services.billing.model.renew.ResourceAutoRenewRequest;
@@ -76,11 +87,17 @@ public class BillingClient extends AbstractBceClient {
     private static final String RENEW = "renew";
     private static final String MONTH = "month";
     private static final String SHARE_PREPAY = "share/prepay";
+    private static final String SHARE_BILL = "share/bill";
+    private static final String MONTH_SUMMARY = "month/summary";
+    private static final String QUERY_RENEW = "query/renew";
     private static final String PRICE = "price";
     private static final String CPC = "cpc";
     private static final String CPT = "cpt";
     private static final String ORDER = "order";
+    private static final String CANCEL = "cancel";
+    private static final String PAY = "pay";
     private static final String LIST = "list";
+    private static final String GET_BY_UUID = "getByUuid";
 
     private static final String FINANCE = "finance";
     private static final String SUPERVISOR = "supervisor";
@@ -194,6 +211,78 @@ public class BillingClient extends AbstractBceClient {
     }
 
     /**
+     * Query the detail share bills. containing prepay/postpay.
+     * Set the parameter queryAccountId if want to query the sub account's bills whole is in finance circle.
+     *
+     * @param request The request containing all options for getting the bills info.
+     * @return detailed share bill list.
+     */
+    public ShareBillResponse queryShareBill(ShareBillRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkIsTrue(!StringUtils.isEmpty(request.getStartDay()) || !StringUtils.isEmpty(request.getEndDay())
+                        || !StringUtils.isEmpty(request.getMonth()),
+                "Parameters month, startDay and endDay cannot all be empty!");
+        checkIsTrue(!(StringUtils.isEmpty(request.getStartDay()) && !StringUtils.isEmpty(request.getEndDay())),
+                "If parameter endDay is not empty, parameter startDay cannot be empty!");
+        checkIsTrue(!(!StringUtils.isEmpty(request.getStartDay()) && StringUtils.isEmpty(request.getEndDay())),
+                "If parameter startDay is not empty, parameter endDay cannot be empty!");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VERSION_V1, BILL, SHARE_BILL);
+        if (request.getMonth() != null) {
+            internalRequest.addParameter(MONTH, request.getMonth());
+        }
+        if (request.getStartDay() != null) {
+            internalRequest.addParameter("startDay", request.getStartDay());
+        }
+        if (request.getEndDay() != null) {
+            internalRequest.addParameter("endDay", request.getEndDay());
+        }
+        if (request.getProductType() != null) {
+            internalRequest.addParameter("productType", request.getProductType());
+        }
+        if (request.getServiceType() != null) {
+            internalRequest.addParameter("serviceType", request.getServiceType());
+        }
+        if (request.getQueryAccountId() != null) {
+            internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
+        }
+        if (request.getPageNo() != null) {
+            internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        }
+        if (request.getPageSize() != null) {
+            internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        }
+        return invokeHttpClient(internalRequest, ShareBillResponse.class);
+    }
+
+    /**
+     * Query the product month bill summary.
+     *
+     * @param request The request containing all options for getting the bills info.
+     * @return detailed product month bill list.
+     */
+    public ProductMonthBillSummaryResponse queryProductMonthBillSummary(ProductMonthBillSummaryRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkIsTrue(!StringUtils.isEmpty(request.getBillMonth()), "The parameter billMonth cannot be empty!");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VERSION_V1, BILL, MONTH_SUMMARY);
+
+        internalRequest.addParameter("billMonth", request.getBillMonth());
+
+        if (request.getProductType() != null) {
+            internalRequest.addParameter("productType", request.getProductType());
+        }
+        if (request.getServiceType() != null) {
+            internalRequest.addParameter("serviceType", request.getServiceType());
+        }
+        if (request.getQueryAccountId() != null) {
+            internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
+        }
+        return invokeHttpClient(internalRequest, ProductMonthBillSummaryResponse.class);
+    }
+
+    /**
      * Query the resource bill list
      *
      * @param request The request containing all options for getting the resource info.
@@ -229,6 +318,49 @@ public class BillingClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, ORDER, LIST);
 
         return invokeHttpClient(internalRequest, OrderListResponse.class);
+    }
+
+    /**
+     * Get order list with uuid
+     * @param request request of order query with uuid list
+     * @return detailed order information list.
+     */
+    public OrderListResponse getOrdersByUuid(OrderUuidQueryRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, ORDER, GET_BY_UUID);
+
+        return invokeHttpClient(internalRequest, OrderListResponse.class);
+    }
+
+    /**
+     * Cancel the order list.
+     *
+     * @param request The request containing all options for cancel orders.
+     * @return whether the order is cancelled successfully.
+     */
+    public OrderCancelResponse cancelOrders(OrderCancelRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkNotNull(request.getOrderIds(), "The parameter orderIds should NOT be null.");
+        checkIsTrue(request.getOrderIds().size() > 0, "The parameter orderIds should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, ORDER, CANCEL);
+
+        return invokeHttpClient(internalRequest, OrderCancelResponse.class);
+    }
+
+    /**
+     * Pay the order.
+     *
+     * @param request The request containing all options for the order payment.
+     * @return whether the order is payment successfully.
+     */
+    public OrderPaymentResponse payOrder(OrderPaymentRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getOrderId(), "The parameter orderId should NOT be empty.");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, ORDER, PAY);
+
+        return invokeHttpClient(internalRequest, OrderPaymentResponse.class);
     }
 
     /**
@@ -290,6 +422,24 @@ public class BillingClient extends AbstractBceClient {
                 "/resource/list");
 
         return invokeHttpClient(internalRequest, RenewResourceResponse.class);
+    }
+
+    /**
+     * Query renew resource list by expire time
+     * Set the parameter queryAccountId if want to query the sub account's bills whole is in finance circle.
+     *
+     * @param request The request containing all options for getting the resource list info.
+     * @return detailed renew resource list
+     */
+    public RenewResourceDetailResponse queryRenewResourceListV2(RenewResourceDetailRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkStringNotEmpty(request.getServiceType(), "The parameter serviceType should NOT be null");
+        checkStringNotEmpty(request.getRegion(), "The parameter region should NOT be null");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, RESOURCE,
+                QUERY_RENEW);
+
+        return invokeHttpClient(internalRequest, RenewResourceDetailResponse.class);
     }
 
     /**

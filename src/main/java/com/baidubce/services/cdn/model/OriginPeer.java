@@ -16,14 +16,20 @@ package com.baidubce.services.cdn.model;
 /**
  * @author yixing
  */
-public class OriginPeer extends JsonObject {
+public class OriginPeer {
     private String peer;
     private String host;
     private boolean backup;
     private int weight;
+    private String isp;
 
     public OriginPeer withPeer(String peer) {
         this.peer = peer;
+        return this;
+    }
+
+    public OriginPeer withIsp(String isp) {
+        this.isp = isp;
         return this;
     }
 
@@ -74,4 +80,11 @@ public class OriginPeer extends JsonObject {
         this.weight = weight;
     }
 
+    public String getIsp() {
+        return isp;
+    }
+
+    public void setIsp(String isp) {
+        this.isp = isp;
+    }
 }

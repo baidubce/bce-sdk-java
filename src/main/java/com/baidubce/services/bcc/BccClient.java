@@ -54,6 +54,8 @@ import com.baidubce.services.bcc.model.image.CancelRemoteCopyImageRequest;
 import com.baidubce.services.bcc.model.image.CreateImageRequest;
 import com.baidubce.services.bcc.model.image.CreateImageResponse;
 import com.baidubce.services.bcc.model.image.DeleteImageRequest;
+import com.baidubce.services.bcc.model.image.GetAvailableImagesBySpecRequest;
+import com.baidubce.services.bcc.model.image.GetAvailableImagesBySpecResponse;
 import com.baidubce.services.bcc.model.image.GetImageRequest;
 import com.baidubce.services.bcc.model.image.GetImageResponse;
 import com.baidubce.services.bcc.model.image.ImageAction;
@@ -124,10 +126,12 @@ import com.baidubce.services.bcc.model.keypair.KeypairUpdateDescRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupResponse;
 import com.baidubce.services.bcc.model.securitygroup.DeleteSecurityGroupRequest;
+import com.baidubce.services.bcc.model.securitygroup.DeleteSecurityGroupRuleRequest;
 import com.baidubce.services.bcc.model.securitygroup.ListSecurityGroupsRequest;
 import com.baidubce.services.bcc.model.securitygroup.ListSecurityGroupsResponse;
 import com.baidubce.services.bcc.model.securitygroup.SecurityGroupAction;
 import com.baidubce.services.bcc.model.securitygroup.SecurityGroupRuleOperateRequest;
+import com.baidubce.services.bcc.model.securitygroup.UpdateSecurityGroupRuleRequest;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotResponse;
 import com.baidubce.services.bcc.model.snapshot.DeleteSnapshotRequest;
@@ -139,21 +143,31 @@ import com.baidubce.services.bcc.model.snapshot.ListSnapshotsRequest;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotsResponse;
 import com.baidubce.services.bcc.model.volume.AttachVolumeRequest;
 import com.baidubce.services.bcc.model.volume.AttachVolumeResponse;
+import com.baidubce.services.bcc.model.volume.AutoRenewVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.AutoRenewVolumeRequest;
+import com.baidubce.services.bcc.model.volume.CancelAutoRenewVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.CancelAutoRenewVolumeRequest;
+import com.baidubce.services.bcc.model.volume.CreateVolumeClusterRequest;
+import com.baidubce.services.bcc.model.volume.CreateVolumeClusterResponse;
 import com.baidubce.services.bcc.model.volume.CreateVolumeRequest;
 import com.baidubce.services.bcc.model.volume.CreateVolumeResponse;
 import com.baidubce.services.bcc.model.volume.DetachVolumeRequest;
+import com.baidubce.services.bcc.model.volume.GetVolumeClusterRequest;
+import com.baidubce.services.bcc.model.volume.GetVolumeClusterResponse;
 import com.baidubce.services.bcc.model.volume.GetVolumeRequest;
 import com.baidubce.services.bcc.model.volume.GetVolumeResponse;
+import com.baidubce.services.bcc.model.volume.ListVolumeClustersRequest;
+import com.baidubce.services.bcc.model.volume.ListVolumeClustersResponse;
 import com.baidubce.services.bcc.model.volume.ListVolumesRequest;
 import com.baidubce.services.bcc.model.volume.ListVolumesResponse;
 import com.baidubce.services.bcc.model.volume.ModifyCdsAttrRequest;
 import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeRequest;
 import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeTypeRequest;
+import com.baidubce.services.bcc.model.volume.PurchaseReservedVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.PurchaseReservedVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ReleaseVolumeRequest;
 import com.baidubce.services.bcc.model.volume.RenameVolumeRequest;
+import com.baidubce.services.bcc.model.volume.ResizeVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.ResizeVolumeRequest;
 import com.baidubce.services.bcc.model.volume.RollbackVolumeRequest;
 import com.baidubce.services.bcc.model.volume.VolumeAction;
@@ -181,7 +195,6 @@ import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageForm
 import static com.baidubce.util.Validate.checkIsTrue;
 import static com.baidubce.util.Validate.checkNotNull;
 import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 
@@ -227,6 +240,9 @@ public class BccClient extends AbstractBceClient {
     private static final String REBUILD = "rebuild";
     private static final String SUBNET_PREFIX = "subnet";
     private static final String CHANGE_SUBNET = "changeSubnet";
+    private static final String SECURITY_GROUP_RULE_PREFIX = "rule";
+    private static final String SECURITY_GROUP_RULE_UPDATE_PREFIX = "update";
+    private static final String SYNC_CREATE = "syncCreate";
 
     /**
      * Exception messages.
@@ -250,6 +266,12 @@ public class BccClient extends AbstractBceClient {
     private static final String ASPID_MESSAGE_KEY = "aspId";
     private static final String KEYPAIR_ID_MESSAGE_KEY = "keypair";
     private static final String SUBNETID_MESSAGE_KEY = "subnetId";
+    private static final String SECURITY_GROUP_RULE_ID_MESSAGE_KEY = "securityGroupRuleId";
+    private static final String CLUSTERID_MESSAGE_KEY = "clusterId";
+    private static final String CLUSTER_NAME_MESSAGE_KEY = "clusterName";
+    private static final String VOLUME_CLUSTER_PREFIX = "volume/cluster";
+    private static final String UUID_FLAG = "uuidFlag";
+
 
     /**
      * Generate signature with specified headers.
@@ -1684,6 +1706,36 @@ public class BccClient extends AbstractBceClient {
     }
 
     /**
+     * Sync create volume with the specified options.
+     * syncCreateVolume does not support snapshotId and Prepay
+     *
+     * You can use this method to create a new empty volume by specified options
+     *
+     * @param request The request containing all options for creating a volume.
+     * @return The response with list of id of volumes newly created.
+     */
+    public CreateVolumeResponse syncCreateVolume(CreateVolumeRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        if (StringUtils.isNotEmpty(request.getSnapshotId())) {
+            throw new IllegalArgumentException("sync create does not support use snapshot!");
+        }
+        if (null == request.getBilling()) {
+            request.setBilling(generateDefaultBilling());
+        }
+        if (!"Postpaid".equalsIgnoreCase(request.getBilling().getPaymentTiming())) {
+            throw new IllegalArgumentException("sync create does only support Postpaid!");
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, VOLUME_PREFIX, SYNC_CREATE);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateVolumeResponse.class);
+    }
+
+    /**
      * Listing volumes owned by the authenticated user.
      *
      * @return The response containing a list of volume owned by the authenticated user.
@@ -2989,6 +3041,9 @@ public class BccClient extends AbstractBceClient {
             internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
         }
 
+        if (request.getName() != null && request.getName().length() > 0) {
+            internalRequest.addParameter(NAME_MESSAGE_KEY, request.getName());
+        }
         return invokeHttpClient(internalRequest, KeypairListResponse.class);
     }
 
@@ -3103,6 +3158,295 @@ public class BccClient extends AbstractBceClient {
 
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Delete the specific security group rule by the corresponding rule id.
+     *
+     * @param securityGroupRuleId the security group rule id to be deleted
+     */
+    public void deleteSecurityGroupRule(String securityGroupRuleId) {
+        deleteSecurityGroupRule(new DeleteSecurityGroupRuleRequest().withSecurityGroupRuleId(securityGroupRuleId));
+    }
+
+    /**
+     * Delete the specific security group rule via params in the deleteSecurityGroupRuleRequest
+     *
+     * @param request the request for deleteSecurityGroupRule
+     */
+    public void deleteSecurityGroupRule(DeleteSecurityGroupRuleRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSecurityGroupRuleId(),
+                checkEmptyExceptionMessageFormat(SECURITY_GROUP_RULE_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.DELETE,
+                SECURITYGROUP_PREFIX,
+                SECURITY_GROUP_RULE_PREFIX,
+                request.getSecurityGroupRuleId());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Update the specific security group rule via params in the updateSecurityGroupRuleRequest
+     *
+     * @param request the request for updateSecurityGroupRule
+     */
+    public void updateSecurityGroupRule(UpdateSecurityGroupRuleRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSecurityGroupRuleId(),
+                checkEmptyExceptionMessageFormat(SECURITY_GROUP_RULE_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, SECURITYGROUP_PREFIX,
+                SECURITY_GROUP_RULE_PREFIX, SECURITY_GROUP_RULE_UPDATE_PREFIX);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Create a volume Cluster with the specified options.
+     *
+     * @param request The request containing all options for creating a volume cluster.
+     * @return The response with list of id of volumes newly created.
+     */
+    public CreateVolumeClusterResponse createVolumeCluster(CreateVolumeClusterRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, VOLUME_CLUSTER_PREFIX);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        internalRequest.addParameter(UUID_FLAG, request.getUuidFlag());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateVolumeClusterResponse.class);
+    }
+
+    /**
+     * Listing volumes owned by the authenticated user.
+     *
+     * @return The response containing a list of volume owned by the authenticated user.
+     */
+    public ListVolumeClustersResponse listVolumeClusters() {
+        return listVolumeClusters(new ListVolumeClustersRequest());
+    }
+
+    /**
+     * Listing Cluster owned by the authenticated user.
+     *
+     * @param request The request containing all options for listing Clusters owned by the authenticated user.
+     * @return The response containing a list of Cluster owned by the authenticated user.
+     */
+    public ListVolumeClustersResponse listVolumeClusters(ListVolumeClustersRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, VOLUME_CLUSTER_PREFIX);
+        if (request.getMarker() != null) {
+            internalRequest.addParameter(MARKER, request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
+        }
+        if (!Strings.isNullOrEmpty(request.getClusterName())) {
+            internalRequest.addParameter(CLUSTER_NAME_MESSAGE_KEY, request.getClusterName());
+        }
+        if (!Strings.isNullOrEmpty(request.getZoneName())) {
+            internalRequest.addParameter(ZONE_NAME, request.getZoneName());
+        }
+        return invokeHttpClient(internalRequest, ListVolumeClustersResponse.class);
+    }
+
+    /**
+     * Get the detail information of specified cluster.
+     *
+     * @param clusterId The id of the volume.
+     * @return The response containing the detail information of specified volume.
+     */
+    public GetVolumeClusterResponse getVolumeCluster(String clusterId) {
+        GetVolumeClusterRequest request = new GetVolumeClusterRequest();
+        request.setClusterId(clusterId);
+        return getVolumeCluster(request);
+    }
+
+    /**
+     * Get the detail information of specified cluster.
+     *
+     * @param request The request containing all options for getting the detail information of specified cluster.
+     * @return The response containing the detail information of specified cluster.
+     */
+    public GetVolumeClusterResponse getVolumeCluster(GetVolumeClusterRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.GET, VOLUME_CLUSTER_PREFIX, request.getClusterId());
+        return invokeHttpClient(internalRequest, GetVolumeClusterResponse.class);
+    }
+
+    /**
+     * Resizing the specified cluster with newly size.
+     *
+     * @param clusterId          The id of cluster which you want to resize.
+     * @param newClusterSizeInGB The new cluster size you want to resize in GB.
+     */
+    public void resizeVolumeCluster(String clusterId, int newClusterSizeInGB) {
+        ResizeVolumeClusterRequest request = new ResizeVolumeClusterRequest();
+        request.setClusterId(clusterId);
+        request.setNewClusterSizeInGB(newClusterSizeInGB);
+        this.resizeVolumeCluster(request);
+    }
+
+    /**
+     * Resizing the specified cluster with newly size.
+     *
+     * @param request The request containing all options for resize the specified cluster.
+     */
+    public void resizeVolumeCluster(ResizeVolumeClusterRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkState(request.getNewClusterSizeInGB() > 0,
+                "request newClusterSizeInGB should greater than 0");
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, VOLUME_CLUSTER_PREFIX, request.getClusterId());
+        internalRequest.addParameter(VolumeAction.resize.name(), null);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * PurchaseReserved the cluster with fixed duration.
+     *
+     * @param clusterId           The id of cluster which will be renew.
+     * @param reservationLength   The fixed duration to renew,available is [6,12,24,36,60]
+     * @param reservationTimeUnit The timeUnit to renew the instance, support "month" now.
+     */
+    public void purchaseReservedVolumeCluster(String clusterId, int reservationLength, String reservationTimeUnit) {
+        PurchaseReservedVolumeClusterRequest request = new PurchaseReservedVolumeClusterRequest();
+        request.setClusterId(clusterId);
+        Billing billing = new Billing();
+        Reservation reservation = new Reservation();
+        reservation.setReservationLength(reservationLength);
+        reservation.setReservationTimeUnit(reservationTimeUnit);
+        billing.setReservation(reservation);
+        request.setBilling(billing);
+        this.purchaseReservedVolumeCluster(request);
+    }
+
+    /**
+     * PurchaseReserved the cluster with fixed duration.
+     *
+     * You can not purchaseReserved the cluster which is resizing.
+     *
+     * @param request The request containing all options for renew the specified cluster.
+     */
+    public void purchaseReservedVolumeCluster(PurchaseReservedVolumeClusterRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, VOLUME_CLUSTER_PREFIX, request.getClusterId());
+        internalRequest.addParameter(VolumeAction.purchaseReserved.name(), null);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void autoRenewVolumeCluster(String clusterId, int renewTime, String renewTimeUnit) {
+        AutoRenewVolumeClusterRequest request = new AutoRenewVolumeClusterRequest();
+        request.setClusterId(clusterId);
+        request.setRenewTime(renewTime);
+        request.setRenewTimeUnit(renewTimeUnit);
+        autoRenewVolumeCluster(request);
+    }
+
+    /**
+     * Enable auto renewal the specified cluster
+     *
+     * @param request The request containing all options for renew the specified cluster.
+     */
+    public void autoRenewVolumeCluster(AutoRenewVolumeClusterRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+
+        if (request.getRenewTime() <= 0) {
+            throw new IllegalArgumentException("request renewTime should be a positive integer");
+        }
+
+        if (!request.getRenewTimeUnit().equalsIgnoreCase("month") &&
+                !request.getRenewTimeUnit().equalsIgnoreCase("year")) {
+            throw new IllegalArgumentException("request renewTimeUnit only support \"month\" and \"year\"");
+        }
+
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, VOLUME_CLUSTER_PREFIX, VolumeAction.autoRenew.name());
+
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Disable auto renewal the cluster
+     *
+     * @param request The request containing all options for disable auto renew the specified cluster.
+     */
+    public void cancelAutoRenewVolumeCluster(CancelAutoRenewVolumeClusterRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, VOLUME_CLUSTER_PREFIX, VolumeAction.cancelAutoRenew.name());
+
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * The cluster can be unsubscribed after six months of use.
+     *
+     * @param clusterId The id of the volume.
+     */
+    public void refundVolumeCluster(String clusterId) {
+        GetVolumeClusterRequest request = new GetVolumeClusterRequest();
+        request.setClusterId(clusterId);
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.DELETE, VOLUME_CLUSTER_PREFIX, request.getClusterId());
+        invokeHttpClient(internalRequest, GetVolumeClusterResponse.class);
+    }
+
+    public GetAvailableImagesBySpecResponse getAvailableImagesBySpec(
+            GetAvailableImagesBySpecRequest request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
+                IMAGE_PREFIX, "getAvailableImagesBySpec");
+        if (request.getMarker() != null) {
+            internalRequest.addParameter(MARKER, request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
+        }
+        if (!Strings.isNullOrEmpty(request.getSpec())) {
+            internalRequest.addParameter("spec", request.getSpec());
+        }
+        if (!Strings.isNullOrEmpty(request.getOsName())) {
+            internalRequest.addParameter("osName", request.getOsName());
+        }
+
+        return invokeHttpClient(internalRequest, GetAvailableImagesBySpecResponse.class);
     }
 
 }

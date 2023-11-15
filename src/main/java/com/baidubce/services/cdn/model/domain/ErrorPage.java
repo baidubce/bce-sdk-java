@@ -6,9 +6,24 @@ import com.baidubce.services.cdn.model.JsonObject;
  * create by changxing01 on 19/8/27
  */
 public class ErrorPage extends JsonObject {
-    private int code;
+
+    /**
+     * 特定的状态码，要求必须为HTTP的标准错误码，且不能是408、444、499等客户端异常/提前断开这类特殊状态码
+     * 必选
+     */
+    private Integer code;
+
+    /**
+     * 重定向目标地址 ，当出现code错误码是，重定向到这个用户自定义的url
+     * 必选
+     */
     private String url;
-    private int redirectCode;
+
+    /**
+     * 重定向状态码，当出现code错误码时，重定向的类型。支持301和302，默认302
+     * 可选
+     */
+    private Integer redirectCode;
 
     public ErrorPage() {
     }
@@ -24,45 +39,42 @@ public class ErrorPage extends JsonObject {
         this.redirectCode = redirectCode;
     }
 
-    /**
-     * @return code
-     */
-    public int getCode() {
+    public ErrorPage withCode(Integer code) {
+        this.code = code;
+        return this;
+    }
+
+    public ErrorPage withUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public ErrorPage withRedirectCode(Integer redirectCode) {
+        this.redirectCode = redirectCode;
+        return this;
+    }
+
+    public Integer getCode() {
         return code;
     }
 
-    /**
-     * @param code status code
-     */
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
-    /**
-     * @return url
-     */
     public String getUrl() {
         return url;
     }
 
-    /**
-     * @param url redirect path
-     */
     public void setUrl(String url) {
         this.url = url;
     }
 
-    /**
-     * @return redirectCode
-     */
-    public int getRedirectCode() {
+    public Integer getRedirectCode() {
         return redirectCode;
     }
 
-    /**
-     * @param redirectCode redirect status code
-     */
-    public void setRedirectCode(int redirectCode) {
+    public void setRedirectCode(Integer redirectCode) {
         this.redirectCode = redirectCode;
     }
 }

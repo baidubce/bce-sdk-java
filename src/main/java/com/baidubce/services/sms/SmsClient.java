@@ -36,6 +36,7 @@ import com.baidubce.services.sms.model.SmsRequest;
 import com.baidubce.services.sms.model.SmsResponse;
 import com.baidubce.services.sms.model.StatReceiverRequest;
 import com.baidubce.services.sms.model.StatReceiverResponse;
+import com.baidubce.services.sms.model.v3.CreateBlackRequest;
 import com.baidubce.services.sms.model.v3.CreateSignatureRequest;
 import com.baidubce.services.sms.model.v3.CreateSignatureResponse;
 import com.baidubce.services.sms.model.v3.DeleteSignatureRequest;
@@ -43,13 +44,17 @@ import com.baidubce.services.sms.model.v3.GetSignatureRequest;
 import com.baidubce.services.sms.model.v3.GetSignatureResponse;
 import com.baidubce.services.sms.model.v3.GetTemplateRequest;
 import com.baidubce.services.sms.model.v3.GetTemplateResponse;
+import com.baidubce.services.sms.model.v3.ListBlackRequest;
+import com.baidubce.services.sms.model.v3.ListBlackResponse;
+import com.baidubce.services.sms.model.v3.ListSignatureRequest;
+import com.baidubce.services.sms.model.v3.ListSignatureResponse;
+import com.baidubce.services.sms.model.v3.ListStatisticsRequest;
+import com.baidubce.services.sms.model.v3.ListStatisticsResponse;
+import com.baidubce.services.sms.model.v3.ListTemplateRequest;
 import com.baidubce.services.sms.model.v3.ModifySignatureRequest;
 import com.baidubce.services.sms.model.v3.ModifyTemplateRequest;
 import com.baidubce.services.sms.model.v3.QueryQuotaRateResponse;
 import com.baidubce.services.sms.model.v3.UpdateQuotaRateRequest;
-import com.baidubce.services.sms.model.v3.ListTemplateRequest;
-import com.baidubce.services.sms.model.v3.ListSignatureRequest;
-import com.baidubce.services.sms.model.v3.ListSignatureResponse;
 import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -332,7 +337,7 @@ public class SmsClient extends SmsClientSupport {
         if (request.getSmsType() != null && request.getSmsType().trim().length() > 0) {
             internalRequest.addParameter("smsType", request.getSmsType());
         }
-        if (request.getStatus() != null && request.getSmsType().trim().length() > 0) {
+        if (request.getStatus() != null && request.getStatus().trim().length() > 0) {
             internalRequest.addParameter("status", request.getStatus());
         }
         if (request.getTemplateId() != null && request.getTemplateId().trim().length() > 0) {
@@ -528,4 +533,98 @@ public class SmsClient extends SmsClientSupport {
         internalRequest.addParameter("isIgnoreDeprecated", "true");
         return this.invokeHttpClient(internalRequest, ListSignatureResponse.class);
     }
+
+    /**
+     * create mobile black
+     */
+    public void createMobileBlack(CreateBlackRequest request) {
+        checkNotNull(request, "object request should not be null");
+        assertStringNotNullOrEmpty(request.getPhone(), "phone should not be null or empty");
+        assertStringNotNullOrEmpty(request.getType(), "type should not be null or empty");
+        if ("SignatureBlack".equals(request.getType())) {
+            assertStringNotNullOrEmpty(request.getSignatureIdStr(),
+                    "signatureIdStr should not be null or empty, when 'type' is 'SignatureBlack'.");
+            assertStringNotNullOrEmpty(request.getSmsType(),
+                    "smsType should not be null or empty, when 'type' is 'SignatureBlack'.");
+        }
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/blacklist", request, HttpMethodName.POST);
+        internalRequest = fillRequestPayload(internalRequest, JsonUtils.toJsonString(request));
+        this.invokeHttpClient(internalRequest, SmsResponse.class);
+    }
+
+    /**
+     * delete mobile black
+     */
+    public void deleteMobileBlack(String phones) {
+        checkNotNull(phones, "phones should not be null");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/blacklist/delete", new SmsRequest(), HttpMethodName.DELETE);
+        internalRequest.addParameter("phones", phones);
+        this.invokeHttpClient(internalRequest, SmsResponse.class);
+    }
+
+    /**
+     * get the list of mobile black
+     */
+    public ListBlackResponse listMobileBlack(ListBlackRequest request) {
+        checkNotNull(request, "object request should not be null");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/blacklist", new SmsRequest(), HttpMethodName.GET);
+        if (StringUtils.isNotEmpty(request.getPhone())) {
+            internalRequest.addParameter("phone", request.getPhone());
+        }
+        if (StringUtils.isNotEmpty(request.getSmsType())) {
+            internalRequest.addParameter("smsType", request.getSmsType());
+        }
+        if (StringUtils.isNotEmpty(request.getSignatureIdStr())) {
+            internalRequest.addParameter("signatureId", request.getSignatureIdStr());
+        }
+        if (StringUtils.isNotEmpty(request.getStartTime())) {
+            internalRequest.addParameter("startTime", request.getStartTime());
+        }
+        if (StringUtils.isNotEmpty(request.getEndTime())) {
+            internalRequest.addParameter("endTime", request.getEndTime());
+        }
+        internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        internalRequest.addParameter("blackSource", "Console");
+        return this.invokeHttpClient(internalRequest, ListBlackResponse.class);
+    }
+
+    /**
+     * Query statistics data as a list format
+     *
+     * @param request The request object, refer to
+     * <code>com.baidubce.services.sms.model.v3.ListStatisticsRequest</code>
+     *
+     * @return The response object which includes a list  of statistics data, refer to
+     * <code>com.baidubce.services.sms.model.v3.ListStatisticsResponse</code>
+     *
+     * @see com.baidubce.services.sms.model.QueryQuotaResponse
+     */
+    public ListStatisticsResponse listStatistics(ListStatisticsRequest request) {
+        checkNotNull(request, "object request should not be null");
+        checkNotNull(request.getStartTime(), "startTime should not be null");
+        checkNotNull(request.getEndTime(), "endTime should not be null");
+        checkNotNull(request.getSmsType(), "smsType should not be null, \"all\" can be set as default");
+        InternalRequest internalRequest = this.createGeneralRequest(
+                "/sms/v3/summary", new SmsRequest(), HttpMethodName.GET);
+        internalRequest.addParameter("smsType", request.getSmsType());
+        internalRequest.addParameter("dimension", "day");
+        internalRequest.addParameter("countryType", "domestic");
+        internalRequest.addParameter("startTime", request.getStartTime() + " 00:00:00");
+        internalRequest.addParameter("endTime", request.getEndTime() + " 23:59:59");
+        if (StringUtils.isNotEmpty(request.getCountryType())) {
+            internalRequest.addParameter("countryType", request.getCountryType());
+        }
+        if (StringUtils.isNotEmpty(request.getSignatureId())) {
+            internalRequest.addParameter("signatureId", request.getSignatureId());
+        }
+        if (StringUtils.isNotEmpty(request.getTemplateCode())) {
+            internalRequest.addParameter("templateCode", request.getTemplateCode());
+        }
+        return this.invokeHttpClient(internalRequest, ListStatisticsResponse.class);
+    }
+
 }

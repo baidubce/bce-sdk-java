@@ -78,6 +78,8 @@ import com.baidubce.services.media.model.GetThumbnailJobRequest;
 import com.baidubce.services.media.model.GetThumbnailJobResponse;
 import com.baidubce.services.media.model.GetThumbnailPresetRequest;
 import com.baidubce.services.media.model.GetThumbnailPresetResponse;
+import com.baidubce.services.media.model.GetTranscodingEncryptionKeyRequest;
+import com.baidubce.services.media.model.GetTranscodingEncryptionKeyResponse;
 import com.baidubce.services.media.model.GetTranscodingJobRequest;
 import com.baidubce.services.media.model.GetTranscodingJobResponse;
 import com.baidubce.services.media.model.GetWaterMarkRequest;
@@ -186,6 +188,11 @@ public class MediaClient extends AbstractBceClient {
     private static final String SUBTITLE = "job/subtitle";
 
     /**
+     * The common URI prefix for subtitle services.
+     */
+    private static final String TRANSCODING_KEY = "transcoding/key";
+
+    /**
      * The common URI prefix for notification services.
      */
     private static final String NOTIFICATION = "notification";
@@ -219,6 +226,7 @@ public class MediaClient extends AbstractBceClient {
     private static final HttpResponseHandler[] mediaHandlers = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(),
             new BceErrorResponseHandler(),
+            new MediaEncryptionKeyResponseHandler(),
             new BceJsonResponseHandler()
     };
 
@@ -2120,4 +2128,31 @@ public class MediaClient extends AbstractBceClient {
         internalRequest.addParameter(PIPELINENAME_MESSAGE_KEY, request.getPipeline());
         return invokeHttpClient(internalRequest, ListSubtitleJobsResponse.class);
     }
+
+    /**
+     * Get transcoding job encryption key
+     *
+     * @param request The request object containing all options for getting encryption key.
+     *
+     * @return Response Object contains transcoding encryption Aes key.
+     */
+    public GetTranscodingEncryptionKeyResponse getTranscodingEncryptionKey(GetTranscodingEncryptionKeyRequest request) {
+        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequest(HttpMethodName.GET, 
+                request, TRANSCODING_KEY, request.getJobId());
+                
+        return invokeHttpClient(internalRequest, GetTranscodingEncryptionKeyResponse.class);
+    }
+
+    /**
+     * Get transcoding job encryption key
+     *
+     * @param jobId The job ID want to query transcoding encryption key.
+     *
+     * @return Response Object contains transcoding encryption Aes keyl.
+     */
+    public GetTranscodingEncryptionKeyResponse getTranscodingEncryptionKey(String jobId) {
+        return getTranscodingEncryptionKey(new GetTranscodingEncryptionKeyRequest().withJobId(jobId));
+    }
+
 }

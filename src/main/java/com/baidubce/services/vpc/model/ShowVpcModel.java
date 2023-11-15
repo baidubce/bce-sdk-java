@@ -1,8 +1,8 @@
 package com.baidubce.services.vpc.model;
 
-import java.util.List;
-
 import com.baidubce.services.subnet.model.Subnet;
+
+import java.util.List;
 
 /**
  * vpc detail info model
@@ -20,6 +20,11 @@ public class ShowVpcModel {
      * The cidr of this vpc.
      */
     private String cidr;
+
+    /***
+     * The IPv6 cidr of this vpc
+     */
+    private String ipv6Cidr;
 
     /**
      * The description of this vpc.
@@ -84,6 +89,14 @@ public class ShowVpcModel {
 
     public void setSubnets(List<Subnet> subnets) {
         this.subnets = subnets;
+    }
+
+    public String getIpv6Cidr() {
+        return ipv6Cidr;
+    }
+
+    public void setIpv6Cidr(String ipv6Cidr) {
+        this.ipv6Cidr = ipv6Cidr;
     }
 
     @Override

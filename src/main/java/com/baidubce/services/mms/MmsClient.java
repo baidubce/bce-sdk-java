@@ -36,8 +36,13 @@ import com.baidubce.services.mms.model.SourceAndDescRequest;
 import com.baidubce.services.mms.model.InsertVideoResultResponse;
 import com.baidubce.services.mms.model.SourceRequest;
 import com.baidubce.services.mms.model.MmsBaseResponse;
+import com.baidubce.services.mms.model.MmsListLibResponse;
+import com.baidubce.services.mms.model.MmsListMediaResponse;
 import com.baidubce.services.mms.model.SearchImageResponse;
 import com.baidubce.services.mms.model.SearchVideoResponse;
+import com.baidubce.services.mms.model.CreateLibRequest;
+import com.baidubce.services.mms.model.ListLibRequest;
+import com.baidubce.services.mms.model.ListMediaRequest;
 
 /** Provides the client for accessing the BCE MMS service. */
 public class MmsClient extends AbstractBceClient {
@@ -48,6 +53,12 @@ public class MmsClient extends AbstractBceClient {
 
     private static final String IMAGE_LIB = "imagelib";
 
+    private static final String LIB = "lib";
+
+    private static final String LIST = "list";
+
+    private static final String ITEM = "item";
+
     private static final String SEARCH_BY_IMAGE = "searchByImage";
 
     private static final String SEARCH_BY_VIDEO = "searchByVideo";
@@ -56,7 +67,21 @@ public class MmsClient extends AbstractBceClient {
 
     private static final String DELETE_IMAGE = "deleteImage";
 
+    private static final String DELETE_VIDEO_BY_ID = "deleteVideoById";
+
+    private static final String DELETE_IMAGE_BY_ID = "deleteImageById";
+
+    private static final String DELETE_LIB_BY_ID = "deleteLibById";
+
     private static final String SOURCE = "source";
+
+    private static final String MEDIA_ID = "mediaId";
+
+    private static final String TASK_ID = "taskId";
+
+    private static final String GET_INSERT_RESPONSE_BY_ID = "getInsertResponseById";
+
+    private static final String GET_SEARCH_RESPONSE_BY_TASK_ID = "getSearchResponseByTaskId";
 
     private static HttpResponseHandler[] mmsHandlers =
         new HttpResponseHandler[] {
@@ -67,6 +92,80 @@ public class MmsClient extends AbstractBceClient {
 
     public MmsClient(BceClientConfiguration config) {
         super(config, mmsHandlers);
+    }
+
+    /**
+     * create a video lib.
+     *
+     * @param request The params of create video lib.
+     * @return BaseResponse
+     */
+    public MmsBaseResponse createVideoLib(CreateLibRequest request) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, request, VERSION, VIDEO_LIB);
+        return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
+    }
+
+    /**
+     * delete a video lib.
+     *
+     * @param libId video lib id.
+     * @return BaseResponse
+     */
+    public MmsBaseResponse deleteVideoLib(String libId) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, new SourceRequest(), VERSION, VIDEO_LIB, libId);
+        internalRequest.addParameter(DELETE_LIB_BY_ID, "");
+        return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
+    }
+
+    /**
+     * create a image lib.
+     *
+     * @param request The params of create video lib.
+     * @return BaseResponse
+     */
+    public MmsBaseResponse createImageLib(CreateLibRequest request) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, request, VERSION, IMAGE_LIB);
+        return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
+    }
+
+    /**
+     * delete a image lib.
+     *
+     * @param libId image lib id.
+     * @return BaseResponse
+     */
+    public MmsBaseResponse deleteImageLib(String libId) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, new SourceRequest(), VERSION, IMAGE_LIB, libId);
+        internalRequest.addParameter(DELETE_LIB_BY_ID, "");
+        return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
+    }
+
+    /**
+     * list lib of user.
+     *
+     * @param request The params of list user lib.
+     * @return BaseResponse
+     */
+    public MmsListLibResponse listLib(ListLibRequest request) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, request, VERSION, LIB, LIST);
+        return this.invokeHttpClient(internalRequest, MmsListLibResponse.class);
+    }
+
+    /**
+     * list lib media.
+     *
+     * @param request The params of list lib media.
+     * @return BaseResponse
+     */
+    public MmsListMediaResponse listMedia(ListMediaRequest request) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, request, VERSION, LIB, ITEM, LIST);
+        return this.invokeHttpClient(internalRequest, MmsListMediaResponse.class);
     }
 
     /**
@@ -84,12 +183,26 @@ public class MmsClient extends AbstractBceClient {
     /**
      * Get insert video task result.
      *
+     * @param libId The name of video lib id.
+     * @return InsertVideoResultResponse
+     */
+    public InsertVideoResultResponse getInsertVideoResultById(String libId, String mediaId) {
+        InternalRequest internalRequest =
+            createRequest(HttpMethodName.GET, new SourceRequest(), VERSION, VIDEO_LIB, libId);
+        internalRequest.addParameter(MEDIA_ID, mediaId);
+        internalRequest.addParameter(GET_INSERT_RESPONSE_BY_ID, "");
+        return this.invokeHttpClient(internalRequest, InsertVideoResultResponse.class);
+    }
+
+    /**
+     * Get insert video task result by id.
+     *
      * @param libName The name of video lib.
      * @return InsertVideoResultResponse
      */
     public InsertVideoResultResponse getInsertVideoResult(String libName, SourceRequest request) {
         InternalRequest internalRequest =
-            createRequest(HttpMethodName.GET, request, VERSION, VIDEO_LIB, libName);
+                createRequest(HttpMethodName.GET, request, VERSION, VIDEO_LIB, libName);
         internalRequest.addParameter(SOURCE, request.getSource());
         return this.invokeHttpClient(internalRequest, InsertVideoResultResponse.class);
     }
@@ -105,6 +218,20 @@ public class MmsClient extends AbstractBceClient {
             createRequest(HttpMethodName.POST, request, VERSION, VIDEO_LIB, libName);
         internalRequest.addParameter(SEARCH_BY_VIDEO, "");
         return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
+    }
+
+    /**
+     * Get search video by video task result by id.
+     *
+     * @param libName The name of video lib.
+     * @return SearchVideoResponse
+     */
+    public SearchVideoResponse getSearchVideoByVideoResultById(String libName, String taskId) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.GET, new SourceRequest(), VERSION, VIDEO_LIB, libName);
+        internalRequest.addParameter(TASK_ID, taskId);
+        internalRequest.addParameter(GET_SEARCH_RESPONSE_BY_TASK_ID, "");
+        return this.invokeHttpClient(internalRequest, SearchVideoResponse.class);
     }
 
     /**
@@ -150,6 +277,20 @@ public class MmsClient extends AbstractBceClient {
     }
 
     /**
+     * Delete a video from lib.
+     *
+     * @param libId The id of video lib.
+     * @return MmsBaseResponse
+     */
+    public MmsBaseResponse deleteVideoById(String libId, String mediaId) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, new SourceRequest(), VERSION, VIDEO_LIB, libId);
+        internalRequest.addParameter(MEDIA_ID, mediaId);
+        internalRequest.addParameter(DELETE_VIDEO_BY_ID, "");
+        return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
+    }
+
+    /**
      * Insert an image into lib.
      *
      * @param libName The name of image lib.
@@ -185,6 +326,20 @@ public class MmsClient extends AbstractBceClient {
             createRequest(HttpMethodName.POST, request, VERSION, IMAGE_LIB, libName);
         internalRequest.addParameter(SOURCE, request.getSource());
         internalRequest.addParameter(DELETE_IMAGE, "");
+        return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
+    }
+
+    /**
+     * Delete an image from lib.
+     *
+     * @param libId The id of image lib.
+     * @return MmsBaseResponse
+     */
+    public MmsBaseResponse deleteImageById(String libId, String mediaId) {
+        InternalRequest internalRequest =
+                createRequest(HttpMethodName.POST, new SourceRequest(), VERSION, IMAGE_LIB, libId);
+        internalRequest.addParameter(MEDIA_ID, mediaId);
+        internalRequest.addParameter(DELETE_IMAGE_BY_ID, "");
         return this.invokeHttpClient(internalRequest, MmsBaseResponse.class);
     }
 

@@ -322,6 +322,28 @@ public class BceHttpClient {
     }
 
     /**
+    * The difference between shutdown() is that releasing all resources including nio and idle.
+    */
+    public void shutdownClean() {
+        shutdown();
+        IdleConnectionReaper.shutdown();
+        if (this.httpAsyncClient != null) {
+            try {
+                this.httpAsyncClient.close();
+            } catch (IOException e) {
+                logger.debug("Fail to close httpAsyncClient", e);
+            }
+        }
+        if (this.nioConnectionManager != null) {
+            try {
+                this.nioConnectionManager.shutdown();
+            } catch (IOException e) {
+                logger.debug("Fail to shutdown nioConnectionManager", e);
+            }
+        }
+    }
+
+    /**
      * Get delay time before next retry.
      *
      * @param method The current HTTP method being executed.

@@ -41,6 +41,12 @@ public class FetchObjectRequest extends GenericObjectRequest {
      */
     private String storageClass;
 
+    private String callbackAddress;
+
+    private String referer;
+
+    private String userAgent;
+
     /**
      * Constructs a new FetchObjectRequest with only basic options.
      *
@@ -187,4 +193,27 @@ public class FetchObjectRequest extends GenericObjectRequest {
         return this;
     }
 
+    public String getCallbackAddress() {
+        return callbackAddress;
+    }
+
+    public void setCallbackAddress(String callbackAddress) {
+        this.callbackAddress = callbackAddress;
+    }
+
+    public String getReferer() {
+        return referer;
+    }
+
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
 }

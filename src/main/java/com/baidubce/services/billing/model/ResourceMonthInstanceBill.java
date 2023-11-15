@@ -28,6 +28,11 @@ public class ResourceMonthInstanceBill {
     private String vendor;
 
     /**
+     * 账单ID
+     */
+    private String billId;
+
+    /**
      * user id
      */
     private String accountId;
@@ -86,6 +91,16 @@ public class ResourceMonthInstanceBill {
      * the end time of the bill
      */
     private String endTime;
+
+    /**
+     * resource start time
+     */
+    private String serviceStartTime;
+
+    /**
+     * resource end time
+     */
+    private String serviceEndTime;
 
     /**
      * the configuration of the resource
@@ -178,6 +193,11 @@ public class ResourceMonthInstanceBill {
     private BigDecimal creditRefund;
 
     /**
+     * amount of redit refund
+     */
+    private BigDecimal creditRefundDeduct;
+
+    /**
      * amount of debt
      */
     private BigDecimal debt;
@@ -206,6 +226,22 @@ public class ResourceMonthInstanceBill {
      * amount of sales
      */
     private BigDecimal sysGold;
+
+    private BigDecimal deductPrice;
+
+    private BigDecimal deductCash;
+
+    private BigDecimal deductRebate;
+
+    private BigDecimal deductCreditCost;
+
+    private BigDecimal deductCouponPrice;
+
+    private BigDecimal deductDiscountCouponPrice;
+
+    private BigDecimal deductDiscountPrice;
+
+    private BigDecimal deductCashEquivalentCouponPrice;
 
     public String getVendor() {
         return vendor;
@@ -309,6 +345,22 @@ public class ResourceMonthInstanceBill {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getServiceStartTime() {
+        return serviceStartTime;
+    }
+
+    public void setServiceStartTime(String serviceStartTime) {
+        this.serviceStartTime = serviceStartTime;
+    }
+
+    public String getServiceEndTime() {
+        return serviceEndTime;
+    }
+
+    public void setServiceEndTime(String serviceEndTime) {
+        this.serviceEndTime = serviceEndTime;
     }
 
     public String getConfigurationCH() {
@@ -501,5 +553,85 @@ public class ResourceMonthInstanceBill {
 
     public void setSysGold(BigDecimal sysGold) {
         this.sysGold = sysGold;
+    }
+
+    public String getBillId() {
+        return billId;
+    }
+
+    public void setBillId(String billId) {
+        this.billId = billId;
+    }
+
+    public BigDecimal getCreditRefundDeduct() {
+        return creditRefundDeduct;
+    }
+
+    public void setCreditRefundDeduct(BigDecimal creditRefundDeduct) {
+        this.creditRefundDeduct = creditRefundDeduct;
+    }
+
+    public BigDecimal getDeductPrice() {
+        return deductPrice;
+    }
+
+    public void setDeductPrice(BigDecimal deductPrice) {
+        this.deductPrice = deductPrice;
+    }
+
+    public BigDecimal getDeductCash() {
+        return deductCash;
+    }
+
+    public void setDeductCash(BigDecimal deductCash) {
+        this.deductCash = deductCash;
+    }
+
+    public BigDecimal getDeductRebate() {
+        return deductRebate;
+    }
+
+    public void setDeductRebate(BigDecimal deductRebate) {
+        this.deductRebate = deductRebate;
+    }
+
+    public BigDecimal getDeductCreditCost() {
+        return deductCreditCost;
+    }
+
+    public void setDeductCreditCost(BigDecimal deductCreditCost) {
+        this.deductCreditCost = deductCreditCost;
+    }
+
+    public BigDecimal getDeductCouponPrice() {
+        return deductCouponPrice;
+    }
+
+    public void setDeductCouponPrice(BigDecimal deductCouponPrice) {
+        this.deductCouponPrice = deductCouponPrice;
+    }
+
+    public BigDecimal getDeductDiscountCouponPrice() {
+        return deductDiscountCouponPrice;
+    }
+
+    public void setDeductDiscountCouponPrice(BigDecimal deductDiscountCouponPrice) {
+        this.deductDiscountCouponPrice = deductDiscountCouponPrice;
+    }
+
+    public BigDecimal getDeductDiscountPrice() {
+        return deductDiscountPrice;
+    }
+
+    public void setDeductDiscountPrice(BigDecimal deductDiscountPrice) {
+        this.deductDiscountPrice = deductDiscountPrice;
+    }
+
+    public BigDecimal getDeductCashEquivalentCouponPrice() {
+        return deductCashEquivalentCouponPrice;
+    }
+
+    public void setDeductCashEquivalentCouponPrice(BigDecimal deductCashEquivalentCouponPrice) {
+        this.deductCashEquivalentCouponPrice = deductCashEquivalentCouponPrice;
     }
 }

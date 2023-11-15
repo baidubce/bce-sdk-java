@@ -23,7 +23,10 @@ import java.util.Map;
 /**
  * InputSerialization for selecting object request
  */
-@JsonPropertyOrder({"compressionType", Constants.SELECT_TYPE_CSV, Constants.SELECT_TYPE_JSON})
+@JsonPropertyOrder({"compressionType",
+        Constants.SELECT_TYPE_CSV,
+        Constants.SELECT_TYPE_JSON,
+        Constants.SELECT_TYPE_PARQUET})
 public class InputSerialization {
     /**
      * Specifies whether the object of the query is compressed
@@ -31,7 +34,7 @@ public class InputSerialization {
     private String compressionType;
 
     /**
-     * the params of csv or json in inputSerialization
+     * the params of csv, json or parquet in inputSerialization
      */
     @JsonIgnore
     private Map<String, String> params = new HashMap<String, String>();
@@ -47,6 +50,12 @@ public class InputSerialization {
      */
     @JsonProperty(Constants.SELECT_TYPE_JSON)
     private Map<String, String> jsonParams;
+
+    /**
+     * when select parquet object, parquetParams = params; for composing json string
+     */
+    @JsonProperty(Constants.SELECT_TYPE_PARQUET)
+    private Map<String, String> parquetParams;
 
     public void setCompressionType(String compressionType) {
         this.compressionType = compressionType;
@@ -106,6 +115,14 @@ public class InputSerialization {
 
     public void setJsonParams(Map<String, String> jsonParams) {
         this.jsonParams = jsonParams;
+    }
+
+    public Map<String, String> getParquetParams() {
+        return parquetParams;
+    }
+
+    public void setParquetParams(Map<String, String> parquetParams) {
+        this.parquetParams = parquetParams;
     }
 
     public Map<String, String> getParams() {

@@ -41,15 +41,6 @@ public class CreateClusterRequest extends AbstractBceRequest {
     private String vpcId;
     private String subnetId;
     private String availabilityZone;
-    private String templateType;
-
-    public String getTemplateType() {
-        return templateType;
-    }
-
-    public void setTemplateType(String templateType) {
-        this.templateType = templateType;
-    }
 
     public String getImageType() {
         return imageType;
@@ -408,18 +399,6 @@ public class CreateClusterRequest extends AbstractBceRequest {
      */
     public CreateClusterRequest withSecurityGroup(String securityGroup) {
         this.setSecurityGroup(securityGroup);
-        return this;
-    }
-
-    /**
-     * Configure request templateType for the request.
-     *
-     * @param templateType templateType for cluster
-     *
-     * @return CreateClusterRequest
-     */
-    public CreateClusterRequest withTemplateType(String templateType) {
-        this.setTemplateType(templateType);
         return this;
     }
 }

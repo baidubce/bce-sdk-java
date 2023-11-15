@@ -58,6 +58,11 @@ public class UploadPartRequest extends GenericUploadRequest {
     private String xBceCrc;
 
     /**
+     * The BosProgressCallback used for get progress information
+     */
+    private BosProgressCallback progressCallback = null;
+
+    /**
      * Gets xBceCrc of the newly uploaded part.
      * @return xBceCrc of the newly uploaded part.
      */
@@ -299,6 +304,58 @@ public class UploadPartRequest extends GenericUploadRequest {
      */
     public UploadPartRequest withInputStream(InputStream inputStream) {
         this.setInputStream(inputStream);
+        return this;
+    }
+
+    /**
+     * Gets the BosProgressCallback which used for Get upload progress.
+     * @return The BosProgressCallback which used for get progress information.
+     */
+    public BosProgressCallback getProgressCallback() {
+        return progressCallback;
+    }
+
+    /**
+     * Sets the BosProgressCallback which used for Get upload progress.
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     */
+    public void setProgressCallback(BosProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
+
+    /**
+     *
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     * @return This UploadPartRequest, so that additional method calls can be chained together
+     */
+    public UploadPartRequest withProgressCallback(BosProgressCallback progressCallback) {
+        this.setProgressCallback(progressCallback);
+        return this;
+    }
+
+    /**
+     * Gets the limit of put object speed.
+     * @return the limit of put object speed. unit: bit/s
+     */
+    public long getTrafficLimitBitPS() {
+        return trafficLimitBitPS;
+    }
+
+    /**
+     * Sets Gets the limit of put object speed. range: 819200 bit/s ~ 838860800 bit/s
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s
+     */
+    public void setTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.trafficLimitBitPS = trafficLimitBitPS;
+    }
+
+    /**
+     *
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s, range: 819200 bit/s ~ 838860800 bit/s
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public UploadPartRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.setTrafficLimitBitPS(trafficLimitBitPS);
         return this;
     }
 }

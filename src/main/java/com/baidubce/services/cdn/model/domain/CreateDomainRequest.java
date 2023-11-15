@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * Created by sunyixing on 16/1/9.
+ * Updated by changxing01 on 22/4/11
  */
 public class CreateDomainRequest extends AbstractBceRequest {
     
@@ -30,6 +31,7 @@ public class CreateDomainRequest extends AbstractBceRequest {
     private String domain;
     private String defaultHost;
     private String form;
+    private Boolean follow302;
 
     /**
      * @return defaultHost
@@ -139,6 +141,31 @@ public class CreateDomainRequest extends AbstractBceRequest {
     public CreateDomainRequest addPeer(String peer) {
         OriginPeer op = new OriginPeer().withPeer(peer);
         origin.add(op);
+        return this;
+    }
+
+    /**
+     * 是否开启回源follow 302
+     * @return
+     */
+    public Boolean getFollow302() {
+        return follow302;
+    }
+
+    /**
+     * 是否开启回源follow 302
+     * @return
+     */
+    public void setFollow302(Boolean follow302) {
+        this.follow302 = follow302;
+    }
+
+    /**
+     * 是否开启回源follow 302
+     * @return returns this object
+     */
+    public CreateDomainRequest withFollow302(Boolean follow302) {
+        this.follow302 = follow302;
         return this;
     }
     

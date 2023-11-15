@@ -59,6 +59,16 @@ public class PutObjectRequest extends GenericObjectRequest {
     private String storageClass;
 
     /**
+     * Used to Audio and video processing interface
+     */
+    private String videoProcess = null;
+
+    /**
+     * The BosProgressCallback used for get progress information
+     */
+    private BosProgressCallback progressCallback = null;
+
+    /**
      * Constructs a new PutObjectRequest object to upload a file to the
      * specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
@@ -101,6 +111,23 @@ public class PutObjectRequest extends GenericObjectRequest {
     public PutObjectRequest(String bucketName, String key, InputStream inputStream) {
         this(bucketName, key, null, inputStream, new ObjectMetadata());
         checkNotNull(inputStream, "inputStream should not be null.");
+    }
+
+    /**
+     * Constructs a new PutObjectRequest object to upload a stream of data to
+     * the specified bucket and key. After constructing the request,
+     * users may optionally specify object metadata or a canned ACL as well.
+     *
+     * @param bucketName The name of an existing bucket to which the new object will be uploaded.
+     * @param key The key under which to store the new object.
+     * @param inputStream The stream of data to upload to Baidu Bos.
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     */
+    public PutObjectRequest(String bucketName, String key, InputStream inputStream,
+                            BosProgressCallback progressCallback) {
+        this(bucketName, key, null, inputStream, new ObjectMetadata());
+        checkNotNull(inputStream, "inputStream should not be null.");
+        this.setProgressCallback(progressCallback);
     }
 
     /**
@@ -342,6 +369,85 @@ public class PutObjectRequest extends GenericObjectRequest {
      */
     public PutObjectRequest withStorageClass(String storageClass) {
         this.setStorageClass(storageClass);
+        return this;
+    }
+
+    /**
+     * Gets the BosProgressCallback which used for Get upload progress.
+     * @return The BosProgressCallback which used for get progress information.
+     */
+    public BosProgressCallback getProgressCallback() {
+        return progressCallback;
+    }
+
+    /**
+     * Sets the BosProgressCallback which used for Get upload progress.
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     */
+    public void setProgressCallback(BosProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
+
+    /**
+     *
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public PutObjectRequest withProgressCallback(BosProgressCallback progressCallback) {
+        this.setProgressCallback(progressCallback);
+        return this;
+    }
+
+    /**
+     * Gets the limit of put object speed.
+     * @return the limit of put object speed. unit: bit/s
+     */
+    public long getTrafficLimitBitPS() {
+        return trafficLimitBitPS;
+    }
+
+    /**
+     * Sets Gets the limit of put object speed. range: 819200 bit/s ~ 838860800 bit/s
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s
+     */
+    public void setTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.trafficLimitBitPS = trafficLimitBitPS;
+    }
+
+    /**
+     *
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s, range: 819200 bit/s ~ 838860800 bit/s
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public PutObjectRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.setTrafficLimitBitPS(trafficLimitBitPS);
+        return this;
+    }
+
+    /**
+     * Gets the parameter of Audio and video processing
+     * @return the parameter of Audio and video processing
+     */
+    public String getVideoProcess() {
+        return videoProcess;
+    }
+
+    /**
+     *
+     * @param videoProcess The parameter of Audio and video processing
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public void setVideoProcess(String videoProcess) {
+        this.videoProcess = videoProcess;
+    }
+
+    /**
+     *
+     * @param videoProcess The parameter of Audio and video processing
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public PutObjectRequest withVideoProcess(String videoProcess) {
+        this.setVideoProcess(videoProcess);
         return this;
     }
 }

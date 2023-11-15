@@ -24,6 +24,7 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.kms.model.EncryptedRsaKey;
+import com.baidubce.services.kms.model.EncryptedSm2Key;
 import com.baidubce.services.kms.model.KmsResponse;
 import com.baidubce.services.kms.model.ImportAsymmetricKeyRequest;
 import com.baidubce.services.kms.model.ImportKeyRequest;
@@ -41,6 +42,8 @@ import com.baidubce.services.kms.model.DecryptResponse;
 import com.baidubce.services.kms.model.GenerateDataKeyRequest;
 import com.baidubce.services.kms.model.GenerateDataKeyResponse;
 import com.baidubce.services.kms.model.EnableKeyRequest;
+import com.baidubce.services.kms.model.UpdateRotationRequest;
+import com.baidubce.services.kms.model.UpdateRotationResponse;
 import com.baidubce.services.kms.model.DisableKeyRequest;
 import com.baidubce.services.kms.model.ScheduleKeyDeletionRequest;
 import com.baidubce.services.kms.model.ScheduleKeyDeletionResponse;
@@ -102,6 +105,7 @@ public class KmsClient extends AbstractBceClient {
             jsonGenerator.writeStringField(Constants.FIELD_KEYSPEC, request.getKeySpec());
             jsonGenerator.writeStringField(Constants.FIELD_PROTECTEDBY, request.getProtectedBy());
             jsonGenerator.writeStringField(Constants.FIELD_ORIGIN, request.getOrigin());
+            jsonGenerator.writeNumberField(Constants.FIELD_ROTATECYCLE, request.getRotateCycle());
             jsonGenerator.writeEndObject();
         } catch (IOException e) {
             throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
@@ -520,14 +524,12 @@ public class KmsClient extends AbstractBceClient {
                 jsonGenerator.writeStringField("encryptedDq", rsaKey.getEncryptedDq());
                 jsonGenerator.writeStringField("encryptedQinv", rsaKey.getEncryptedQinv());
                 jsonGenerator.writeEndObject();
-            }
-            if (request.getEncryptedSm2Key() != null) {
-                throw new BceClientException(Constants.FAIL_TO_SUPPORT, new Exception());
-                // EncryptedSm2Key sm2Key = request.getEncryptedSm2Key();
-                // jsonGenerator.writeObjectFieldStart(Constants.FIELD_ENCRYPTEDSM2KEY);
-                // jsonGenerator.writeStringField("publicKeyDer", sm2Key.getPublicKeyDer());
-                // jsonGenerator.writeStringField("encryptedPrivateKey", sm2Key.getEncryptedPrivateKey());
-                // jsonGenerator.writeEndObject();
+            } else if (request.getEncryptedSm2Key() != null) {
+                EncryptedSm2Key sm2Key = request.getEncryptedSm2Key();
+                jsonGenerator.writeObjectFieldStart(Constants.FIELD_ENCRYPTEDSM2KEY);
+                jsonGenerator.writeStringField("publicKeyDer", sm2Key.getPublicKeyDer());
+                jsonGenerator.writeStringField("encryptedPrivateKey", sm2Key.getEncryptedPrivateKey());
+                jsonGenerator.writeEndObject();
             }
             jsonGenerator.writeEndObject();
         } catch (IOException e) {
@@ -540,6 +542,33 @@ public class KmsClient extends AbstractBceClient {
 
         setInternalRequest(internalRequest, writer);
         KmsResponse response = this.invokeHttpClient(internalRequest, KmsResponse.class);
+        return response;
+    }
+
+    public UpdateRotationResponse updateRotateKey(UpdateRotationRequest request) throws Exception {
+        checkNotNull(request, Constants.REQUEST_SHOULD_NOT_BE_NULL);
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter(Constants.ACTION, "EnableRotation");
+
+        StringWriter writer = new StringWriter();
+        JsonGenerator jsonGenerator = null;
+        try {
+            jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField(Constants.FIELD_KEYID, request.getKeyId());
+            jsonGenerator.writeNumberField(Constants.FIELD_ROTATECYCLE, request.getRotateCycle());
+            jsonGenerator.writeEndObject();
+        } catch (IOException e) {
+            throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
+        } finally {
+            if (jsonGenerator != null) {
+                jsonGenerator.close();
+            }
+        }
+        setInternalRequest(internalRequest, writer);
+
+        UpdateRotationResponse response = this.invokeHttpClient(internalRequest, UpdateRotationResponse.class);
         return response;
     }
 

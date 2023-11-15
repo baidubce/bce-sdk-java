@@ -9,9 +9,31 @@ import java.util.List;
  * create by changxing01 on 19/8/28
  */
 public class MediaDrag extends JsonObject {
+
+    /**
+     * 百度智能云CDN支持MP4文件的伪流（pseudo-streaming）播放，
+     * 通常这些文件拓展名为.mp4，.m4v，.m4a，因此这个fileSuffix值为文件拓展名集合，
+     * 如： ["mp4", "m4v", "m4a"]，type为mp4，fileSuffix默认值为["mp4"]；type为flv，fileSuffix默认值为["flv"]
+     * 可选
+     */
     private List<String> fileSuffix;
+
+    /**
+     * start参数名称，默认为“start”，您可以自定义参数名称，但是要求不能和endArgName相同
+     * 可选
+     */
     private String startArgName;
+
+    /**
+     * end参数名称，默认为“end”，您可以自定义参数名称，但是要求不能和startArgName相同
+     * 可选
+     */
     private String endArgName;
+
+    /**
+     * mp4类型按秒进行拖拽，flv类型按字节进行拖拽。type为flv可选择的模式为“byteAV”或”byte”；type为mp4只能是"second"模式
+     * 必选
+     */
     private String dragMode;
 
     /**

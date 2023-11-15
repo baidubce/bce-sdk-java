@@ -39,6 +39,11 @@ public class Audio {
      **/
     private VolumeAdjust volumeAdjust = null;
 
+    /**
+     * setting about audio codec
+     */
+    private String codec;
+
     public Integer getBitRateInBps() {
         return bitRateInBps;
     }
@@ -103,6 +108,14 @@ public class Audio {
         this.volumeAdjust = volumeAdjust;
         return this;
     }
+    
+    public String getCodec() {
+        return codec;
+    }
+
+    public void setCodec(String codec) {
+        this.codec = codec;
+    }
 
     @Override
     public String toString() {
@@ -114,6 +127,7 @@ public class Audio {
         sb.append("    channels: ").append(channels).append("\n");
         sb.append("    pcmFormat: ").append(pcmFormat).append("\n");
         sb.append("    volumeAdjust: ").append(volumeAdjust).append("\n");
+        sb.append("    codec: ").append(codec).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

@@ -25,24 +25,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ListClustersResponse extends AbstractBceResponse {
     private String marker;
     private String nextMarker;
-    private int maxKeys;
     private boolean isTruncated;
     private List<Cluster> clusters;
-
     public String getMarker() {
         return marker;
     }
 
     public void setMarker(String marker) {
         this.marker = marker;
-    }
-
-    public int getMaxKeys() {
-        return maxKeys;
-    }
-
-    public void setMaxKeys(int maxKeys) {
-        this.maxKeys = maxKeys;
     }
 
     public String getNextMarker() {
