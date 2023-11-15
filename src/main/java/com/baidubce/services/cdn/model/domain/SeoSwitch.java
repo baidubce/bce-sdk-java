@@ -5,8 +5,18 @@ import com.baidubce.services.cdn.model.JsonObject;
 /**
  * create by changxing01 on 19/8/28
  */
-public class SeoSwitch extends JsonObject {
+public class SeoSwitch {
+
+    /**
+     * ON 表示设置直接回源，OFF 则相反
+     * 可选
+     */
     private String diretlyOrigin;
+
+    /**
+     * ON 表示给百度搜索推送访问记录，OFF则相反
+     * 可选
+     */
     private String pushRecord;
 
     /**

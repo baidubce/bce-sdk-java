@@ -20,10 +20,30 @@ import com.baidubce.services.cdn.model.JsonObject;
  *
  * Cache TTL policy
  */
-public class CacheTTL extends JsonObject {
+public class CacheTTL {
+    /**
+     * suffix"表示文件名后缀，"path"表示url中的目录，"origin"表示源站规则，此规则只有一条，只表示出权重即可
+     * value为"-", ttl为 0，"code"表示异常码缓存，如可以配置404缓存100s ，“exactPath”表示路径完全匹配
+     * 必选
+     */
     private String type;
+
+    /**
+     * type所指定类型的配置规则
+     * 必选
+     */
     private String value;
+
+    /**
+     * 缓存时间，单位为秒
+     * 必选
+     */
     private Integer ttl;
+
+    /**
+     * 权重，0-100的整数，权重越高优先级越高，默认为0，优先级在为code类型下是没有作用的，可以忽略
+     * 可选
+     */
     private Integer weight;
     
     /**

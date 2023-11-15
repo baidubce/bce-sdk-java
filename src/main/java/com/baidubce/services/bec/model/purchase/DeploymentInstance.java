@@ -14,6 +14,8 @@ package com.baidubce.services.bec.model.purchase;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Deployment instance.
  */
@@ -39,4 +41,29 @@ public class DeploymentInstance {
      * The city of the deployment.
      */
     private String city;
+
+    /**
+     * The regionId of the deployment.
+     */
+    private String regionId;
+
+    /**
+     * The subServiceProvider of the deployment.
+     */
+    private List<String> subServiceProviders;
+
+    /**
+     * The networkType of the deployment.
+     */
+    private String networkType;
+
+    /**
+     * The vpcId of the deployment.
+     */
+    private String vpcId;
+
+    /**
+     * The subnetId of the deployment.
+     */
+    private String subnetId;
 }

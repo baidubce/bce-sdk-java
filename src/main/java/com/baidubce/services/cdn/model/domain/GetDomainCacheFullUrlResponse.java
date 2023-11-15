@@ -10,6 +10,7 @@ import java.util.List;
 public class GetDomainCacheFullUrlResponse extends CdnResponse {
     private boolean cacheFullUrl;
     private List<String> cacheUrlArgs;
+    private List<String> ignoreUrlArgs;
 
     /**
      * @return cacheFullUrl
@@ -37,5 +38,13 @@ public class GetDomainCacheFullUrlResponse extends CdnResponse {
      */
     public void setCacheUrlArgs(List<String> cacheUrlArgs) {
         this.cacheUrlArgs = cacheUrlArgs;
+    }
+
+    public List<String> getIgnoreUrlArgs() {
+        return ignoreUrlArgs;
+    }
+
+    public void setIgnoreUrlArgs(List<String> ignoreUrlArgs) {
+        this.ignoreUrlArgs = ignoreUrlArgs;
     }
 }

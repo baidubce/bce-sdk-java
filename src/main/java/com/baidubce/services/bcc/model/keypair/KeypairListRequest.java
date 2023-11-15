@@ -18,11 +18,22 @@ import com.baidubce.model.ListRequest;
  */
 public class KeypairListRequest extends ListRequest {
 
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "KeypairListResponse{" +
                 "maker='" + this.getMarker() + '\'' +
                 ", maxKeys=" + this.getMaxKeys() +
+                ", name='" + this.getName() + '\'' +
                 '}';
     }
 

@@ -23,6 +23,7 @@ public class SourceAndDescRequest extends AbstractBceRequest {
 
     private String source;
     private String description;
+    private String notification;
 
     public SourceAndDescRequest() {
     }
@@ -54,11 +55,20 @@ public class SourceAndDescRequest extends AbstractBceRequest {
         this.description = description;
     }
 
+    public String getNotification() {
+        return notification;
+    }
+
+    public void setNotification(String notification) {
+        this.notification = notification;
+    }
+
     @Override
     public String toString() {
-        return "InsertVideoRequest{" +
+        return "SourceAndDescRequest{" +
                 "source='" + source + '\'' +
                 ", description='" + description + '\'' +
+                ", notification='" + notification + '\'' +
                 '}';
     }
 }

@@ -67,6 +67,16 @@ public class OrderListRequest extends AbstractBceRequest {
     private String endTime;
 
     /**
+     * whether the order is payed automatically
+     */
+    private Boolean autoPayed;
+
+    /**
+     * whether the order is created by auto-renew service
+     */
+    private Boolean autoRenewOrder;
+
+    /**
      * page number, begin with 1
      */
     private Integer pageNo;

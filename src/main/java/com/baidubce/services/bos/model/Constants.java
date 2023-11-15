@@ -19,6 +19,8 @@ public class Constants {
 
     public static final String APPLICATION_JSON = "application/json";
 
+    public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+
     public static final String ENCRYPTION = "encryption";
 
     public static final String WEBSITE = "website";
@@ -30,6 +32,8 @@ public class Constants {
     public static final String SELECT_TYPE_CSV = "csv";
 
     public static final String SELECT_TYPE_JSON = "json";
+
+    public static final String SELECT_TYPE_PARQUET = "parquet";
 
     public static final String FILE_HEADER_INFO = "fileHeaderInfo";
 

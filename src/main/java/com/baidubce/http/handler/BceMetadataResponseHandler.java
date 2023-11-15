@@ -37,6 +37,7 @@ public class BceMetadataResponseHandler implements HttpResponseHandler {
         metadata.setDate(httpResponse.getHeaderAsRfc822Date(Headers.DATE));
         metadata.setTransferEncoding(httpResponse.getHeader(Headers.TRANSFER_ENCODING));
         metadata.setSymlinkTarget(httpResponse.getHeader(Headers.BCE_SYMLINK_TARGET));
+        metadata.setBucketType(httpResponse.getHeader(Headers.BCE_BUCKET_TYPE));
         String eTag = httpResponse.getHeader(Headers.ETAG);
         if (eTag != null) {
             metadata.setETag(CharMatcher.is('"').trimFrom(eTag));

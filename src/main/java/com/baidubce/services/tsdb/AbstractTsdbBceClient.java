@@ -33,12 +33,12 @@ import com.baidubce.auth.SignOptions;
 import com.baidubce.http.Headers;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.http.handler.BceErrorResponseHandler;
-import com.baidubce.http.handler.BceJsonResponseHandler;
 import com.baidubce.http.handler.BceMetadataResponseHandler;
 import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.tsdb.handler.TsdbJsonResponseHandler;
 import com.baidubce.services.tsdb.model.WriteDatapointsRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -60,7 +60,7 @@ public abstract class AbstractTsdbBceClient extends AbstractBceClient {
      * Responsible for handling HttpResponse from all Tsdb service calls.
      */
     protected static final HttpResponseHandler[] TSDB_HANDLERS = new HttpResponseHandler[] {
-            new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new BceJsonResponseHandler() };
+            new BceMetadataResponseHandler(), new BceErrorResponseHandler(), new TsdbJsonResponseHandler() };
 
     public AbstractTsdbBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers) {
         super(config, responseHandlers);

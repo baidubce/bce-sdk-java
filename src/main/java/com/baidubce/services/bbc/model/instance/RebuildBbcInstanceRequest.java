@@ -90,11 +90,11 @@ public class RebuildBbcInstanceRequest extends AbstractBceRequest {
         this.adminPass = adminPass;
     }
 
-    public Boolean getPreserveData() {
+    public Boolean getIsPreserveData() {
         return isPreserveData;
     }
 
-    public void setPreserveData(Boolean preserveData) {
+    public void setIsPreserveData(Boolean preserveData) {
         isPreserveData = preserveData;
     }
 

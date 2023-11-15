@@ -32,6 +32,8 @@ public class ModifyInstanceAttributesRequest extends AbstractBceRequest {
      */
     private String name;
 
+    private Integer netEthQueueCount;
+
     public String getInstanceId() {
         return instanceId;
     }
@@ -67,6 +69,19 @@ public class ModifyInstanceAttributesRequest extends AbstractBceRequest {
      */
     public ModifyInstanceAttributesRequest withName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public Integer getNetEthQueueCount() {
+        return netEthQueueCount;
+    }
+
+    public void setNetEthQueueCount(Integer netEthQueueCount) {
+        this.netEthQueueCount = netEthQueueCount;
+    }
+
+    public ModifyInstanceAttributesRequest withNetEthQueueCount(Integer netEthQueueCount) {
+        this.netEthQueueCount = netEthQueueCount;
         return this;
     }
 

@@ -12,31 +12,25 @@
  */
 package com.baidubce.services.bmr.model;
 
+import java.util.Date;
 import java.util.List;
-
 /**
  * Represent a BMR cluster.
  */
 public class Cluster {
     private String id;
     private String name;
+    private String payType;
     private String imageType;
     private String imageVersion;
     private String logUri;
-    private boolean autoTerminate;
+    private boolean enableAutoScale;
+    private Date createTime;
+    private List<Tag> tags;
     private List<Application> applications;
     private ClusterStatus status;
     private boolean serviceHaEnabled;
     private boolean safeModeEnabled;
-    private String templateType;
-
-    public String getTemplateType() {
-        return templateType;
-    }
-
-    public void setTemplateType(String templateType) {
-        this.templateType = templateType;
-    }
 
     public String getId() {
         return id;
@@ -68,14 +62,6 @@ public class Cluster {
 
     public void setImageVersion(String imageVersion) {
         this.imageVersion = imageVersion;
-    }
-
-    public boolean getAutoTerminate() {
-        return autoTerminate;
-    }
-
-    public void setAutoTerminate(boolean autoTerminate) {
-        this.autoTerminate = autoTerminate;
     }
 
     public String getLogUri() {
@@ -117,4 +103,37 @@ public class Cluster {
     public void setSafeModeEnabled(Boolean safeModeEnabled) {
         this.safeModeEnabled = safeModeEnabled;
     }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
+
+    public boolean isEnableAutoScale() {
+        return enableAutoScale;
+    }
+
+    public void setEnableAutoScale(boolean enableAutoScale) {
+        this.enableAutoScale = enableAutoScale;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
 }

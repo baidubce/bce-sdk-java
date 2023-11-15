@@ -14,6 +14,7 @@ package com.baidubce.services.bec.model.vo;
 
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bec.model.ImageDetail;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
  * Vm Instance Brief.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VmInstanceBriefVo extends AbstractBceResponse {
 
     /**
@@ -103,6 +105,31 @@ public class VmInstanceBriefVo extends AbstractBceResponse {
      * Creation time.
      */
     private String createTime;
+
+    /**
+     * The spec of the virtual machine instance.
+     */
+    private String spec;
+
+    /**
+     * The regionId of the virtual machine instance.
+     */
+    private String regionId;
+
+    /**
+     * The vpc of the virtual machine instance.
+     */
+    private VpcVo vpc;
+
+    /**
+     * The needIpv6PublicIp of the virtual machine instance.
+     */
+    private boolean needIpv6PublicIp;
+
+    /**
+     * The hostname of the virtual machine instance.
+     */
+    private String hostname;
 
     @Data
     public static class IpInfo {

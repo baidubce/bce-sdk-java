@@ -18,9 +18,25 @@ package com.baidubce.services.cdn.model;
  *
  */
 public class GetCacheQuotaResponse extends CdnResponse {
+
+    /**
+     * 当日刷新目录限额余量
+     */
     private Integer dirRemain;
+
+    /**
+     * 当日刷新（含预热）URL限额余量
+     */
     private Integer urlRemain;
+
+    /**
+     * 刷新目录限额总量
+     */
     private Integer dirQuota;
+
+    /**
+     * 刷新（含预热）URL限额总量
+     */
     private Integer urlQuota;
     
     /**

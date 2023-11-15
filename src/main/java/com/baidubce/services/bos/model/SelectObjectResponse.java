@@ -59,6 +59,7 @@ public class SelectObjectResponse extends GetObjectResponse {
     public class Messages implements Iterator {
         BosObject object;
         BosObjectInputStream inputStream;
+        boolean isEnd = false;
         private String messageType = "";
 
         Messages(BosObject object) {
@@ -66,12 +67,31 @@ public class SelectObjectResponse extends GetObjectResponse {
             inputStream = object.getObjectContent();
         }
 
+        public boolean readFromStream(byte[] b) {
+            int readed = 0;
+            try {
+                int n = 0;
+                while (readed < b.length) {
+                    n = inputStream.read(b, readed, b.length - readed);
+                    if (n == -1) {
+                        break;
+                    }
+                    readed += n;
+                }
+            } catch (IOException e) {
+                return false;
+            }
+            return readed == b.length;
+        }
+
+
         @Override
         public boolean hasNext() {
-            if (messageType.equals("End") || messageType.equals("EndMessage lost")) {
+            if ("End".equals(messageType) || "EndMessage lost".equals(messageType) || isEnd) {
                 try {
                     if (inputStream != null) {
                         inputStream.close();
+                        inputStream = null;
                     }
                 } catch (IOException e) {
                     throw new IllegalStateException("the EndMessage may have been lost.", e);
@@ -87,16 +107,25 @@ public class SelectObjectResponse extends GetObjectResponse {
             try {
                 byte[] temp_4 = new byte[4];
                 // totalLen
-                inputStream.read(temp_4);
+                if (!readFromStream(temp_4)) {
+                    isEnd = true;
+                    throw new IllegalStateException("the Message may have been lost.");
+                }
                 int totalLen = ByteBuffer.wrap(temp_4).getInt();
 
                 // headersLen
-                inputStream.read(temp_4);
+                if (!readFromStream(temp_4)) {
+                    isEnd = true;
+                    throw new IllegalStateException("the Message may have been lost.");
+                }
                 int headerLen = ByteBuffer.wrap(temp_4).getInt();
 
                 // headersVal
                 byte[] temp_headers = new byte[headerLen];
-                inputStream.read(temp_headers);
+                if (!readFromStream(temp_headers)) {
+                    isEnd = true;
+                    throw new IllegalStateException("the Message may have been lost.");
+                }
                 Map<String, String> headers = parseMessages(temp_headers);
                 if (headers.get(Constants.MESSAGE_TYPE).equals("Records")) {
                     this.messageType = "Records";
@@ -104,11 +133,17 @@ public class SelectObjectResponse extends GetObjectResponse {
                     // payload part
                     int payloadLen = totalLen - headerLen - 12;
                     byte[] temp_payLoad = new byte[payloadLen];
-                    inputStream.read(temp_payLoad);
+                    if (!readFromStream(temp_payLoad)) {
+                        isEnd = true;
+                        throw new IllegalStateException("the Message may have been lost.");
+                    }
                     String payload = new String(temp_payLoad);
 
                     // crc
-                    inputStream.read(temp_4);
+                    if (!readFromStream(temp_4)) {
+                        isEnd = true;
+                        throw new IllegalStateException("the Message may have been lost.");
+                    }
                     int crc = ByteBuffer.wrap(temp_4).getInt();
                     Prelude prelude = new Prelude(totalLen, headerLen);
 
@@ -125,13 +160,22 @@ public class SelectObjectResponse extends GetObjectResponse {
                     this.messageType = "Cont";
                     byte[] temp_8 = new byte[8];
 
-                    inputStream.read(temp_8);
+                    if (!readFromStream(temp_8)) {
+                        isEnd = true;
+                        throw new IllegalStateException("the Message may have been lost.");
+                    }
                     int bytesScanned = ByteBuffer.wrap(temp_8).getInt();
 
-                    inputStream.read(temp_8);
+                    if (!readFromStream(temp_8)) {
+                        isEnd = true;
+                        throw new IllegalStateException("the Message may have been lost.");
+                    }
                     int bytesReturned = ByteBuffer.wrap(temp_8).getInt();
 
-                    inputStream.read(temp_4);
+                    if (!readFromStream(temp_4)) {
+                        isEnd = true;
+                        throw new IllegalStateException("the Message may have been lost.");
+                    }
                     int crc = ByteBuffer.wrap(temp_4).getInt();
 
                     Prelude prelude = new Prelude(totalLen, headerLen);
@@ -141,12 +185,16 @@ public class SelectObjectResponse extends GetObjectResponse {
 
                 if (headers.get(Constants.MESSAGE_TYPE).equals("End")) {
                     this.messageType = "End";
-                    inputStream.read(temp_4);
+                    if (!readFromStream(temp_4)) {
+                        isEnd = true;
+                        throw new IllegalStateException("the Message may have been lost.");
+                    }
 
                     int crc = ByteBuffer.wrap(temp_4).getInt();
                     Prelude prelude = new Prelude(totalLen, headerLen);
 
                     inputStream.close();
+                    inputStream = null;
 
                     return new EndMessage(prelude, headers, crc);
                 }

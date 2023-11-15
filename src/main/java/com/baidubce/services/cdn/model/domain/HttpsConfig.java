@@ -15,35 +15,80 @@ package com.baidubce.services.cdn.model.domain;
 
 import com.baidubce.services.cdn.model.JsonObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * update by changxing01 on 19/8/28
  */
-public class HttpsConfig extends JsonObject {
+public class HttpsConfig {
+
+    /**
+     * 开启HTTPS加速(服务端HTTPS认证)，默认为false，当enabled=false，以下几列字段设置无效（当certId=""时certId字段是有效的）
+     * 必选
+     */
     private boolean enabled;
+
+    /**
+     * 当enabled=true时此项为必选，为SSL证书服务返回的证书ID，
+     * 当enablae为false且certId为""时解绑domain当前绑定的certId，否则当enabled=False时此项无效
+     * 可选
+     */
     private String certId;
-    private boolean httpRedirect;
-    private boolean httpOrigin;
-    private int httpRedirectCode;
-    private boolean httpsRedirect;
-    private int httpsRedirectCode;
-    private boolean http2Enabled;
-    private String sslVersion;
+
+    /**
+     * 为true时将HTTP请求重定向到HTTPS（重定向状态码为httpRedirectCode所配置），
+     * 默认为false，当enabled=false此项无效，不可与httpsRedirect同时为true
+     * 可选
+     */
+    private Boolean httpRedirect;
+
+    /**
+     * 重定向状态码，可选值301/302，默认302，当enabled=false此项无效，httpRedirect=false此项无效
+     * 可选
+     */
+    private Integer httpRedirectCode;
+
+    /**
+     * 为true时将HTTPS请求重定向到HTTP重定向状态码为httpsRedirectCode所配置），
+     * 默认为false，当enabled=false此项无效，不可与httpRedirect同时为true
+     * 可选
+     */
+    private Boolean httpsRedirect;
+
+    /**
+     * 重定向状态码，可选值301/302，默认302，当enabled=false此项无效，httpsRedirect=false此项无效
+     * 可选
+     */
+    private Integer httpsRedirectCode;
+
+    /**
+     * 开启HTTP2特性，默认true，当enabled=false此项无效
+     * 可选
+     */
+    private Boolean http2Enabled;
+
+    /**
+     * 为true时开启HTTPS双向认证。只有开启了服务端HTTPS认证时可以开启该配置，默认为false
+     * 可选
+     */
+    private Boolean verifyClient;
+
+    /**
+     * 设置访问TLS版本，默认为支持从TLSv1.0到TLSv1.3的版本，
+     * 也可以主动设置为以下四个中的一个或多个，"TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"。
+     * 该参数不能为空list。当enabled=false时此项无效。此项一般取默认值，无需设置
+     *
+     * 可选
+     */
     private List<String> sslProtocols;
 
     /**
-     * @param protocol
-     * @return
+     * 跳转时排除包含该字段ua值的请求
+     * 批量上传时使用
+     *
+     * 可选
      */
-    public HttpsConfig addSslProtocols(String protocol) {
-        if (sslProtocols == null) {
-            sslProtocols = new ArrayList<String>();
-        }
-        sslProtocols.add(protocol);
-        return this;
-    }
+    private String disableHttpsSpider;
 
     /**
      * @param httpRedirectCode http redirect code
@@ -100,6 +145,15 @@ public class HttpsConfig extends JsonObject {
     }
 
     /**
+     * @param disableHttpsSpider 跳转时排除包含该字段ua值的请求
+     * @return this object
+     */
+    public HttpsConfig withDisableHttpsSpider(String disableHttpsSpider) {
+        this.disableHttpsSpider = disableHttpsSpider;
+        return this;
+    }
+
+    /**
      * @param httpRedirect http redirect code
      * @return this object
      */
@@ -109,20 +163,20 @@ public class HttpsConfig extends JsonObject {
     }
 
     /**
-     * @param httpOrigin HTTP protocol source
+     * @param verifyClient HTTP protocol source
      * @return this object
      */
-    public HttpsConfig withHttpOrigint(boolean httpOrigin) {
-        this.httpOrigin = httpOrigin;
+    public HttpsConfig withVerifyClient(boolean verifyClient) {
+        this.verifyClient = verifyClient;
         return this;
     }
 
     /**
-     * @param sslVersion TLS version
+     * @param sslProtocols TLS version
      * @return this object
      */
-    public HttpsConfig withSslVersion(String sslVersion) {
-        this.sslVersion = sslVersion;
+    public HttpsConfig withSslProtocols(List<String> sslProtocols) {
+        this.sslProtocols = sslProtocols;
         return this;
     }
 
@@ -142,60 +196,52 @@ public class HttpsConfig extends JsonObject {
         this.certId = certId;
     }
 
-    public boolean isHttpRedirect() {
+    public Boolean getHttpRedirect() {
         return httpRedirect;
     }
 
-    public void setHttpRedirect(boolean httpRedirect) {
+    public void setHttpRedirect(Boolean httpRedirect) {
         this.httpRedirect = httpRedirect;
     }
 
-    public boolean isHttpOrigin() {
-        return httpOrigin;
-    }
-
-    public void setHttpOrigin(boolean httpOrigin) {
-        this.httpOrigin = httpOrigin;
-    }
-
-    public String getSslVersion() {
-        return sslVersion;
-    }
-
-    public void setSslVersion(String sslVersion) {
-        this.sslVersion = sslVersion;
-    }
-
-    public int getHttpRedirectCode() {
+    public Integer getHttpRedirectCode() {
         return httpRedirectCode;
     }
 
-    public void setHttpRedirectCode(int httpRedirectCode) {
+    public void setHttpRedirectCode(Integer httpRedirectCode) {
         this.httpRedirectCode = httpRedirectCode;
     }
 
-    public boolean isHttpsRedirect() {
+    public Boolean getHttpsRedirect() {
         return httpsRedirect;
     }
 
-    public void setHttpsRedirect(boolean httpsRedirect) {
+    public void setHttpsRedirect(Boolean httpsRedirect) {
         this.httpsRedirect = httpsRedirect;
     }
 
-    public int getHttpsRedirectCode() {
+    public Integer getHttpsRedirectCode() {
         return httpsRedirectCode;
     }
 
-    public void setHttpsRedirectCode(int httpsRedirectCode) {
+    public void setHttpsRedirectCode(Integer httpsRedirectCode) {
         this.httpsRedirectCode = httpsRedirectCode;
     }
 
-    public boolean isHttp2Enabled() {
+    public Boolean getHttp2Enabled() {
         return http2Enabled;
     }
 
-    public void setHttp2Enabled(boolean http2Enabled) {
+    public void setHttp2Enabled(Boolean http2Enabled) {
         this.http2Enabled = http2Enabled;
+    }
+
+    public Boolean getVerifyClient() {
+        return verifyClient;
+    }
+
+    public void setVerifyClient(Boolean verifyClient) {
+        this.verifyClient = verifyClient;
     }
 
     public List<String> getSslProtocols() {
@@ -204,5 +250,13 @@ public class HttpsConfig extends JsonObject {
 
     public void setSslProtocols(List<String> sslProtocols) {
         this.sslProtocols = sslProtocols;
+    }
+
+    public String getDisableHttpsSpider() {
+        return disableHttpsSpider;
+    }
+
+    public void setDisableHttpsSpider(String disableHttpsSpider) {
+        this.disableHttpsSpider = disableHttpsSpider;
     }
 }

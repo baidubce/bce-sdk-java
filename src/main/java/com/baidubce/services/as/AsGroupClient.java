@@ -25,6 +25,7 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.as.model.asgroup.AdjustAsGroupRequest;
 import com.baidubce.services.as.model.asgroup.AdjustAsGroupResponse;
 import com.baidubce.services.as.model.asgroup.AsGroupAction;
@@ -38,6 +39,9 @@ import com.baidubce.services.as.model.asgroup.ListAsGroupRequest;
 import com.baidubce.services.as.model.asgroup.ListAsGroupResponse;
 import com.baidubce.services.as.model.asgroup.ListAsNodeRequest;
 import com.baidubce.services.as.model.asgroup.ListAsNodeResponse;
+import com.baidubce.services.as.model.asgroup.TemplateUpdateRequest;
+import com.baidubce.services.as.model.asgroup.GroupCreateResponse;
+import com.baidubce.services.as.model.asgroup.GroupCreateRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -65,10 +69,12 @@ public class AsGroupClient extends AbstractBceClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsGroupClient.class);
 
     private static final String VERSION = "v2";
+    private static final String TEMPLATE = "template";
     private static final String AS_GROUP = "asGroup";
     private static final String AS_NODE = "asNode";
     private static final String GROUP_NAME = "groupName";
     private static final String GROUP_ID = "groupId";
+    private static final String GROUP_ID_LOWER= "groupid";
     private static final String MARKER = "marker";
     private static final String MAX_KEYS = "maxKeys";
     private static final String CLIENT_TOKEN = "clientToken";
@@ -224,6 +230,44 @@ public class AsGroupClient extends AbstractBceClient {
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, IncreaseAsGroupResponse.class);
+    }
+
+
+    /**
+     * create new  auto scaling group
+     *
+     * @param request The request containing all options for creating the specified asGroup.
+     * @return the groupId and orderId
+     */
+    public GroupCreateResponse createAsGroup(GroupCreateRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, AS_GROUP, null);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, GroupCreateResponse.class);
+    }
+
+    /**
+     * update the template
+     *
+     * @param request The request containing all options for upating the template
+     * @return
+     */
+    public void updateTemplate(String groupId, TemplateUpdateRequest request) {
+        checkStringNotEmpty(groupId, checkEmptyExceptionMessageFormat(GROUP_ID));
+        checkNotNull(request);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.PUT, AS_GROUP, TEMPLATE);
+        internalRequest.addParameter(GROUP_ID_LOWER, groupId);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
     /**

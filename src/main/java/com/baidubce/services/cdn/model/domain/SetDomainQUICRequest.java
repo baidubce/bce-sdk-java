@@ -6,23 +6,46 @@ import com.baidubce.services.cdn.model.CdnRequest;
  * Quick UDP Internet Connection(QUIC)
  */
 public class SetDomainQUICRequest extends CdnRequest {
+    private String domain;
+    private boolean quic;
 
-    private boolean QUIC;
-
-    public boolean isQUIC() {
-        return QUIC;
+    public boolean isQuic() {
+        return quic;
     }
 
-    public void setQUIC(boolean QUIC) {
-        this.QUIC = QUIC;
+    public void setQuic(boolean quic) {
+        this.quic = quic;
     }
 
     /**
-     * @param QUIC
+     * @param quic
      * @return this object
      */
-    public SetDomainQUICRequest withQUIC(boolean QUIC) {
-        setQUIC(QUIC);
+    public SetDomainQUICRequest withQuic(boolean quic) {
+        setQuic(quic);
+        return this;
+    }
+
+    /**
+     * @return domain
+     */
+    public String getDomain() {
+        return domain;
+    }
+
+    /**
+     * @param domain the domain name
+     */
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    /**
+     * @param domain the domain name
+     * @return returns this object
+     */
+    public SetDomainQUICRequest withDomain(String domain) {
+        this.domain = domain;
         return this;
     }
 }

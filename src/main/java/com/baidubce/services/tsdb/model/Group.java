@@ -1,6 +1,7 @@
 package com.baidubce.services.tsdb.model;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -168,6 +169,16 @@ public class Group {
         @JsonIgnore
         public byte[] getBytesValue(int index) throws IOException {
             return value.get(index).binaryValue();
+        }
+
+        @JsonIgnore
+        public BigDecimal getBigDecimalValue() throws IOException {
+            return getBigDecimalValue(0);
+        }
+
+        @JsonIgnore
+        public BigDecimal getBigDecimalValue(int index) {
+            return new BigDecimal(value.get(index).asText());
         }
 
         @JsonIgnore

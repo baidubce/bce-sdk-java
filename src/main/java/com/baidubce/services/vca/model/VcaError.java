@@ -9,7 +9,9 @@ package com.baidubce.services.vca.model;
  * @author houshunwei
  */
 public class VcaError {
+
     private String code;
+
     private String message;
 
     @Override

@@ -24,8 +24,12 @@ import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
+import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryRequest;
+import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryResponse;
 import com.baidubce.services.billing.model.bill.ResourceBillListQueryRequest;
 import com.baidubce.services.billing.model.bill.ResourceBillListQueryResponse;
+import com.baidubce.services.billing.model.bill.ShareBillRequest;
+import com.baidubce.services.billing.model.bill.ShareBillResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceQueryRequest;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
@@ -33,8 +37,13 @@ import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequ
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
 import com.baidubce.services.billing.model.finance.TransferResultResponse;
 import com.baidubce.services.billing.model.finance.UserBalanceQueryResponse;
+import com.baidubce.services.billing.model.order.OrderCancelRequest;
+import com.baidubce.services.billing.model.order.OrderCancelResponse;
 import com.baidubce.services.billing.model.order.OrderListRequest;
 import com.baidubce.services.billing.model.order.OrderListResponse;
+import com.baidubce.services.billing.model.order.OrderPaymentRequest;
+import com.baidubce.services.billing.model.order.OrderPaymentResponse;
+import com.baidubce.services.billing.model.order.OrderUuidQueryRequest;
 import com.baidubce.services.billing.model.price.ChargeItem;
 import com.baidubce.services.billing.model.price.CpcPricingRequest;
 import com.baidubce.services.billing.model.price.CptPricingRequest;
@@ -61,8 +70,13 @@ public class BillingExample {
         sampleForQueryRenewResourceList();
         // sampleForSetRenewResourceRule();
         sampleForQueryPrepayShareBill();
+        sampleForQueryShareBill();
+        sampleForQueryProductMonthBillSummary();
         sampleForGetResourceMonthBills();
         sampleForQueryOrderList();
+        sampleForGetOrderWithUuid();
+        sampleForCancelOrders();
+        sampleForPayOrder();
         sampleForgetSpecificCptPrice();
         sampleForgetSpecificCpcPrice();
         sampleForCashBalanceQuery();
@@ -161,6 +175,46 @@ public class BillingExample {
         System.out.println("==================================");
     }
 
+    private static void sampleForQueryShareBill() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        ShareBillRequest request = new ShareBillRequest();
+        request.setMonth("2022-09");
+        request.setPageNo(1);
+        request.setPageSize(50);
+
+        ShareBillResponse response = client.queryShareBill(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForQueryShareBill ShareBillResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    month:  " + response.getBillMonth());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    bills:  " + response.getBills());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForQueryProductMonthBillSummary() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        ProductMonthBillSummaryRequest request = new ProductMonthBillSummaryRequest();
+        request.setBillMonth("2022-09");
+
+        ProductMonthBillSummaryResponse response = client.queryProductMonthBillSummary(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForQueryShareBill ShareBillResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    data:  " + response.getData());
+        System.out.println("==================================");
+    }
+
     private static void sampleForGetResourceMonthBills() {
         BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
         BillingClient client = new BillingClient(
@@ -203,6 +257,68 @@ public class BillingExample {
         System.out.println("    pageSize:  " + response.getPageSize());
         System.out.println("    size:  " + response.getTotalCount());
         System.out.println("    orders:  " + response.getOrders());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForGetOrderWithUuid() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        OrderUuidQueryRequest request = new OrderUuidQueryRequest();
+        request.setQueryAccountId("query accountId");
+        List<String> uuidList = new ArrayList<String>();
+        uuidList.add("order id A");
+        uuidList.add("order id B");
+        request.setUuids(uuidList);
+
+
+        OrderListResponse response = client.getOrdersByUuid(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForGetOrderWithUuid OrderListResponse result:");
+        System.out.println("    pageNo:  " + response.getPageNo());
+        System.out.println("    pageSize:  " + response.getPageSize());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    orders:  " + response.getOrders());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForCancelOrders() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        OrderCancelRequest request = new OrderCancelRequest();
+        List<String> orderIds = new ArrayList<String>();
+        orderIds.add("test order uuid 1");
+        orderIds.add("test order uuid 2");
+        request.setOrderIds(orderIds);
+
+        OrderCancelResponse response = client.cancelOrders(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForCancelOrders OrderCancelResponse result:");
+        System.out.println("    success:  " + response.getSuccess());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForPayOrder() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        OrderPaymentRequest request = new OrderPaymentRequest();
+        request.setOrderId("test order uuid");
+
+        OrderPaymentResponse response = client.payOrder(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForPayOrder OrderPaymentResponse result:");
+        System.out.println("    success:  " + response.getSuccess());
         System.out.println("==================================");
     }
 

@@ -12,6 +12,8 @@
  */
 package com.baidubce.internal;
 
+import com.baidubce.services.bos.model.BosProgressCallback;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -19,11 +21,29 @@ import java.io.InputStream;
  * Abstract class Restartable InputStream extends InputStream.
  */
 public abstract class RestartableInputStream extends InputStream {
+    private BosProgressCallback progressCallback = null;
+
     public abstract void restart();
 
     public static RestartableInputStream wrap(byte[] b) {
         ByteArrayInputStream input = new ByteArrayInputStream(b);
         input.mark(b.length);
         return new RestartableResettableInputStream(input);
+    }
+
+    public void setProgressCallback(BosProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
+
+    public void doProgressCallback(int count) {
+        if (progressCallback != null) {
+            progressCallback.addCurrentSize(count);
+        }
+    }
+
+    public void restartProgressCallback() {
+        if (progressCallback != null) {
+            progressCallback.setCurrentSize(0);
+        }
     }
 }

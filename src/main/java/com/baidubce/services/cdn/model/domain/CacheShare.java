@@ -1,9 +1,17 @@
 package com.baidubce.services.cdn.model.domain;
 
-import com.baidubce.services.cdn.model.JsonObject;
+public class CacheShare {
 
-public class CacheShare extends JsonObject {
+    /**
+     * 是否开启缓存共享
+     * 必选
+     */
     private boolean enabled;
+
+    /**
+     * 客户名下其他域名，开启情况下须传入该参数
+     * 可选
+     */
     private String domain;
 
     public boolean isEnabled() {

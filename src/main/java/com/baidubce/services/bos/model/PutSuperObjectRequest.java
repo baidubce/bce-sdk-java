@@ -52,7 +52,18 @@ public class PutSuperObjectRequest extends GenericObjectRequest {
      */
     private static final long CHUNK_SIZE = 1024 * 1024 * 5L;
 
+    /**
+     * Additional information about the new object being created, such as
+     * content type, content encoding, user metadata, etc.
+     */
+    private ObjectMetadata objectMetadata = new ObjectMetadata();
+
     private static final int AVAILABLEPROCESSORS = Runtime.getRuntime().availableProcessors();
+
+    /**
+     * The BosProgressCallback used for get progress information
+     */
+    private BosProgressCallback progressCallback = null;
 
     public PutSuperObjectRequest(String bucketName, String key, File file) {
         this(bucketName, key, file, CHUNK_SIZE, AVAILABLEPROCESSORS);
@@ -190,6 +201,80 @@ public class PutSuperObjectRequest extends GenericObjectRequest {
 
     public PutSuperObjectRequest withUploadId(String uploadId) {
         this.setUploadId(uploadId);
+        return this;
+    }
+
+    /**
+     * Returns the additional information about the new object being created,
+     * such as content type, content encoding, user metadata, etc.
+     *
+     * @return The additional information about the new object being created,
+     *     such as content type, content encoding, user metadata, etc.
+     */
+    public ObjectMetadata getObjectMetadata() {
+        return objectMetadata;
+    }
+
+    /**
+     * Sets the additional information about the new object being created, such
+     * as content type, content encoding, user metadata, etc.
+     *
+     * @param objectMetadata Additional information about the new object being created,
+     *     such as content type, content encoding, user metadata, etc.
+     */
+    public void setObjectMetadata(ObjectMetadata objectMetadata) {
+        this.objectMetadata = objectMetadata;
+    }
+
+    /**
+     * Gets the BosProgressCallback which used for Get upload progress.
+     * @return The BosProgressCallback which used for get progress information.
+     */
+    public BosProgressCallback getProgressCallback() {
+        return progressCallback;
+    }
+
+    /**
+     * Sets the BosProgressCallback which used for Get upload progress.
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     */
+    public void setProgressCallback(BosProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
+
+    /**
+     *
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     * @return This PutSuperObjectRequest, so that additional method calls can be chained together
+     */
+    public PutSuperObjectRequest withProgressCallback(BosProgressCallback progressCallback) {
+        this.setProgressCallback(progressCallback);
+        return this;
+    }
+
+    /**
+     * Gets the limit of put object speed.
+     * @return the limit of put object speed. unit: bit/s
+     */
+    public long getTrafficLimitBitPS() {
+        return trafficLimitBitPS;
+    }
+
+    /**
+     * Sets Gets the limit of put object speed. range: 819200 bit/s ~ 838860800 bit/s
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s
+     */
+    public void setTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.trafficLimitBitPS = trafficLimitBitPS;
+    }
+
+    /**
+     *
+     * @param trafficLimitBitPS the limit of put object speed. unit: bit/s, range: 819200 bit/s ~ 838860800 bit/s
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public PutSuperObjectRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
+        this.setTrafficLimitBitPS(trafficLimitBitPS);
         return this;
     }
 }

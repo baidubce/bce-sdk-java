@@ -19,9 +19,14 @@ import java.util.Date;
  */
 public class ClusterStatus {
     private String state;
+    private String code;
+    private String message;
+    private String orderStatus;
     private Date creationDateTime;
     private Date endDateTime;
     private Date readyDateTime;
+    private Date expireDateTime;
+    private int expireDates;
 
     public String getState() {
         return state;
@@ -53,5 +58,46 @@ public class ClusterStatus {
 
     public void setReadyDateTime(Date readyDateTime) {
         this.readyDateTime = readyDateTime;
+    }
+
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Date getExpireDateTime() {
+        return expireDateTime;
+    }
+
+    public void setExpireDateTime(Date expireDateTime) {
+        this.expireDateTime = expireDateTime;
+    }
+
+    public int getExpireDates() {
+        return expireDates;
+    }
+
+    public void setExpireDates(int expireDates) {
+        this.expireDates = expireDates;
     }
 }

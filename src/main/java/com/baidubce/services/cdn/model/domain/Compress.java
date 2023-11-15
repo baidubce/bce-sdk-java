@@ -6,7 +6,17 @@ import com.baidubce.services.cdn.model.JsonObject;
  * create by changxing01 on 19/8/28
  */
 public class Compress extends JsonObject {
+
+    /**
+     * true表示开启页面压缩，false表示关闭页面压缩
+     * 必选
+     */
     private boolean allow;
+
+    /**
+     * 值为"br"或者"gzip"或者"all"，分别表示支持br，gzip以及br和gzip都支持
+     * 必选
+     */
     private String type;
 
     /**

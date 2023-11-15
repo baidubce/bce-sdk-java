@@ -111,4 +111,19 @@ public class Order {
      */
     private String payChannel;
 
+    /**
+     * whether the order is payed automatically
+     */
+    private Boolean isAutoPayed;
+
+    /**
+     * whether the order is created by auto-renew service
+     */
+    private Boolean autoRenewOrder;
+
+    /**
+     * the finance price of the order
+     */
+    private BigDecimal financePrice;
+
 }

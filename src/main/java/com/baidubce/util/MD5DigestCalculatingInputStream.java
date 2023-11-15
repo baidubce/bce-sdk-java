@@ -29,10 +29,16 @@ public class MD5DigestCalculatingInputStream extends FilterInputStream {
      */
     private MessageDigest digest;
 
-    public MD5DigestCalculatingInputStream(InputStream in) throws NoSuchAlgorithmException {
+    /**
+     * The bytes remain being calculated by this input stream
+     */
+    private long digestRemain;
+
+    public MD5DigestCalculatingInputStream(InputStream in, long len) throws NoSuchAlgorithmException {
         super(in);
 
         this.digest = MessageDigest.getInstance("MD5");
+        this.digestRemain = len;
     }
 
     public byte[] getMd5Digest() {
@@ -63,9 +69,13 @@ public class MD5DigestCalculatingInputStream extends FilterInputStream {
      */
     @Override
     public int read() throws IOException {
+        if (digestRemain <= 0) {
+            return -1;
+        }
         int ch = this.in.read();
         if (ch != -1) {
             this.digest.update((byte) ch);
+            digestRemain -= ch;
         }
         return ch;
     }
@@ -75,11 +85,15 @@ public class MD5DigestCalculatingInputStream extends FilterInputStream {
      */
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        int result = this.in.read(b, off, len);
+        long curReadMax = Math.min(digestRemain, len);
+        if (curReadMax <= 0) {
+            return -1;
+        }
+        int result = this.in.read(b, off, (int) curReadMax);
         if (result != -1) {
             this.digest.update(b, off, result);
+            digestRemain -= result;
         }
         return result;
     }
-
 }

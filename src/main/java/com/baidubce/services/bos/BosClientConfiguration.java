@@ -25,6 +25,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class BosClientConfiguration extends BceClientConfiguration {
     public static final int DEFAULT_STREAM_BUFFER_SIZE = 5 * 1024 * 1024;
     private int streamBufferSize = DEFAULT_STREAM_BUFFER_SIZE;
+    private static final String DEFAULT_ENDPOINT = "bj.bcebos.com";
 
     /**
      * whether to enable using cname to visit bos resource. If user use custom domain as the endpoint, the cnameEnabled
@@ -37,12 +38,37 @@ public class BosClientConfiguration extends BceClientConfiguration {
      */
     private boolean enableHttpAsyncPut = true;
 
+    /**
+     * whether use path style host in BOS. <region>.bcebos.com
+     */
+    private boolean pathStyleAccessEnable = false;
+
+    /**
+     *
+     * whether use path style host in BOS. <region>.bcebos.com
+     *
+     * @return the result of use path style host in BOS.
+     */
+    public boolean isPathStyleAccessEnable() {
+        return pathStyleAccessEnable;
+    }
+
+    /**
+     * Set whether use path style host in BOS. <region>.bcebos.com
+     *
+     * @param pathStyleAccessEnable whether use path style host in BOS.
+     */
+    public void setPathStyleAccessEnable(boolean pathStyleAccessEnable) {
+        this.pathStyleAccessEnable = pathStyleAccessEnable;
+    }
+
     public int getStreamBufferSize() {
         return this.streamBufferSize;
     }
 
     public BosClientConfiguration() {
         super();
+        this.setEndpoint(DEFAULT_ENDPOINT);
     }
     
     public BosClientConfiguration(BceClientConfiguration clientConfiguration) {

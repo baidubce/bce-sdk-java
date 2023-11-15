@@ -236,6 +236,11 @@ public class CreateInstanceRequest extends AbstractBceRequest {
     private String deployId;
 
     /**
+     * Whether SN is automatically hidden
+     */
+    private boolean disableRootDiskSerial;
+
+    /**
      * Specified the internet charge type
      */
     private String internetChargeType;
@@ -254,6 +259,21 @@ public class CreateInstanceRequest extends AbstractBceRequest {
      * Specified the bidding price
      */
     private String bidPrice;
+
+    /**
+     * If the instance meets the limit of using instance custom data, you can pass in the UserData information.
+     */
+    private String userData;
+
+    /**
+     * The list of internal ips.
+     */
+    private List<String> internalIps;
+
+    /**
+     * Specified the resource group id of creating instance, optional param
+     */
+    private String resGroupId;
 
     /**
      * Configure optional client token for the request. The request will be idempotent if client token is provided.
@@ -816,6 +836,14 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         return this;
     }
 
+    public boolean isDisableRootDiskSerial() {
+        return disableRootDiskSerial;
+    }
+
+    public void setDisableRootDiskSerial(boolean disableRootDiskSerial) {
+        this.disableRootDiskSerial = disableRootDiskSerial;
+    }
+
     public String getInternetChargeType() {
         return internetChargeType;
     }
@@ -878,6 +906,14 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         this.bidPrice = bidPrice;
     }
 
+    public String getUserData() {
+        return userData;
+    }
+
+    public void setUserData(String userData) {
+        this.userData = userData;
+    }
+
     /**
      * Configure the bidPrice for the request
      * @param bidPrice The specified bidPrice. Only the value of bidModel is custom, the param works.
@@ -899,5 +935,24 @@ public class CreateInstanceRequest extends AbstractBceRequest {
         return this;
     }
 
+    public List<String> getInternalIps() {
+        return internalIps;
+    }
 
+    public void setInternalIps(List<String> internalIps) {
+        this.internalIps = internalIps;
+    }
+
+    public String getResGroupId() {
+        return resGroupId;
+    }
+
+    public void setResGroupId(String resGroupId) {
+        this.resGroupId = resGroupId;
+    }
+
+    public CreateInstanceRequest withResGroupId(String resGroupId) {
+        this.setResGroupId(resGroupId);
+        return this;
+    }
 }

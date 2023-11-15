@@ -6,13 +6,13 @@ import com.baidubce.services.cdn.model.CdnResponse;
  * create by hansongda on 20/12/01
  */
 public class GetDomainOCSPSwitchResponse extends CdnResponse {
-    private boolean OCSP;
+    private boolean ocsp;
 
-    public boolean isOCSP() {
-        return OCSP;
+    public boolean isOcsp() {
+        return ocsp;
     }
 
-    public void setOCSP(boolean OCSP) {
-        this.OCSP = OCSP;
+    public void setOcsp(boolean ocsp) {
+        this.ocsp = ocsp;
     }
 }

@@ -38,6 +38,12 @@ public class RestoreObjectRequest extends GenericObjectRequest {
         super(bucketName, key);
     }
 
+    public RestoreObjectRequest(String bucketName, String key, int restoreDays, String restoreTier) {
+        super(bucketName, key);
+        this.setRestoreDays(restoreDays);
+        this.setRestoreTier(restoreTier);
+    }
+
     /**
      * Sets the key by which to restore, and hence, the
      * eventual object restored from RestoreObjectRequest.

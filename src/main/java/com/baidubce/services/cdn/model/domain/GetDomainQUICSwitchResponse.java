@@ -6,13 +6,13 @@ import com.baidubce.services.cdn.model.CdnResponse;
  * create by hansongda on 20/12/01
  */
 public class GetDomainQUICSwitchResponse extends CdnResponse {
-    private boolean QUIC;
+    private boolean quic;
 
-    public boolean isQUIC() {
-        return QUIC;
+    public boolean isQuic() {
+        return quic;
     }
 
-    public void setQUIC(boolean QUIC) {
-        this.QUIC = QUIC;
+    public void setQuic(boolean quic) {
+        this.quic = quic;
     }
 }

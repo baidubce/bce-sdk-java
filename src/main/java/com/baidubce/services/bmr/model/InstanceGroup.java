@@ -23,10 +23,154 @@ public class InstanceGroup {
     private String instanceType;
     private String name;
     private String type;
-    private int requestedInstanceCount;
+    private String spec;
+    private int cpu;
+    private int memory;
+    private boolean isSpot;
+    private String bidModel;
+    private String bidPrice;
+    private List<CdsItem> cds = new ArrayList<CdsItem>();
+    private String diskType;
+    private int localDiskSize;
     private int rootDiskSizeInGB;
     private String rootDiskMediumType;
-    private List<CdsItem> cds = new ArrayList<CdsItem>();
+    private int requestedInstanceCount;
+    private int totalInstanceCount;
+    private int runningInstanceCount;
+    private int maxCount;
+    private int minCount;
+    private int canExpand;
+    private int canShrink;
+    private String code;
+    private String message;
+
+    public String getSpec() {
+        return spec;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
+    }
+
+    public int getCpu() {
+        return cpu;
+    }
+
+    public void setCpu(int cpu) {
+        this.cpu = cpu;
+    }
+
+    public int getMemory() {
+        return memory;
+    }
+
+    public void setMemory(int memory) {
+        this.memory = memory;
+    }
+
+    public boolean isSpot() {
+        return isSpot;
+    }
+
+    public void setSpot(boolean spot) {
+        isSpot = spot;
+    }
+
+    public String getBidModel() {
+        return bidModel;
+    }
+
+    public void setBidModel(String bidModel) {
+        this.bidModel = bidModel;
+    }
+
+    public String getBidPrice() {
+        return bidPrice;
+    }
+
+    public void setBidPrice(String bidPrice) {
+        this.bidPrice = bidPrice;
+    }
+
+    public String getDiskType() {
+        return diskType;
+    }
+
+    public void setDiskType(String diskType) {
+        this.diskType = diskType;
+    }
+
+    public int getLocalDiskSize() {
+        return localDiskSize;
+    }
+
+    public void setLocalDiskSize(int localDiskSize) {
+        this.localDiskSize = localDiskSize;
+    }
+
+    public int getTotalInstanceCount() {
+        return totalInstanceCount;
+    }
+
+    public void setTotalInstanceCount(int totalInstanceCount) {
+        this.totalInstanceCount = totalInstanceCount;
+    }
+
+    public int getRunningInstanceCount() {
+        return runningInstanceCount;
+    }
+
+    public void setRunningInstanceCount(int runningInstanceCount) {
+        this.runningInstanceCount = runningInstanceCount;
+    }
+
+    public int getMaxCount() {
+        return maxCount;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    public int getMinCount() {
+        return minCount;
+    }
+
+    public void setMinCount(int minCount) {
+        this.minCount = minCount;
+    }
+
+    public int getCanExpand() {
+        return canExpand;
+    }
+
+    public void setCanExpand(int canExpand) {
+        this.canExpand = canExpand;
+    }
+
+    public int getCanShrink() {
+        return canShrink;
+    }
+
+    public void setCanShrink(int canShrink) {
+        this.canShrink = canShrink;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public String getId() {
         return this.id;

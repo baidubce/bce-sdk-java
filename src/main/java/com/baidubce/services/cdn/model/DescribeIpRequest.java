@@ -13,14 +13,12 @@
 
 package com.baidubce.services.cdn.model;
 
-import com.baidubce.auth.BceCredentials;
-import com.baidubce.model.AbstractBceRequest;
-import com.baidubce.util.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.List;
 
-public class DescribeIpRequest extends AbstractBceRequest {
+public class DescribeIpRequest extends CdnRequest {
     private String action = "describeIp";
     private String ip;
+    private List<String> ips;
     
     public DescribeIpRequest withAction(String action) {
         setAction(action);
@@ -39,6 +37,11 @@ public class DescribeIpRequest extends AbstractBceRequest {
         setIp(ip);
         return this;
     }
+
+    public DescribeIpRequest withIps(List<String> ip) {
+        setIps(ip);
+        return this;
+    }
     
     public String getIp() {
         return ip;
@@ -47,19 +50,12 @@ public class DescribeIpRequest extends AbstractBceRequest {
     public void setIp(String ip) {
         this.ip = ip;
     }
-    
-    @Override
-    public DescribeIpRequest withRequestCredentials(BceCredentials credentials) {
-        this.setRequestCredentials(credentials);
-        return this;
+
+    public List<String> getIps() {
+        return ips;
     }
 
-    @Override
-    public String toString() {
-        try {
-            return JsonUtils.toJsonPrettyString(this);
-        } catch (JsonProcessingException e) {
-            return "";
-        }
+    public void setIps(List<String> ips) {
+        this.ips = ips;
     }
 }

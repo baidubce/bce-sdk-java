@@ -8,7 +8,7 @@ import com.baidubce.services.cdn.model.CdnRequest;
 public class SetDomainOCSPRequest extends CdnRequest {
 
     private String domain;
-    private boolean OCSP;
+    private boolean ocsp;
 
     public String getDomain() {
         return domain;
@@ -18,20 +18,20 @@ public class SetDomainOCSPRequest extends CdnRequest {
         this.domain = domain;
     }
 
-    public boolean isOCSP() {
-        return OCSP;
+    public boolean isOcsp() {
+        return ocsp;
     }
 
-    public void setOCSP(boolean OCSP) {
-        this.OCSP = OCSP;
+    public void setOcsp(boolean ocsp) {
+        this.ocsp = ocsp;
     }
 
     /**
-     * @param OCSP
+     * @param ocsp
      * @return this object
      */
-    public SetDomainOCSPRequest withOCSP(boolean OCSP) {
-        setOCSP(OCSP);
+    public SetDomainOCSPRequest withOcsp(boolean ocsp) {
+        setOcsp(ocsp);
         return this;
     }
 

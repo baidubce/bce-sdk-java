@@ -10,17 +10,17 @@ import java.util.List;
  * create by changxing01 on 19/8/28
  */
 public class GetDomainListLogRequest extends CdnRequest {
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
     private Long type;
     private List<String> domains;
-    private int pageNo;
-    private int pageSize;
+    private Integer pageNo;
+    private Integer pageSize;
 
     /**
      * @param startTime
      */
-    public GetDomainListLogRequest withStartTime(Date startTime) {
+    public GetDomainListLogRequest withStartTime(String startTime) {
         this.startTime = startTime;
         return this;
     }
@@ -28,7 +28,7 @@ public class GetDomainListLogRequest extends CdnRequest {
     /**
      * @param endTime
      */
-    public GetDomainListLogRequest withEndTime(Date endTime) {
+    public GetDomainListLogRequest withEndTime(String endTime) {
         this.endTime = endTime;
         return this;
     }
@@ -36,28 +36,28 @@ public class GetDomainListLogRequest extends CdnRequest {
     /**
      * @return startTime
      */
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
     /**
      * @param startTime
      */
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
     /**
      * @return endTime
      */
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
     /**
      * @param endTime
      */
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -73,6 +73,11 @@ public class GetDomainListLogRequest extends CdnRequest {
      */
     public void setType(Long type) {
         this.type = type;
+    }
+
+    public GetDomainListLogRequest withType(Long type) {
+        this.type = type;
+        return this;
     }
 
     /**
@@ -110,32 +115,29 @@ public class GetDomainListLogRequest extends CdnRequest {
         return this;
     }
 
-
-    /**
-     * @return pageNo
-     */
-    public int getPageNo() {
+    public Integer getPageNo() {
         return pageNo;
     }
 
-    /**
-     * @param pageNo
-     */
-    public void setPageNo(int pageNo) {
+    public void setPageNo(Integer pageNo) {
         this.pageNo = pageNo;
     }
 
-    /**
-     * @return pageSize
-     */
-    public int getPageSize() {
+    public GetDomainListLogRequest withPageNo(Integer pageNo) {
+        this.pageNo = pageNo;
+        return this;
+    }
+
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    /**
-     * @param pageSize
-     */
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public GetDomainListLogRequest withPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+        return this;
     }
 }

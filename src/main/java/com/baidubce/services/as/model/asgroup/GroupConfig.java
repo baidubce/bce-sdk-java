@@ -10,9 +10,12 @@
  */
 package com.baidubce.services.as.model.asgroup;
 
+import lombok.Data;
+
 /**
  * The config of the group.
  */
+@Data
 public class GroupConfig {
     private int minNodeNum;
     private int maxNodeNum;

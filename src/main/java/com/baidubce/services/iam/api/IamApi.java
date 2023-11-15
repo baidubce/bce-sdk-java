@@ -305,6 +305,24 @@ public class IamApi {
                 new ApiPath("/v1/user/[userName]"),
                 new HashMap<String, String>(),
                 new HashMap<String, String>()));
+        // CreateVsAccount
+        APIS.put("createVsAccount", new ApiInfo(
+                HttpMethodName.valueOf("POST"),
+                new ApiPath("/v1/vs/account"),
+                new HashMap<String, String>(),
+                new HashMap<String, String>()));
+        // GetVsAccount
+        APIS.put("getVsAccount", new ApiInfo(
+                HttpMethodName.valueOf("GET"),
+                new ApiPath("/v1/vs/account/[userId]"),
+                new HashMap<String, String>(),
+                new HashMap<String, String>()));
+        // ListVsAccounts
+        APIS.put("listVsAccount", new ApiInfo(
+                HttpMethodName.valueOf("POST"),
+                new ApiPath("/v1/vs/account/list"),
+                new HashMap<String, String>(),
+                new HashMap<String, String>()));
         return APIS;
     }
 }

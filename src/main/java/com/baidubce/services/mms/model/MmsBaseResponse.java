@@ -22,6 +22,7 @@ public class MmsBaseResponse extends AbstractBceResponse {
 
     private String status;
     private String taskId;
+    private String libId;
     private MmsError error;
 
     public String getStatus() {
@@ -38,6 +39,14 @@ public class MmsBaseResponse extends AbstractBceResponse {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    public String getLibId() {
+        return libId;
+    }
+
+    public void setLibId(String libId) {
+        this.libId = libId;
     }
 
     public MmsError getError() {

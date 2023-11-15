@@ -57,7 +57,7 @@ public class GetStreamResponse extends AbstractBceResponse {
 
     private LivePlay play = null;
 
-    private String streamStatus = null;
+    private String streamingStatus = null;
 
     private StreamingStatistics statistics = null;
 
@@ -338,19 +338,19 @@ public class GetStreamResponse extends AbstractBceResponse {
     }
 
     /**
-     * Returns streamStatus
-     * @return streamStatus
+     * Returns streamingStatus
+     * @return streamingStatus
      */
-    public String getStreamStatus() {
-        return streamStatus;
+    public String getStreamingStatus() {
+        return streamingStatus;
     }
 
     /**
-     * Sets streamStatus
-     * @param streamStatus
+     * Sets streamingStatus
+     * @param streamingStatus
      */
-    public void setStreamStatus(String streamStatus) {
-        this.streamStatus = streamStatus;
+    public void setStreamingStatus(String streamingStatus) {
+        this.streamingStatus = streamingStatus;
     }
 
     /**
@@ -463,7 +463,7 @@ public class GetStreamResponse extends AbstractBceResponse {
         sb.append("    presets: ").append(presets).append("\n");
         sb.append("    createTime: ").append(createTime).append("\n");
         sb.append("    status: ").append(status).append("\n");
-        sb.append("    streamStatus: ").append(streamStatus).append("\n");
+        sb.append("    streamingStatus: ").append(streamingStatus).append("\n");
         sb.append("    notification: ").append(notification).append("\n");
         sb.append("    securityPolicy: ").append(securityPolicy).append("\n");
         sb.append("    audit: ").append(audit).append("\n");

@@ -6,7 +6,17 @@ import com.baidubce.services.cdn.model.JsonObject;
  * create by changxing01 on 19/8/28
  */
 public class MediaDragConf extends JsonObject {
+
+    /**
+     * mp4类型伪流的拖拽设置，如果是取消设置，请不要带上这个字段
+     * 可选
+     */
     private MediaDrag mp4;
+
+    /**
+     * flv类型伪流的拖拽设置，如果是取消设置，请不要带上这个字段
+     * 可选
+     */
     private MediaDrag flv;
 
     /**

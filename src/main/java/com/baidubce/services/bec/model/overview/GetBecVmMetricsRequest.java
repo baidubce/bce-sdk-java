@@ -33,6 +33,16 @@ public class GetBecVmMetricsRequest extends AbstractBceRequest {
     private Integer offsetInSeconds;
 
     /**
+     * ServiceProvider.
+     */
+    private String serviceProvider;
+
+    /**
+     * stepInMin
+     */
+    private Integer stepInMin;
+
+    /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.

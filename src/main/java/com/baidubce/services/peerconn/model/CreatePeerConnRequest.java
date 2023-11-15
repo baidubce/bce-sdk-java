@@ -14,8 +14,11 @@ package com.baidubce.services.peerconn.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bcc.model.TagModel;
 import com.baidubce.services.eip.model.Billing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 /**
  * The request for creating a peer connection.
@@ -78,6 +81,11 @@ public class CreatePeerConnRequest extends AbstractBceRequest {
      * The billing of peer conn that will be created.
      */
     private Billing billing;
+
+    /**
+     * the list of tags which will be bound to peer conn instance
+     */
+    private List<TagModel> tags;
 
     /**
      * Configure billing for the request.
@@ -262,5 +270,13 @@ public class CreatePeerConnRequest extends AbstractBceRequest {
 
     public void setBilling(Billing billing) {
         this.billing = billing;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

@@ -15,6 +15,7 @@ package com.baidubce.services.nat.model;
 import java.util.List;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bcc.model.TagModel;
 
 /**
  * The response for get nat.
@@ -60,6 +61,11 @@ public class GetNatResponse extends AbstractBceResponse {
      * The status of this nat.
      */
     private String status;
+
+    /**
+     * the list of tags which are bound to nat instance
+     */
+    private List<TagModel> tags;
 
     public String getId() {
         return id;
@@ -123,5 +129,13 @@ public class GetNatResponse extends AbstractBceResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

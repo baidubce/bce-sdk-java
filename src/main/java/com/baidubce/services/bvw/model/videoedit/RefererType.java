@@ -27,5 +27,8 @@ public enum RefererType {
     /**
      * 天脉
      */
-    tianmai
+    tianmai,
+    saas,
+    zsyh,
+    others
 }

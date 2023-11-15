@@ -13,10 +13,13 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bcm.model.Dimension;
 import com.baidubce.services.bcm.model.ListMetricDataRequest;
 import com.baidubce.services.bcm.model.ListMetricDataResponse;
 import com.baidubce.services.bcm.model.MetricDataRequest;
 import com.baidubce.services.bcm.model.MetricDataResponse;
+import com.baidubce.services.bcm.model.PushCustomMetricDataRequest;
+import com.baidubce.services.bcm.model.PushMetricDataResponse;
 import com.baidubce.services.bcm.model.Statistics;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -26,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -49,6 +53,8 @@ public class BcmClient extends AbstractBceClient {
     private static final String METRIC_DATA = "metricdata";
     private static final String METRIC_NAME = "metricName";
 
+    private static final String PUSH_CUSTOM_METRIC_DATA_FORMAT = "/csm/api/v1/userId/%s/custom/data";
+
     /**
      * Exceptions
      */
@@ -59,11 +65,13 @@ public class BcmClient extends AbstractBceClient {
     private static final String STATISTICS_ARR_MESSAGE_KEY = "statistics[]";
     private static final String START_TIME_MESSAGE_KEY = "startTime";
     private static final String END_TIME_MESSAGE_KEY = "endTime";
+    private static final String TIMESTAMP_MESSAGE_KEY = "timestamp";
     private static final String PERIOD_MESSAGE_KEY = "periodInSecond";
 
     private static final String DIMENSIONS_MESSAGE_KEY = "dimensions";
     private static final String METRIC_NAME_MESSAGE_KEY = "metricName";
     private static final String METRIC_NAMES_MESSAGE_KEY = "metricName[]";
+    private static final String NAMESPACE_MESSAGE_KEY = "namespace";
     /**
      * Generate signature with specified headers.
      */
@@ -116,6 +124,24 @@ public class BcmClient extends AbstractBceClient {
         }
         URI uri = HttpUtils.appendUri(this.getEndpoint(), path.toArray(new String[path.size()]));
         InternalRequest request = new InternalRequest(httpMethod, uri);
+        SignOptions signOptions = new SignOptions();
+        signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
+        request.setSignOptions(signOptions);
+        request.setCredentials(bceRequest.getRequestCredentials());
+        return request;
+    }
+
+    /**
+     * create request with json format body
+     * @param bceRequest request body object
+     * @param httpMethod method name，such as put, post, delete et
+     * @param url method url
+     * @return InternalRequest
+     */
+    private InternalRequest createBodyRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod, String url) {
+        URI uri = HttpUtils.appendUri(this.getEndpoint(), url);
+        InternalRequest request = new InternalRequest(httpMethod, uri);
+        fillPayload(request, bceRequest);
         SignOptions signOptions = new SignOptions();
         signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
         request.setSignOptions(signOptions);
@@ -221,4 +247,40 @@ public class BcmClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, ListMetricDataResponse.class);
     }
 
+    /**
+     * push custom monitor metric data api
+     * @param request request
+     * @return PushMetricDataResponse
+     */
+    public PushMetricDataResponse pushCustomMonitorMetricData(PushCustomMetricDataRequest request) {
+        checkAndFormatPushCustomMetricDataRequest(request);
+        String url = String.format(PUSH_CUSTOM_METRIC_DATA_FORMAT, request.getUserId());
+        InternalRequest internalRequest = this.createBodyRequest(request, HttpMethodName.POST, url);
+        return invokeHttpClient(internalRequest, PushMetricDataResponse.class);
+    }
+
+    /**
+     * check and format request
+     * @param request push custom metric reqeuest
+     */
+    private void checkAndFormatPushCustomMetricDataRequest(PushCustomMetricDataRequest request) {
+        // check not null
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        // check userId
+        checkStringNotEmpty(request.getUserId(), checkEmptyExceptionMessageFormat(USER_ID_MESSAGE_KEY));
+        // check namespace
+        checkStringNotEmpty(request.getTimestamp(), checkEmptyExceptionMessageFormat(NAMESPACE_MESSAGE_KEY));
+        // check metric name
+        checkStringNotEmpty(request.getMetricName(), checkEmptyExceptionMessageFormat(METRIC_NAME_MESSAGE_KEY));
+        // check timestamp
+        checkStringNotEmpty(request.getTimestamp(), checkEmptyExceptionMessageFormat(TIMESTAMP_MESSAGE_KEY));
+        // check value
+        if (null == request.getValue() && null == request.getStatisticValues()) {
+            throw new IllegalArgumentException("value and statistics all should not be null.");
+        }
+
+        if (null == request.getDimensions()) {
+            request.setDimensions(Collections.<Dimension>emptyList());
+        }
+    }
 }

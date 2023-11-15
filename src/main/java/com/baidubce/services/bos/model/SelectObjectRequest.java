@@ -192,12 +192,14 @@ public class SelectObjectRequest extends GenericObjectRequest {
         if (this.selectType.equals(Constants.SELECT_TYPE_CSV)) {
             inputSerialization.setCsvParams(inputSerialization.getParams());
             outputSerialization.setCsvParams(outputSerialization.getParams());
-        }
-        else if (this.selectType.equals(Constants.SELECT_TYPE_JSON)) {
+        } else if (this.selectType.equals(Constants.SELECT_TYPE_JSON)) {
             inputSerialization.setJsonParams(inputSerialization.getParams());
             outputSerialization.setJsonParams(outputSerialization.getParams());
+        } else if (this.selectType.equals(Constants.SELECT_TYPE_PARQUET)) {
+            inputSerialization.setParquetParams(inputSerialization.getParams());
+            outputSerialization.setJsonParams(outputSerialization.getParams());
         } else {
-            throw new IllegalArgumentException("selectType should be csv or json");
+            throw new IllegalArgumentException("selectType should be one of csv/json/parquet");
         }
 
         String writer = JsonUtils.toJsonStringWithRootName(this);

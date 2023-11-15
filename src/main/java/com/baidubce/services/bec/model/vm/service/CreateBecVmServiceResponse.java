@@ -13,13 +13,12 @@
 package com.baidubce.services.bec.model.vm.service;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
+import com.baidubce.services.bec.model.vo.VmServiceBriefVo;
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * The response for creating the BEC service.
  */
 @Data
-public class CreateBecVmServiceResponse extends ActionInfoVo<Map<String, String>> {
+public class CreateBecVmServiceResponse extends ActionInfoVo<VmServiceBriefVo> {
 }

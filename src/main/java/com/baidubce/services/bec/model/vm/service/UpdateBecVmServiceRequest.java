@@ -75,6 +75,11 @@ public class UpdateBecVmServiceRequest extends AbstractBceRequest {
     private String imageId;
 
     /**
+     * The imageType of the service.
+     */
+    private String imageType;
+
+    /**
      * The bandwidth of the service.
      */
     private float bandwidth;
@@ -83,6 +88,16 @@ public class UpdateBecVmServiceRequest extends AbstractBceRequest {
      * The vm name of the service.
      */
     private String vmName;
+
+    /**
+     * The spec of the vm service.
+     */
+    private String spec;
+
+    /**
+     * The hostname of the vm service.
+     */
+    private String hostname;
 
     /**
      * An ASCII string whose length is less than 64.

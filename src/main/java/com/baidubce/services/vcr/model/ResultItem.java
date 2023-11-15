@@ -12,6 +12,9 @@
  */
 package com.baidubce.services.vcr.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A specific item in CheckResult.
  */
@@ -28,6 +31,8 @@ public class ResultItem {
     private String label;
     private String extra;
     private Evidence evidence;
+
+    private List<List<Integer>> positions = new ArrayList<List<Integer>>();
 
     public String getSubType() {
         return subType;
@@ -125,6 +130,14 @@ public class ResultItem {
         this.evidence = evidence;
     }
 
+    public List<List<Integer>> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<List<Integer>> positions) {
+        this.positions = positions;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ResultItem{");
@@ -139,7 +152,8 @@ public class ResultItem {
         sb.append(", confidence=").append(confidence);
         sb.append(", label='").append(label).append('\'');
         sb.append(", extra='").append(extra).append('\'');
-        sb.append(", evidence=").append(evidence);
+        sb.append(", evidence=").append(evidence).append('\'');
+        sb.append(", positions=").append(positions).append('\'');
         sb.append('}');
         return sb.toString();
     }

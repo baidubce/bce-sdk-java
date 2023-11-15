@@ -13,13 +13,12 @@
 package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
+import com.baidubce.services.bec.model.vo.VmInstanceBriefVo;
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * The response for updating BEC virtual machine resources.
  */
 @Data
-public class UpdateBecVmDeploymentResponse extends ActionInfoVo<Map<String, String>> {
+public class UpdateBecVmDeploymentResponse extends ActionInfoVo<VmInstanceBriefVo> {
 }

@@ -121,6 +121,21 @@ public interface Headers {
     public static final String BCE_FORBID_OVERWRITE = "x-bce-forbid-overwrite";
 
     public static final String BCE_RESTORE = "x-bce-restore";
+
+    public static final String BOS_TRAFFIC_LIMIT = "x-bce-traffic-limit";
+
+    public static final String BOS_PROCESS = "x-bce-process";
+
+    public static final String BCE_TAG_LIST = "x-bce-tag-list";
+
+    public static final String BCE_REFERER = "referer";
+
+    public static final String BCE_FETCH_USER_AGENT = "x-bce-fetch-user-agent";
+
+    public static final String BCE_FETCH_CALLBACK_ADDRESS = "x-bce-callback-address";
+
+    public static final  String BCE_BUCKET_TYPE = "x-bce-bucket-type";
+
     /*
      * CFC HTTP Headers
      */

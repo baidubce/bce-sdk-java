@@ -13,15 +13,13 @@
 
 package com.baidubce.services.billing.model.bill;
 
-import java.math.BigDecimal;
-
 import lombok.Data;
 
 /**
  * the bill of the charge item
  */
 @Data
-public class ChargeItemBill {
+public class ChargeItemBill extends AmountDetail {
 
     /**
      * the charge item ,like RunningTimeMinutes
@@ -42,10 +40,5 @@ public class ChargeItemBill {
      * the amount unit of the charge item
      */
     private String amountUnit;
-
-    /**
-     * the bill price of the charge item
-     */
-    private BigDecimal originPrice;
 
 }

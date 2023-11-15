@@ -19,4 +19,5 @@ public class MatlibConstants {
     public static final String PREFIX_AUDIO = "audio";
     public static final String SUFFIX_VIDEO = ".mp4";
     public static final String SUFFIX_AUDIO = ".mp3";
+    public static final String DATE_MINUTE_FORMAT = "yyyyMMddHHmm";
 }

@@ -12,12 +12,15 @@
  */
 package com.baidubce.services.bcc.model;
 
+import lombok.ToString;
+
 import java.util.Date;
 import java.util.List;
 
 /**
  * instance detail info model
  */
+@ToString
 public class InstanceModel {
 
     /**
@@ -163,6 +166,8 @@ public class InstanceModel {
      * The address of the ipv6
      */
     private String ipv6;
+
+    private Integer netEthQueueCount;
 
     public String getId() {
         return id;
@@ -396,38 +401,12 @@ public class InstanceModel {
         this.hostname = hostname;
     }
 
-    @Override
-    public String toString() {
-        return "InstanceModel{"
-                + "id='" + id + '\''
-                + ", name='" + name + '\''
-                + ", status='" + status + '\''
-                + ", desc='" + desc + '\''
-                + ", paymentTiming='" + paymentTiming + '\''
-                + ", createTime=" + createTime
-                + ", expireTime=" + expireTime
-                + ", internalIp='" + internalIp + '\''
-                + ", publicIp='" + publicIp + '\''
-                + ", cpuCount=" + cpuCount
-                + ", memoryCapacityInGB=" + memoryCapacityInGB
-                + ", localDiskSizeInGB=" + localDiskSizeInGB
-                + ", imageId='" + imageId + '\''
-                + ", networkCapacityInMbps=" + networkCapacityInMbps
-                + ", zoneName='" + zoneName + '\''
-                + ", tags=" + tags
-                + ", placementPolicy='" + placementPolicy + '\''
-                + ", subnetId='" + subnetId + '\''
-                + ", vpcId='" + vpcId + '\''
-                + ", instanceType='" + instanceType + '\''
-                + ", gpuCard='" + gpuCard + '\''
-                + ", fpgaCard='" + fpgaCard + '\''
-                + ", cardCount=" + cardCount
-                + ", keypairId='" + keypairId + '\''
-                + ", keypairName='" + keypairName + '\''
-                + ", dedicatedHostId='" + dedicatedHostId + '\''
-                + ", autoRenew=" + autoRenew
-                + ", ipv6='" + ipv6 + '\''
-                + ", hostname='" + hostname + '\''
-                + '}';
+    public Integer getNetEthQueueCount() {
+        return netEthQueueCount;
     }
+
+    public void setNetEthQueueCount(Integer netEthQueueCount) {
+        this.netEthQueueCount = netEthQueueCount;
+    }
+
 }

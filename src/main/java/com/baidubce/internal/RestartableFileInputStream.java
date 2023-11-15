@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.baidubce.BceClientException;
+import com.baidubce.services.bos.model.BosProgressCallback;
 
 /**
  * Restartable File InputStream extends Restartable InputStream.
@@ -36,11 +37,17 @@ public class RestartableFileInputStream extends RestartableInputStream {
         this.input = new FileInputStream(file);
     }
 
+    public RestartableFileInputStream(File file, BosProgressCallback progressCallback) throws FileNotFoundException {
+        this(file);
+        super.setProgressCallback(progressCallback);
+    }
+
     @Override
     public void restart() {
         try {
             this.input.close();
             this.input = new FileInputStream(this.file);
+            super.restartProgressCallback();
         } catch (IOException e) {
             throw new BceClientException("Fail to restart.", e);
         }
@@ -48,12 +55,23 @@ public class RestartableFileInputStream extends RestartableInputStream {
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        return this.input.read(b, off, len);
+        int count = this.input.read(b, off, len);
+        if (count < 0) {
+            return count;
+        }
+        super.doProgressCallback(count);
+
+        return count;
     }
 
     @Override
     public int read() throws IOException {
-        return this.input.read();
+        int count = this.input.read();
+        if (count < 0) {
+            return count;
+        }
+        super.doProgressCallback(1);
+        return count;
     }
 
     @Override

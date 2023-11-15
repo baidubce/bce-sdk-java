@@ -33,6 +33,10 @@ public class AppPolicyRequest extends AbstractBceRequest {
      */
     private Integer listenerPort;
     /**
+     * the listenerType of the policy.
+     */
+    private String type;
+    /**
      * the appPolicyVos of the policy.
      */
     private List<AppPolicy> appPolicyVos;
@@ -65,6 +69,14 @@ public class AppPolicyRequest extends AbstractBceRequest {
         this.listenerPort = listenerPort;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public List<AppPolicy> getAppPolicyVos() {
         return appPolicyVos;
     }
@@ -88,6 +100,11 @@ public class AppPolicyRequest extends AbstractBceRequest {
 
     public AppPolicyRequest withListenerPort(Integer listenerPort) {
         this.listenerPort = listenerPort;
+        return this;
+    }
+
+    public AppPolicyRequest withType(String type) {
+        this.type = type;
         return this;
     }
 

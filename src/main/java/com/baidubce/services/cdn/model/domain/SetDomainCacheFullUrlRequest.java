@@ -15,6 +15,7 @@ package com.baidubce.services.cdn.model.domain;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.cdn.model.CdnRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -25,10 +26,47 @@ import java.util.List;
  * @author yixing
  * update by changxing01 on 19/8/28
  */
-public class SetDomainCacheFullUrlRequest extends AbstractBceRequest {
+public class SetDomainCacheFullUrlRequest extends CdnRequest {
     private String domain;
-    private boolean cacheFullUrl;
+
+    /**
+     * true和false，true表示支持全URL缓存，false表示忽略参数缓存(可保留部分参数)
+     * 必选
+     */
+    private Boolean cacheFullUrl;
+
+    /**
+     * cacheFullUrl为true时，此项不起作用；cacheFullUrl为false时，此项表示保留的参数列表，如果为空，表示忽略所有参数
+     * 可选
+     */
     private List<String> cacheUrlArgs;
+
+    /**
+     * ignoreUrlArgs为true时，此项不起作用; cacheFullUrl为false时，此项表示忽略的参数列表，如果为空，表示保留所有参数
+     * 可选
+     */
+    private List<String> ignoreUrlArgs;
+
+    /**
+     * @param ignoreUrlArgs List of reserved parameters
+     * @return returns this object
+     */
+    public SetDomainCacheFullUrlRequest withIgnoreUrlArgs(List<String> ignoreUrlArgs) {
+        this.ignoreUrlArgs = ignoreUrlArgs;
+        return this;
+    }
+
+    /**
+     * @param ignoreUrlArg List of reserved parameter
+     * @return returns this object
+     */
+    public SetDomainCacheFullUrlRequest addIgnoreUrlArgs(String ignoreUrlArg) {
+        if (this.ignoreUrlArgs == null) {
+            this.ignoreUrlArgs = new ArrayList<String>();
+        }
+        this.ignoreUrlArgs.add(ignoreUrlArg);
+        return this;
+    }
 
     /**
      * @return cacheUrlArgs
@@ -65,17 +103,11 @@ public class SetDomainCacheFullUrlRequest extends AbstractBceRequest {
         return this;
     }
 
-    /**
-     * @return cacheFullUrl
-     */
-    public boolean isCacheFullUrl() {
+    public Boolean getCacheFullUrl() {
         return cacheFullUrl;
     }
 
-    /**
-     * @param cacheFullUrl
-     */
-    public void setCacheFullUrl(boolean cacheFullUrl) {
+    public void setCacheFullUrl(Boolean cacheFullUrl) {
         this.cacheFullUrl = cacheFullUrl;
     }
 
@@ -110,28 +142,13 @@ public class SetDomainCacheFullUrlRequest extends AbstractBceRequest {
         this.domain = domain;
         return this;
     }
-    
-    /**
-     * (non-Javadoc)
-     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
-     */
-    @Override
-    public SetDomainCacheFullUrlRequest withRequestCredentials(BceCredentials credentials) {
-        this.setRequestCredentials(credentials);
-        return this;
+
+    public List<String> getIgnoreUrlArgs() {
+        return ignoreUrlArgs;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        try {
-            return JsonUtils.toJsonPrettyString(this);
-        } catch (JsonProcessingException e) {
-            return "";
-        }
+    public void setIgnoreUrlArgs(List<String> ignoreUrlArgs) {
+        this.ignoreUrlArgs = ignoreUrlArgs;
     }
 }
 

@@ -25,6 +25,7 @@ import org.apache.http.annotation.ThreadSafe;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Abstract base class for BCE service clients.
@@ -66,6 +67,11 @@ public abstract class AbstractBceClient {
      * The endpoint URI for the service.
      */
     private URI endpoint;
+
+    /**
+     * The bucket virtual hosting(bucket.<region>.bcebos.com) endpoint URI for the service.
+     */
+    private ConcurrentHashMap<String, URI> bktVirEndpoint = new ConcurrentHashMap<String, URI>();
 
     /**
      * Responsible for sending HTTP requests to services.
@@ -185,6 +191,8 @@ public abstract class AbstractBceClient {
         if (!request.getHeaders().containsKey(Headers.DATE)) {
             request.addHeader(Headers.DATE, DateUtils.formatRfc822Date(new Date()));
         }
+       /* request.addHeader("x-bce-date", "2020-11-17T03:22:12Z");
+        request.addHeader("host", "bcc.bj.qasandbox.baidu-int.com");*/
 
         return this.client.execute(request, responseClass, this.responseHandlers);
     }
@@ -250,6 +258,49 @@ public abstract class AbstractBceClient {
                 }
             }
             return new URI(endpoint);
+        } catch (URISyntaxException e) {
+            // only if the endpoint specified in the client configuration is not a valid URI, which is not expected.
+            throw new IllegalArgumentException("Invalid endpoint." + endpoint, e);
+        }
+    }
+
+    /**
+     * Returns the service endpoint(bucket virtual hosting) to which this client will send requests.
+     *
+     * @return the service endpoint(bucket virtual hosting) to which this client will send requests.
+     */
+    public URI getBktVirEndpoint(String bucketName) {
+        if (!bktVirEndpoint.isEmpty() && bktVirEndpoint.containsKey(bucketName)) {
+            return bktVirEndpoint.get(bucketName);
+        }
+        return null;
+    }
+
+    /**
+     * BOS
+     *
+     * Returns the bucket virtual hosting service endpoint.
+     * <p>
+     * The endpoint will be in the form of "http(s)://<bucket>[.<Region>].bcebos.com".
+     *
+     * @return the computed service endpoint
+     * @throws IllegalArgumentException if the endpoint specified in the client configuration is not a valid URI.
+     */
+    public void computeBktVirEndpoint(String bucketName) {
+        if (bucketName == null || bucketName.isEmpty()) {
+            return;
+        }
+        String host = this.endpoint.getHost();
+        String uri = null;
+        if (host.startsWith(bucketName) && host.split("\\.").length >= 4) {
+            uri = this.config.getProtocol().toString().toLowerCase() + "://" + host;
+        } else {
+            uri = this.config.getProtocol().toString().toLowerCase() + "://" + bucketName + '.' + host;
+        }
+        try {
+            if (uri != null) {
+                this.bktVirEndpoint.put(bucketName, new URI(uri));
+            }
         } catch (URISyntaxException e) {
             // only if the endpoint specified in the client configuration is not a valid URI, which is not expected.
             throw new IllegalArgumentException("Invalid endpoint." + endpoint, e);

@@ -7,6 +7,8 @@ import com.baidubce.services.cdn.model.CdnRequest;
  */
 public class SetDomainOfflineModeRequest extends CdnRequest {
 
+    private String domain;
+
     private boolean OfflineMode;
 
     public boolean isOfflineMode() {
@@ -23,6 +25,29 @@ public class SetDomainOfflineModeRequest extends CdnRequest {
      */
     public SetDomainOfflineModeRequest withOfflineMode(boolean Offline) {
         setOfflineMode(Offline);
+        return this;
+    }
+
+    /**
+     * @return domain
+     */
+    public String getDomain() {
+        return domain;
+    }
+
+    /**
+     * @param domain the domain name
+     */
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    /**
+     * @param domain the domain name
+     * @return returns this object
+     */
+    public SetDomainOfflineModeRequest withDomain(String domain) {
+        this.domain = domain;
         return this;
     }
 

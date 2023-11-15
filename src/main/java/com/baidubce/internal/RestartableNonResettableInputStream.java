@@ -13,6 +13,7 @@
 package com.baidubce.internal;
 
 import com.baidubce.BceClientException;
+import com.baidubce.services.bos.model.BosProgressCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,12 +56,20 @@ public class RestartableNonResettableInputStream extends RestartableInputStream 
         }
     }
 
+    public RestartableNonResettableInputStream(InputStream input, int bufferSize,
+                                               BosProgressCallback progressCallback) {
+        this(input, bufferSize);
+        super.setProgressCallback(progressCallback);
+    }
+
+
     @Override
     public void restart() {
         if (this.buffer == null) {
             throw new IllegalStateException("Fail to restart. Input buffer exhausted.");
         }
         this.offset = 0;
+        super.restartProgressCallback();
     }
 
     @Override
@@ -79,6 +88,7 @@ public class RestartableNonResettableInputStream extends RestartableInputStream 
             }
             System.arraycopy(this.buffer, this.offset, b, off, copyLength);
             this.offset += copyLength;
+            super.doProgressCallback(copyLength);
             return copyLength;
         }
         if (this.eof) {
@@ -90,13 +100,16 @@ public class RestartableNonResettableInputStream extends RestartableInputStream 
             return -1;
         }
         this.buffer = null;
+        super.doProgressCallback(result);
         return result;
     }
 
     @Override
     public int read() throws IOException {
         if (this.offset < this.length) {
-            return this.buffer[this.offset++] & 0xff;
+            int result = this.buffer[this.offset++] & 0xff;
+            super.doProgressCallback(1);
+            return result;
         }
         if (this.eof) {
             return -1;
@@ -107,6 +120,7 @@ public class RestartableNonResettableInputStream extends RestartableInputStream 
             return -1;
         }
         this.buffer = null;
+        super.doProgressCallback(1);
         return result;
     }
 

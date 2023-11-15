@@ -13,31 +13,28 @@
 
 package com.baidubce.services.cdn.model.domain;
 
-import com.baidubce.auth.BceCredentials;
-import com.baidubce.model.AbstractBceRequest;
-
-import java.util.Date;
+import com.baidubce.services.cdn.model.CdnRequest;
 
 /**
  * @author yixing
  *
  */
-public class GetDomainLogRequest extends AbstractBceRequest {
+public class GetDomainLogRequest extends CdnRequest {
     private String domain;
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String endTime;
     
     /**
      * @return startTime
      */
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
     /**
      * @param startTime
      */
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
@@ -45,7 +42,7 @@ public class GetDomainLogRequest extends AbstractBceRequest {
      * @param startTime
      * @return returns this object
      */
-    public GetDomainLogRequest withStartTime(Date startTime) {
+    public GetDomainLogRequest withStartTime(String startTime) {
         setStartTime(startTime);
         return this;
     }
@@ -53,14 +50,14 @@ public class GetDomainLogRequest extends AbstractBceRequest {
     /**
      * @return endTime
      */
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
     /**
      * @param endTime
      */
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -68,7 +65,7 @@ public class GetDomainLogRequest extends AbstractBceRequest {
      * @param endTime
      * @return returns this object
      */
-    public GetDomainLogRequest withEndTime(Date endTime) {
+    public GetDomainLogRequest withEndTime(String endTime) {
         setEndTime(endTime);
         return this;
     }
@@ -95,14 +92,5 @@ public class GetDomainLogRequest extends AbstractBceRequest {
         this.domain = domain;
         return this;
     }
-    
-    /**
-     * (non-Javadoc)
-     * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
-     */
-    @Override
-    public GetDomainLogRequest withRequestCredentials(BceCredentials credentials) {
-        this.setRequestCredentials(credentials);
-        return this;
-    }
+
 }

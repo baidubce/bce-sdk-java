@@ -40,12 +40,6 @@ public class QueryQuotaRateResponse extends SmsResponse {
     private int quotaRemainThisMonth;
 
     /**
-     * QuotaWhitelist indicates a user is in quota white list or not. <br/>
-     * If quotaWhitelist is true, SMS will skip counting quota when the user send SMS request
-     */
-    private boolean quotaWhitelist;
-
-    /**
      * Daily rate limit with same mobile and signature
      */
     @JsonProperty("rateLimitPerMobilePerSignByDay")
@@ -69,9 +63,29 @@ public class QueryQuotaRateResponse extends SmsResponse {
      */
     private boolean rateLimitWhitelist;
 
-    public void setQuotaWhitelist(boolean quotaWhitelist) {
-        this.quotaWhitelist = quotaWhitelist;
-    }
+    /**
+     * Daily quota update apply
+     */
+    @JsonProperty("applyQuotaPerDay")
+    private Integer quotaPerDayApply;
+
+    /**
+     * Monthly quota update apply
+     */
+    @JsonProperty("applyQuotaPerMonth")
+    private Integer quotaPerMonthApply;
+
+    /**
+     * Quota apply update check status (PENDING: checking, PASS: checked pass, FAILURE: checked fail)
+     */
+    @JsonProperty("applyCheckStatus")
+    private String quotaApplyCheckStatus;
+
+    /**
+     * Quota apply update check reply (Reason of checked fail)
+     */
+    @JsonProperty("checkReply")
+    private String quotaApplyCheckReply;
 
     public void setRateLimitWhitelist(boolean rateLimitWhitelist) {
         this.rateLimitWhitelist = rateLimitWhitelist;
@@ -105,6 +119,22 @@ public class QueryQuotaRateResponse extends SmsResponse {
         this.quotaRemainToday = quotaRemainToday;
     }
 
+    public void setQuotaPerDayApply(int quotaPerMonthApply) {
+        this.quotaPerDayApply = quotaPerMonthApply;
+    }
+
+    public void setQuotaPerMonthApply(int quotaPerMonthApply) {
+        this.quotaPerMonthApply = quotaPerMonthApply;
+    }
+
+    public void setQuotaApplyCheckStatus(String quotaApplyCheckStatus) {
+        this.quotaApplyCheckStatus = quotaApplyCheckStatus;
+    }
+
+    public void setQuotaApplyCheckReply(String quotaApplyCheckReply) {
+        this.quotaApplyCheckReply = quotaApplyCheckReply;
+    }
+
     public int getRateLimitPerMinute() {
         return rateLimitPerMinute;
     }
@@ -133,12 +163,24 @@ public class QueryQuotaRateResponse extends SmsResponse {
         return quotaRemainThisMonth;
     }
 
-    public boolean isQuotaWhitelist() {
-        return quotaWhitelist;
-    }
-
     public boolean isRateLimitWhitelist() {
         return rateLimitWhitelist;
+    }
+    
+    public Integer getQuotaPerDayApply() {
+        return quotaPerDayApply;
+    }
+
+    public Integer getQuotaPerMonthApply() {
+        return quotaPerMonthApply;
+    }
+
+    public String getQuotaApplyCheckStatus() {
+        return quotaApplyCheckStatus;
+    }
+
+    public String getQuotaApplyCheckReply() {
+        return quotaApplyCheckReply;
     }
 
     @Override
@@ -147,7 +189,10 @@ public class QueryQuotaRateResponse extends SmsResponse {
                 + ", quotaPerMonth=" + quotaPerMonth
                 + ", quotaRemainToday=" + quotaRemainToday
                 + ", quotaRemainThisMonth=" + quotaRemainThisMonth
-                + ", quotaWhitelist=" + quotaWhitelist
+                + ", quotaPerDayApply=" + quotaPerDayApply
+                + ", quotaPerMonthApply=" + quotaPerMonthApply
+                + ", quotaApplyCheckStatus=" + quotaApplyCheckStatus
+                + ", quotaApplyCheckReply=" + quotaApplyCheckReply
                 + ", rateLimitPerMobilePerSignByDay=" + rateLimitPerDay
                 + ", rateLimitPerMobilePerSignByHour=" + rateLimitPerHour
                 + ", rateLimitPerMobilePerSignByMinute=" + rateLimitPerMinute

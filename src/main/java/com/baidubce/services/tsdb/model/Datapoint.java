@@ -1,9 +1,15 @@
 package com.baidubce.services.tsdb.model;
 
+import static com.baidubce.services.tsdb.TsdbConstants.ValueType.TYPE_BIG_DECIMAL;
+import static com.baidubce.services.tsdb.TsdbConstants.ValueType.TYPE_BYTES;
+import static com.baidubce.services.tsdb.TsdbConstants.ValueType.TYPE_DOUBLE;
+import static com.baidubce.services.tsdb.TsdbConstants.ValueType.TYPE_LONG;
+import static com.baidubce.services.tsdb.TsdbConstants.ValueType.TYPE_STRING;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.baidubce.services.tsdb.TsdbConstants;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.BinaryNode;
 import com.fasterxml.jackson.databind.node.DoubleNode;
@@ -102,49 +108,56 @@ public class Datapoint {
     /**
      * Add datapoint of long type value.
      *
-     * @param time datapoint's timestamp
+     * @param time  datapoint's timestamp
      * @param value datapoint's value
      * @return Datapoint
      */
     public Datapoint addLongValue(long time, long value) {
-        initialValues(TsdbConstants.TYPE_LONG);
+        initialValues(TYPE_LONG);
 
-        values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new LongNode(value)));
+        values.add(Lists.<JsonNode>newArrayList(new LongNode(time), new LongNode(value)));
         return this;
     }
 
     /**
      * Add datapoint of double type value.
      *
-     * @param time datapoint's timestamp
+     * @param time  datapoint's timestamp
      * @param value datapoint's value
      * @return Datapoint
      */
     public Datapoint addDoubleValue(long time, double value) {
-        initialValues(TsdbConstants.TYPE_DOUBLE);
+        initialValues(TYPE_DOUBLE);
 
-        values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new DoubleNode(value)));
+        values.add(Lists.<JsonNode>newArrayList(new LongNode(time), new DoubleNode(value)));
         return this;
     }
 
     /**
      * Add datapoint of String type value.
      *
-     * @param time datapoint's timestamp
+     * @param time  datapoint's timestamp
      * @param value datapoint's value
      * @return Datapoint
      */
     public Datapoint addStringValue(long time, String value) {
-        initialValues(TsdbConstants.TYPE_STRING);
+        initialValues(TYPE_STRING);
 
-        values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new TextNode(value)));
+        values.add(Lists.<JsonNode>newArrayList(new LongNode(time), new TextNode(value)));
         return this;
     }
 
     public Datapoint addBytesValue(long time, byte[] value) {
-        initialValues(TsdbConstants.TYPE_BYTES);
+        initialValues(TYPE_BYTES);
 
-        values.add(Lists.<JsonNode> newArrayList(new LongNode(time), new BinaryNode(value)));
+        values.add(Lists.<JsonNode>newArrayList(new LongNode(time), new BinaryNode(value)));
+        return this;
+    }
+
+    public Datapoint addBigDecimalValue(long time, BigDecimal value) {
+        initialValues(TYPE_BIG_DECIMAL);
+
+        values.add(Lists.<JsonNode>newArrayList(new LongNode(time), new TextNode(String.valueOf(value))));
         return this;
     }
 
