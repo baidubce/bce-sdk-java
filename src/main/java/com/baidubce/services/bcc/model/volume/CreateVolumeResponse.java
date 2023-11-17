@@ -30,7 +30,7 @@ public class CreateVolumeResponse extends AbstractBceResponse {
     private List<Volume> volumes;
 
     @Data
-    private static class Volume {
+    public static class Volume {
         private String volumeId;
         private String volumeUuid;
         private String name;
