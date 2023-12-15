@@ -44,6 +44,10 @@ public class CreateBlbRequest extends AbstractBceRequest {
      * the tags of blb.
      */
     private List<Tag> tags;
+    /**
+     * the type of blb, it can be 'normal' or 'ipv6'.
+     */
+    private String type;
 
     /**
      * An ASCII string whose length is less than 64.
@@ -90,6 +94,11 @@ public class CreateBlbRequest extends AbstractBceRequest {
         return this;
     }
 
+    public CreateBlbRequest withType(String type) {
+        this.setType(type);
+        return this;
+    }
+
     public String getSubnetId() {
         return subnetId;
     }
@@ -128,6 +137,14 @@ public class CreateBlbRequest extends AbstractBceRequest {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public CreateBlbRequest withClientToken(String clientToken) {

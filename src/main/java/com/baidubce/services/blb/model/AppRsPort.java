@@ -101,4 +101,17 @@ public class AppRsPort {
     public void setPolicyId(String policyId) {
         this.policyId = policyId;
     }
+
+    @Override
+    public String toString() {
+        return "AppRsPort{" +
+                "listenerPort=" + listenerPort +
+                ", backendPort='" + backendPort + '\'' +
+                ", portType='" + portType + '\'' +
+                ", healthCheckPortType='" + healthCheckPortType + '\'' +
+                ", status='" + status + '\'' +
+                ", portId='" + portId + '\'' +
+                ", policyId='" + policyId + '\'' +
+                '}';
+    }
 }

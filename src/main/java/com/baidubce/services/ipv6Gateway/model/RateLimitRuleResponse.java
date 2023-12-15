@@ -4,10 +4,13 @@
 package com.baidubce.services.ipv6Gateway.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
 /**
  * Created by wangkai on 2019/8/19
  */
+
+@ToString
 public class RateLimitRuleResponse extends AbstractBceResponse {
     /*
      * the id of rateLimit rule

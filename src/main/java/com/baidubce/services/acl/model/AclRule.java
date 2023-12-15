@@ -179,4 +179,22 @@ public class AclRule {
     public void setAction(String action) {
         this.action = action;
     }
+
+    @Override
+    public String toString() {
+        return "AclRule{" +
+                "id='" + id + '\'' +
+                ", subnetId='" + subnetId + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", protocol='" + protocol + '\'' +
+                ", sourceIpAddress='" + sourceIpAddress + '\'' +
+                ", destinationIpAddress='" + destinationIpAddress + '\'' +
+                ", sourcePort='" + sourcePort + '\'' +
+                ", destinationPort='" + destinationPort + '\'' +
+                ", position=" + position +
+                ", direction='" + direction + '\'' +
+                ", action='" + action + '\'' +
+                '}';
+    }
 }

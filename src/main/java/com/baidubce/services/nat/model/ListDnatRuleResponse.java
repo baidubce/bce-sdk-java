@@ -16,4 +16,15 @@ public class ListDnatRuleResponse extends ListResponse {
      * List of dnat rule info
      */
     private List<DnatRule> rules;
+
+    @Override
+    public String toString() {
+        return "ListDnatRuleResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "rules=" + rules +
+                '}';
+    }
 }

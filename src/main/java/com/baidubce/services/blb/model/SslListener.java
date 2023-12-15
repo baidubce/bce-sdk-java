@@ -79,4 +79,15 @@ public class SslListener extends ListenerBase {
     public void setClientCertIds(List<String> clientCertIds) {
         this.clientCertIds = clientCertIds;
     }
+
+    @Override
+    public String toString() {
+        return "SslListener{" +
+                "certIds=" + certIds +
+                ", encryptionType='" + encryptionType + '\'' +
+                ", encryptionProtocols=" + encryptionProtocols +
+                ", dualAuth=" + dualAuth +
+                ", clientCertIds=" + clientCertIds +
+                '}';
+    }
 }

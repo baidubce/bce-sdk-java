@@ -16,10 +16,12 @@ import java.util.List;
 
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bcc.model.TagModel;
+import lombok.ToString;
 
 /**
  * The response for get nat.
  */
+@ToString
 public class GetNatResponse extends AbstractBceResponse {
 
     /**

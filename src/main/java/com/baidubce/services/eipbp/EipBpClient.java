@@ -194,6 +194,9 @@ public class EipBpClient extends AbstractBceClient {
         if (!Strings.isNullOrEmpty(request.getBindType())) {
             internalRequest.addParameter("bindType", request.getBindType());
         }
+        if (!Strings.isNullOrEmpty(request.getType())) {
+            internalRequest.addParameter("type", request.getType());
+        }
         return invokeHttpClient(internalRequest, ListEipBpsResponse.class);
     }
 
@@ -218,6 +221,21 @@ public class EipBpClient extends AbstractBceClient {
     public ListEipBpsResponse listEipBps(String id, String name, String bindType) {
         ListEipBpsRequest request = new ListEipBpsRequest();
         request.withId(id).withName(name).withBindType(bindType);
+        return listEipBps(request);
+    }
+
+    /**
+     * Get a list of eipbps owned by the authenticated user and specified conditions.
+     *
+     * @param id       eipbp's id.
+     * @param name     eipbp's name.
+     * @param bindType eipbp's bindType, eip or eipgroup.
+     * @param type eipbp's type, BandwidthPackage or AccelerationPackage.
+     * @return the eipbp's list.
+     */
+    public ListEipBpsResponse listEipBps(String id, String name, String bindType, String type) {
+        ListEipBpsRequest request = new ListEipBpsRequest();
+        request.withId(id).withName(name).withBindType(bindType).withType(type);
         return listEipBps(request);
     }
 

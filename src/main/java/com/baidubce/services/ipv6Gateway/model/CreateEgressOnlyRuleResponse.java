@@ -4,7 +4,9 @@
 package com.baidubce.services.ipv6Gateway.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
+@ToString
 public class CreateEgressOnlyRuleResponse extends AbstractBceResponse {
     private String egressOnlyRuleId;
 

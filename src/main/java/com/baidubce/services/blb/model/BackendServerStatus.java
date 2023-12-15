@@ -55,4 +55,13 @@ public class BackendServerStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "BackendServerStatus{" +
+                "instanceId='" + instanceId + '\'' +
+                ", weight=" + weight +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

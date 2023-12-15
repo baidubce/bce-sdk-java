@@ -20,4 +20,15 @@ public class ListEgressOnlyRuleResponse extends ListResponse {
     public void setEgressOnlyRules(List<EgressOnlyRule> egressOnlyRules) {
         this.egressOnlyRules = egressOnlyRules;
     }
+
+    @Override
+    public String toString() {
+        return "ListEgressOnlyRuleResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "egressOnlyRules=" + egressOnlyRules +
+                '}';
+    }
 }

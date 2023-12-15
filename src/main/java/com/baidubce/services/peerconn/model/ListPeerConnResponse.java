@@ -12,13 +12,17 @@
  */
 package com.baidubce.services.peerconn.model;
 
-import java.util.List;
-
 import com.baidubce.model.ListResponse;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 /**
  * The response for list peer conn.
  */
+@Getter
+@Setter
 public class ListPeerConnResponse extends ListResponse {
 
     /**
@@ -26,11 +30,14 @@ public class ListPeerConnResponse extends ListResponse {
      */
     private List<PeerConn> peerConns;
 
-    public List<PeerConn> getPeerConns() {
-        return peerConns;
-    }
-
-    public void setPeerConns(List<PeerConn> peerConns) {
-        this.peerConns = peerConns;
+    @Override
+    public String toString() {
+        return "ListPeerConnResponse{" +
+                "marker=" + getMarker() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "peerConns=" + peerConns +
+                '}';
     }
 }

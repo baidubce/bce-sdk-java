@@ -1,10 +1,11 @@
 package com.baidubce.services.eiptp.model;
 
+import java.util.List;
+
 import com.baidubce.services.eip.model.ListResponse;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
  * The request for listing eiptp.
@@ -14,6 +15,17 @@ import java.util.List;
 public class ListEipTpsResponse extends ListResponse {
 
     private List<ListEipTpsResponse.Package> packageList;
+
+    @Override
+    public String toString() {
+        return "ListEipTpsResponse{" +
+                "marker=" + getMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "packageList=" + packageList +
+                '}';
+    }
 
     @Setter
     @Getter
@@ -62,5 +74,20 @@ public class ListEipTpsResponse extends ListResponse {
          * The expire time of the eipTp (GMT+8 format).
          */
         private String expireTime;
+
+        @Override
+        public String toString() {
+            return "Package{" +
+                    "id='" + id + '\'' +
+                    ", deductPolicy='" + deductPolicy + '\'' +
+                    ", packageType='" + packageType + '\'' +
+                    ", status='" + status + '\'' +
+                    ", capacity='" + capacity + '\'' +
+                    ", usedCapacity='" + usedCapacity + '\'' +
+                    ", createTime='" + createTime + '\'' +
+                    ", activeTime='" + activeTime + '\'' +
+                    ", expireTime='" + expireTime + '\'' +
+                    '}';
+        }
     }
 }

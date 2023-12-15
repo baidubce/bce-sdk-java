@@ -12,6 +12,8 @@
  */
 package com.baidubce.services.eni.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 /**
  * The detail model for describing Elastic Network Interface Card.
@@ -38,6 +38,7 @@ public class EniDetail extends Eni {
      */
     private List<String> securityGroupIds;
 
+    private List<String> enterpriseSecurityGroupIds;
     /**
      * createTime of ENI
      */

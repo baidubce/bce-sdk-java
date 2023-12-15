@@ -12,9 +12,16 @@
  */
 package com.baidubce.services.peerconn.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * The peer connection instance.
  */
+@Getter
+@Setter
+@ToString
 public class PeerConn {
 
     /**
@@ -96,132 +103,4 @@ public class PeerConn {
      * The expiredTime of peer conn.
      */
     private String expiredTime;
-
-    public String getPeerConnId() {
-        return peerConnId;
-    }
-
-    public void setPeerConnId(String peerConnId) {
-        this.peerConnId = peerConnId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getBandwidthInMbps() {
-        return bandwidthInMbps;
-    }
-
-    public void setBandwidthInMbps(int bandwidthInMbps) {
-        this.bandwidthInMbps = bandwidthInMbps;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLocalIfId() {
-        return localIfId;
-    }
-
-    public void setLocalIfId(String localIfId) {
-        this.localIfId = localIfId;
-    }
-
-    public String getLocalIfName() {
-        return localIfName;
-    }
-
-    public void setLocalIfName(String localIfName) {
-        this.localIfName = localIfName;
-    }
-
-    public String getLocalVpcId() {
-        return localVpcId;
-    }
-
-    public void setLocalVpcId(String localVpcId) {
-        this.localVpcId = localVpcId;
-    }
-
-    public String getLocalRegion() {
-        return localRegion;
-    }
-
-    public void setLocalRegion(String localRegion) {
-        this.localRegion = localRegion;
-    }
-
-    public String getPeerAccountId() {
-        return peerAccountId;
-    }
-
-    public void setPeerAccountId(String peerAccountId) {
-        this.peerAccountId = peerAccountId;
-    }
-
-    public String getPeerVpcId() {
-        return peerVpcId;
-    }
-
-    public void setPeerVpcId(String peerVpcId) {
-        this.peerVpcId = peerVpcId;
-    }
-
-    public String getPeerRegion() {
-        return peerRegion;
-    }
-
-    public void setPeerRegion(String peerRegion) {
-        this.peerRegion = peerRegion;
-    }
-
-    public String getPaymentTiming() {
-        return paymentTiming;
-    }
-
-    public void setPaymentTiming(String paymentTiming) {
-        this.paymentTiming = paymentTiming;
-    }
-
-    public String getDnsStatus() {
-        return dnsStatus;
-    }
-
-    public void setDnsStatus(String dnsStatus) {
-        this.dnsStatus = dnsStatus;
-    }
-
-    public String getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(String createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public String getExpiredTime() {
-        return expiredTime;
-    }
-
-    public void setExpiredTime(String expiredTime) {
-        this.expiredTime = expiredTime;
-    }
 }

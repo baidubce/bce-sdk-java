@@ -12,11 +12,14 @@
  */
 package com.baidubce.services.nat.model;
 
+import lombok.ToString;
+
 import java.util.List;
 
 /**
  * Nat detail info model
  */
+@ToString
 public class Nat {
 
     /**

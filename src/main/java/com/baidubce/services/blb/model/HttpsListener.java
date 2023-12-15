@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.blb.model;
 
+
 import java.util.List;
 
 /**
@@ -162,5 +163,23 @@ public class HttpsListener extends ListenerBase {
 
     public void setIe6Compatible(boolean ie6Compatible) {
         this.ie6Compatible = ie6Compatible;
+    }
+
+    @Override
+    public String toString() {
+        return "HttpsListener{" +
+                "keepSession=" + keepSession +
+                ", keepSessionType='" + keepSessionType + '\'' +
+                ", keepSessionDuration=" + keepSessionDuration +
+                ", keepSessionCookieName='" + keepSessionCookieName + '\'' +
+                ", xForwardFor=" + xForwardFor +
+                ", healthCheckType='" + healthCheckType + '\'' +
+                ", healthCheckPort=" + healthCheckPort +
+                ", healthCheckURI='" + healthCheckURI + '\'' +
+                ", healthCheckNormalStatus='" + healthCheckNormalStatus + '\'' +
+                ", serverTimeout=" + serverTimeout +
+                ", certIds=" + certIds +
+                ", ie6Compatible=" + ie6Compatible +
+                '}';
     }
 }

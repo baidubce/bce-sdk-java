@@ -10,4 +10,14 @@ public class ListVpnResponse extends ListResponse {
 
     private List<Vpn> vpns;
 
+    @Override
+    public String toString() {
+        return "ListVpnResponse{" +
+                "marker=" + getMarker() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "vpns=" + vpns +
+                '}';
+    }
 }

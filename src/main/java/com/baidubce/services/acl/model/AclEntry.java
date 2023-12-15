@@ -70,4 +70,14 @@ public class AclEntry {
     public void setAclRules(List<AclRule> aclRules) {
         this.aclRules = aclRules;
     }
+
+    @Override
+    public String toString() {
+        return "AclEntry{" +
+                "subnetId='" + subnetId + '\'' +
+                ", subnetName='" + subnetName + '\'' +
+                ", subnetCidr='" + subnetCidr + '\'' +
+                ", aclRules=" + aclRules +
+                '}';
+    }
 }

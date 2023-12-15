@@ -102,4 +102,16 @@ public class ListenerBase {
         this.healthyThreshold = healthyThreshold;
     }
 
+    @Override
+    public String toString() {
+        return "ListenerBase{" +
+                "listenerPort=" + listenerPort +
+                ", backendPort=" + backendPort +
+                ", scheduler='" + scheduler + '\'' +
+                ", healthCheckTimeoutInSecond=" + healthCheckTimeoutInSecond +
+                ", healthCheckInterval=" + healthCheckInterval +
+                ", unhealthyThreshold=" + unhealthyThreshold +
+                ", healthyThreshold=" + healthyThreshold +
+                '}';
+    }
 }

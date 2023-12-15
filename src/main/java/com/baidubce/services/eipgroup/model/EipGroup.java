@@ -12,11 +12,14 @@
  */
 package com.baidubce.services.eipgroup.model;
 
+import lombok.ToString;
+
 import java.util.List;
 
 /**
  * Eip group model.
  */
+@ToString
 public class EipGroup {
 
     /**

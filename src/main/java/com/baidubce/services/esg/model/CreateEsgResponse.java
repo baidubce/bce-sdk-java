@@ -13,6 +13,7 @@
 package com.baidubce.services.esg.model;
 
 import com.baidubce.model.AbstractBceResponse;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,4 +28,11 @@ public class CreateEsgResponse extends AbstractBceResponse {
      * The id of newly created enterprise security group
      */
     private String enterpriseSecurityGroupId;
+
+    @Override
+    public String toString() {
+        return "CreateEsgResponse{" +
+                "enterpriseSecurityGroupId='" + enterpriseSecurityGroupId + '\'' +
+                '}';
+    }
 }

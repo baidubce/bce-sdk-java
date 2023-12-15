@@ -36,6 +36,10 @@ public class ListBlbRequest extends ListRequest {
      * the id of the bcc.
      */
     private String bccId;
+    /**
+     * the type of the blb.
+     */
+    private String type;
 
     public ListBlbRequest withAddress(String address) {
         this.address = address;
@@ -54,6 +58,11 @@ public class ListBlbRequest extends ListRequest {
 
     public ListBlbRequest withBccId(String bccId) {
         this.bccId = bccId;
+        return this;
+    }
+
+    public ListBlbRequest withType(String type) {
+        this.type = type;
         return this;
     }
 
@@ -87,6 +96,14 @@ public class ListBlbRequest extends ListRequest {
 
     public void setBccId(String bccId) {
         this.bccId = bccId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

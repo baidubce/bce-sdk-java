@@ -29,4 +29,15 @@ public class ListEniResponse extends ListResponse {
      * The list of ENI detail models.
      */
     private List<Eni> enis;
+
+    @Override
+    public String toString() {
+        return "ListEniResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "enis=" + enis +
+                '}';
+    }
 }

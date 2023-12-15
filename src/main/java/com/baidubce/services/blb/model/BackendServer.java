@@ -41,4 +41,12 @@ public class BackendServer {
     public void setWeight(Integer weight) {
         this.weight = weight;
     }
+
+    @Override
+    public String toString() {
+        return "BackendServer{" +
+                "instanceId='" + instanceId + '\'' +
+                ", weight=" + weight +
+                '}';
+    }
 }

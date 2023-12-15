@@ -15,10 +15,12 @@ package com.baidubce.services.eipgroup.model;
 import java.util.List;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
 /**
  * Eip group model.
  */
+@ToString
 public class GetEipGroupResponse extends AbstractBceResponse {
 
     /**

@@ -13,22 +13,20 @@
 package com.baidubce.services.peerconn.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * The response for creating a peer conn.
  */
+@Getter
+@Setter
+@ToString
 public class CreatePeerConnResponse extends AbstractBceResponse {
 
     /**
      * the id of peer conn created.
      */
     private String peerConnId;
-
-    public String getPeerConnId() {
-        return peerConnId;
-    }
-
-    public void setPeerConnId(String peerConnId) {
-        this.peerConnId = peerConnId;
-    }
 }

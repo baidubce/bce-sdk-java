@@ -149,4 +149,21 @@ public class HttpListener extends ListenerBase {
     public void setRedirectPort(int redirectPort) {
         this.redirectPort = redirectPort;
     }
+
+    @Override
+    public String toString() {
+        return "HttpListener{" +
+                "keepSession=" + keepSession +
+                ", keepSessionType='" + keepSessionType + '\'' +
+                ", keepSessionDuration=" + keepSessionDuration +
+                ", keepSessionCookieName='" + keepSessionCookieName + '\'' +
+                ", xForwardFor=" + xForwardFor +
+                ", healthCheckType='" + healthCheckType + '\'' +
+                ", healthCheckPort=" + healthCheckPort +
+                ", healthCheckURI='" + healthCheckURI + '\'' +
+                ", healthCheckNormalStatus='" + healthCheckNormalStatus + '\'' +
+                ", serverTimeout=" + serverTimeout +
+                ", redirectPort=" + redirectPort +
+                '}';
+    }
 }

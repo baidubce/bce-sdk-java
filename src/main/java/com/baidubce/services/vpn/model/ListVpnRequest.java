@@ -13,6 +13,12 @@ public class ListVpnRequest  extends ListRequest {
     /**Bound eip address */
     private String eip;
 
+    /**
+     * the type of vpn.
+     * IPSec means IPsec-VPN, SSL means SSL-VPN, default empty,means all vpn.
+     */
+    private String type;
+
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

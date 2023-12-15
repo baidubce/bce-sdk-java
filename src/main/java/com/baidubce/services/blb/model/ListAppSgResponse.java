@@ -33,4 +33,15 @@ public class ListAppSgResponse extends ListResponse {
     public void setAppServerGroupList(List<AppSgResponse> appServerGroupList) {
         this.appServerGroupList = appServerGroupList;
     }
+
+    @Override
+    public String toString() {
+        return "ListAppSgResponse{" +
+                "marker=" + getMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "appServerGroupList=" + appServerGroupList +
+                '}';
+    }
 }

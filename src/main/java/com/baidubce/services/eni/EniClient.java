@@ -12,6 +12,22 @@
  */
 package com.baidubce.services.eni;
 
+import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
+
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -36,6 +52,7 @@ import com.baidubce.services.eni.model.EniInstanceOperateRequest;
 import com.baidubce.services.eni.model.EniPrivateIpBatchAddRequest;
 import com.baidubce.services.eni.model.EniPrivateIpBatchOperateRequest;
 import com.baidubce.services.eni.model.EniPrivateIpOperateRequest;
+import com.baidubce.services.eni.model.EniStatusResponse;
 import com.baidubce.services.eni.model.EniUnBindEipRequest;
 import com.baidubce.services.eni.model.EniUpdateEnterpriseSecurityGroupRequest;
 import com.baidubce.services.eni.model.EniUpdateRequest;
@@ -47,21 +64,6 @@ import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.baidubce.util.Validate;
 import com.google.common.base.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
-
-import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides the client for accessing the Baidu Cloud network Service Elastic Network Interface Card.
@@ -492,7 +494,7 @@ public class EniClient extends AbstractBceClient {
             request.setClientToken(this.generateClientToken());
         }
         if (Strings.isNullOrEmpty(request.getAction())) {
-            request.setAction(EniAction.unbind.name());
+            request.setAction(EniAction.unBind.name());
         }
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, ENI_PREFIX,
                 request.getEniId());
@@ -556,6 +558,15 @@ public class EniClient extends AbstractBceClient {
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public EniStatusResponse getEniStatus(String eniId) {
+        GetEniDetailRequest request = new GetEniDetailRequest();
+        request.setEniId(eniId);
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, ENI_PREFIX,
+                request.getEniId(), "status");
+        return invokeHttpClient(internalRequest, EniStatusResponse.class);
     }
 
     /**

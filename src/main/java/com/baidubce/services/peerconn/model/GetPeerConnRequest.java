@@ -14,16 +14,27 @@ package com.baidubce.services.peerconn.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The request for creating a peer conn.
  */
+@Getter
+@Setter
 public class GetPeerConnRequest extends AbstractBceRequest {
 
     /**
      * The id of peer conn .
      */
     private String peerConnId;
+
+    /**
+     * The local or peer interface of peer conn while getting detail.
+     * "initiator" means local, "acceptor" means peer.
+     * If this parameter is not set, the same region will return a random peer.
+     */
+    private String role;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -32,21 +43,24 @@ public class GetPeerConnRequest extends AbstractBceRequest {
     }
 
     /**
-     * Configure id for the request.
+     * Configure peerConnId for the request.
      *
-     * @param peerConnId The name of GetNatRequest
-     * @return GetNatRequest with specific name
+     * @param peerConnId The peerConnId of GetPeerConnRequest
+     * @return GetPeerConnRequest with specific peerConnId
      */
     public GetPeerConnRequest withPeerConnId(String peerConnId) {
         this.peerConnId = peerConnId;
         return this;
     }
 
-    public String getPeerConnId() {
-        return peerConnId;
-    }
-
-    public void setPeerConnId(String peerConnId) {
-        this.peerConnId = peerConnId;
+    /**
+     * Configure role for the request.
+     *
+     * @param role The role of GetPeerConnRequest
+     * @return GetPeerConnRequest with specific role
+     */
+    public GetPeerConnRequest withRole(String role) {
+        this.role = role;
+        return this;
     }
 }

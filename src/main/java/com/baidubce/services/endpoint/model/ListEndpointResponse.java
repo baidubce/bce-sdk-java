@@ -26,4 +26,15 @@ public class ListEndpointResponse extends ListResponse {
     public void setEndpoints(List<Endpoint> endpoints) {
         this.endpoints = endpoints;
     }
+
+    @Override
+    public String toString() {
+        return "ListEndpointResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "endpoints=" + endpoints +
+                '}';
+    }
 }

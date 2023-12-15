@@ -12,11 +12,12 @@
  */
 package com.baidubce.services.esg.model;
 
+import java.util.List;
+
 import com.baidubce.model.ListResponse;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
  * The response for listing enterprise security group request.
@@ -29,4 +30,15 @@ public class ListEsgResponse extends ListResponse {
      * The list of enterprise security group detail model.
      */
     private List<EnterpriseSecurityGroup> enterpriseSecurityGroups;
+
+    @Override
+    public String toString() {
+        return "ListEsgResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "enterpriseSecurityGroups=" + enterpriseSecurityGroups +
+                '}';
+    }
 }

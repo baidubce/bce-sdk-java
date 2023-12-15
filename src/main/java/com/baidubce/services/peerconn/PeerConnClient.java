@@ -1,18 +1,5 @@
 package com.baidubce.services.peerconn;
 
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientException;
 import com.baidubce.http.Headers;
@@ -39,6 +26,18 @@ import com.baidubce.services.peerconn.model.SyncDnsRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides the client for accessing the Baidu Cloud network Service peer conn part.
@@ -191,6 +190,9 @@ public class PeerConnClient extends AbstractBceClient {
         checkStringNotEmpty(request.getPeerConnId(), "PeerConnId should not be empty.");
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, PREFIX, request.getPeerConnId());
+        if (StringUtils.isNotBlank(request.getRole())) {
+            internalRequest.addParameter("role", request.getRole());
+        }
         return this.invokeHttpClient(internalRequest, GetPeerConnResponse.class);
     }
 

@@ -220,17 +220,18 @@ public class SecurityGroupRuleModel {
 
     @Override
     public String toString() {
-        return "SecurityGroupRuleModel{"
-                + "remark='" + remark + '\''
-                + ", direction='" + direction + '\''
-                + ", ethertype='" + ethertype + '\''
-                + ", portRange='" + portRange + '\''
-                + ", protocol='" + protocol + '\''
-                + ", sourceGroupId='" + sourceGroupId + '\''
-                + ", sourceIp='" + sourceIp + '\''
-                + ", destGroupId='" + destGroupId + '\''
-                + ", destIp='" + destIp + '\''
-                + ", securityGroupId='" + securityGroupId + '\''
-                + '}';
+        return "SecurityGroupRuleModel{" +
+                "remark='" + remark + '\'' +
+                ", direction='" + direction + '\'' +
+                ", ethertype='" + ethertype + '\'' +
+                ", portRange='" + portRange + '\'' +
+                ", protocol='" + protocol + '\'' +
+                ", sourceGroupId='" + sourceGroupId + '\'' +
+                ", sourceIp='" + sourceIp + '\'' +
+                ", destGroupId='" + destGroupId + '\'' +
+                ", destIp='" + destIp + '\'' +
+                ", securityGroupId='" + securityGroupId + '\'' +
+                ", securityGroupRuleId='" + securityGroupRuleId + '\'' +
+                '}';
     }
 }

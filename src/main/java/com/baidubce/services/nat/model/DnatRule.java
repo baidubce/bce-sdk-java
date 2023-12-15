@@ -2,12 +2,14 @@ package com.baidubce.services.nat.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Dnat rule info model
  */
 @Getter
 @Setter
+@ToString
 public class DnatRule {
 
     /**

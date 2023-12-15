@@ -21,4 +21,15 @@ public class ListVpcResponse extends ListResponse {
     public void setVpcs(List<Vpc> vpcs) {
         this.vpcs = vpcs;
     }
+
+    @Override
+    public String toString() {
+        return "ListVpcResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "vpcs=" + vpcs +
+                '}';
+    }
 }

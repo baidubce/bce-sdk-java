@@ -21,4 +21,11 @@ public class CreateAppPolicyResponse extends AbstractBceResponse {
     public void setIdList(List<String> idList) {
         this.idList = idList;
     }
+
+    @Override
+    public String toString() {
+        return "CreateAppPolicyResponse{" +
+                "idList=" + idList +
+                '}';
+    }
 }

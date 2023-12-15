@@ -19,7 +19,7 @@ import com.baidubce.model.ListResponse;
 /**
  * The response for list listener.
  */
-public class ListListenerResponse<T extends ListenerBase> extends ListResponse {
+public class ListListenerResponse<T> extends ListResponse {
 
     /**
      * the listener info list.
@@ -32,6 +32,17 @@ public class ListListenerResponse<T extends ListenerBase> extends ListResponse {
 
     public void setListenerList(List<T> listenerList) {
         this.listenerList = listenerList;
+    }
+
+    @Override
+    public String toString() {
+        return "ListListenerResponse{" +
+                "marker=" + getMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "listenerList=" + listenerList +
+                '}';
     }
 }
 

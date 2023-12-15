@@ -3,12 +3,14 @@ package com.baidubce.services.eiptp.model;
 import com.baidubce.model.AbstractBceResponse;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * The response for getting eiptp detail.
  */
 @Getter
 @Setter
+@ToString
 public class EipTpDetailResponse extends AbstractBceResponse {
 
     /**

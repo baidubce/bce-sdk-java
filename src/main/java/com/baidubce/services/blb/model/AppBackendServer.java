@@ -67,4 +67,14 @@ public class AppBackendServer {
     public void setPrivateIp(String privateIp) {
         this.privateIp = privateIp;
     }
+
+    @Override
+    public String toString() {
+        return "AppBackendServer{" +
+                "instanceId='" + instanceId + '\'' +
+                ", weight=" + weight +
+                ", privateIp='" + privateIp + '\'' +
+                ", portList=" + portList +
+                '}';
+    }
 }

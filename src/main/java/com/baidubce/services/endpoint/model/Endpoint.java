@@ -4,12 +4,14 @@
 package com.baidubce.services.endpoint.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
 /**
  * Created by XingChunyang
  * Date: 2021/01/21.
  */
 
+@ToString
 public class Endpoint extends AbstractBceResponse {
 
     /**

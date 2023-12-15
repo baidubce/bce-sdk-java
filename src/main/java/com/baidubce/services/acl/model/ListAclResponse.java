@@ -33,4 +33,14 @@ public class ListAclResponse extends ListResponse {
     public void setAclRules(List<AclRule> aclRules) {
         this.aclRules = aclRules;
     }
+
+    @Override
+    public String toString() {
+        return "ListAclResponse{" +
+                "marker= " + getMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "aclRules=" + aclRules +
+                '}';
+    }
 }

@@ -30,4 +30,10 @@ public class UdpListener extends ListenerBase {
         this.healthCheckString = healthCheckString;
     }
 
+    @Override
+    public String toString() {
+        return "UdpListener{" +
+                "healthCheckString='" + healthCheckString + '\'' +
+                '}';
+    }
 }

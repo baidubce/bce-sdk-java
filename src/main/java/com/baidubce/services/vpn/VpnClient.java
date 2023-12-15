@@ -15,31 +15,45 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.eip.model.Billing;
 import com.baidubce.services.vpc.model.NetworkAction;
+import com.baidubce.services.vpn.model.BatchCreateSslVpnUserRequest;
+import com.baidubce.services.vpn.model.BatchCreateSslVpnUserResponse;
 import com.baidubce.services.vpn.model.BindEipRequest;
+import com.baidubce.services.vpn.model.CreateSslVpnServerRequest;
+import com.baidubce.services.vpn.model.CreateSslVpnServerResponse;
 import com.baidubce.services.vpn.model.CreateVpnConnRequest;
 import com.baidubce.services.vpn.model.CreateVpnConnResponse;
 import com.baidubce.services.vpn.model.CreateVpnRequest;
 import com.baidubce.services.vpn.model.CreateVpnResponse;
+import com.baidubce.services.vpn.model.DeleteSslVpnServerRequest;
+import com.baidubce.services.vpn.model.DeleteSslVpnUserRequest;
 import com.baidubce.services.vpn.model.DeleteVpnConnRequest;
 import com.baidubce.services.vpn.model.DeleteVpnRequest;
+import com.baidubce.services.vpn.model.GetSslVpnServerRequest;
+import com.baidubce.services.vpn.model.GetSslVpnServerResponse;
 import com.baidubce.services.vpn.model.GetVpnRequest;
 import com.baidubce.services.vpn.model.GetVpnResponse;
+import com.baidubce.services.vpn.model.ListSslVpnUserRequest;
+import com.baidubce.services.vpn.model.ListSslVpnUserResponse;
 import com.baidubce.services.vpn.model.ListVpnConnRequest;
 import com.baidubce.services.vpn.model.ListVpnConnResponse;
 import com.baidubce.services.vpn.model.ListVpnRequest;
 import com.baidubce.services.vpn.model.ListVpnResponse;
 import com.baidubce.services.vpn.model.RenewVpnRequest;
 import com.baidubce.services.vpn.model.UnBindEipRequest;
+import com.baidubce.services.vpn.model.UpdateSslVpnServerRequest;
+import com.baidubce.services.vpn.model.UpdateSslVpnUserRequest;
 import com.baidubce.services.vpn.model.UpdateVpnConnRequest;
 import com.baidubce.services.vpn.model.UpdateVpnRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.baidubce.services.vpn.util.Preconditions.checkListIsBlank;
 import static com.baidubce.services.vpn.util.Preconditions.checkStrIsBlank;
@@ -49,6 +63,8 @@ public class VpnClient extends AbstractBceClient {
 
     private static final String VERSION = "v1";
     private static final String VPN_PREFIX = "vpn";
+    private static final String SSL_VPN_SERVER = "sslVpnServer";
+    private static final String SSL_VPN_USER = "sslVpnUser";
 
     /**
      * Responsible for handling httpResponses from all vpn service calls.
@@ -74,7 +90,7 @@ public class VpnClient extends AbstractBceClient {
     }
 
     /**
-     *  vpn List
+     * vpn List
      */
     public ListVpnResponse listVpns(ListVpnRequest request) {
         checkNotNull(request, "request should not be null.");
@@ -90,6 +106,9 @@ public class VpnClient extends AbstractBceClient {
         if (StringUtils.isNotBlank(request.getEip())) {
             internalRequest.addParameter("eip", request.getEip());
         }
+        if (StringUtils.isNotBlank(request.getType())) {
+            internalRequest.addParameter("type", request.getType());
+        }
         internalRequest.addParameter("vpcId", request.getVpcId());
 
         return invokeHttpClient(internalRequest, ListVpnResponse.class);
@@ -97,6 +116,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * create vpn
+     *
      * @param createVpnRequest
      * @return
      */
@@ -119,6 +139,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * update vpn
+     *
      * @param updateVpnRequest
      */
     public AbstractBceResponse updateVpn(UpdateVpnRequest updateVpnRequest) {
@@ -138,6 +159,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * delete vpn
+     *
      * @param deleteVpnResquest
      */
     public AbstractBceResponse deleteVpn(DeleteVpnRequest deleteVpnResquest) {
@@ -155,6 +177,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * Obtain vpn Details
+     *
      * @param vpnId
      * @return
      */
@@ -171,6 +194,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * bind eip
+     *
      * @param bindEipRequest
      */
     public AbstractBceResponse bindEip(BindEipRequest bindEipRequest) {
@@ -191,6 +215,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * unbind eip
+     *
      * @param unbindEipRequest
      */
     public AbstractBceResponse unBindEip(UnBindEipRequest unbindEipRequest) {
@@ -210,6 +235,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * Specify VPN Renewal operation to extend the expiration time
+     *
      * @param renewVpnRequest
      */
     public AbstractBceResponse renewVpn(RenewVpnRequest renewVpnRequest) {
@@ -231,7 +257,8 @@ public class VpnClient extends AbstractBceClient {
     }
 
     /**
-     *  Inquire VPN tunnel
+     * Inquire VPN tunnel
+     *
      * @param listVpnConnRequest
      * @return
      */
@@ -247,6 +274,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * create vpnConn
+     *
      * @param createVpnConnRequest
      * @return
      */
@@ -273,6 +301,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * update vpnConn
+     *
      * @param updateVpnConnRequest
      */
     public AbstractBceResponse updateVpnConn(UpdateVpnConnRequest updateVpnConnRequest) {
@@ -299,6 +328,7 @@ public class VpnClient extends AbstractBceClient {
 
     /**
      * delete vpnConn
+     *
      * @param deleteVpnConnRequest
      */
     public AbstractBceResponse deleteVpnConn(DeleteVpnConnRequest deleteVpnConnRequest) {
@@ -314,7 +344,6 @@ public class VpnClient extends AbstractBceClient {
 
         return this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
-
 
 
     /**
@@ -361,8 +390,8 @@ public class VpnClient extends AbstractBceClient {
      * only support HttpMethodName.POST or HttpMethodName.PUT
      *
      * @param internalRequest A request object, populated with endpoint, resource path, ready for callers to populate
-     * any additional headers or parameters, and execute.
-     * @param bceRequest The original request, as created by the user.
+     *                        any additional headers or parameters, and execute.
+     * @param bceRequest      The original request, as created by the user.
      */
     protected void fillPayload(InternalRequest internalRequest, AbstractBceRequest bceRequest) {
         if (internalRequest.getHttpMethod() == HttpMethodName.POST
@@ -378,6 +407,140 @@ public class VpnClient extends AbstractBceClient {
             internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
             internalRequest.setContent(RestartableInputStream.wrap(requestJson));
         }
+    }
+
+    /**
+     * The default method to generate the random String for clientToken if the optional parameter clientToken
+     * is not specified by the user.
+     * <p/>
+     * The default algorithm is using {@link UUID} to generate a random UUID,
+     *
+     * @return An random String generated by {@link UUID}.
+     */
+    private String generateClientToken() {
+        return UUID.randomUUID().toString();
+    }
+
+    /**
+     *  create an SSL-VPN server
+     * @param request The request containing all options for creating a SslVpnServer
+     * @return
+     */
+    public CreateSslVpnServerResponse createSslVpnServer(CreateSslVpnServerRequest request) {
+        checkNotNull(request, "request should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_SERVER);
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateSslVpnServerResponse.class);
+    }
+
+    public void updateSslVpnServer(UpdateSslVpnServerRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpnId(), "request vpnId should not be null.");
+        checkNotNull(request.getSslVpnServerId(), "request sslVpnServerId should not be null.");
+        checkNotNull(request.getSslVpnServerName(), "request sslVpnServerName should not be null.");
+        checkNotNull(request.getLocalSubnets(), "request localSubnets should not be null.");
+        checkNotNull(request.getRemoteSubnet(), "request remoteSubnet should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_SERVER, request.getSslVpnServerId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void deleteSslVpnServer(DeleteSslVpnServerRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpnId(), "request vpnId should not be null.");
+        checkNotNull(request.getSslVpnServerId(), "request sslVpnServerId should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_SERVER, request.getSslVpnServerId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public GetSslVpnServerResponse getSslVpnServer(String vpnId) {
+        return getSslVpnServer(new GetSslVpnServerRequest().setVpnId(vpnId));
+    }
+
+    private GetSslVpnServerResponse getSslVpnServer(GetSslVpnServerRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpnId(), "request vpnId should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_SERVER);
+        return this.invokeHttpClient(internalRequest, GetSslVpnServerResponse.class);
+    }
+
+    public BatchCreateSslVpnUserResponse batchCreateSslVpnUser(BatchCreateSslVpnUserRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpnId(), "request vpnId should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_USER);
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, BatchCreateSslVpnUserResponse.class);
+    }
+
+
+    public void updateSslVpnUser(UpdateSslVpnUserRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpnId(), "request vpnId should not be null.");
+        checkNotNull(request.getUserId(), "request userId should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_USER, request.getUserId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void deleteSslVpnUser(DeleteSslVpnUserRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpnId(), "request vpnId should not be null.");
+        checkNotNull(request.getUserId(), "request userId should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_USER, request.getUserId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public ListSslVpnUserResponse getSslVpnUser(ListSslVpnUserRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpnId(), "request vpnId should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, VPN_PREFIX,
+                request.getVpnId(), SSL_VPN_USER);
+        if (request.getMarker() != null) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        if (StringUtils.isNotBlank(request.getUserName())) {
+            internalRequest.addParameter("userName", request.getUserName());
+        }
+
+        return this.invokeHttpClient(internalRequest, ListSslVpnUserResponse.class);
     }
 
 }

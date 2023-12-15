@@ -19,4 +19,11 @@ public class GetSubnetDetailResponse extends AbstractBceResponse {
     public void setSubnet(SubnetDetail subnet) {
         this.subnet = subnet;
     }
+
+    @Override
+    public String toString() {
+        return "GetSubnetDetailResponse{" +
+                "subnet=" + subnet +
+                '}';
+    }
 }

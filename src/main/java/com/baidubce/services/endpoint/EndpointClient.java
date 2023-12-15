@@ -3,8 +3,8 @@
  */
 package com.baidubce.services.endpoint;
 
-import static com.baidubce.util.Validate.checkStringNotEmpty;
 import static com.baidubce.util.Validate.checkMultyParamsNotBothEmpty;
+import static com.baidubce.util.Validate.checkStringNotEmpty;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.UnsupportedEncodingException;
@@ -41,6 +41,8 @@ import com.baidubce.services.endpoint.model.ModifyEndpointRequest;
 import com.baidubce.services.endpoint.model.ReleaseEndpointRequest;
 import com.baidubce.services.endpoint.model.ServiceRequest;
 import com.baidubce.services.endpoint.model.ServiceResponse;
+import com.baidubce.services.endpoint.model.UpdateEnterpriseSecurityGroups;
+import com.baidubce.services.endpoint.model.UpdateSecurityGroups;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -271,6 +273,42 @@ public class EndpointClient extends AbstractBceClient {
         }
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.DELETE, ENDPOINT_PREFIX, request.getEndpointId());
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * update endpoint's securitygroups
+     *
+     * @param updateSecurityGroups
+     */
+    public void updateSecurityGroups(UpdateSecurityGroups updateSecurityGroups) {
+        checkNotNull(updateSecurityGroups, "request should not be null.");
+        checkStringNotEmpty(updateSecurityGroups.getEndpointId(), "endpointId should not be empty.");
+        if (Strings.isNullOrEmpty(updateSecurityGroups.getClientToken())) {
+            updateSecurityGroups.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                updateSecurityGroups, HttpMethodName.PUT, ENDPOINT_PREFIX, updateSecurityGroups.getEndpointId());
+        internalRequest.addParameter("bindSg", null);
+        fillPayload(internalRequest, updateSecurityGroups);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * update endpoint's enterpriseSecurityGroups
+     *
+     * @param updateSecurityGroups
+     */
+    public void updateEnterpriseSecurityGroups(UpdateEnterpriseSecurityGroups updateSecurityGroups) {
+        checkNotNull(updateSecurityGroups, "request should not be null.");
+        checkStringNotEmpty(updateSecurityGroups.getEndpointId(), "endpointId should not be empty.");
+        if (Strings.isNullOrEmpty(updateSecurityGroups.getClientToken())) {
+            updateSecurityGroups.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                updateSecurityGroups, HttpMethodName.PUT, ENDPOINT_PREFIX, updateSecurityGroups.getEndpointId());
+        internalRequest.addParameter("bindEsg", null);
+        fillPayload(internalRequest, updateSecurityGroups);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 }

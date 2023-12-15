@@ -112,6 +112,16 @@ public class RouteRule {
         this.nexthopType = nexthopType;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "RouteRule{" +
+                "routeRuleId='" + routeRuleId + '\'' +
+                ", routeTableId='" + routeTableId + '\'' +
+                ", sourceAddress='" + sourceAddress + '\'' +
+                ", destinationAddress='" + destinationAddress + '\'' +
+                ", nexthopId='" + nexthopId + '\'' +
+                ", nexthopType='" + nexthopType + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

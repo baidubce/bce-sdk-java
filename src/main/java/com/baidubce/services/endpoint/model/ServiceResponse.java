@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
 /**
  * Created by XingChunyang
  * Date: 2021/01/21.
  */
 
+@ToString
 public class ServiceResponse extends AbstractBceResponse {
     /**
      * The service list

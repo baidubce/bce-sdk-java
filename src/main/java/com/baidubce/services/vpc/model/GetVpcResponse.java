@@ -19,4 +19,11 @@ public class GetVpcResponse extends AbstractBceResponse {
     public void setVpc(ShowVpcModel vpc) {
         this.vpc = vpc;
     }
+
+    @Override
+    public String toString() {
+        return "GetVpcResponse{" +
+                "vpc=" + vpc +
+                '}';
+    }
 }

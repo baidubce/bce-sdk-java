@@ -81,4 +81,15 @@ public class AppSgResponse extends AbstractBceResponse {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "AppSgResponse{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", status='" + status + '\'' +
+                ", portList=" + portList +
+                '}';
+    }
 }

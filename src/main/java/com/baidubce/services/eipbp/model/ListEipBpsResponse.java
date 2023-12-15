@@ -4,6 +4,7 @@
 package com.baidubce.services.eipbp.model;
 
 import com.baidubce.services.eip.model.ListResponse;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class ListEipBpsResponse extends ListResponse {
         this.bpList = bpList;
     }
 
+    @ToString
     public static class BandwidthPackage {
         /**
          * The name of eipBp.
@@ -119,5 +121,16 @@ public class ListEipBpsResponse extends ListResponse {
         public void setAutoReleaseTime(String autoReleaseTime) {
             this.autoReleaseTime = autoReleaseTime;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ListEipBpsResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "bpList=" + bpList +
+                '}';
     }
 }

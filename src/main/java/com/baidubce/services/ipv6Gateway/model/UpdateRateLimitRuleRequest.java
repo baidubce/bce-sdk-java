@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class UpdateRateLimitRuleRequest extends AbstractBceRequest {
 
     private String gatewayId;
-    private String egressOnlyRuleId;
+    private String rateLimitRuleId;
     private int ingressBandwidthInMbps = -1;
     private int egressBandwidthInMbps = -1;
     private String clientToken;
@@ -24,12 +24,12 @@ public class UpdateRateLimitRuleRequest extends AbstractBceRequest {
         this.gatewayId = gatewayId;
     }
 
-    public String getEgressOnlyRuleId() {
-        return egressOnlyRuleId;
+    public String getRateLimitRuleId() {
+        return rateLimitRuleId;
     }
 
-    public void setEgressOnlyRuleId(String egressOnlyRuleId) {
-        this.egressOnlyRuleId = egressOnlyRuleId;
+    public void setRateLimitRuleId(String rateLimitRuleId) {
+        this.rateLimitRuleId = rateLimitRuleId;
     }
 
     public int getIngressBandwidthInMbps() {

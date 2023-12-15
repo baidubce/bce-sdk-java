@@ -21,8 +21,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.baidubce.AbstractBceClient;
+import com.baidubce.BceClientException;
+import com.baidubce.http.Headers;
+import com.baidubce.http.HttpMethodName;
+import com.baidubce.http.handler.BceErrorResponseHandler;
+import com.baidubce.http.handler.BceJsonResponseHandler;
+import com.baidubce.http.handler.BceMetadataResponseHandler;
+import com.baidubce.http.handler.HttpResponseHandler;
+import com.baidubce.internal.InternalRequest;
+import com.baidubce.internal.RestartableInputStream;
+import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.nat.model.BatchAddDnatRulesRequest;
+import com.baidubce.services.nat.model.BatchAddSnatRuleRequest;
 import com.baidubce.services.nat.model.BindDnatEipRequest;
 import com.baidubce.services.nat.model.BindEipRequest;
+import com.baidubce.services.nat.model.CreateBatchDnatRuleIdsResponse;
+import com.baidubce.services.nat.model.CreateBatchSnatRuleIdsResponse;
 import com.baidubce.services.nat.model.CreateDnatRuleRequest;
 import com.baidubce.services.nat.model.CreateNatRequest;
 import com.baidubce.services.nat.model.CreateNatResponse;
@@ -41,22 +61,6 @@ import com.baidubce.services.nat.model.PurchaseReservedNatRequest;
 import com.baidubce.services.nat.model.ReleaseNatRequest;
 import com.baidubce.services.nat.model.UpdateDnatRuleRequest;
 import com.baidubce.services.nat.model.UpdateSnatRuleRequest;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.baidubce.AbstractBceClient;
-import com.baidubce.BceClientException;
-import com.baidubce.http.Headers;
-import com.baidubce.http.HttpMethodName;
-import com.baidubce.http.handler.BceErrorResponseHandler;
-import com.baidubce.http.handler.BceJsonResponseHandler;
-import com.baidubce.http.handler.BceMetadataResponseHandler;
-import com.baidubce.http.handler.HttpResponseHandler;
-import com.baidubce.internal.InternalRequest;
-import com.baidubce.internal.RestartableInputStream;
-import com.baidubce.model.AbstractBceRequest;
-import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -581,4 +585,35 @@ public class NatClient extends AbstractBceClient {
         }
         return invokeHttpClient(internalRequest, ListDnatRuleResponse.class);
     }
+
+
+    public CreateBatchDnatRuleIdsResponse batchAddDnatRules(BatchAddDnatRulesRequest request) {
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.POST, NAT_PREFIX, request.getNatId(), DNAT_RULE_PREFIX, "batchCreate");
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        return this.invokeHttpClient(internalRequest, CreateBatchDnatRuleIdsResponse.class);
+    }
+
+    public CreateBatchSnatRuleIdsResponse batchAddSnatRules(BatchAddSnatRuleRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.POST,
+                NAT_PREFIX,
+                SNAT_RULE_PREFIX,
+                "batchCreate");
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        return this.invokeHttpClient(internalRequest, CreateBatchSnatRuleIdsResponse.class);
+
+    }
+
 }

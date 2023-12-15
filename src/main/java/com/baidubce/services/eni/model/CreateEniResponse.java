@@ -13,6 +13,7 @@
 package com.baidubce.services.eni.model;
 
 import com.baidubce.model.AbstractBceResponse;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,4 +28,11 @@ public class CreateEniResponse extends AbstractBceResponse {
      * id of the newly created ENI
      */
     private String eniId;
+
+    @Override
+    public String toString() {
+        return "CreateEniResponse{" +
+                "eniId='" + eniId + '\'' +
+                '}';
+    }
 }

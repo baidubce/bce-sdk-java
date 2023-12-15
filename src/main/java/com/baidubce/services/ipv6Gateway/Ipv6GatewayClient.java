@@ -332,13 +332,13 @@ public class Ipv6GatewayClient extends AbstractBceClient {
     public void updateRateLimitRule(UpdateRateLimitRuleRequest request) {
         checkNotNull(request, "the request should not be null");
         checkStringNotEmpty(request.getGatewayId(), "the gatewayId should not be null");
-        checkStringNotEmpty(request.getEgressOnlyRuleId(), "the egressOnlyRuleId should not be null");
+        checkStringNotEmpty(request.getRateLimitRuleId(), "the rateLimitRuleId should not be null");
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(generateDefaultClientToken());
         }
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.PUT,
-                        request.getGatewayId(), RATE_LIMIT_RULE_PREFIX, request.getEgressOnlyRuleId());
+                        request.getGatewayId(), RATE_LIMIT_RULE_PREFIX, request.getRateLimitRuleId());
         internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);

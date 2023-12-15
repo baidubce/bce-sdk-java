@@ -13,10 +13,13 @@
 package com.baidubce.services.nat.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
 /**
  * The response for creating a nat.
  */
+
+@ToString
 public class CreateNatResponse extends AbstractBceResponse {
 
     /**

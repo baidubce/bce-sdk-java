@@ -38,12 +38,17 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.subnet.model.CreateIpReservedReq;
+import com.baidubce.services.subnet.model.CreateIpReservedResponse;
 import com.baidubce.services.subnet.model.CreateSubnetRequest;
 import com.baidubce.services.subnet.model.CreateSubnetResponse;
+import com.baidubce.services.subnet.model.DeleteIpReserveRequest;
 import com.baidubce.services.subnet.model.DeleteSubnetRequest;
 import com.baidubce.services.subnet.model.GetSubnetDetailResponse;
 import com.baidubce.services.subnet.model.GetSubnetRequest;
 import com.baidubce.services.subnet.model.GetSubnetResponse;
+import com.baidubce.services.subnet.model.ListIpReserveRequest;
+import com.baidubce.services.subnet.model.ListIpReserveResponse;
 import com.baidubce.services.subnet.model.ListSubnetsRequest;
 import com.baidubce.services.subnet.model.ListSubnetsResponse;
 import com.baidubce.services.subnet.model.ModifySubnetAttributesRequest;
@@ -62,10 +67,12 @@ public class SubnetClient extends AbstractBceClient {
     private static final String VERSION = "v1";
     private static final String SUBNET_PREFIX = "subnet";
 
+    private static final String IPRESERVE_PREFIX = "subnet/ipreserve";
+
     /**
      * Responsible for handling httpResponses from all network service calls.
      */
-    private static final HttpResponseHandler[] vpc_handlers = new HttpResponseHandler[]{
+    private static final HttpResponseHandler[] VPC_HANDLERS = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(),
             new BceErrorResponseHandler(),
             new BceJsonResponseHandler()
@@ -85,9 +92,8 @@ public class SubnetClient extends AbstractBceClient {
      *                            connects to network (e.g. proxy settings, retry counts, etc).
      */
     public SubnetClient(BceClientConfiguration clientConfiguration) {
-        super(clientConfiguration, vpc_handlers);
+        super(clientConfiguration, VPC_HANDLERS);
     }
-
 
     /**
      * Creates and initializes a new request object for the specified network resource. This method is responsible
@@ -121,8 +127,8 @@ public class SubnetClient extends AbstractBceClient {
      * Only support HttpMethodName.POST or HttpMethodName.PUT
      *
      * @param internalRequest A request object, populated with endpoint, resource path, ready for callers to populate
-     * any additional headers or parameters, and execute.
-     * @param bceRequest The original request, as created by the user.
+     *                        any additional headers or parameters, and execute.
+     * @param bceRequest      The original request, as created by the user.
      */
     private void fillPayload(InternalRequest internalRequest, AbstractBceRequest bceRequest) {
         if (internalRequest.getHttpMethod() == HttpMethodName.POST
@@ -153,14 +159,12 @@ public class SubnetClient extends AbstractBceClient {
     }
 
     /**
-     *
-     * @param name   The name of subnet that will be created.
-     * @param vpcId  The id of vpc which this subnet belong.
-     * @param cidr   The CIDR of this subnet.
-     * @param zoneName
-     *        the name of available zone which the subnet belong
-     *        through listZones, we can get all available zone info at current region
-     *        ee.g. "cn-gz-a"  "cn-gz-b"
+     * @param name     The name of subnet that will be created.
+     * @param vpcId    The id of vpc which this subnet belong.
+     * @param cidr     The CIDR of this subnet.
+     * @param zoneName the name of available zone which the subnet belong
+     *                 through listZones, we can get all available zone info at current region
+     *                 ee.g. "cn-gz-a"  "cn-gz-b"
      * @return
      */
     public CreateSubnetResponse createSubnet(String name, String vpcId, String cidr, String zoneName) {
@@ -169,6 +173,7 @@ public class SubnetClient extends AbstractBceClient {
         return createSubnet(request);
 
     }
+
     /**
      * Create a subnet with the specified options.
      * You must fill the field of clientToken,which is especially for keeping idempotent.
@@ -301,8 +306,9 @@ public class SubnetClient extends AbstractBceClient {
 
     /**
      * Modifying the special attribute to new value of the subnet owned by the user.
+     *
      * @param subnetId The id of the subnet
-     * @param name The name of the subnet after modifying
+     * @param name     The name of the subnet after modifying
      */
     public void modifySubnetAttributes(String subnetId, String name) {
         ModifySubnetAttributesRequest request = new ModifySubnetAttributesRequest();
@@ -329,4 +335,72 @@ public class SubnetClient extends AbstractBceClient {
         internalRequest.addParameter("clientToken", modifySubnetAttributesRequest.getClientToken());
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
+
+    public CreateIpReservedResponse createIpReserved(CreateIpReservedReq createIpReservedReq) {
+        if (Strings.isNullOrEmpty(createIpReservedReq.getClientToken())) {
+            createIpReservedReq.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest =
+                this.createRequest(createIpReservedReq, HttpMethodName.POST, IPRESERVE_PREFIX);
+        fillPayload(internalRequest, createIpReservedReq);
+        internalRequest.addParameter("clientToken", createIpReservedReq.getClientToken());
+        return this.invokeHttpClient(internalRequest, CreateIpReservedResponse.class);
+    }
+
+    public void deleteIpReserve(String ipReserveId) {
+        this.deleteIpReserve(new DeleteIpReserveRequest().withIpReserveId(ipReserveId));
+    }
+
+    /**
+     * Delete the specified subnet owned by the user.
+     * <p/>
+     *
+     * @param deleteIpReserveRequest the request containing all options for deleting own's ipReserve.
+     */
+    public void deleteIpReserve(DeleteIpReserveRequest deleteIpReserveRequest) {
+        checkNotNull(deleteIpReserveRequest, "request should not be null.");
+        checkNotNull(deleteIpReserveRequest.getIpReserveId(), "request ipReserve should not be null.");
+        if (Strings.isNullOrEmpty(deleteIpReserveRequest.getClientToken())) {
+            deleteIpReserveRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                deleteIpReserveRequest, HttpMethodName.DELETE, IPRESERVE_PREFIX,
+                deleteIpReserveRequest.getIpReserveId());
+        internalRequest.addParameter("clientToken", deleteIpReserveRequest.getClientToken());
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Return a list of subnets owned by the authenticated user.
+     *
+     * @return The response containing a list of subnets owned by the authenticated user.
+     */
+    public ListIpReserveResponse listIpReserve() {
+        return this.listIpReserve(new ListIpReserveRequest());
+    }
+
+    /**
+     * Return a list of IpReserve owned by the authenticated user.
+     *
+     * @param request The request containing all options for listing own's IpReserve.
+     * @return The response containing a list of IpReserves owned by the authenticated user.
+     */
+    public ListIpReserveResponse listIpReserve(ListIpReserveRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, IPRESERVE_PREFIX);
+        if (request.getMarker() != null) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        if (StringUtils.isNotEmpty(request.getSubnetId())) {
+            internalRequest.addParameter("subnetId", request.getSubnetId());
+        }
+
+        return invokeHttpClient(internalRequest, ListIpReserveResponse.class);
+    }
+
 }
+
+

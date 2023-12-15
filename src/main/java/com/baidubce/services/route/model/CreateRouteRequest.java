@@ -68,12 +68,10 @@ public class CreateRouteRequest extends AbstractBceRequest {
 
     private String description;
 
-    public String getVersion() {
-        return version;
-    }
+    private int ipVersion = 4;
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setIpVersion(int ipVersion) {
+        this.ipVersion = ipVersion;
     }
 
     public String getClientToken() {
@@ -131,6 +129,10 @@ public class CreateRouteRequest extends AbstractBceRequest {
 
     public void setRouteTableId(String routeTableId) {
         this.routeTableId = routeTableId;
+    }
+
+    public int getIpVersion() {
+        return ipVersion;
     }
 
     public CreateRouteRequest withVersion(String version) {

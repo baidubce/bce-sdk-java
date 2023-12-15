@@ -48,9 +48,19 @@ public class CreateNatRequest extends AbstractBceRequest {
     private String vpcId;
 
     /**
-     * The spec of nat that will be created.
+     * The size of the NAT gateway, with options:
+     *      small (supports binding up to 5 public IP addresses),
+     *      medium (supports binding up to 10 public IP addresses),
+     *      and large (supports binding up to 15 public IP addresses).
+     * This parameter and 'cuNum' can only be selected in one of the two
      */
     private String spec;
+
+    /**
+     * The number of compute units (CUs) for the NAT gateway.
+     * This parameter and 'spec' can only be selected in one of the two."
+     */
+    private Integer cuNum;
 
     /**
      * The eips of nat that will be created.
@@ -182,5 +192,13 @@ public class CreateNatRequest extends AbstractBceRequest {
 
     public void setTags(List<TagModel> tags) {
         this.tags = tags;
+    }
+
+    public Integer getCuNum() {
+        return cuNum;
+    }
+
+    public void setCuNum(Integer cuNum) {
+        this.cuNum = cuNum;
     }
 }

@@ -69,4 +69,18 @@ public class ListBackendServerStatusResponse extends ListResponse {
     public void setBackendPort(int backendPort) {
         this.backendPort = backendPort;
     }
+
+    @Override
+    public String toString() {
+        return "ListBackendServerStatusResponse{" +
+                "marker=" + getMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "backendServerList=" + backendServerList +
+                ", type='" + type + '\'' +
+                ", listenerPort=" + listenerPort +
+                ", backendPort=" + backendPort +
+                '}';
+    }
 }

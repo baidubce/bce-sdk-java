@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.baidubce.model.ListResponse;
 
+
 public class ListRateLimitRuleResponse extends ListResponse {
     /**
      * List of ipv6Gateway' RateLimitRule info
@@ -19,5 +20,16 @@ public class ListRateLimitRuleResponse extends ListResponse {
 
     public void setRateLimitRules(List<RateLimitRule> rateLimitRules) {
         this.rateLimitRules = rateLimitRules;
+    }
+
+    @Override
+    public String toString() {
+        return "ListRateLimitRuleResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "rateLimitRules=" + rateLimitRules +
+                '}';
     }
 }

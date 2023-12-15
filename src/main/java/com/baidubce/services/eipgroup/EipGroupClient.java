@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.baidubce.services.eipgroup.model.EipGroupOperateRequest;
+import com.baidubce.services.eipgroup.model.MoveInRequest;
+import com.baidubce.services.eipgroup.model.MoveOutRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -289,4 +292,59 @@ public class EipGroupClient extends AbstractBceClient {
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
+
+    /**
+     * release eip group.
+     *
+     * @param request The request containing all options for release the specified eip group.
+     */
+    public void releaseEipGroup(EipGroupOperateRequest request) {
+        checkStringNotEmpty(request.getId(), "id should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.DELETE, PREFIX, request.getId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * move eip form group.
+     *
+     * @param request The request containing all options for move the specified eips from group.
+     */
+    public void moveOutEips(MoveOutRequest request) {
+        checkStringNotEmpty(request.getId(), "id should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, PREFIX, request.getId());
+        internalRequest.addParameter("move_out", null);
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * move eip into eipgroup.
+     *
+     * @param request The request containing all options for move the specified eips into group.
+     */
+    public void moveInEips(MoveInRequest request) {
+        checkStringNotEmpty(request.getId(), "id should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, PREFIX, request.getId());
+        internalRequest.addParameter("move_in", null);
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
 }

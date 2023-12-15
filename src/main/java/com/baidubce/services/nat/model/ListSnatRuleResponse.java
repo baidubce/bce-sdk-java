@@ -17,4 +17,15 @@ public class ListSnatRuleResponse extends ListResponse {
      * List of snat rule info
      */
     private List<SnatRule> rules;
+
+    @Override
+    public String toString() {
+        return "ListSnatRuleResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "rules=" + rules +
+                '}';
+    }
 }

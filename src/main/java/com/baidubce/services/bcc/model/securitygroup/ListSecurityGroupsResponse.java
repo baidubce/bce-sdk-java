@@ -34,4 +34,15 @@ public class ListSecurityGroupsResponse extends ListResponse {
     public void setSecurityGroups(List<SecurityGroupModel> securityGroups) {
         this.securityGroups = securityGroups;
     }
+
+    @Override
+    public String toString() {
+        return "ListSecurityGroupsResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "securityGroups=" + securityGroups +
+                '}';
+    }
 }

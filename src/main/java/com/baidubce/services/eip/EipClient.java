@@ -34,15 +34,22 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.eip.model.AutoRenewEipRequest;
 import com.baidubce.services.eip.model.Billing;
 import com.baidubce.services.eip.model.BindEipRequest;
 import com.baidubce.services.eip.model.CreateEipRequest;
 import com.baidubce.services.eip.model.CreateEipResponse;
+import com.baidubce.services.eip.model.DirectEipRequest;
 import com.baidubce.services.eip.model.ListEipsRequest;
 import com.baidubce.services.eip.model.ListEipsResponse;
+import com.baidubce.services.eip.model.ListRecycleEipsRequest;
+import com.baidubce.services.eip.model.ListRecycleEipsResponse;
+import com.baidubce.services.eip.model.OptionalReleaseEipRequest;
 import com.baidubce.services.eip.model.PurchaseReservedEipRequest;
+import com.baidubce.services.eip.model.RecycleOperateEipRequest;
 import com.baidubce.services.eip.model.ReleaseEipRequest;
 import com.baidubce.services.eip.model.ResizeEipRequest;
+import com.baidubce.services.eip.model.StopAutoRenewEipRequest;
 import com.baidubce.services.eip.model.UnbindEipRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -194,6 +201,86 @@ public class EipClient extends AbstractBceClient {
     }
 
     /**
+     * AutoRenew eip with fixed duration
+     * only Prepaid eip can do this
+     * <p>
+     * This is an asynchronous interface
+     *
+     * @param request The request containing all options for starting autorenew eip.
+     */
+    public void startAutoRenew(AutoRenewEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, request.getEip());
+        internalRequest.addParameter("startAutoRenew", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Stop autoRenew eip.
+     * only Prepaid eip can do this
+     *
+     * This is an asynchronous interface
+     *
+     * @param request The request containing all options for stopping autorenew eip.
+     */
+    public void stopAutoRenew(StopAutoRenewEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, request.getEip());
+        internalRequest.addParameter("stopAutoRenew", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Direct eip.
+     *
+     * This is an asynchronous interface
+     *
+     * @param request The request containing all options for directing on eip.
+     */
+    public void directEip(DirectEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, request.getEip());
+        internalRequest.addParameter("direct", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, "0");
+        internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * UnDirect eip.
+     *
+     * This is an asynchronous interface
+     *
+     * @param request The request containing all options for undirecting on eip.
+     */
+    public void unDirectEip(DirectEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, request.getEip());
+        internalRequest.addParameter("unDirect", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, "0");
+        internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
      * bind the eip to a specified instanceId and instanceType(BCC|BLB).
      * @param eip eip address to be bound
      * @param instanceId id of instance to be bound
@@ -308,6 +395,87 @@ public class EipClient extends AbstractBceClient {
             internalRequest.addParameter("instanceType", request.getInstanceType());
         }
         return invokeHttpClient(internalRequest, ListEipsResponse.class);
+    }
+
+    /**
+     * get a list of eips from recycle owned by the authenticated user and specified conditions
+     *
+     * @param request The request containing all options for query
+     * @return
+     */
+    public ListRecycleEipsResponse listRecycleEips(ListRecycleEipsRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, "recycle");
+        if (!Strings.isNullOrEmpty(request.getMarker())) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getMaxKeys() >= 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        if (!Strings.isNullOrEmpty(request.getEip())) {
+            internalRequest.addParameter("eip", request.getEip());
+        }
+        if (!Strings.isNullOrEmpty(request.getName())) {
+            internalRequest.addParameter("name", request.getName());
+        }
+        return invokeHttpClient(internalRequest, ListRecycleEipsResponse.class);
+    }
+
+
+    /**
+     * optional release the eip(delete operation)
+     * Only the Postpaid instance or Prepaid which is expired can be released.
+     * if the eip has been bound, must unbind before releasing
+     * @param request The request containing all options for releasing eip
+     */
+    public void optionalReleaseEip(OptionalReleaseEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE, request.getEip());
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        internalRequest.addParameter("releaseToRecycle", String.valueOf(request.isReleaseToRecycle()));
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+
+    /**
+     * release the eip from recycle.
+     *
+     * @param request The request containing all options for releasing eip from recycle.
+     * @return
+     */
+    public void releaseEipFromRecycle(RecycleOperateEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE,
+                "recycle/" + request.getEip());
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * restore the eip from recycle.
+     *
+     * @param request The request containing all options for restoring eip from recycle.
+     * @return
+     */
+    public void restoreEipFromRecycle(RecycleOperateEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                "recycle/" + request.getEip());
+        internalRequest.addParameter("restore", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, "0");
+        internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
     /**

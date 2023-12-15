@@ -12,6 +12,19 @@
  */
 package com.baidubce.services.blb;
 
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import com.baidubce.services.blb.model.ListAppRsMountResponse;
+import com.baidubce.services.blb.model.ListAppRsUnMountResponse;
+import org.apache.commons.lang3.StringUtils;
+
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientException;
 import com.baidubce.http.Headers;
@@ -24,6 +37,7 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.blb.model.AllListener;
 import com.baidubce.services.blb.model.AppBackendPolicyRequest;
 import com.baidubce.services.blb.model.AppBackendServer;
 import com.baidubce.services.blb.model.AppIgRequest;
@@ -37,6 +51,8 @@ import com.baidubce.services.blb.model.AppSgPortRequest;
 import com.baidubce.services.blb.model.AppSgPortResponse;
 import com.baidubce.services.blb.model.AppSgRequest;
 import com.baidubce.services.blb.model.AppSgResponse;
+import com.baidubce.services.blb.model.BlbDetailRequest;
+import com.baidubce.services.blb.model.BlbInstance;
 import com.baidubce.services.blb.model.BlbListenerAction;
 import com.baidubce.services.blb.model.BlbListenerRequest;
 import com.baidubce.services.blb.model.CreateAppPolicyResponse;
@@ -45,8 +61,10 @@ import com.baidubce.services.blb.model.CreateBlbResponse;
 import com.baidubce.services.blb.model.DeleteAppPolicyRequest;
 import com.baidubce.services.blb.model.DeleteBlbRequest;
 import com.baidubce.services.blb.model.DeleteListenerRequest;
+import com.baidubce.services.blb.model.EsgOperateRequest;
 import com.baidubce.services.blb.model.HttpListener;
 import com.baidubce.services.blb.model.HttpsListener;
+import com.baidubce.services.blb.model.ListAllListenerRequest;
 import com.baidubce.services.blb.model.ListAppIgRequest;
 import com.baidubce.services.blb.model.ListAppIgResponse;
 import com.baidubce.services.blb.model.ListAppIpGroupMemberRequest;
@@ -59,12 +77,16 @@ import com.baidubce.services.blb.model.ListAppSgRequest;
 import com.baidubce.services.blb.model.ListAppSgResponse;
 import com.baidubce.services.blb.model.ListBackendServerStatusRequest;
 import com.baidubce.services.blb.model.ListBackendServerStatusResponse;
+import com.baidubce.services.blb.model.ListBlbEsgResponse;
 import com.baidubce.services.blb.model.ListBlbRequest;
 import com.baidubce.services.blb.model.ListBlbResponse;
+import com.baidubce.services.blb.model.ListBlbSgRequest;
+import com.baidubce.services.blb.model.ListBlbSgResponse;
 import com.baidubce.services.blb.model.ListListenerRequest;
 import com.baidubce.services.blb.model.ListListenerResponse;
 import com.baidubce.services.blb.model.ListenerConstant;
 import com.baidubce.services.blb.model.ModifyBlbAttributesRequest;
+import com.baidubce.services.blb.model.SgOperateRequest;
 import com.baidubce.services.blb.model.SslListener;
 import com.baidubce.services.blb.model.TcpListener;
 import com.baidubce.services.blb.model.UdpListener;
@@ -72,16 +94,6 @@ import com.baidubce.services.tag.model.Tag;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides the client for accessing the Baidu Cloud network Service Baidu Application Load Balance (APPBLB).
@@ -265,6 +277,20 @@ public class AppBlbClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, ListBlbResponse.class);
     }
 
+
+    /**
+     * Return the blb detail with the specified id.
+     *
+     * @param request The request containing all options for getting blb detail.
+     *
+     * @return The response containing the blb detail
+     */
+    public BlbInstance blbDetail(BlbDetailRequest request) {
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, PREFIX, request.getBlbId());
+        return invokeHttpClient(internalRequest, BlbInstance.class);
+    }
+
     /**
      * Modifying the special attribute to new blb.
      *
@@ -394,6 +420,41 @@ public class AppBlbClient extends AbstractBceClient {
      */
     public ListListenerResponse<SslListener> listSslListener(String blbId) {
         return listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.SSL_LISTENER));
+    }
+
+    /**
+     * Return a list of all listener with the specified options.
+     *
+     * @param blbId The blb id of the listener.
+     *
+     * @return The response containing a list of listener.
+     */
+    public ListListenerResponse<AllListener> listAllListener(String blbId) {
+        return listAllListener(new ListAllListenerRequest().withBlbId(blbId));
+    }
+
+    /**
+     * Return a list of listener with the specified options of blb.
+     *
+     * @param request The request containing all options for listing listeners of blb.
+     *
+     * @return The response containing a list of listener with the specified options.
+     */
+    public ListListenerResponse<AllListener> listAllListener(ListAllListenerRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, PREFIX,
+                request.getBlbId(), "listener");
+        if (request.getListenerPort() != 0) {
+            internalRequest.addParameter("listenerPort", String.valueOf(request.getListenerPort()));
+        }
+        if (request.getMarker() != null) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        return invokeHttpClient(internalRequest, ListListenerResponse.class);
     }
 
     /**
@@ -651,7 +712,7 @@ public class AppBlbClient extends AbstractBceClient {
      *
      * @return The response containing a list of backend servers of the specified blb appServerGroup.
      */
-    public List<AppBackendServer> listBlbRsMount(String blbId, String sgId) {
+    public ListAppRsMountResponse listBlbRsMount(String blbId, String sgId) {
         return listBlbRsMount(new ListAppRsRequest(blbId).withSgId(sgId));
     }
 
@@ -662,14 +723,14 @@ public class AppBlbClient extends AbstractBceClient {
      *
      * @return The response containing a list of backend servers of the specified blb appServerGroup.
      */
-    public List<AppBackendServer> listBlbRsMount(ListAppRsRequest listAppRsRequest) {
+    public ListAppRsMountResponse listBlbRsMount(ListAppRsRequest listAppRsRequest) {
         checkNotNull(listAppRsRequest, "request should not be null.");
         checkNotNull(listAppRsRequest.getBlbId(), "request blbId should not be null.");
         checkNotNull(listAppRsRequest.getSgId(), "request sgId should not be null.");
         InternalRequest internalRequest = this.createRequest(listAppRsRequest, HttpMethodName.GET, PREFIX,
                 listAppRsRequest.getBlbId(), "blbrsmount");
         internalRequest.addParameter("sgId", listAppRsRequest.getSgId());
-        return invokeHttpClient(internalRequest, ListAppRsResponse.class).getBackendServerList();
+        return invokeHttpClient(internalRequest, ListAppRsMountResponse.class);
 
     }
 
@@ -681,7 +742,7 @@ public class AppBlbClient extends AbstractBceClient {
      *
      * @return The response containing a list of backend servers of the specified blb appServerGroup.
      */
-    public List<AppBackendServer> listBlbRsUnMount(String blbId, String sgId) {
+    public ListAppRsUnMountResponse listBlbRsUnMount(String blbId, String sgId) {
         return listBlbRsUnMount(new ListAppRsRequest(blbId).withSgId(sgId));
     }
 
@@ -692,14 +753,14 @@ public class AppBlbClient extends AbstractBceClient {
      *
      * @return The response containing a list of backend servers of the specified blb appServerGroup.
      */
-    public List<AppBackendServer> listBlbRsUnMount(ListAppRsRequest listAppRsRequest) {
+    public ListAppRsUnMountResponse listBlbRsUnMount(ListAppRsRequest listAppRsRequest) {
         checkNotNull(listAppRsRequest, "request should not be null.");
         checkNotNull(listAppRsRequest.getBlbId(), "request blbId should not be null.");
         checkNotNull(listAppRsRequest.getSgId(), "request sgId should not be null.");
         InternalRequest internalRequest = this.createRequest(listAppRsRequest, HttpMethodName.GET, PREFIX,
                 listAppRsRequest.getBlbId(), "blbrsunmount");
         internalRequest.addParameter("sgId", listAppRsRequest.getSgId());
-        return invokeHttpClient(internalRequest, ListAppRsResponse.class).getBackendServerList();
+        return invokeHttpClient(internalRequest, ListAppRsUnMountResponse.class);
 
     }
 
@@ -1384,6 +1445,109 @@ public class AppBlbClient extends AbstractBceClient {
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    /**
+     * bind the securityGroups on the specified blb.
+     *
+     * @param request   The request containing all options for binding sg.
+     */
+    public void bindSg(SgOperateRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, "blb",
+                request.getBlbId(), "securitygroup");
+        internalRequest.addParameter("bind", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
 
+    /**
+     * unbind the securityGroups from the specified blb.
+     *
+     * @param request   The request containing all options for unbinding sg.
+     */
+    public void unBindSg(SgOperateRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, "blb",
+                request.getBlbId(), "securitygroup");
+        internalRequest.addParameter("unbind", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
 
+    /**
+     * Return a list of sg info of the specified blb
+     *
+     * @param request The request containing all options for listing blb's sg.
+     *
+     * @return The response containing a listing blb's sg.
+     */
+    public ListBlbSgResponse listBlbSg(ListBlbSgRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, "blb",
+                request.getBlbId(), "securitygroup");
+        return invokeHttpClient(internalRequest, ListBlbSgResponse.class);
+    }
+
+    /**
+     * bind the enterpriseSecurityGroups on the specified blb.
+     *
+     * @param request   The request containing all options for binding esg.
+     */
+    public void bindEsg(EsgOperateRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, "blb",
+                request.getBlbId(), "enterprise", "securitygroup");
+        internalRequest.addParameter("bind", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * unbind the enterpriseSecurityGroups from the specified blb.
+     *
+     * @param request   The request containing all options for unbinding esg.
+     */
+    public void unBindEsg(EsgOperateRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, "blb",
+                request.getBlbId(), "enterprise", "securitygroup");
+        internalRequest.addParameter("unbind", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Return a list of esg info of the specified blb
+     *
+     * @param request The request containing all options for listing blb's esg.
+     *
+     * @return The response containing a listing blb's esg.
+     */
+    public ListBlbEsgResponse listBlbEsg(ListBlbSgRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getBlbId(), "blbId should not be empty");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, "blb",
+                request.getBlbId(), "enterprise", "securitygroup");
+        return invokeHttpClient(internalRequest, ListBlbEsgResponse.class);
+    }
 }

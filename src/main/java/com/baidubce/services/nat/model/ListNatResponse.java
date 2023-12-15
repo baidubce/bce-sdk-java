@@ -33,4 +33,15 @@ public class ListNatResponse extends ListResponse {
     public void setNats(List<Nat> nats) {
         this.nats = nats;
     }
+
+    @Override
+    public String toString() {
+        return "ListNatResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "nats=" + nats +
+                '}';
+    }
 }

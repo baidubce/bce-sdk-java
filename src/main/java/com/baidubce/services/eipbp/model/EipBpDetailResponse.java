@@ -4,12 +4,14 @@
 package com.baidubce.services.eipbp.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
 import java.util.List;
 
 /**
  * The response for get eipBp detail.
  */
+@ToString
 public class EipBpDetailResponse extends AbstractBceResponse {
     /**
      * The name of eipBp.

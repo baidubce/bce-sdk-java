@@ -22,6 +22,11 @@ public class ListEipBpsRequest extends ListRequest {
      */
     private String bindType;
 
+    /**
+     * eipbp type condition.
+     */
+    private String type;
+
     public String getId() {
         return id;
     }
@@ -46,6 +51,14 @@ public class ListEipBpsRequest extends ListRequest {
         this.bindType = bindType;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public ListEipBpsRequest withId(String id) {
         this.id = id;
         return this;
@@ -58,6 +71,11 @@ public class ListEipBpsRequest extends ListRequest {
 
     public ListEipBpsRequest withBindType(String bindType) {
         this.bindType = bindType;
+        return this;
+    }
+
+    public ListEipBpsRequest withType(String type) {
+        this.type = type;
         return this;
     }
 }

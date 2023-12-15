@@ -11,7 +11,7 @@ public enum EniAction {
     attach,
     detach,
     bind,
-    unbind,
+    unBind,
     bindSg,
     bindEsg,
 }

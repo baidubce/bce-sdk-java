@@ -163,4 +163,22 @@ public class AppPolicy {
     public void setGroupType(String groupType) {
         this.groupType = groupType;
     }
+
+    @Override
+    public String toString() {
+        return "AppPolicy{" +
+                "id='" + id + '\'' +
+                ", desc='" + desc + '\'' +
+                ", appServerGroupId='" + appServerGroupId + '\'' +
+                ", appServerGroupName='" + appServerGroupName + '\'' +
+                ", appIpGroupId='" + appIpGroupId + '\'' +
+                ", appIpGroupName='" + appIpGroupName + '\'' +
+                ", groupType='" + groupType + '\'' +
+                ", frontendPort=" + frontendPort +
+                ", backendPort=" + backendPort +
+                ", portType='" + portType + '\'' +
+                ", priority=" + priority +
+                ", ruleList=" + ruleList +
+                '}';
+    }
 }

@@ -12,10 +12,12 @@
  */
 package com.baidubce.services.blb.model;
 
+import com.baidubce.model.AbstractBceResponse;
+
 /**
  * The blb info modal.
  */
-public class BlbInstance {
+public class BlbInstance extends AbstractBceResponse {
 
     /**
      * the short id of the blb.
@@ -114,4 +116,17 @@ public class BlbInstance {
         this.subnetId = subnetId;
     }
 
+    @Override
+    public String toString() {
+        return "BlbInstance{" +
+                "blbId='" + blbId + '\'' +
+                ", status='" + status + '\'' +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", address='" + address + '\'' +
+                ", vpcId='" + vpcId + '\'' +
+                ", subnetId='" + subnetId + '\'' +
+                ", publicIp='" + publicIp + '\'' +
+                '}';
+    }
 }

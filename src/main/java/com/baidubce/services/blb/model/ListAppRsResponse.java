@@ -33,4 +33,15 @@ public class ListAppRsResponse extends ListResponse {
     public void setBackendServerList(List<AppBackendServer> backendServerList) {
         this.backendServerList = backendServerList;
     }
+
+    @Override
+    public String toString() {
+        return "ListAppRsResponse{" +
+                "marker=" + getMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "backendServerList=" + backendServerList +
+                '}';
+    }
 }

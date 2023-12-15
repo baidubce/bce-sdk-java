@@ -33,4 +33,15 @@ public class ListEipGroupResponse extends ListResponse {
     public void setEipgroups(List<EipGroup> eipgroups) {
         this.eipgroups = eipgroups;
     }
+
+    @Override
+    public String toString() {
+        return "ListEipGroupResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "eipgroups=" + eipgroups +
+                '}';
+    }
 }

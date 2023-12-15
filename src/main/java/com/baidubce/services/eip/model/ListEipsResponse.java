@@ -3,6 +3,8 @@
  */
 package com.baidubce.services.eip.model;
 
+import lombok.ToString;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class ListEipsResponse extends ListResponse {
         this.eipList = eipList;
     }
 
+    @ToString
     public static class EipModel {
         /**
          * name of eip
@@ -56,8 +59,8 @@ public class ListEipsResponse extends ListResponse {
          */
         private String paymentTiming;
         /**
-         *  The way of eip charging
-         *  see more detail at <a href = "https://bce.baidu.com/doc/EIP/API.html#Billing">BCE API doc</a>
+         * The way of eip charging
+         * see more detail at <a href = "https://bce.baidu.com/doc/EIP/API.html#Billing">BCE API doc</a>
          */
         private String billingMethod;
         /**
@@ -156,5 +159,16 @@ public class ListEipsResponse extends ListResponse {
         public void setExpireTime(Date expireTime) {
             this.expireTime = expireTime;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ListEipsResponse{" +
+                "marker= " + getMarker() + "," +
+                "nextMarker= " + getNextMarker() + "," +
+                "maxKeys= " + getMaxKeys() + "," +
+                "isTruncated= " + getIsTruncated() + "," +
+                "eipList=" + eipList +
+                '}';
     }
 }

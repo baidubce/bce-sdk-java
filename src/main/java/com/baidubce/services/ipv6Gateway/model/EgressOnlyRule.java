@@ -4,8 +4,10 @@
 package com.baidubce.services.ipv6Gateway.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.ToString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class EgressOnlyRule {
     private String egressOnlyRuleId;
     private String cidr;

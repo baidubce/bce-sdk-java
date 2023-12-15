@@ -33,4 +33,15 @@ public class ListAppPolicyResponse extends ListResponse {
     public void setPolicyList(List<AppPolicy> policyList) {
         this.policyList = policyList;
     }
+
+    @Override
+    public String toString() {
+        return "ListAppPolicyResponse{" +
+                "marker=" + getMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "policyList=" + policyList +
+                '}';
+    }
 }

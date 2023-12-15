@@ -72,4 +72,14 @@ public class GetAclResponse extends AbstractBceResponse {
     public void setAclEntrys(List<AclEntry> aclEntrys) {
         this.aclEntrys = aclEntrys;
     }
+
+    @Override
+    public String toString() {
+        return "GetAclResponse{" +
+                "vpcId='" + vpcId + '\'' +
+                ", vpcName='" + vpcName + '\'' +
+                ", vpcCidr='" + vpcCidr + '\'' +
+                ", aclEntrys=" + aclEntrys +
+                '}';
+    }
 }

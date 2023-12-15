@@ -14,8 +14,10 @@ package com.baidubce.services.eipgroup.model;
 
 import com.baidubce.model.AbstractBceResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.ToString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class IdResponse extends AbstractBceResponse {
     private String id;
 

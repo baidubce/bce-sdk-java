@@ -30,6 +30,10 @@ import com.baidubce.services.route.model.CreateRouteResponse;
 import com.baidubce.services.route.model.DeleteRouteRequest;
 import com.baidubce.services.route.model.GetRouteRequest;
 import com.baidubce.services.route.model.GetRouteResponse;
+import com.baidubce.services.route.model.ListRouteRuleReq;
+import com.baidubce.services.route.model.ListRouteRuleResponse;
+import com.baidubce.services.route.model.SwitchRouteHaRequest;
+import com.baidubce.services.route.model.UpdateRouteRuleRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -52,7 +56,6 @@ public class RouteClient extends AbstractBceClient {
             new BceErrorResponseHandler(),
             new BceJsonResponseHandler()
     };
-
     /**
      * Constructs a new client to invoke service methods on network.
      */
@@ -131,17 +134,6 @@ public class RouteClient extends AbstractBceClient {
     }
 
 
-//    public CreateRouteResponse createRoute(String routeTableId, String sourceAddress, String destinationAddress,
-//                                           String nexthopType, String nexthopId, String description) {
-//        CreateRouteRequest createRouteRequest = new CreateRouteRequest();
-//        createRouteRequest.withRouteTableId(routeTableId).withSourceAddress(sourceAddress)
-//                .withDestinationAddress(destinationAddress).withNextHopType(nexthopType).withDescription(description);
-//        if (!Strings.isNullOrEmpty(nexthopId)) {
-//            createRouteRequest.withNextHopId(nexthopId);
-//        }
-//        return createRoute(createRouteRequest);
-//
-//    }
     /**
      * Create a route with the specified options.
      * You must fill the field of clientToken,which is especially for keeping idempotent.
@@ -236,6 +228,61 @@ public class RouteClient extends AbstractBceClient {
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    /**
+     * update route rule info
+     *
+     * @param updateRouteRuleRequest
+     */
+    public void updateRouteRule(UpdateRouteRuleRequest updateRouteRuleRequest) {
+        checkNotNull(updateRouteRuleRequest, "request should not be null.");
+        checkNotNull(updateRouteRuleRequest.getRouteRuleId(), "request routeRuleId should not be null.");
+        if (Strings.isNullOrEmpty(updateRouteRuleRequest.getClientToken())) {
+            updateRouteRuleRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                updateRouteRuleRequest, HttpMethodName.PUT, ROUTE_PREFIX, ROUTE_RULE,
+                updateRouteRuleRequest.getRouteRuleId());
+        internalRequest.addParameter("clientToken", updateRouteRuleRequest.getClientToken());
+        fillPayload(internalRequest, updateRouteRuleRequest);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
 
+    }
 
+    /**
+     * list route by marker & maxKeys param
+     * the method is high performance
+     *
+     * @param listRouteRuleReq
+     * @return
+     */
+    public ListRouteRuleResponse listRouteRule(ListRouteRuleReq listRouteRuleReq) {
+        InternalRequest internalRequest = this.createRequest(
+                listRouteRuleReq, HttpMethodName.GET, ROUTE_PREFIX, ROUTE_RULE);
+        if (!Strings.isNullOrEmpty(listRouteRuleReq.getVpcId())) {
+            internalRequest.addParameter("vpcId", listRouteRuleReq.getVpcId());
+        } else if (!Strings.isNullOrEmpty(listRouteRuleReq.getRouteTableId())) {
+            internalRequest.addParameter("routeTableId", listRouteRuleReq.getRouteTableId());
+        }
+        return this.invokeHttpClient(internalRequest, ListRouteRuleResponse.class);
+    }
+
+    /**
+     * The method is used to switch routeHA
+     *
+     * @param ruleId
+     */
+    public void switchRouteHa(String ruleId) {
+        SwitchRouteHaRequest switchRouteHaRequest = new SwitchRouteHaRequest();
+        switchRouteHaRequest.setRouteRuleId(ruleId);
+        switchRouteHa(switchRouteHaRequest);
+    }
+
+    public void switchRouteHa(SwitchRouteHaRequest switchRouteHaRequest) {
+        InternalRequest internalRequest = this.createRequest(
+                switchRouteHaRequest, HttpMethodName.PUT, ROUTE_PREFIX, ROUTE_RULE,
+                switchRouteHaRequest.getRouteRuleId());
+        internalRequest.addParameter("switchRouteHA", null);
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, "0");
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
 }

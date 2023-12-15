@@ -3,6 +3,9 @@
  */
 package com.baidubce.services.ipv6Gateway.model;
 
+import lombok.ToString;
+
+@ToString
 public class RateLimitRule {
 
     private String rateLimitRuleId;

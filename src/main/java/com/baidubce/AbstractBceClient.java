@@ -191,8 +191,6 @@ public abstract class AbstractBceClient {
         if (!request.getHeaders().containsKey(Headers.DATE)) {
             request.addHeader(Headers.DATE, DateUtils.formatRfc822Date(new Date()));
         }
-       /* request.addHeader("x-bce-date", "2020-11-17T03:22:12Z");
-        request.addHeader("host", "bcc.bj.qasandbox.baidu-int.com");*/
 
         return this.client.execute(request, responseClass, this.responseHandlers);
     }

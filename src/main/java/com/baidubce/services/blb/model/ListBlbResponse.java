@@ -33,4 +33,15 @@ public class ListBlbResponse extends ListResponse {
     public void setBlbList(List<BlbInstance> blbList) {
         this.blbList = blbList;
     }
+
+    @Override
+    public String toString() {
+        return "ListBlbResponse{" +
+                "marker=" + getMarker() + "," +
+                "maxKeys=" + getMaxKeys() + "," +
+                "isTruncated=" + getIsTruncated() + "," +
+                "nextMarker=" + getNextMarker() + "," +
+                "blbList=" + blbList +
+                '}';
+    }
 }

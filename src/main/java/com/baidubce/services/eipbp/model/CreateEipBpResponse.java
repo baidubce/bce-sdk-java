@@ -4,10 +4,12 @@
 package com.baidubce.services.eipbp.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.ToString;
 
 /**
  * The response for create eipBp.
  */
+@ToString
 public class CreateEipBpResponse extends AbstractBceResponse {
 
     /**

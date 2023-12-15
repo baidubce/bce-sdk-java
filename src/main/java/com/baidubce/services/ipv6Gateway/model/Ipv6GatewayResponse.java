@@ -7,8 +7,10 @@ import java.util.List;
 
 import com.baidubce.model.ListResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.ToString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class Ipv6GatewayResponse extends ListResponse {
     private String name;
     private String gatewayId;
