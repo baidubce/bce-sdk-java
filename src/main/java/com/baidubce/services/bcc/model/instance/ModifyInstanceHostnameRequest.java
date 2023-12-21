@@ -15,6 +15,7 @@ package com.baidubce.services.bcc.model.instance;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * request for changing the instance with a new hostname.
@@ -36,6 +37,13 @@ public class ModifyInstanceHostnameRequest extends AbstractBceRequest {
      * Indicates whether automatic reboot
      */
     private boolean isReboot;
+
+
+    /**
+     * Indicates whether open hostname domain
+     */
+    @JsonProperty("isOpenHostnameDomain")
+    private boolean isOpenHostnameDomain;
 
     public String getInstanceId() {
         return instanceId;
@@ -79,6 +87,20 @@ public class ModifyInstanceHostnameRequest extends AbstractBceRequest {
 
     public ModifyInstanceHostnameRequest withIsReboot(boolean isReboot) {
         this.isReboot = isReboot;
+        return this;
+    }
+
+    @JsonIgnore
+    public boolean isOpenHostnameDomain() {
+        return isOpenHostnameDomain;
+    }
+
+    public void setOpenHostnameDomain(boolean isOpenHostnameDomain) {
+        this.isOpenHostnameDomain = isOpenHostnameDomain;
+    }
+
+    public ModifyInstanceHostnameRequest withIsOpenHostnameDomain(boolean isOpenHostnameDomain) {
+        this.isOpenHostnameDomain = isOpenHostnameDomain;
         return this;
     }
     /**

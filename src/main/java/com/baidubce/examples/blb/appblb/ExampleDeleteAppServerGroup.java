@@ -4,7 +4,6 @@ import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.blb.AppBlbClient;
 import com.baidubce.services.blb.BlbClientConfiguration;
-import com.baidubce.services.blb.model.ListAppSgResponse;
 
 /**
  * @author chenchangquan
@@ -27,8 +26,5 @@ public class ExampleDeleteAppServerGroup {
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
-
 }

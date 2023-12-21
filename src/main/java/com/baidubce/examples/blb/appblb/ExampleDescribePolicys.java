@@ -4,9 +4,7 @@ import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.blb.AppBlbClient;
 import com.baidubce.services.blb.BlbClientConfiguration;
-import com.baidubce.services.blb.model.AllListener;
 import com.baidubce.services.blb.model.ListAppPolicyResponse;
-import com.baidubce.services.blb.model.ListListenerResponse;
 
 /**
  * @author chenchangquan
@@ -30,8 +28,5 @@ public class ExampleDescribePolicys {
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
-
 }

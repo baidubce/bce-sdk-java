@@ -35,6 +35,11 @@ public class ReleaseVolumeRequest extends AbstractBceRequest {
      */
     private String manualSnapshot;
 
+    /**
+     * whether recycle the volume, value can be on, off. default on
+     */
+    private String recycle;
+
     public String getAutoSnapshot() {
         return autoSnapshot;
     }
@@ -61,6 +66,22 @@ public class ReleaseVolumeRequest extends AbstractBceRequest {
 
     public ReleaseVolumeRequest withVolumeId(String volumeId) {
         this.volumeId = volumeId;
+        return this;
+    }
+
+    public String getRecycle() {
+        return recycle;
+    }
+
+    public void setRecycle(String recycle) {
+        this.recycle = recycle;
+    }
+
+    public ReleaseVolumeRequest withRecycle(String recycle) {
+        if (!"on".equals(recycle) && !"off".equals(recycle)) {
+            throw new IllegalArgumentException("recycle can only be set to 'on' or 'off'");
+        }
+        this.recycle = recycle;
         return this;
     }
 

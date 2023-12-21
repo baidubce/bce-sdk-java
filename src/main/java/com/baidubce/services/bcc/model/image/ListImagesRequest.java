@@ -25,6 +25,8 @@ public class ListImagesRequest extends ListRequest {
      */
     private String imageType;
 
+    private String imageName;
+
     public String getImageType() {
         return imageType;
     }
@@ -82,4 +84,24 @@ public class ListImagesRequest extends ListRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    /**
+     * Configure the request with specified imageName.
+     *
+     * @param imageName The optional parameter to filter image to list
+     * @return ListInstancesRequest with specified imageName.
+     */
+    public ListImagesRequest withImageName(String imageName) {
+        this.imageName = imageName;
+        return this;
+    }
+
 }

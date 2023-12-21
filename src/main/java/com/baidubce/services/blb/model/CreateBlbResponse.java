@@ -14,8 +14,6 @@ package com.baidubce.services.blb.model;
 
 import com.baidubce.model.ListResponse;
 
-import lombok.ToString;
-
 /**
  * The response for create blb.
  */
@@ -72,11 +70,19 @@ public class CreateBlbResponse extends ListResponse {
 
     @Override
     public String toString() {
-        return "CreateBlbResponse{" +
-                "blbId='" + blbId + '\'' +
-                ", name='" + name + '\'' +
-                ", desc='" + desc + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+        return "CreateBlbResponse{"
+            + "blbId='"
+            + blbId
+            + '\''
+            + ", name='"
+            + name
+            + '\''
+            + ", desc='"
+            + desc
+            + '\''
+            + ", address='"
+            + address
+            + '\''
+            + '}';
     }
 }

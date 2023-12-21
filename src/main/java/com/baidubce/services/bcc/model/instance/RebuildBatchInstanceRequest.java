@@ -57,6 +57,10 @@ public class RebuildBatchInstanceRequest extends AbstractBceRequest {
         this.instanceIds = instanceIds;
     }
 
+    public void setInstanceIds(List<String> instanceIds) {
+        this.instanceIds = instanceIds;
+    }
+
     /**
      * Configure instanceIds for the request.
      *

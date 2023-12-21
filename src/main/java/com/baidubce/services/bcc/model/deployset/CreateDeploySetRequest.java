@@ -45,6 +45,12 @@ public class CreateDeploySetRequest extends AbstractBceRequest {
      */
     private String strategy;
 
+    /**
+     * num of instances can be created in one location
+     * definition of location: for HOST_HA is host, for RACK_HA is rack, for TOR_HA is tor
+     */
+    private int concurrency = 1;
+
     public String getClientToken() {
         return clientToken;
     }
@@ -77,6 +83,14 @@ public class CreateDeploySetRequest extends AbstractBceRequest {
         this.strategy = strategy;
     }
 
+    public int getConcurrency() {
+        return concurrency;
+    }
+
+    public void setConcurrency(int concurrency) {
+        this.concurrency = concurrency;
+    }
+
     @Override
     public String toString() {
         return "CreateDeploySetRequest{" +
@@ -84,6 +98,7 @@ public class CreateDeploySetRequest extends AbstractBceRequest {
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
                 ", strategy='" + strategy + '\'' +
+                ", concurrency='" + concurrency + '\'' +
                 '}';
     }
 

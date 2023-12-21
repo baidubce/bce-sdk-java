@@ -90,6 +90,7 @@ import com.baidubce.services.bcc.model.instance.GpuCardType;
 import com.baidubce.services.bcc.model.instance.InstanceAction;
 import com.baidubce.services.bcc.model.instance.InstanceType;
 import com.baidubce.services.bcc.model.instance.ListGetInstanceNoChargeRequest;
+import com.baidubce.services.bcc.model.instance.ListInstanceByIdsRequest;
 import com.baidubce.services.bcc.model.instance.ListInstanceSpecsRequest;
 import com.baidubce.services.bcc.model.instance.ListInstanceSpecsResponse;
 import com.baidubce.services.bcc.model.instance.ListInstancesRequest;
@@ -99,11 +100,13 @@ import com.baidubce.services.bcc.model.instance.ModifyInstanceDescRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceHostnameRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstancePasswordRequest;
 import com.baidubce.services.bcc.model.instance.PurchaseReservedInstanceRequeset;
+import com.baidubce.services.bcc.model.instance.PurchaseReservedInstanceResponse;
 import com.baidubce.services.bcc.model.instance.RebootInstanceRequest;
 import com.baidubce.services.bcc.model.instance.RebuildBatchInstanceRequest;
 import com.baidubce.services.bcc.model.instance.RebuildInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceByPostRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceRequest;
+import com.baidubce.services.bcc.model.instance.ReleaseMultipleInstancesRequest;
 import com.baidubce.services.bcc.model.instance.ResizeInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
@@ -207,6 +210,7 @@ public class BccClient extends AbstractBceClient {
 
     private static final String VERSION = "v2";
     private static final String INSTANCE_PREFIX = "instance";
+    private static final String LIST_BY_INSTANCE_ID_PREFIX = "listByInstanceId";
     private static final String INSTANCE_BY_SPEC_PREFIX = "instanceBySpec";
     private static final String BID = "bid";
     private static final String FLAVOR_SPEC_PREFIX = "flavorSpec";
@@ -221,12 +225,14 @@ public class BccClient extends AbstractBceClient {
     private static final String KEYPAIR = "keypair";
     private static final String SHARED_USER = "sharedUsers";
     private static final String CLIENT_TOKEN = "clientToken";
+    private static final String RELATED_RENEW_FLAG = "relatedRenewFlag";
     private static final String MARKER = "marker";
     private static final String MAX_KEYS = "maxKeys";
     private static final String ZONE_NAME = "zoneName";
     private static final String INTERNAL_IP = "internalIp";
     private static final String DEDICATED_HOST_ID = "dedicatedHostId";
     private static final String IMAGE_TYPE = "imageType";
+    private static final String IMAGE_NAME = "imageName";
     private static final String VOLUME_NAME = "volumeName";
     private static final String VPC_ID = "vpcId";
     private static final String FLAVOR_SPEC = "flavorSpec";
@@ -243,6 +249,12 @@ public class BccClient extends AbstractBceClient {
     private static final String SECURITY_GROUP_RULE_PREFIX = "rule";
     private static final String SECURITY_GROUP_RULE_UPDATE_PREFIX = "update";
     private static final String SYNC_CREATE = "syncCreate";
+    private static final String BATCH_DELETE = "batchDelete";
+    private static final String RECYCLE = "recycle";
+    private static final String ORDERBY = "orderBy";
+    private static final String ORDER = "order";
+    private static final String PAGENO = "pageNo";
+    private static final String PAGESIZE = "pageSize";
 
     /**
      * Exception messages.
@@ -309,8 +321,8 @@ public class BccClient extends AbstractBceClient {
      * Creates and initializes a new request object for the specified bcc resource. This method is responsible
      * for determining the right way to address resources.
      *
-     * @param bceRequest The original request, as created by the user.
-     * @param httpMethod The HTTP method to use when sending the request.
+     * @param bceRequest    The original request, as created by the user.
+     * @param httpMethod    The HTTP method to use when sending the request.
      * @param pathVariables The optional variables used in the URI path.
      * @return A new request object, populated with endpoint, resource path, ready for callers to populate
      * any additional headers or parameters, and execute.
@@ -341,7 +353,7 @@ public class BccClient extends AbstractBceClient {
      *
      * @param internalRequest A request object, populated with endpoint, resource path, ready for callers to populate
      *                        any additional headers or parameters, and execute.
-     * @param bceRequest The original request, as created by the user.
+     * @param bceRequest      The original request, as created by the user.
      */
     private void fillPayload(InternalRequest internalRequest, AbstractBceRequest bceRequest) {
         if (internalRequest.getHttpMethod() == HttpMethodName.POST
@@ -362,7 +374,7 @@ public class BccClient extends AbstractBceClient {
     /**
      * The default method to generate the random String for clientToken if the optional parameter clientToken
      * is not specified by the user.
-     *
+     * <p>
      * The default algorithm is using {@link UUID} to generate a random UUID,
      *
      * @return An random String generated by {@link UUID}.
@@ -374,7 +386,7 @@ public class BccClient extends AbstractBceClient {
     /**
      * The encryption implement for AES-128 algorithm for BCE password encryption.
      * Only the first 16 bytes of privateKey will be used to encrypt the content.
-     *
+     * <p>
      * See more detail on
      * <a href = "https://bce.baidu.com/doc/BCC/API.html#.7A.E6.31.D8.94.C1.A1.C2.1A.8D.92.ED.7F.60.7D.AF">
      * BCE API doc</a>
@@ -419,8 +431,8 @@ public class BccClient extends AbstractBceClient {
     /**
      * Create a bcc Instance with the specified options,
      * see all the supported instance in {@link com.baidubce.services.bcc.model.instance.InstanceType}
-     * You must fill the field of clientToken,which is especially for keeping idempotent.
-     *
+     * You must fill the field with clientToken,which is especially for keeping idempotent.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -471,8 +483,8 @@ public class BccClient extends AbstractBceClient {
     /**
      * Create a bcc Instance by spec
      * see all the supported instance in {@link com.baidubce.services.bcc.model.instance.InstanceType}
-     * You must fill the field of clientToken,which is especially for keeping idempotent.
-     *
+     * You must fill the field with clientToken,which is especially for keeping idempotent.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -524,7 +536,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Create a bcc bidding Instance with the specified options,
-     * You must fill the field of clientToken,which is especially for keeping idempotent.
+     * You must fill the field with clientToken,which is especially for keeping idempotent.
      * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
@@ -596,7 +608,7 @@ public class BccClient extends AbstractBceClient {
     /**
      * Return a list of instances owned by the authenticated user.
      *
-     * @param request The request containing all options for listing own's bcc Instance.
+     * @param request The request containing all options for listing owns bcc Instance.
      * @return The response containing a list of instances owned by the authenticated user.
      */
     public ListInstancesResponse listInstances(ListInstancesRequest request) {
@@ -621,9 +633,30 @@ public class BccClient extends AbstractBceClient {
     }
 
     /**
+     * Return a list of instances owned by the authenticated user.
+     *
+     * @param request The request containing all options for listing owns bcc Instance.
+     * @return The response containing a list of instances owned by the authenticated user.
+     */
+    public ListInstancesResponse listInstanceByIds(ListInstanceByIdsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX,
+                LIST_BY_INSTANCE_ID_PREFIX);
+        if (request.getMarker() != null) {
+            internalRequest.addParameter(MARKER, request.getMarker());
+        }
+        if (request.getMaxKeys() > 0) {
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
+        }
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, ListInstancesResponse.class);
+    }
+
+    /**
      * Return a list of flavorSpec owned by the authenticated user.
      *
-     * @param request The request containing all options for listing own's flavor spec.
+     * @param request The request containing all options for listing owns flavor spec.
      * @return The response containing a list of flavor spec owned by the authenticated user.
      */
     public ListBccFlavorSpecResponse listFlavorSpec(ListFlavorSpecRequest request) {
@@ -728,7 +761,7 @@ public class BccClient extends AbstractBceClient {
     /**
      * Return a list of noCharge instances owned by the authenticated user.
      *
-     * @param request The request containing all options for listing own's bcc noCharge Instance.
+     * @param request The request containing all options for listing owns bcc noCharge Instance.
      * @return The response containing a list of noCharge instances owned by the authenticated user.
      */
     public ListInstancesResponse getInstanceNoChargeList(ListGetInstanceNoChargeRequest request) {
@@ -794,10 +827,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Starting the instance owned by the user.
-     *
+     * <p>
      * You can start the instance only when the instance is Stopped,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -809,10 +842,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Starting the instance owned by the user.
-     *
+     * <p>
      * You can start the instance only when the instance is Stopped,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -830,10 +863,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Stopping the instance owned by the user.
-     *
+     * <p>
      * You can stop the instance only when the instance is Running,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -847,17 +880,17 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Stopping the instance owned by the user.
-     *
+     * <p>
      * You can stop the instance only when the instance is Running,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
      * @param instanceId The id of the instance.
-     * @param forceStop The optional parameter to stop the instance forcibly.If <code>true</code>,
-     *                  it will stop the instance just like power off immediately
-     *                  and it may result in losing important data which have not been written to disk.
+     * @param forceStop  The optional parameter to stop the instance forcibly.If <code>true</code>,
+     *                   it will stop the instance just like power off immediately,
+     *                   and it may result in losing important data which have not been written to disk.
      */
     public void stopInstance(String instanceId, boolean forceStop) {
         this.stopInstance(new StopInstanceRequest()
@@ -867,16 +900,16 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Stopping the instance owned by the user.
-     *
+     * <p>
      * You can stop the instance only when the instance is Running,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
      * @param instanceId       The id of the instance.
      * @param forceStop        The optional parameter to stop the instance forcibly.If <code>true</code>,
-     *                         it will stop the instance just like power off immediately
+     *                         it will stop the instance just like power off immediately,
      *                         and it may result in losing important data which have not been written to disk.
      * @param stopWithNoCharge The optional parameter to indicate that whether the instance can be stopped
      *                         with no charge or not, default value is false.
@@ -890,10 +923,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Stopping the instance owned by the user.
-     *
+     * <p>
      * You can stop the instance only when the instance is Running,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -911,10 +944,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Rebooting the instance owned by the user.
-     *
+     * <p>
      * You can reboot the instance only when the instance is Running,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -926,17 +959,17 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Rebooting the instance owned by the user.
-     *
+     * <p>
      * You can reboot the instance only when the instance is Running,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
      * @param instanceId The id of the instance.
-     * @param forceStop The option param to stop the instance forcibly.If <code>true</code>,
-     *                  it will stop the instance just like power off immediately
-     *                  and it may result int losing important data which have not written to disk.
+     * @param forceStop  The option param to stop the instance forcibly.If <code>true</code>,
+     *                   it will stop the instance just like power off immediately,
+     *                   and it may result int losing important data which have not written to disk.
      */
     public void rebootInstance(String instanceId, boolean forceStop) {
         this.rebootInstance(new RebootInstanceRequest().withInstanceId(instanceId).withForceStop(forceStop));
@@ -944,10 +977,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Rebooting the instance owned by the user.
-     *
+     * <p>
      * You can reboot the instance only when the instance is Running,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -965,17 +998,17 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Modifying the password of the instance.
-     *
+     * <p>
      * You can change the instance password only when the instance is Running or Stopped ,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
      * @param instanceId The id of the instance.
-     * @param adminPass The new password to update.
-     *                  The adminPass will be encrypted in AES-128 algorithm
-     *                  with the substring of the former 16 characters of user SecretKey.
+     * @param adminPass  The new password to update.
+     *                   The adminPass will be encrypted in AES-128 algorithm
+     *                   with the substring of the former 16 characters of user SecretKey.
      * @throws BceClientException
      */
     public void modifyInstancePassword(String instanceId, String adminPass) throws BceClientException {
@@ -985,10 +1018,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Modifying the password of the instance.
-     *
+     * <p>
      * You can reboot the instance only when the instance is Running or Stopped ,
-     * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -1015,9 +1048,15 @@ public class BccClient extends AbstractBceClient {
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
-    public void modifyInstanceHostname(String instanceId, String hostname, boolean isReboot) throws BceClientException {
+    public void modifyInstanceHostname(String instanceId,
+                                       String hostname,
+                                       boolean isReboot,
+                                       boolean isOpenHostnameDomain) throws BceClientException {
         this.modifyInstanceHostname(new ModifyInstanceHostnameRequest()
-                .withInstanceId(instanceId).withHostname(hostname).withIsReboot(isReboot));
+                .withInstanceId(instanceId)
+                .withHostname(hostname)
+                .withIsReboot(isReboot)
+                .withIsOpenHostnameDomain(isOpenHostnameDomain));
     }
 
     /**
@@ -1038,9 +1077,9 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Modifying the special attribute to new value of the instance.
-     *
+     * <p>
      * You can reboot the instance only when the instance is Running or Stopped ,
-     * otherwise,it's will get <code>409</code> errorCode.
+     * otherwise,it will get <code>409</code> errorCode.
      *
      * @param request The request containing all options for modifying the instance attribute.
      */
@@ -1074,36 +1113,11 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Rebuilding the instance owned by the user.
-     *
+     * <p>
      * After rebuilding the instance,
-     * all of snapshots created from original instance system disk will be deleted,
+     * all snapshots created from original instance system disk will be deleted,
      * all of customized images will be saved for using in the future.
-     *
-     * This is an asynchronous interface,
-     * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
-     *
-     * @param instanceId The id of the instance.
-     * @param imageId The id of the image which is used to rebuild the instance.
-     * @param adminPass The admin password to login the instance.
-     *                  The admin password will be encrypted in AES-128 algorithm
-     *                  with the substring of the former 16 characters of user SecretKey.
-     *                  See more detail on
-     *                  <a href = "https://bce.baidu.com/doc/BCC/API.html#.7A.E6.31.D8.94.C1.A1.C2.1A.8D.92.ED.7F.60.7D.AF">
-     *                  BCE API doc</a>
-     * @throws BceClientException
-     */
-    public void rebuildInstance(String instanceId, String imageId, String adminPass) throws BceClientException {
-        this.rebuildInstance(new RebuildInstanceRequest().withInstanceId(instanceId)
-                .withImageId(imageId).withAdminPass(adminPass));
-    }
-
-    /**
-     * Rebuilding the instance owned by the user.
-     *
-     * After rebuilding the instance,
-     * all of snapshots created from original instance system disk will be deleted,
-     * all of customized images will be saved for using in the future.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -1115,7 +1129,32 @@ public class BccClient extends AbstractBceClient {
      *                   See more detail on
      *                   <a href = "https://bce.baidu.com/doc/BCC/API.html#.7A.E6.31.D8.94.C1.A1.C2.1A.8D.92.ED.7F.60.7D.AF">
      *                   BCE API doc</a>
-     * @param keypairId The id of the keypair.
+     * @throws BceClientException
+     */
+    public void rebuildInstance(String instanceId, String imageId, String adminPass) throws BceClientException {
+        this.rebuildInstance(new RebuildInstanceRequest().withInstanceId(instanceId)
+                .withImageId(imageId).withAdminPass(adminPass));
+    }
+
+    /**
+     * Rebuilding the instance owned by the user.
+     * <p>
+     * After rebuilding the instance,
+     * all snapshots created from original instance system disk will be deleted,
+     * all of customized images will be saved for using in the future.
+     * <p>
+     * This is an asynchronous interface,
+     * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
+     *
+     * @param instanceId The id of the instance.
+     * @param imageId    The id of the image which is used to rebuild the instance.
+     * @param adminPass  The admin password to login the instance.
+     *                   The admin password will be encrypted in AES-128 algorithm
+     *                   with the substring of the former 16 characters of user SecretKey.
+     *                   See more detail on
+     *                   <a href = "https://bce.baidu.com/doc/BCC/API.html#.7A.E6.31.D8.94.C1.A1.C2.1A.8D.92.ED.7F.60.7D.AF">
+     *                   BCE API doc</a>
+     * @param keypairId  The id of the keypair.
      * @throws BceClientException
      */
     public void rebuildInstance(String instanceId, String imageId, String adminPass, String keypairId)
@@ -1126,11 +1165,11 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Rebuilding the instance owned by the user.
-     *
+     * <p>
      * After rebuilding the instance,
-     * all of snapshots created from original instance system disk will be deleted,
+     * all snapshots created from original instance system disk will be deleted,
      * all of customized images created from original instance system disk will be saved.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -1163,7 +1202,7 @@ public class BccClient extends AbstractBceClient {
      * Rebuilding the instance owned by the user by batch.
      * <p>
      * After rebuilding the instance,
-     * all of snapshots created from original instance system disk will be deleted,
+     * all snapshots created from original instance system disk will be deleted,
      * all of customized images will be saved for using in the future.
      * <p>
      * This is an asynchronous interface,
@@ -1189,7 +1228,7 @@ public class BccClient extends AbstractBceClient {
      * Rebuilding the instance owned by the user by batch.
      * <p>
      * After rebuilding the instance,
-     * all of snapshots created from original instance system disk will be deleted,
+     * all snapshots created from original instance system disk will be deleted,
      * all of customized images will be saved for using in the future.
      * <p>
      * This is an asynchronous interface,
@@ -1203,7 +1242,7 @@ public class BccClient extends AbstractBceClient {
      *                    See more detail on
      *                    <a href = "https://bce.baidu.com/doc/BCC/API.html#.7A.E6.31.D8.94.C1.A1.C2.1A.8D.92.ED.7F.60.7D.AF">
      *                    BCE API doc</a>
-     * @param keypairId The id of the keypair.
+     * @param keypairId   The id of the keypair.
      * @throws BceClientException
      */
     public void rebuildBatchInstance(List<String> instanceIds, String imageId, String adminPass, String keypairId)
@@ -1216,7 +1255,7 @@ public class BccClient extends AbstractBceClient {
      * Rebuilding the instance owned by the user.
      * <p>
      * After rebuilding the instance,
-     * all of snapshots created from original instance system disk will be deleted,
+     * all snapshots created from original instance system disk will be deleted,
      * all of customized images created from original instance system disk will be saved.
      * <p>
      * This is an asynchronous interface,
@@ -1250,13 +1289,13 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Releasing the instance owned by the user.
-     *
+     * <p>
      * Only the Postpaid instance or Prepaid which is expired can be released.
-     *
+     * <p>
      * After releasing the instance,
-     * all of the data will be deleted.
-     * all of volumes attached will be auto detached, but the volume snapshots will be saved.
-     * all of snapshots created from original instance system disk will be deleted,
+     * all the data will be deleted.
+     * all volumes attached will be auto detached, but the volume snapshots will be saved.
+     * all snapshots created from original instance system disk will be deleted,
      * all of customized images created from original instance system disk will be reserved.
      *
      * @param instanceId The id of the instance.
@@ -1266,8 +1305,40 @@ public class BccClient extends AbstractBceClient {
     }
 
     /**
-     * Releasing the instance owned by the user.
+     * Releasing the recycled instance owned by the user.
+     * <p>
+     * After releasing the instance,
+     * all the data will be deleted.
      *
+     * @param instanceId The id of the instance.
+     */
+    public void releaseRecycledInstance(String instanceId) {
+        this.releaseRecycledInstance(new ReleaseInstanceRequest().withInstanceId(instanceId));
+    }
+
+    /**
+     * Releasing the recycled instance owned by the user.
+     * <p>
+     * Only the Postpaid instance or Prepaid which is expired can be released.
+     * After releasing the instance,
+     * all the data will be deleted.
+     * all volumes attached will be detached,but the volume snapshots will be saved.
+     * all snapshots created from original instance system disk will be deleted,
+     * all of customized images created from original instance system disk will be reserved.
+     *
+     * @param request The request containing all options for releasing the instance.
+     */
+    public void releaseRecycledInstance(ReleaseInstanceRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.DELETE, RECYCLE, INSTANCE_PREFIX, request.getInstanceId());
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Releasing the instance owned by the user.
+     * <p>
      * Only the Postpaid instance or Prepaid which is expired can be released.
      * After releasing the instance,
      * all of the data will be deleted.
@@ -1312,6 +1383,40 @@ public class BccClient extends AbstractBceClient {
     }
 
     /**
+     * Releasing the instance owned by the user by POST.
+     * <p>
+     * Only the Postpaid instance or Prepaid which is expired can be released.
+     * <p>
+     * After releasing the instance,
+     * all the data will be deleted.
+     * all volumes attached will be auto detached, but the volume snapshots will be saved.
+     * all snapshots created from original instance system disk will be deleted,
+     * all of customized images created from original instance system disk will be reserved.
+     *
+     * @param instanceIds           The id of the instances.
+     * @param relatedReleaseFlag    Whether to release the EIP and the data disk attached to the instance
+     *                              at the current time in the same time. If<code>true</code>, it means release,
+     *                              and the parameters deleteCdsSnapshotFlag works. If<code>false</code>, it means
+     *                              not to release, and the parameters deleteCdsSnapshotFlag does not work.
+     * @param deleteCdsSnapshotFlag Whether to delete the CDS Snapshot. If<code>true</code>, it means delete.
+     * @param bccRecycleFlag        Whether to recycle the bcc. If<code>true</code>, it means recycle.
+     * @param deleteRelatedEnisFlag Whether to delete the ENI. If<code>true</code>, it means delete.
+     */
+    public void releaseMultipleInstancesByPost(List<String> instanceIds,
+                                               boolean relatedReleaseFlag,
+                                               boolean deleteCdsSnapshotFlag,
+                                               boolean bccRecycleFlag,
+                                               boolean deleteRelatedEnisFlag) {
+        this.releaseMultipleInstanceByPost(
+                new ReleaseMultipleInstancesRequest()
+                        .withInstanceIds(instanceIds)
+                        .withRelatedReleaseFlag(relatedReleaseFlag)
+                        .withDeleteCdsSnapshotFlag(deleteCdsSnapshotFlag)
+                        .withBccRecycleFlag(bccRecycleFlag)
+                        .withDeleteRelatedEnisFlag(deleteRelatedEnisFlag));
+    }
+
+    /**
      * Releasing the instance owned by the user.
      * <p>
      * Only the Postpaid instance or Prepaid which is expired can be released.
@@ -1328,6 +1433,26 @@ public class BccClient extends AbstractBceClient {
         checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.POST, INSTANCE_PREFIX, request.getInstanceId());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Releasing the instance owned by the user.
+     * <p>
+     * Only the Postpaid instance or Prepaid which is expired can be released.
+     * After releasing the instance,
+     * all the data will be deleted.
+     * all volumes attached will be detached,but the volume snapshots will be saved.
+     * all snapshots created from original instance system disk will be deleted,
+     * all of customized images created from original instance system disk will be reserved.
+     *
+     * @param request The request containing all options for releasing the instance.
+     */
+    public void releaseMultipleInstanceByPost(ReleaseMultipleInstancesRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, INSTANCE_PREFIX, BATCH_DELETE);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -1364,11 +1489,11 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Resizing the instance owned by the user.
-     *
+     * <p>
      * The Prepaid instance can not be downgrade.
      * Only the Running/Stopped instance can be resized,otherwise,it's will get <code>409</code> errorCode.
      * After resizing the instance,it will be reboot once.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -1396,11 +1521,11 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Through spec Resizing the instance through the spec owned by the user.
-     *
+     * <p>
      * The Prepaid instance can not be downgrade.
      * Only the Running/Stopped instance can be resized,otherwise,it's will get <code>409</code> errorCode.
      * After resizing the instance,it will be reboot once.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
@@ -1423,7 +1548,7 @@ public class BccClient extends AbstractBceClient {
     /**
      * Binding the instance to specified securitygroup.
      *
-     * @param instanceId  The id of the instance.
+     * @param instanceId      The id of the instance.
      * @param securityGroupId The id of the securitygroup.
      */
     public void bindInstanceToSecurityGroup(String instanceId, String securityGroupId) {
@@ -1452,7 +1577,7 @@ public class BccClient extends AbstractBceClient {
     /**
      * Unbinding the instance from securitygroup.
      *
-     * @param instanceId The id of the instance.
+     * @param instanceId      The id of the instance.
      * @param securityGroupId The id of the securitygroup.
      */
     public void unbindInstanceFromSecurityGroup(String instanceId, String securityGroupId) {
@@ -1546,7 +1671,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Getting the vnc url to access the instance.
-     *
+     * <p>
      * The vnc url can be used once.
      *
      * @param instanceId The id of the instance.
@@ -1557,7 +1682,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Getting the vnc url to access the instance.
-     *
+     * <p>
      * The vnc url can be used once.
      *
      * @param request The request containing all options for getting the vnc url.
@@ -1573,18 +1698,19 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * PurchaseReserved the instance with fixed duration.
-     *
+     * <p>
      * You can not purchaseReserved the instance which is resizing.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
-     * @param instanceId The id of the instance.
-     * @param reservationLength The fixed duration to purchaseReserved,available is [1,2,3,4,5,6,7,8,9,12,24,36]
+     * @param instanceId          The id of the instance.
+     * @param reservationLength   The fixed duration to purchaseReserved,available is [1,2,3,4,5,6,7,8,9,12,24,36]
      * @param reservationTimeUnit The timeUnit to renew the instance,only support "month" now.
+     * @return The id of the order.
      */
-    public void purchaseReservedInstance(String instanceId, int reservationLength, String reservationTimeUnit) {
-        this.purchaseReservedInstance(new PurchaseReservedInstanceRequeset()
+    public PurchaseReservedInstanceResponse purchaseReservedInstance(String instanceId, int reservationLength, String reservationTimeUnit) {
+        return this.purchaseReservedInstance(new PurchaseReservedInstanceRequeset()
                 .withInstanceId(instanceId)
                 .withBilling(new Billing().withReservation(new Reservation()
                         .withReservationLength(reservationLength)
@@ -1593,22 +1719,23 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * PurchaseReserved the instance with fixed duration.
-     *
+     * <p>
      * You can not purchaseReserved the instance which is resizing.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
-     * @param instanceId The id of the instance.
-     * @param reservationLength The fixed duration to purchaseReserved,available is [1,2,3,4,5,6,7,8,9,12,24,36]
-     * @param reservationTimeUnit The timeUnit to renew the instance,only support "month" now.
+     * @param instanceId           The id of the instance.
+     * @param reservationLength    The fixed duration to purchaseReserved,available is [1,2,3,4,5,6,7,8,9,12,24,36]
+     * @param reservationTimeUnit  The timeUnit to renew the instance,only support "month" now.
      * @param relatedRenewFlagType The flag of instance related renew.
      *                             see all of supported flag type in
-     *                             {@link com.baidubce.services.bcc.model.instance.RelatedRenewFlagType}
+     * @return The id of the order.
+     * {@link com.baidubce.services.bcc.model.instance.RelatedRenewFlagType}
      */
-    public void purchaseReservedInstance(String instanceId, int reservationLength, String reservationTimeUnit,
-                                         String relatedRenewFlagType) {
-        this.purchaseReservedInstance(new PurchaseReservedInstanceRequeset()
+    public PurchaseReservedInstanceResponse purchaseReservedInstance(String instanceId, int reservationLength, String reservationTimeUnit,
+                                                                     String relatedRenewFlagType) {
+        return this.purchaseReservedInstance(new PurchaseReservedInstanceRequeset()
                 .withInstanceId(instanceId)
                 .withBilling(new Billing().withReservation(new Reservation()
                         .withReservationLength(reservationLength)
@@ -1618,15 +1745,16 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Renewing the instance with fixed duration.
-     *
+     * <p>
      * You can not renew the instance which is resizing.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
      *
      * @param request The request containing all options for renewing the instance with fixed duration.
+     * @return The id of the order.
      */
-    public void purchaseReservedInstance(PurchaseReservedInstanceRequeset request) {
+    public PurchaseReservedInstanceResponse purchaseReservedInstance(PurchaseReservedInstanceRequeset request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
@@ -1639,16 +1767,17 @@ public class BccClient extends AbstractBceClient {
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
         internalRequest.addParameter(InstanceAction.purchaseReserved.name(), null);
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        internalRequest.addParameter(RELATED_RENEW_FLAG, request.getRelatedRenewFlag());
         fillPayload(internalRequest, request);
-        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+        return this.invokeHttpClient(internalRequest, PurchaseReservedInstanceResponse.class);
     }
 
     /**
      * The interface will be deprecated in the future,
      * we suggest to use triad (instanceType，cpuCount，memoryCapacityInGB) to specified the instance configuration.
-     *
+     * <p>
      * Listing all of specification for instance resource to buy.
-     *
+     * <p>
      * See more detail on
      * <a href = "https://bce.baidu.com/doc/BCC/API.html#.E5.AE.9E.E4.BE.8B.E5.A5.97.E9.A4.90.E8.A7.84.E6.A0.BC">
      * BCE API doc</a>
@@ -1663,9 +1792,9 @@ public class BccClient extends AbstractBceClient {
     /**
      * The interface will be deprecated in the future,
      * we suggest to use triad (instanceType，cpuCount，memoryCapacityInGB) to specified the instance configuration.
-     *
+     * <p>
      * Listing all of specification for instance resource to buy.
-     *
+     * <p>
      * See more detail on
      * <a href = "https://bce.baidu.com/doc/BCC/API.html#.E5.AE.9E.E4.BE.8B.E5.A5.97.E9.A4.90.E8.A7.84.E6.A0.BC">
      * BCE API doc</a>
@@ -1682,7 +1811,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Create a volume with the specified options.
-     *
+     * <p>
      * You can use this method to create a new empty volume by specified options
      * or you  can create a new volume from customized volume snapshot but not system disk snapshot.
      * By using the cdsSizeInGB parameter you can create a newly empty volume.
@@ -1708,7 +1837,7 @@ public class BccClient extends AbstractBceClient {
     /**
      * Sync create volume with the specified options.
      * syncCreateVolume does not support snapshotId and Prepay
-     *
+     * <p>
      * You can use this method to create a new empty volume by specified options
      *
      * @param request The request containing all options for creating a volume.
@@ -1793,7 +1922,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Attaching the specified volume to a specified instance.
-     *
+     * <p>
      * You can attach the specified volume to a specified instance only
      * when the volume is Available and the instance is Running or Stopped ,
      * otherwise,it's will get <code>409</code> errorCode.
@@ -1808,7 +1937,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Attaching the specified volume to a specified instance.
-     *
+     * <p>
      * You can attach the specified volume to a specified instance only
      * when the volume is Available and the instance is Running or Stopped ,
      * otherwise,it's will get <code>409</code> errorCode.
@@ -1829,7 +1958,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Detaching the specified volume from a specified instance.
-     *
+     * <p>
      * You can detach the specified volume from a specified instance only
      * when the instance is Running or Stopped ,
      * otherwise,it's will get <code>409</code> errorCode.
@@ -1843,7 +1972,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Detaching the specified volume from a specified instance.
-     *
+     * <p>
      * You can detach the specified volume from a specified instance only
      * when the instance is Running or Stopped ,
      * otherwise,it's will get <code>409</code> errorCode.
@@ -1863,7 +1992,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Releasing the specified volume owned by the user.
-     *
+     * <p>
      * You can release the specified volume only
      * when the instance is among state of  Available/Expired/Error,
      * otherwise,it's will get <code>409</code> errorCode.
@@ -1876,7 +2005,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Releasing the specified volume owned by the user.
-     *
+     * <p>
      * You can release the specified volume only
      * when the volume is Available/Expired/Error,
      * otherwise,it's will get <code>409</code> errorCode.
@@ -1939,12 +2068,12 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Resizing the specified volume with newly size.
-     *
+     * <p>
      * You can resize the specified volume only when the volume is Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * The prepaid volume can not be downgrade.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getVolume(String)}
      *
@@ -1958,12 +2087,12 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Resizing the specified volume with newly size.
-     *
+     * <p>
      * You can resize the specified volume only when the volume is Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * The prepaid volume can not be downgrade.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getVolume(String)}
      *
@@ -1986,14 +2115,14 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Rollback the volume with the specified volume snapshot.
-     *
-     *
+     * <p>
+     * <p>
      * You can rollback the specified volume only when the volume is Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * The snapshot used to rollback must be created by the volume,
      * otherwise,it's will get <code>404</code> errorCode.
-     *
+     * <p>
      * If rolling back the system volume,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.After rolling back the
      * volume,all the system disk data will erase.
@@ -2008,13 +2137,13 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Rollback the volume with the specified volume snapshot.
-     *
+     * <p>
      * You can rollback the specified volume only when the volume is Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * The snapshot used to rollback must be created by the volume,
      * otherwise,it's will get <code>404</code> errorCode.
-     *
+     * <p>
      * If rolling back the system volume,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.After rolling back the
      * volume,all the system disk data will erase.
@@ -2034,7 +2163,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * PurchaseReserved the instance with fixed duration.
-     *
+     * <p>
      * You can not purchaseReserved the instance which is resizing.
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getVolume(String)}
@@ -2053,7 +2182,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * PurchaseReserved the instance with fixed duration.
-     *
+     * <p>
      * You can not purchaseReserved the instance which is resizing.
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getVolume(String)}
@@ -2176,10 +2305,10 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Creating a customized image from the instance..
-     *
+     * <p>
      * While creating an image from an instance,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getImage(GetImageRequest)}
      *
@@ -2194,17 +2323,17 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Creating a customized image from the instance..
-     *
+     * <p>
      * While creating an image from an instance,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getImage(GetImageRequest)}
      *
      * @param imageName  The name of image that will be created.
      * @param instanceId The id of instance which will be used to create image.
-     * @param relateCds Whether the image is related with cds.
-     *                  If <code>true</code>, it means the image is related with cds.
+     * @param relateCds  Whether the image is related with cds.
+     *                   If <code>true</code>, it means the image is related with cds.
      * @return The response with id of image newly created.
      */
     public CreateImageResponse createImageFromInstanceWithRelateCds(String imageName,
@@ -2215,11 +2344,11 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Creating a customized image from specified snapshot.
-     *
+     * <p>
      * You can create the image only from system snapshot.
      * While creating an image from a system snapshot,the snapshot must be Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getImage(GetImageRequest)}
      *
@@ -2234,18 +2363,18 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Creating a customized image which can be used for creating instance in the future.
-     *
+     * <p>
      * You can create an image from an instance or you can create from an snapshot.
      * The parameters of instanceId and snapshotId can no be null simultaneously.
      * when both instanceId and snapshotId are assigned,only instanceId will be used.
-     *
+     * <p>
      * While creating an image from an instance,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * You can create the image only  from system snapshot.
      * While creating an image from a system snapshot,the snapshot must be Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getImage(GetImageRequest)}
      *
@@ -2294,6 +2423,9 @@ public class BccClient extends AbstractBceClient {
         if (!Strings.isNullOrEmpty(request.getImageType())) {
             internalRequest.addParameter(IMAGE_TYPE, request.getImageType());
         }
+        if (!Strings.isNullOrEmpty(request.getImageName())) {
+            internalRequest.addParameter(IMAGE_NAME, request.getImageName());
+        }
         return invokeHttpClient(internalRequest, ListImagesResponse.class);
     }
 
@@ -2323,7 +2455,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Deleting the specified image.
-     *
+     * <p>
      * Only the customized image can be deleted,
      * otherwise,it's will get <code>403</code> errorCode.
      *
@@ -2335,7 +2467,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Deleting the specified image.
-     *
+     * <p>
      * Only the customized image can be deleted,
      * otherwise,it's will get <code>403</code> errorCode.
      *
@@ -2352,7 +2484,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Sharing the specified image.
-     *
+     * <p>
      * Only the customized image can be shared,
      * otherwise,it's will get <code>403</code> errorCode.
      *
@@ -2374,7 +2506,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * UnSharing the specified image.
-     *
+     * <p>
      * Only the customized and shared image can be unshared,
      * otherwise,it's will get <code>403</code> errorCode.
      *
@@ -2483,13 +2615,13 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Creating snapshot from specified volume.
-     *
+     * <p>
      * You can create snapshot from system volume and CDS volume.
      * While creating snapshot from system volume,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.
      * While creating snapshot from CDS volume,,the volume must be InUse or Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getSnapshot(GetSnapshotRequest)}
      *
@@ -2504,13 +2636,13 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Creating snapshot from specified volume.
-     *
+     * <p>
      * You can create snapshot from system volume and CDS volume.
      * While creating snapshot from system volume,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.
      * While creating snapshot from CDS volume,,the volume must be InUs or Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getSnapshot(GetSnapshotRequest)}
      *
@@ -2526,13 +2658,13 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Creating snapshot from specified volume.
-     *
+     * <p>
      * You can create snapshot from system volume and CDS volume.
      * While creating snapshot from system volume,the instance must be Running or Stopped,
      * otherwise,it's will get <code>409</code> errorCode.
      * While creating snapshot from CDS volume,,the volume must be InUs or Available,
      * otherwise,it's will get <code>409</code> errorCode.
-     *
+     * <p>
      * This is an asynchronous interface,
      * you can get the latest status by invoke {@link #getSnapshot(GetSnapshotRequest)}
      *
@@ -2600,7 +2732,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Deleting the specified snapshot.
-     *
+     * <p>
      * Only when the snapshot is CreatedFailed or Available,the specified snapshot can be deleted.
      * otherwise,it's will get <code>403</code> errorCode.
      *
@@ -2612,7 +2744,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * Deleting the specified snapshot.
-     *
+     * <p>
      * Only when the snapshot is CreatedFailed or Available,the specified snapshot can be deleted.
      * otherwise,it's will get <code>403</code> errorCode.
      *
@@ -2636,7 +2768,21 @@ public class BccClient extends AbstractBceClient {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.GET, SNAPSHOT_PREFIX, CHAIN);
-
+        if (!Strings.isNullOrEmpty(request.getOrderBy())) {
+            internalRequest.addParameter(ORDERBY, request.getOrderBy());
+        }
+        if (!Strings.isNullOrEmpty(request.getOrder())) {
+            internalRequest.addParameter(ORDER, request.getOrder());
+        }
+        if (request.getPageNo() > 0) {
+            internalRequest.addParameter(PAGENO, String.valueOf(request.getPageNo()));
+        }
+        if (request.getPageSize() > 0) {
+            internalRequest.addParameter(PAGESIZE, String.valueOf(request.getPageSize()));
+        }
+        if (!Strings.isNullOrEmpty(request.getVolumeId())) {
+            internalRequest.addParameter(VOLUMEID_MESSAGE_KEY, request.getVolumeId());
+        }
         return invokeHttpClient(internalRequest, ListSnapchainResponse.class);
     }
 
@@ -3332,7 +3478,7 @@ public class BccClient extends AbstractBceClient {
 
     /**
      * PurchaseReserved the cluster with fixed duration.
-     *
+     * <p>
      * You can not purchaseReserved the cluster which is resizing.
      *
      * @param request The request containing all options for renew the specified cluster.

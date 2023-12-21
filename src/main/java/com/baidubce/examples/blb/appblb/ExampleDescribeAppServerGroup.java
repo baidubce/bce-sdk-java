@@ -4,7 +4,6 @@ import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.blb.AppBlbClient;
 import com.baidubce.services.blb.BlbClientConfiguration;
-import com.baidubce.services.blb.model.ListAppPolicyResponse;
 import com.baidubce.services.blb.model.ListAppSgResponse;
 
 /**
@@ -29,8 +28,5 @@ public class ExampleDescribeAppServerGroup {
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
-
 }

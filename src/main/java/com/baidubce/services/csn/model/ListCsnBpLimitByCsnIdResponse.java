@@ -13,7 +13,6 @@
 package com.baidubce.services.csn.model;
 
 import java.util.List;
-import java.math.BigDecimal;
 
 import com.baidubce.common.BaseBceResponse;
 import lombok.Getter;
@@ -34,14 +33,13 @@ public class ListCsnBpLimitByCsnIdResponse extends BaseBceResponse {
     @ToString
     public static class CsnBpLimit {
         private String csnBpId;
-    
+
         private String csnId;
-    
+
         private String localRegion;
-    
+
         private String peerRegion;
-    
+
         private Integer bandwidth;
     }
-
 }

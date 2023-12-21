@@ -122,6 +122,21 @@ public class VolumeModel {
      */
     private String clusterId;
 
+    /*
+     * whether enable auto-renew
+     */
+    private boolean enableAutoRenew;
+
+    /*
+     * time for auto-renew
+     */
+    private int autoRenewTime;
+
+    /*
+     * mark for system volume
+     */
+    private boolean isSystemVolume;
+
     public String getId() {
         return id;
     }
@@ -274,6 +289,30 @@ public class VolumeModel {
         this.clusterId = clusterId;
     }
 
+    public void setEnableAutoRenew(boolean enableAutoRenew) {
+        this.enableAutoRenew = enableAutoRenew;
+    }
+
+    public boolean isEnableAutoRenew() {
+        return enableAutoRenew;
+    }
+
+    public void setAutoRenewTime(int autoRenewTime) {
+        this.autoRenewTime = autoRenewTime;
+    }
+
+    public int getAutoRenewTime() {
+        return autoRenewTime;
+    }
+
+    public void setIsSystemVolume(boolean isSystemVolume) {
+        this.isSystemVolume = isSystemVolume;
+    }
+
+    public boolean getIsSystemVolume() {
+        return isSystemVolume;
+    }
+
     @Override
     public String toString() {
         return "VolumeModel{" +
@@ -296,6 +335,9 @@ public class VolumeModel {
                 ", tags=" + tags +
                 ", encrypted=" + encrypted +
                 ", clusterId=" + clusterId +
+                ", enableAutoRenew=" + enableAutoRenew +
+                ", autoRenewTime=" + autoRenewTime +
+                ", isSystemVolume=" + isSystemVolume +
                 '}';
     }
 }

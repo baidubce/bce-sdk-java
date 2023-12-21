@@ -5,7 +5,6 @@ import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.blb.AppBlbClient;
 import com.baidubce.services.blb.BlbClientConfiguration;
 import com.baidubce.services.blb.model.ListListenerResponse;
-import com.baidubce.services.blb.model.TcpListener;
 import com.baidubce.services.blb.model.UdpListener;
 
 /**
@@ -30,8 +29,5 @@ public class ExampleDescribeAppUDPListeners {
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
-
 }

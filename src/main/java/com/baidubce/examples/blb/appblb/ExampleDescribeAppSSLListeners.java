@@ -4,7 +4,6 @@ import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.blb.AppBlbClient;
 import com.baidubce.services.blb.BlbClientConfiguration;
-import com.baidubce.services.blb.model.HttpsListener;
 import com.baidubce.services.blb.model.ListListenerResponse;
 import com.baidubce.services.blb.model.SslListener;
 
@@ -30,8 +29,5 @@ public class ExampleDescribeAppSSLListeners {
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
-
 }
