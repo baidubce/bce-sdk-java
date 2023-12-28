@@ -224,6 +224,11 @@ public class ShareBill {
     private BigDecimal shareAmount;
 
     /**
+     * 量包抵扣对应的应收金额
+     */
+    private BigDecimal deductPackageFinancePrice = BigDecimal.ZERO;
+
+    /**
      * 用量单位
      */
     private String amountUnit;
