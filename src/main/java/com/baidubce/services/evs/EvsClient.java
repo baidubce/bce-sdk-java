@@ -15,6 +15,8 @@ import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.evs.model.BindDeviceRequest;
 import com.baidubce.services.evs.model.BindDeviceResponse;
+import com.baidubce.services.evs.model.DeviceAiAnalysisListMarkRequest;
+import com.baidubce.services.evs.model.DeviceAiAnalysisListMarkResponse;
 import com.baidubce.services.evs.model.DeviceChannelListResponse;
 import com.baidubce.services.evs.model.DeviceChannelSignedUrlResponse;
 import com.baidubce.services.evs.model.DeviceGetResponse;
@@ -43,6 +45,7 @@ import com.baidubce.services.evs.model.SpaceCreateResponse;
 import com.baidubce.services.evs.model.SpaceGetResponse;
 import com.baidubce.services.evs.model.SpaceListMarkRequest;
 import com.baidubce.services.evs.model.SpaceUpdateRequest;
+import com.baidubce.util.DateUtils;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,10 +54,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import static com.baidubce.util.Validate.checkNotNull;
+import static com.baidubce.util.Validate.checkPattern;
 
 /**
  * Provides the client for accessing the Baidu Cloud network Service EVS.
@@ -77,7 +82,7 @@ public class EvsClient extends AbstractBceClient {
     private static final String TYPE = "type";
     private static final String RECORDING = "recording";
     private static final String THUMBNAIL = "thumbnail";
-    private static final String AI_ANALYSIS = "aiAnalysis";
+    private static final String AI_ANALYSIS = "aiAnalysisByMarker";
     private static final String SIGNED_URL = "signedUrl";
     private static final String PROTOCOL = "protocol";
     private static final String GB_CONFIG_DOWNLOAD = "gbConfigDownload";
@@ -106,6 +111,7 @@ public class EvsClient extends AbstractBceClient {
 
     private static final String CHANNEL_URL = "device/channel";
 
+    private static final String MILLISECONDS_TIMESTAMP = "\\d{13}";
     private static final String[] HEADERS_TO_SIGN = {"host", "x-bce-date"};
 
     private static final HttpResponseHandler[] EVS_HANDLERS = new HttpResponseHandler[]{
@@ -519,21 +525,26 @@ public class EvsClient extends AbstractBceClient {
      * @param request  Query required conditions：Recording start and end time (Unix timestamp) 、pageNo、pageSize
      * @return Matching screenshot file paging data
      */
-    public DeviceTsStorePageListResponse listDeviceAiAnalysisResult(
-            long deviceId, String aiType, DeviceTsStoreListRequest request) {
+    public DeviceAiAnalysisListMarkResponse listDeviceAiAnalysisResultByMarker(
+            long deviceId, String aiType, DeviceAiAnalysisListMarkRequest request) {
         checkNotNull(request.getBegin(), "DeviceTsStoreListRequest.begin parameter request should not be null.");
         checkNotNull(request.getEnd(), "DeviceTsStoreListRequest.end parameter request should not be null.");
-        checkNotNull(request.getPageNo(), "DeviceTsStoreListRequest.pageNo parameter request should not be null.");
-        checkNotNull(request.getPageSize(), "DeviceTsStoreListRequest.pageSize parameter request should not be null.");
         checkNotNull(aiType, "type parameter request should not be null.");
+        checkPattern(String.valueOf(request.getBegin()), MILLISECONDS_TIMESTAMP,
+                "DeviceTsStoreListRequest.begin parameter request should have a millisecond timestamp.");
+        checkPattern(String.valueOf(request.getEnd()), MILLISECONDS_TIMESTAMP,
+                "DeviceTsStoreListRequest.end parameter request should have a millisecond timestamp.");
         InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, DEVICE_URL,
                 String.valueOf(deviceId), AI_ANALYSIS);
         internalRequest.addParameter(TYPE, aiType);
-        internalRequest.addParameter(BEGIN, String.valueOf(request.getBegin()));
-        internalRequest.addParameter(END, String.valueOf(request.getEnd()));
-        internalRequest.addParameter(PAGE_NO, String.valueOf(request.getPageNo()));
-        internalRequest.addParameter(PAGE_SIZE, String.valueOf(request.getPageSize()));
-        return invokeHttpClient(internalRequest, DeviceTsStorePageListResponse.class);
+        internalRequest.addParameter(MARKER, null);
+        internalRequest.addParameter(MAX_SIZE, String.valueOf(request.getMaxSize()));
+        internalRequest.addParameter(BEGIN, String.valueOf(DateUtils.formatIso8601Date(new Date(request.getBegin()))));
+        internalRequest.addParameter(END, String.valueOf(DateUtils.formatIso8601Date(new Date(request.getEnd()))));
+        if (request.getMarker() != null) {
+            internalRequest.addParameter(MARKER, String.valueOf(request.getMarker()));
+        }
+        return invokeHttpClient(internalRequest, DeviceAiAnalysisListMarkResponse.class);
     }
 
     /**
@@ -843,20 +854,26 @@ public class EvsClient extends AbstractBceClient {
      * @param request   Query required conditions：Recording start and end time (Unix timestamp) 、pageNo、pageSize
      * @return Matching screenshot file paging data
      */
-    public DeviceTsStorePageListResponse listChannelAiAnalysisResult(
-            long channelId, String aiType, DeviceTsStoreListRequest request) {
+    public DeviceAiAnalysisListMarkResponse listChannelAiAnalysisResultByMarker(
+            long channelId, String aiType, DeviceAiAnalysisListMarkRequest request) {
         checkNotNull(request.getBegin(), "DeviceTsStoreListRequest.begin parameter request should not be null.");
         checkNotNull(request.getEnd(), "DeviceTsStoreListRequest.end parameter request should not be null.");
-        checkNotNull(request.getPageNo(), "DeviceTsStoreListRequest.pageNo parameter request should not be null.");
-        checkNotNull(request.getPageSize(), "DeviceTsStoreListRequest.pageSize parameter request should not be null.");
+        checkNotNull(aiType, "type parameter request should not be null.");
+        checkPattern(String.valueOf(request.getBegin()), MILLISECONDS_TIMESTAMP,
+                "DeviceTsStoreListRequest.begin parameter request should have a millisecond timestamp.");
+        checkPattern(String.valueOf(request.getEnd()), MILLISECONDS_TIMESTAMP,
+                "DeviceTsStoreListRequest.end parameter request should have a millisecond timestamp.");
         InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, CHANNEL_URL,
-                String.valueOf(channelId), THUMBNAIL);
+                String.valueOf(channelId), AI_ANALYSIS);
         internalRequest.addParameter(TYPE, aiType);
-        internalRequest.addParameter(BEGIN, String.valueOf(request.getBegin()));
-        internalRequest.addParameter(END, String.valueOf(request.getEnd()));
-        internalRequest.addParameter(PAGE_NO, String.valueOf(request.getPageNo()));
-        internalRequest.addParameter(PAGE_SIZE, String.valueOf(request.getPageSize()));
-        return invokeHttpClient(internalRequest, DeviceTsStorePageListResponse.class);
+        internalRequest.addParameter(MARKER, null);
+        internalRequest.addParameter(MAX_SIZE, String.valueOf(request.getMaxSize()));
+        if (request.getMarker() != null) {
+            internalRequest.addParameter(MARKER, String.valueOf(request.getMarker()));
+        }
+        internalRequest.addParameter(BEGIN, String.valueOf(DateUtils.formatIso8601Date(new Date(request.getBegin()))));
+        internalRequest.addParameter(END, String.valueOf(DateUtils.formatIso8601Date(new Date(request.getEnd()))));
+        return invokeHttpClient(internalRequest, DeviceAiAnalysisListMarkResponse.class);
     }
 
     /**
