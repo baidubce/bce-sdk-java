@@ -69,6 +69,11 @@ public class CopyObjectRequest extends GenericObjectRequest {
     private String storageClass;
 
     /**
+     * The xBceCrc32cFlag, whether to calculate crc32c
+     */
+    private boolean xBceCrc32cFlag = false;
+
+    /**
      * Constructs a new CopyObjectRequest with only basic options.
      *
      * @param sourceBucketName The name of the Bos bucket containing the object to copy.
@@ -405,5 +410,21 @@ public class CopyObjectRequest extends GenericObjectRequest {
     public CopyObjectRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
         this.setTrafficLimitBitPS(trafficLimitBitPS);
         return this;
+    }
+
+    /**
+     * Gets xBceCrc32cFlag of the newly uploaded part.
+     * @return xBceCrc32cFlag of the newly uploaded part.
+     */
+    public boolean getxBceCrc32cFlag() {
+        return xBceCrc32cFlag;
+    }
+
+    /**
+     * Sets xBceCrc32cFlag of the newly uploaded part.
+     * @param  xBceCrc32cFlag whether to calculate crc32c
+     */
+    public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
+        this.xBceCrc32cFlag = xBceCrc32cFlag;
     }
 }

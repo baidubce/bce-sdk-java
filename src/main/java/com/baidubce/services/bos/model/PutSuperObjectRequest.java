@@ -65,6 +65,11 @@ public class PutSuperObjectRequest extends GenericObjectRequest {
      */
     private BosProgressCallback progressCallback = null;
 
+    /**
+     * The xBceCrc32cFlag, whether to calculate crc32c
+     */
+    private boolean xBceCrc32cFlag = false;
+
     public PutSuperObjectRequest(String bucketName, String key, File file) {
         this(bucketName, key, file, CHUNK_SIZE, AVAILABLEPROCESSORS);
     }
@@ -276,5 +281,21 @@ public class PutSuperObjectRequest extends GenericObjectRequest {
     public PutSuperObjectRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
         this.setTrafficLimitBitPS(trafficLimitBitPS);
         return this;
+    }
+
+    /**
+     * Gets xBceCrc32cFlag of the object
+     * @return xBceCrc32cFlag of the object.
+     */
+    public boolean getxBceCrc32cFlag() {
+        return xBceCrc32cFlag;
+    }
+
+    /**
+     * Sets xBceCrc32cFlag of the object
+     * @param  xBceCrc32cFlag whether to calculate crc32c.
+     */
+    public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
+        this.xBceCrc32cFlag = xBceCrc32cFlag;
     }
 }

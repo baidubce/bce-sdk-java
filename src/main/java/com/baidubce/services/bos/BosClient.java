@@ -1642,6 +1642,9 @@ public class BosClient extends AbstractBceClient {
         if (request.getTrafficLimitBitPS() > 0) {
             internalRequest.addHeader(Headers.BOS_TRAFFIC_LIMIT, String.valueOf(request.getTrafficLimitBitPS()));
         }
+        if (request.getxBceCrc32cFlag()) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
+        }
         ObjectMetadata newObjectMetadata = request.getNewObjectMetadata();
         if (newObjectMetadata != null) {
             internalRequest.addHeader(Headers.BCE_COPY_METADATA_DIRECTIVE, "replace");
@@ -1850,6 +1853,50 @@ public class BosClient extends AbstractBceClient {
         GetObjectSymlinkResponse result = new GetObjectSymlinkResponse();
         result.setSymlinkTarget(response.getMetadata().getSymlinkTarget());
         return result;
+    }
+
+    /**
+     * Deletes the specified directory in the specified namespace bucket.
+     *
+     * @param bucketName The name of the Bos bucket containing the object to delete.
+     * @param key        The path of the directory to delete.
+     * @param isDeleteRecursive Whether delete a dir in namespace
+     */
+    public DeleteDirectoryResponse deleteDirectory(String bucketName, String key, boolean isDeleteRecursive) {
+        return this.deleteDirectory(new DeleteDirectoryRequest(bucketName, key, isDeleteRecursive));
+    }
+
+    /**
+     * Deletes the specified object in the specified bucket.
+     *
+     * @param bucketName The directory of the Bos bucket containing the object to delete.
+     * @param key        The path of the directory to delete.
+     * @param isDeleteRecursive Whether delete a dir in namespace
+     * @param marker    The marker position of delete begin, must be sub of key
+     */
+    public DeleteDirectoryResponse deleteDirectory(String bucketName, String key, boolean isDeleteRecursive, String marker) {
+        return this.deleteDirectory(new DeleteDirectoryRequest(bucketName, key, isDeleteRecursive, marker));
+    }
+
+    /**
+     * Deletes the specified directory in the specified namespace bucket.
+     *
+     * @param request The request containing all options for deleting a Bos object.
+     */
+    public DeleteDirectoryResponse deleteDirectory(DeleteDirectoryRequest request) {
+        checkNotNull(request, "request should not be null.");
+        assertStringNotNullOrEmpty(request.getKey(), "object key should not be null or empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        if (request.isDeleteRecursive()) {
+            internalRequest.addHeader(Headers.BCE_DELETE_RECURSIVE, String.valueOf(true));
+            if (request.getDeleteMarker() != null) {
+                internalRequest.addHeader(Headers.BCE_DELETE_TOKEN, request.getDeleteMarker());
+            }
+        }
+
+        DeleteDirectoryResponse response = this.invokeHttpClient(internalRequest, DeleteDirectoryResponse.class);
+        return response;
     }
 
     /**
@@ -2102,7 +2149,13 @@ public class BosClient extends AbstractBceClient {
         internalRequest.addParameter("partNumber", String.valueOf(request.getPartNumber()));
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(request.getPartSize()));
         if (request.getxBceCrc() != null) {
-            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32, String.valueOf(request.getxBceCrc()));
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32, request.getxBceCrc());
+        }
+        if (request.getxBceCrc32c() != null) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C, request.getxBceCrc32c());
+        }
+        if (request.getxBceCrc32cFlag()) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
         }
         if (request.getTrafficLimitBitPS() > 0) {
             internalRequest.addHeader(Headers.BOS_TRAFFIC_LIMIT, String.valueOf(request.getTrafficLimitBitPS()));
@@ -2190,6 +2243,12 @@ public class BosClient extends AbstractBceClient {
         }
         if (request.getxBceCrc() != null) {
             internalRequest.addHeader(Headers.BCE_CONTENT_CRC32, request.getxBceCrc());
+        }
+        if (request.getxBceCrc32c() != null) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C, request.getxBceCrc32c());
+        }
+        if (request.getxBceCrc32cFlag()) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
         }
         if (request.getPartSize() != 0) {
             long offSet = request.getOffSet();
@@ -2285,6 +2344,9 @@ public class BosClient extends AbstractBceClient {
         ObjectMetadata metadata = request.getObjectMetadata();
         if (metadata != null) {
             populateRequestMetadata(internalRequest, metadata);
+        }
+        if (request.getxBceCrc32cFlag()) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
         }
 
         byte[] json = null;
@@ -2441,6 +2503,12 @@ public class BosClient extends AbstractBceClient {
         }
         if (metadata.getxBceAcl() != null) {
             request.addHeader(Headers.BCE_ACL, String.valueOf(metadata.getxBceAcl()));
+        }
+        if (metadata.getxBceCrc() != null) {
+            request.addHeader(Headers.BCE_CONTENT_CRC32, metadata.getxBceCrc());
+        }
+        if (metadata.getxBceCrc32c() != null) {
+            request.addHeader(Headers.BCE_CONTENT_CRC32C, metadata.getxBceCrc32c());
         }
 
         Map<String, String> userMetadata = metadata.getUserMetadata();
@@ -3335,8 +3403,8 @@ public class BosClient extends AbstractBceClient {
             internalRequest.addHeader(Headers.BOS_PROCESS, request.getVideoProcess());
         }
 
-        if (metadata.getxBceCrc() != null) {
-            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32, String.valueOf(metadata.getxBceCrc()));
+        if (request.getxBceCrc32cFlag()) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
         }
 
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(metadata.getContentLength()));
@@ -3485,6 +3553,7 @@ public class BosClient extends AbstractBceClient {
             });
             CompleteMultipartUploadRequest completeMultipartUploadRequest =
                     new CompleteMultipartUploadRequest(bucketName, objectKey, uploadId, partETags);
+            completeMultipartUploadRequest.setxBceCrc32cFlag(putSuperObjectRequest.getxBceCrc32cFlag());
             CompleteMultipartUploadResponse response = completeMultipartUpload(completeMultipartUploadRequest);
             logger.debug("Success to upload file: " + file.getAbsolutePath() + " to BOS with ETag: "
                     + response.getETag());
@@ -3522,6 +3591,9 @@ public class BosClient extends AbstractBceClient {
                 uploadPartRequest.setInputStream(fis);
                 uploadPartRequest.setPartSize(partSize);
                 uploadPartRequest.setPartNumber(partNum + 1);
+                if (putSuperObjectRequest.getxBceCrc32cFlag()) {
+                    uploadPartRequest.setxBceCrc32cFlag(putSuperObjectRequest.getxBceCrc32cFlag());
+                }
                 if (putSuperObjectRequest.getProgressCallback() != null) {
                     uploadPartRequest.setProgressCallback(putSuperObjectRequest.getProgressCallback());
                 }

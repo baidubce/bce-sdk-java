@@ -69,6 +69,11 @@ public class PutObjectRequest extends GenericObjectRequest {
     private BosProgressCallback progressCallback = null;
 
     /**
+     * The xBceCrc32cFlag, whether to calculate crc32c
+     */
+    private boolean xBceCrc32cFlag = false;
+
+    /**
      * Constructs a new PutObjectRequest object to upload a file to the
      * specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
@@ -449,5 +454,21 @@ public class PutObjectRequest extends GenericObjectRequest {
     public PutObjectRequest withVideoProcess(String videoProcess) {
         this.setVideoProcess(videoProcess);
         return this;
+    }
+
+    /**
+     * Gets xBceCrc32cFlag of the object
+     * @return xBceCrc32cFlag of the object.
+     */
+    public boolean getxBceCrc32cFlag() {
+        return xBceCrc32cFlag;
+    }
+
+    /**
+     * Sets xBceCrc32cFlag of the object
+     * @param  xBceCrc32cFlag whether to calculate crc32c.
+     */
+    public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
+        this.xBceCrc32cFlag = xBceCrc32cFlag;
     }
 }

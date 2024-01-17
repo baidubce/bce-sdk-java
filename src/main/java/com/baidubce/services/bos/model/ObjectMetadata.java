@@ -114,6 +114,11 @@ public class ObjectMetadata {
      */
     private String xBceAcl;
 
+    /**
+     * The CRC32C value of the object. CRC(Cyclic Redundancy Check)
+     */
+    private String xBceCrc32c;
+
     public ObjectMetadata() {
     }
 
@@ -555,5 +560,21 @@ public class ObjectMetadata {
      */
     public void setxBceAcl(String xBceAcl) {
         this.xBceAcl = xBceAcl;
+    }
+
+    /**
+     * Gets the crc32c of object.
+     * @return the crc32c of object.
+     */
+    public String getxBceCrc32c() {
+        return xBceCrc32c;
+    }
+
+    /**
+     * Sets the crc32c of object.
+     * @return the crc32c of object.
+     */
+    public void setxBceCrc32c(String xBceCrc32c) {
+        this.xBceCrc32c = xBceCrc32c;
     }
 }

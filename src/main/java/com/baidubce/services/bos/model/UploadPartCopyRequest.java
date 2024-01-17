@@ -50,6 +50,16 @@ public class UploadPartCopyRequest extends GenericUploadRequest {
         this.xBceCrc = xBceCrc;
     }
 
+    /**
+     * The xBceCrc32c of the newly uploadCopyPart
+     */
+    private String xBceCrc32c;
+
+    /**
+     * The xBceCrc32cFlag, whether to calculate crc32c
+     */
+    private boolean xBceCrc32cFlag = false;
+
     public UploadPartCopyRequest() {
         super();
     }
@@ -248,5 +258,37 @@ public class UploadPartCopyRequest extends GenericUploadRequest {
     public UploadPartCopyRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
         this.setTrafficLimitBitPS(trafficLimitBitPS);
         return this;
+    }
+
+    /**
+     * Gets xBceCrc32c of the newly uploaded part.
+     * @return xBceCrc32c of the newly uploaded part.
+     */
+    public String getxBceCrc32c() {
+        return xBceCrc32c;
+    }
+
+    /**
+     * Sets xBceCrc32c of the newly uploaded part.
+     * @param xBceCrc32c The xBceCrc of the newly uploaded part.
+     */
+    public void setxBceCrc32c(String xBceCrc32c) {
+        this.xBceCrc32c = xBceCrc32c;
+    }
+
+    /**
+     * Gets xBceCrc32cFlag of the newly uploaded part.
+     * @return xBceCrc32cFlag of the newly uploaded part.
+     */
+    public boolean getxBceCrc32cFlag() {
+        return xBceCrc32cFlag;
+    }
+
+    /**
+     * Sets xBceCrc32cFlag of the newly uploaded part.
+     * @param  xBceCrc32cFlag whether to calculate crc32c
+     */
+    public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
+        this.xBceCrc32cFlag = xBceCrc32cFlag;
     }
 }

@@ -16,7 +16,7 @@ package com.baidubce;
  * Common constants used by the whole SDK.
  */
 public class BceConstants {
-    public static final String VERSION = "0.10.272";
+    public static final String VERSION = "0.10.293";
 
     public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String DEFAULT_TIME_ZONE = "UTC";

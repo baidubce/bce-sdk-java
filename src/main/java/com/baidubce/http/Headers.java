@@ -136,6 +136,14 @@ public interface Headers {
 
     public static final  String BCE_BUCKET_TYPE = "x-bce-bucket-type";
 
+    public static final  String BCE_DELETE_RECURSIVE = "x-bce-delete-recursive";
+
+    public static final  String BCE_DELETE_TOKEN = "x-bce-delete-token";
+
+    public static final String BCE_CONTENT_CRC32C = "x-bce-content-crc32c";
+
+    public static final String BCE_CONTENT_CRC32C_FLAG = "x-bce-content-crc32c-flag";
+
     /*
      * CFC HTTP Headers
      */

@@ -39,6 +39,11 @@ public class CompleteMultipartUploadRequest extends GenericUploadRequest {
      */
     private List<PartETag> partETags;
 
+    /**
+     * The xBceCrc32cFlag, whether to calculate crc32c
+     */
+    private boolean xBceCrc32cFlag = false;
+
     public CompleteMultipartUploadRequest() {
         super();
     }
@@ -203,5 +208,21 @@ public class CompleteMultipartUploadRequest extends GenericUploadRequest {
     public CompleteMultipartUploadRequest withPartETags(List<PartETag> partETags) {
         this.setPartETags(partETags);
         return this;
+    }
+
+    /**
+     * Gets xBceCrc32cFlag of the object
+     * @return xBceCrc32cFlag of the object.
+     */
+    public boolean getxBceCrc32cFlag() {
+        return xBceCrc32cFlag;
+    }
+
+    /**
+     * Sets xBceCrc32cFlag of the object
+     * @param  xBceCrc32cFlag whether to calculate crc32c.
+     */
+    public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
+        this.xBceCrc32cFlag = xBceCrc32cFlag;
     }
 }
