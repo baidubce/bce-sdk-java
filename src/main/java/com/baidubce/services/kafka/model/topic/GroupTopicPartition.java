@@ -11,6 +11,10 @@ public class GroupTopicPartition {
 
     private String consumerId;
 
+    private String clientId;
+
+    private String host;
+
     private long maxOffset;
 
     private long committedOffset;

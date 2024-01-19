@@ -11,9 +11,9 @@ public class OperationDetail {
 
     private String operationId;
 
-    private JobType type;
+    private String type;
 
-    private JobState state;
+    private String state;
 
     private int process;
 

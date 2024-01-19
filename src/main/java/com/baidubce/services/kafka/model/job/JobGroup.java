@@ -7,5 +7,5 @@ public class JobGroup {
 
     private String groupName;
 
-    private JobState state;
+    private String state;
 }

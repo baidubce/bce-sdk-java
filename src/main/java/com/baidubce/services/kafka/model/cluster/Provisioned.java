@@ -17,17 +17,19 @@ public class Provisioned {
 
     private Billing billing;
 
-    private List<String> logicalZones;
-
     private Vpc vpc;
 
     private List<Subnet> subnets;
 
-    private SecurityGroup securityGroup;
+    private List<String> logicalZones;
+
+    private List<SecurityGroup> securityGroup;
 
     private String vpcId;
 
     private List<String> subnetIds;
+
+    private List<String> securityGroupIds;
 
     private boolean publicIpEnabled;
 
@@ -35,9 +37,9 @@ public class Provisioned {
 
     private boolean intranetIpEnabled;
 
-    private boolean aclEnabled;
-
     private List<Authentication> authentications;
+
+    private boolean aclEnabled;
 
     private int numberOfBrokerNodes;
 
@@ -46,6 +48,10 @@ public class Provisioned {
     private String nodeType;
 
     private StorageMeta storageMeta;
+
+    private Boolean storagePolicyEnabled;
+
+    private StoragePolicy storagePolicy;
 
     private ConfigMeta configMeta;
 

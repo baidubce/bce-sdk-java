@@ -4,31 +4,28 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class ExpandBrokerDiskCapacityRequest extends AbstractBceRequest {
+public class UpdateKafkaConfigRequest extends AbstractBceRequest {
 
     /**
      * The id of cluster.
      */
     private String clusterId;
 
-    private Long storageSize;
+    private String configId;
 
-    private List<String> couponIds;
-
-    private Boolean isAutoPay;
+    private Integer revisionId;
 
     /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return public ExpandBrokerDiskCapacityRequest withRequestCredentials(BceCredentials credentials) { with credentials.
+     * @return public UpdateKafkaConfigRequest withRequestCredentials(BceCredentials credentials) { with credentials.
      */
     @Override
-    public ExpandBrokerDiskCapacityRequest withRequestCredentials(BceCredentials credentials) {
+    public UpdateKafkaConfigRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
+
 }

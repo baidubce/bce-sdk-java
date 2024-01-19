@@ -13,6 +13,8 @@ public class Subnet {
 
     private String subnetId;
 
+    private String subnetUuid;
+
     private String name;
 
     private String subnetType;

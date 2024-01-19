@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vpc {
-
-    private String vpcId;
-
-    private String vpcUuid;
-
-    private String name;
-
-    private String cidr;
+public class StorageAutoDelete {
+    private Integer diskUsedThresholdPercent;
+    private Long logMinRetentionMs;
+    private Long logMinRetentionBytes;
 }

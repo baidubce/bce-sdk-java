@@ -4,7 +4,7 @@ import com.baidubce.model.AbstractBceResponse;
 import lombok.Data;
 
 @Data
-public class SwitchClusterEipResponse extends AbstractBceResponse {
+public class UpdateStoragePolicyResponse extends AbstractBceResponse {
 
     private String clusterId;
 

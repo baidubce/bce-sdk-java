@@ -29,6 +29,8 @@ import com.baidubce.services.kafka.model.cluster.ExpandBrokerDiskCapacityRequest
 import com.baidubce.services.kafka.model.cluster.ExpandBrokerDiskCapacityResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterAccessEndpointsRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterAccessEndpointsResponse;
+import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsRequest;
+import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterNodesRequest;
@@ -49,6 +51,26 @@ import com.baidubce.services.kafka.model.cluster.UpdateAccessConfigRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateAccessConfigResponse;
 import com.baidubce.services.kafka.model.cluster.UpdateBrokerNodeTypeRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateBrokerNodeTypeResponse;
+import com.baidubce.services.kafka.model.cluster.UpdateKafkaConfigRequest;
+import com.baidubce.services.kafka.model.cluster.UpdateKafkaConfigResponse;
+import com.baidubce.services.kafka.model.cluster.UpdateSecurityGroupRequest;
+import com.baidubce.services.kafka.model.cluster.UpdateSecurityGroupResponse;
+import com.baidubce.services.kafka.model.cluster.UpdateStoragePolicyRequest;
+import com.baidubce.services.kafka.model.cluster.UpdateStoragePolicyResponse;
+import com.baidubce.services.kafka.model.config.CreateClusterConfigRequest;
+import com.baidubce.services.kafka.model.config.CreateClusterConfigResponse;
+import com.baidubce.services.kafka.model.config.CreateClusterConfigRevisionRequest;
+import com.baidubce.services.kafka.model.config.CreateClusterConfigRevisionResponse;
+import com.baidubce.services.kafka.model.config.DeleteClusterConfigRequest;
+import com.baidubce.services.kafka.model.config.DeleteClusterConfigResponse;
+import com.baidubce.services.kafka.model.config.GetClusterConfigRequest;
+import com.baidubce.services.kafka.model.config.GetClusterConfigResponse;
+import com.baidubce.services.kafka.model.config.GetClusterConfigRevisionRequest;
+import com.baidubce.services.kafka.model.config.GetClusterConfigRevisionResponse;
+import com.baidubce.services.kafka.model.config.ListClusterConfigRevisionsRequest;
+import com.baidubce.services.kafka.model.config.ListClusterConfigRevisionsResponse;
+import com.baidubce.services.kafka.model.config.ListClusterConfigsRequest;
+import com.baidubce.services.kafka.model.config.ListClusterConfigsResponse;
 import com.baidubce.services.kafka.model.consumer.DeleteConsumerGroupRequest;
 import com.baidubce.services.kafka.model.consumer.DeleteConsumerGroupResponse;
 import com.baidubce.services.kafka.model.consumer.ListConsumerGroupRequest;
@@ -93,8 +115,8 @@ import com.baidubce.services.kafka.model.user.CreateUserRequest;
 import com.baidubce.services.kafka.model.user.CreateUserResponse;
 import com.baidubce.services.kafka.model.user.DeleteUserRequest;
 import com.baidubce.services.kafka.model.user.DeleteUserResponse;
-import com.baidubce.services.kafka.model.user.ListUsersRequest;
 import com.baidubce.services.kafka.model.user.ListUserResponse;
+import com.baidubce.services.kafka.model.user.ListUsersRequest;
 import com.baidubce.services.kafka.model.user.ResetUserPasswordRequest;
 import com.baidubce.services.kafka.model.user.ResetUserPasswordResponse;
 import com.baidubce.util.HttpUtils;
@@ -140,6 +162,9 @@ public class KafkaClient extends AbstractBceClient {
     private static final String PARTITONS_PREFIX = "partitions";
     private static final String JOBS_PREFIX = "jobs";
     private static final String OPERATIONS_PREFIX = "operations";
+    private static final String CONFIGURATIONS_PREFIX = "configurations";
+    private static final String CONFIGS_PREFIX = "configs";
+    private static final String REVISIONS_PREFIX = "revisions";
 
     private static final String PAGE_NO = "pageNo";
     private static final String PAGE_SIZE = "pageSize";
@@ -162,8 +187,11 @@ public class KafkaClient extends AbstractBceClient {
     private static final String NAME_MESSAGE_KEY = "name";
     private static final String TOPIC_NAME_MESSAGE_KEY = "topicName";
     private static final String GROUP_NAME_MESSAGE_KEY = "groupName";
+    private static final String CONFIG_NAME_MESSAGE_KEY = "configName";
     private static final String JOBID_MESSAGE_KEY = "jobId";
     private static final String OPERATIONID_MESSAGE_KEY = "operationId";
+    private static final String CONFIGID_MESSAGE_KEY = "configId";
+    private static final String REVISIONID_MESSAGE_KEY = "revisionId";
 
     private static final String USERNAME_MESSAGE_KEY = "username";
     private static final String PASSWORD_MESSAGE_KEY = "password";
@@ -415,6 +443,19 @@ public class KafkaClient extends AbstractBceClient {
     }
 
     /**
+     * 查询集群配置信息
+     * @param request
+     * @return
+     */
+    public GetClusterConfigurationsResponse getClusterConfigurations(GetClusterConfigurationsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), CONFIGURATIONS_PREFIX);
+        return invokeHttpClient(internalRequest, GetClusterConfigurationsResponse.class);
+    }
+
+    /**
      * 增加节点数量
      * @param request
      * @return
@@ -540,6 +581,155 @@ public class KafkaClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, SwitchClusterEipResponse.class);
     }
 
+    /**
+     * 变更磁盘阈值策略
+     * @param request
+     * @return
+     */
+    public UpdateStoragePolicyResponse updateStoragePolicy(UpdateStoragePolicyRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "update-storage-policy");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateStoragePolicyResponse.class);
+    }
+
+    /**
+     * 变更集群 kafka 配置
+     * @param request
+     * @return
+     */
+    public UpdateKafkaConfigResponse updateKafkaConfig(UpdateKafkaConfigRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "update-kafka-config");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateKafkaConfigResponse.class);
+    }
+
+    /**
+     * 变更用户安全组
+     * @param request
+     * @return
+     */
+    public UpdateSecurityGroupResponse updateSecurityGroup(UpdateSecurityGroupRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "security-groups");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateSecurityGroupResponse.class);
+    }
+
+    /** ========================================= config API ======================================================== */
+
+    /**
+     * 创建集群配置
+     * @param request
+     * @return
+     */
+    public CreateClusterConfigResponse createClusterConfig(CreateClusterConfigRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, CONFIGS_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateClusterConfigResponse.class);
+    }
+
+    /**
+     * 查询集群配置列表
+     * @param request
+     * @return
+     */
+    public ListClusterConfigsResponse listClusterConfigs(ListClusterConfigsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, CONFIGS_PREFIX);
+        if (!Strings.isNullOrEmpty(request.getMarker())) {
+            internalRequest.addParameter(MARKER, request.getMarker());
+        }
+        if (request.getMaxKeys() <= 1000 && request.getMaxKeys() > 0) {
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
+        }
+        if (!Strings.isNullOrEmpty(request.getConfigName())) {
+            internalRequest.addParameter(CONFIG_NAME_MESSAGE_KEY, request.getConfigName());
+        }
+        if (!Strings.isNullOrEmpty(request.getState())) {
+            internalRequest.addParameter(STATE, request.getState());
+        }
+        return invokeHttpClient(internalRequest, ListClusterConfigsResponse.class);
+    }
+
+    /**
+     * 删除集群配置
+     * @param request
+     * @return
+     */
+    public DeleteClusterConfigResponse deleteClusterConfig(DeleteClusterConfigRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getConfigId(), checkEmptyExceptionMessageFormat(CONFIGID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.DELETE, CONFIGS_PREFIX, request.getConfigId());
+        return invokeHttpClient(internalRequest, DeleteClusterConfigResponse.class);
+    }
+
+    /**
+     * 查询集群配置详情
+     * @param request
+     * @return
+     */
+    public GetClusterConfigResponse getClusterConfig(GetClusterConfigRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getConfigId(), checkEmptyExceptionMessageFormat(CONFIGID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CONFIGS_PREFIX, request.getConfigId());
+        return invokeHttpClient(internalRequest, GetClusterConfigResponse.class);
+    }
+
+    /**
+     * 新增集群配置版本
+     * @param request
+     * @return
+     */
+    public CreateClusterConfigRevisionResponse createClusterConfigRevision(CreateClusterConfigRevisionRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getConfigId(), checkEmptyExceptionMessageFormat(CONFIGID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, CONFIGS_PREFIX, request.getConfigId(), REVISIONS_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateClusterConfigRevisionResponse.class);
+    }
+
+    /**
+     * 查询集群配置版本列表
+     * @param request
+     * @return
+     */
+    public ListClusterConfigRevisionsResponse listClusterConfigRevisions(ListClusterConfigRevisionsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getConfigId(), checkEmptyExceptionMessageFormat(CONFIGID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CONFIGS_PREFIX, request.getConfigId(), REVISIONS_PREFIX);
+        if (!Strings.isNullOrEmpty(request.getState())) {
+            internalRequest.addParameter(STATE, request.getState());
+        }
+        return invokeHttpClient(internalRequest, ListClusterConfigRevisionsResponse.class);
+    }
+
+    /**
+     * 查询集群配置版本详情
+     * @param request
+     * @return
+     */
+    public GetClusterConfigRevisionResponse getClusterConfigRevision(GetClusterConfigRevisionRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getConfigId(), checkEmptyExceptionMessageFormat(CONFIGID_MESSAGE_KEY));
+        checkNotNull(request.getRevisionId(), checkEmptyExceptionMessageFormat(REVISIONID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CONFIGS_PREFIX, request.getConfigId(),
+                REVISIONS_PREFIX, String.valueOf(request.getRevisionId()));
+        return invokeHttpClient(internalRequest, GetClusterConfigRevisionResponse.class);
+    }
 
     /** ========================================= topic API ======================================================== */
 

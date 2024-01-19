@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vpc {
-
-    private String vpcId;
-
-    private String vpcUuid;
-
-    private String name;
-
-    private String cidr;
+public class StorageDynamicRetention {
+    private Integer diskUsedThresholdPercent;
+    private Integer stepForwardPercent;
+    private Long logMinRetentionMs;
 }

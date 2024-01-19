@@ -8,6 +8,6 @@ import java.util.List;
 public class Job {
     private String name ;
     private String jobId;
-    private String state;
+    private String status;
     private List<Operation> operations;
 }

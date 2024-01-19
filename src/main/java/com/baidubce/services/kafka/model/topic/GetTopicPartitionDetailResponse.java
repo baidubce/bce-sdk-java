@@ -7,5 +7,5 @@ import lombok.Data;
 public class GetTopicPartitionDetailResponse extends AbstractBceResponse {
 
     private String topicName;
-    private TopicPartition topicPartition;
+    private TopicPartition partition;
 }

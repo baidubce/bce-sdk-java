@@ -5,6 +5,7 @@ import com.baidubce.model.AbstractBceRequest;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class SwitchClusterEipRequest extends AbstractBceRequest {
@@ -18,7 +19,13 @@ public class SwitchClusterEipRequest extends AbstractBceRequest {
 
     private Integer publicIpBandwidth;
 
+    private Boolean aclEnabled;
+
+    private Set<AuthMode> authenticationMode;
+
     private List<String> couponIds;
+
+    private Boolean isAutoPay;
 
     /**
      * Configure request credential for the request.

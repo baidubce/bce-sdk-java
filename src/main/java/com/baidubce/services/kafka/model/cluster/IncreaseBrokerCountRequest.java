@@ -18,6 +18,8 @@ public class IncreaseBrokerCountRequest extends AbstractBceRequest {
 
     private List<String> couponIds;
 
+    private Boolean isAutoPay;
+
     /**
      * Configure request credential for the request.
      *

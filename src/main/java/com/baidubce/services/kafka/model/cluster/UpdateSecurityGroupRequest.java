@@ -7,27 +7,23 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ExpandBrokerDiskCapacityRequest extends AbstractBceRequest {
+public class UpdateSecurityGroupRequest extends AbstractBceRequest {
 
     /**
      * The id of cluster.
      */
     private String clusterId;
 
-    private Long storageSize;
-
-    private List<String> couponIds;
-
-    private Boolean isAutoPay;
+    private List<String> securityGroupIds;
 
     /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return public ExpandBrokerDiskCapacityRequest withRequestCredentials(BceCredentials credentials) { with credentials.
+     * @return public UpdateSecurityGroupRequest withRequestCredentials(BceCredentials credentials) { with credentials.
      */
     @Override
-    public ExpandBrokerDiskCapacityRequest withRequestCredentials(BceCredentials credentials) {
+    public UpdateSecurityGroupRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }

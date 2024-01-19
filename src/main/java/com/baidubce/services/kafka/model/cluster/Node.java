@@ -11,7 +11,7 @@ public class Node {
 
     private String nodeId;
 
-    private String status;
+    private String state;
 
     private String publicIp;
 

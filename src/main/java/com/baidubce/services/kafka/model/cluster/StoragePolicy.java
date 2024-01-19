@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vpc {
-
-    private String vpcId;
-
-    private String vpcUuid;
-
-    private String name;
-
-    private String cidr;
+public class StoragePolicy {
+    private StoragePolicyType type;
+    private StorageAutoDelete autoDelete;
+    private StorageAutoExpand autoExpand;
+    private StorageDynamicRetention dynamicRetention;
 }

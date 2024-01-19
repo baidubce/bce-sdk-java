@@ -2,7 +2,7 @@ package com.baidubce.services.kafka.model.topic;
 
 import lombok.Data;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 public class TopicDetail {
@@ -23,5 +23,5 @@ public class TopicDetail {
 
     private double underReplicated;
 
-    private Map<String, String> otherConfigs;
+    private List<TopicConfig> otherConfigs;
 }

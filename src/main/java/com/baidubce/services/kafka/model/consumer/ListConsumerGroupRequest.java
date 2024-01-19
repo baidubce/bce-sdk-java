@@ -12,6 +12,8 @@ public class ListConsumerGroupRequest extends AbstractBceRequest {
      */
     private String clusterId;
 
+    private String groupName;
+
     /**
      * Configure request credential for the request.
      *
