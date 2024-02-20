@@ -7,6 +7,7 @@ import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.eip.EipClient;
+import com.baidubce.services.eip.model.OptionalReleaseEipRequest;
 import com.baidubce.services.eip.model.ReleaseEipRequest;
 
 public class ExampleReleaseEip {
@@ -24,7 +25,14 @@ public class ExampleReleaseEip {
         request.setEip("10.107.245.112"); // eip地址
 
         try {
+            // 直接删除eip
             eipClient.releaseEip(request);
+
+            // 将eip移入回收站
+            OptionalReleaseEipRequest releaseEipRequest = new OptionalReleaseEipRequest();
+            releaseEipRequest.setEip("106.13.244.190"); // eip地址
+            releaseEipRequest.setReleaseToRecycle(true);    // true:将eip移入回收站；false：直接删除eip
+            eipClient.optionalReleaseEip(releaseEipRequest);
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

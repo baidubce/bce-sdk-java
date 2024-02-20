@@ -12,15 +12,6 @@
  */
 package com.baidubce.services.eip;
 
-import static com.baidubce.util.Validate.checkNotNull;
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
@@ -54,6 +45,15 @@ import com.baidubce.services.eip.model.UnbindEipRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static com.baidubce.util.Validate.checkNotNull;
+import static com.baidubce.util.Validate.checkStringNotEmpty;
 
 /**
  * Provides the client for accessing the Elastic Ip Service (EIP).
@@ -344,6 +344,7 @@ public class EipClient extends AbstractBceClient {
      * release the eip(delete operation)
      * Only the Postpaid instance or Prepaid which is expired can be released.
      * if the eip has been bound, must unbind before releasing
+     *
      * @param request The request containing all options for releasing eip
      */
     public void releaseEip(ReleaseEipRequest request) {
@@ -422,10 +423,11 @@ public class EipClient extends AbstractBceClient {
 
 
     /**
-     * optional release the eip(delete operation)
+     * optional release the eip(Including directly deleting the eip or putting the eip into the recycle bin)
      * Only the Postpaid instance or Prepaid which is expired can be released.
      * if the eip has been bound, must unbind before releasing
-     * @param request The request containing all options for releasing eip
+     *
+     * @param request The request containing all options for optional releasing eip
      */
     public void optionalReleaseEip(OptionalReleaseEipRequest request) {
         checkStringNotEmpty(request.getEip(), "eip should not be empty");

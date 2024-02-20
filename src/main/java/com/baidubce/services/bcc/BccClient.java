@@ -107,6 +107,8 @@ import com.baidubce.services.bcc.model.instance.RebuildInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceByPostRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseMultipleInstancesRequest;
+import com.baidubce.services.bcc.model.instance.ReleasePrepaidInstanceRequest;
+import com.baidubce.services.bcc.model.instance.ReleasePrepaidInstanceResponse;
 import com.baidubce.services.bcc.model.instance.ResizeInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
@@ -250,6 +252,8 @@ public class BccClient extends AbstractBceClient {
     private static final String SECURITY_GROUP_RULE_UPDATE_PREFIX = "update";
     private static final String SYNC_CREATE = "syncCreate";
     private static final String BATCH_DELETE = "batchDelete";
+
+    private static final String DELETE = "delete";
     private static final String RECYCLE = "recycle";
     private static final String ORDERBY = "orderBy";
     private static final String ORDER = "order";
@@ -1380,6 +1384,57 @@ public class BccClient extends AbstractBceClient {
                         .withInstanceId(instanceId)
                         .withRelatedReleaseFlag(relatedReleaseFlag)
                         .withDeleteCdsSnapshotFlag(deleteCdsSnapshotFlag));
+    }
+
+    /**
+     * Releasing the instance owned by the user by POST.
+     * <p>
+     * Only the Prepaid instance and the instance has not expired can be released.
+     * <p>
+     * After releasing the instance,
+     * all the data will be deleted.
+     * all volumes attached will be auto detached, but the volume snapshots will be saved.
+     * all snapshots created from original instance system disk will be deleted,
+     * all of customized images created from original instance system disk will be reserved.
+     *
+     * @param instanceId           The id of the instance.
+     * @param relatedReleaseFlag    Whether to release the EIP and the data disk attached to the instance
+     *                              at the current time in the same time. If<code>true</code>, it means release,
+     *                              and the parameters deleteCdsSnapshotFlag works. If<code>false</code>, it means
+     *                              not to release, and the parameters deleteCdsSnapshotFlag does not work.
+     * @param deleteCdsSnapshotFlag Whether to delete the CDS Snapshot. If<code>true</code>, it means delete.
+     * @param deleteRelatedEnisFlag Whether to delete the ENI. If<code>true</code>, it means delete.
+     */
+    public ReleasePrepaidInstanceResponse releasePrepaidInstanceByPost(String instanceId,
+                                               boolean relatedReleaseFlag,
+                                               boolean deleteCdsSnapshotFlag,
+                                               boolean deleteRelatedEnisFlag) {
+        return this.releasePrepaidInstanceByPost(
+                new ReleasePrepaidInstanceRequest()
+                        .withInstanceId(instanceId)
+                        .withRelatedReleaseFlag(relatedReleaseFlag)
+                        .withDeleteCdsSnapshotFlag(deleteCdsSnapshotFlag)
+                        .withDeleteRelatedEnisFlag(deleteRelatedEnisFlag));
+    }
+    /**
+     * Releasing the instance owned by the user.
+     * <p>
+     * Only the Prepaid instance and the instance has not expired can be released.
+     * After releasing the instance,
+     * all the data will be deleted.
+     * all volumes attached will be detached,but the volume snapshots will be saved.
+     * all snapshots created from original instance system disk will be deleted,
+     * all of customized images created from original instance system disk will be reserved.
+     *
+     * @param request The request containing all options for releasing the instance.
+     */
+    public ReleasePrepaidInstanceResponse releasePrepaidInstanceByPost(ReleasePrepaidInstanceRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, INSTANCE_PREFIX, DELETE);
+        fillPayload(internalRequest, request);
+        return this.invokeHttpClient(internalRequest, ReleasePrepaidInstanceResponse.class);
     }
 
     /**

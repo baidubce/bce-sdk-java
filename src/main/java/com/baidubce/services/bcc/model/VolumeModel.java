@@ -137,6 +137,11 @@ public class VolumeModel {
      */
     private boolean isSystemVolume;
 
+    /**
+     * the name of ebc disk size
+     */
+    private int ebcDiskSize;
+
     public String getId() {
         return id;
     }
@@ -313,6 +318,14 @@ public class VolumeModel {
         return isSystemVolume;
     }
 
+    public int getEbcDiskSize() {
+        return ebcDiskSize;
+    }
+
+    public void setEbcDiskSize(int ebcDiskSize) {
+        this.ebcDiskSize = ebcDiskSize;
+    }
+
     @Override
     public String toString() {
         return "VolumeModel{" +
@@ -338,6 +351,7 @@ public class VolumeModel {
                 ", enableAutoRenew=" + enableAutoRenew +
                 ", autoRenewTime=" + autoRenewTime +
                 ", isSystemVolume=" + isSystemVolume +
+                ", ebcDiskSize=" + ebcDiskSize +
                 '}';
     }
 }

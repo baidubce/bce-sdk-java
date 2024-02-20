@@ -13,7 +13,8 @@ import lombok.Setter;
 @Setter
 public class OptionalReleaseEipRequest extends ReleaseEipRequest {
     /**
-     * Whether to put the specified EIP into the recycle bin. The default value is false。
+     * whether to put the specific EIP in the recycle bin (true) or directly delete it (false).
+     * The default value is false。
      */
     private boolean releaseToRecycle = false;
 
