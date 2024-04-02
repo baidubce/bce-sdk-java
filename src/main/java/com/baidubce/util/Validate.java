@@ -20,8 +20,16 @@ import java.util.regex.Pattern;
 
 import com.baidubce.BceClientException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 public class Validate {
+    public static void checkListSizeInRange(List<?> values, int max, String errorMessage) {
+        if (!CollectionUtils.isEmpty(values)) {
+            if (values.size() > max) {
+                throw new IllegalArgumentException(errorMessage);
+            }
+        }
+    }
     public static void checkStringNotEmpty(String value, String errorMessage) {
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(errorMessage);

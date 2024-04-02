@@ -10,7 +10,9 @@
  */
 package com.baidubce.services.as.model;
 
+import com.baidubce.services.as.model.asgroup.TagInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public class NodeModel {
     private String instanceId;
@@ -29,6 +31,33 @@ public class NodeModel {
     private String createTime;
     private String nodeType;
     private AsEipModel eip;
+    private List<TagInfo> tags;
+    private String groupId;
+    private boolean isManaged;
+
+    public List<TagInfo> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagInfo> tags) {
+        this.tags = tags;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public boolean isManaged() {
+        return isManaged;
+    }
+
+    public void setManaged(boolean managed) {
+        isManaged = managed;
+    }
 
     public String getInstanceId() {
         return instanceId;
@@ -164,10 +193,13 @@ public class NodeModel {
                 ", instanceType='" + instanceType + '\'' +
                 ", sysDiskInGB=" + sysDiskInGB +
                 ", subnetType='" + subnetType + '\'' +
-                ", isProtected=" + protect +
+                ", protect=" + protect +
                 ", createTime='" + createTime + '\'' +
                 ", nodeType='" + nodeType + '\'' +
                 ", eip=" + eip +
+                ", tags=" + tags +
+                ", groupId='" + groupId + '\'' +
+                ", isManaged=" + isManaged +
                 '}';
     }
 }

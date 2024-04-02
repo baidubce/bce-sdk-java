@@ -47,6 +47,56 @@ public class GroupCreateRequest extends AbstractBceRequest {
 
     private AssignTagInfo assignTagInfo;
 
+    private String keypairId = "";
+
+    private String keypairName = "";
+
+    private List<NodeInfo> nodes;
+
+    private CmdConfig cmdConfig;
+
+    private BccNameConfig bccNameConfig;
+
+    public String getKeypairId() {
+        return keypairId;
+    }
+
+    public void setKeypairId(String keypairId) {
+        this.keypairId = keypairId;
+    }
+
+    public String getKeypairName() {
+        return keypairName;
+    }
+
+    public void setKeypairName(String keypairName) {
+        this.keypairName = keypairName;
+    }
+
+    public List<NodeInfo> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(List<NodeInfo> nodes) {
+        this.nodes = nodes;
+    }
+
+    public CmdConfig getCmdConfig() {
+        return cmdConfig;
+    }
+
+    public void setCmdConfig(CmdConfig cmdConfig) {
+        this.cmdConfig = cmdConfig;
+    }
+
+    public BccNameConfig getBccNameConfig() {
+        return bccNameConfig;
+    }
+
+    public void setBccNameConfig(BccNameConfig bccNameConfig) {
+        this.bccNameConfig = bccNameConfig;
+    }
+
     public AssignTagInfo getAssignTagInfo() {
         return assignTagInfo;
     }

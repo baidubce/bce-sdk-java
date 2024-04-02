@@ -69,6 +69,11 @@ public class PutObjectRequest extends GenericObjectRequest {
     private BosProgressCallback progressCallback = null;
 
     /**
+     * xBceAcl to control acl.
+     */
+    private String xBceAcl = null;
+
+    /**
      * The xBceCrc32cFlag, whether to calculate crc32c
      */
     private boolean xBceCrc32cFlag = false;
@@ -470,5 +475,20 @@ public class PutObjectRequest extends GenericObjectRequest {
      */
     public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
         this.xBceCrc32cFlag = xBceCrc32cFlag;
+    }
+
+    /**
+     * Gets xBceAcl of the object
+     * @return xBceAcl of the object.
+     */
+    public String getxBceAcl(){
+        return this.xBceAcl;
+    }
+
+    /**
+     * Sets xBceAcl of the object
+     */
+    public void setxBceAcl(String acl){
+        this.xBceAcl = acl;
     }
 }

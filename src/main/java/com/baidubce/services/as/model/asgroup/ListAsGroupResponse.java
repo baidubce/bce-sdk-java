@@ -10,36 +10,26 @@
  */
 package com.baidubce.services.as.model.asgroup;
 
-import com.baidubce.model.ListResponse;
+import com.baidubce.model.AbstractBceResponse;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * The response of getting the asGroup list.
  */
-public class ListAsGroupResponse extends ListResponse {
-
-    /**
-     * Auto scaling group information, a collection of AsGroup
-     */
-    private List<AsGroup> asGroupInfo;
-
-    public List<AsGroup> getAsGroupInfo() {
-        return asGroupInfo;
-    }
-
-    public void setAsGroupInfo(List<AsGroup> asGroupInfo) {
-        this.asGroupInfo = asGroupInfo;
-    }
-
-    @Override
-    public String toString() {
-        return "ListAsGroupResponse{" +
-                "marker='" + this.getMarker() + '\'' +
-                ", isTruncated=" + this.getIsTruncated() +
-                ", nextMarker='" + this.getNextMarker() + '\'' +
-                ", maxKeys=" + this.getMaxKeys() +
-                ", asGroupInfo=" + asGroupInfo +
-                '}';
-    }
+@Data
+public class ListAsGroupResponse extends AbstractBceResponse {
+    // 排序字段
+    private String orderBy = "";
+    // 升序asc 或 降序desc 排序
+    private String order = "";
+    // 页码
+    private int pageNo = 1;
+    // 一页条目数量
+    private int pageSize = 0;
+    // 总条目数量
+    private int totalCount = 0;
+    // 返回的asGroup列表
+    private List<AsGroup> result;
 }

@@ -14,16 +14,22 @@ package com.baidubce.services.bcc.model.volume;
 
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bcc.model.VolumeAttachmentModel;
+import lombok.Data;
+
+import java.util.List;
 
 /**
  * The response for AttachVolumeRequest.
  */
+@Data
 public class AttachVolumeResponse extends AbstractBceResponse {
 
     /**
      * The detail model which describe where the volume will attach to.
      */
     private VolumeAttachmentModel volumeAttachment;
+
+    private List<String> warningList;
 
     public VolumeAttachmentModel getVolumeAttachment() {
         return volumeAttachment;

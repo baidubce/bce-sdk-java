@@ -34,6 +34,7 @@ public class DeleteDirectoryRequest extends GenericObjectRequest {
     public DeleteDirectoryRequest(String bucketName, String key, boolean deleteRecursive, String deleteMarker) {
         super(bucketName, key);
         this.deleteMarker = deleteMarker;
+        this.isDeleteRecursive = deleteRecursive;
     }
 
     @Override

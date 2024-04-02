@@ -1,0 +1,30 @@
+{
+  "jobInput": {},
+  "jobOutput":{},
+  "maxRetryCountOnFailure": 1,
+  "tasks": {
+    "demo": {
+      "type": "docker",
+      "instanceCount": 3,
+      "resource": "cpu:1,ram:4GB",
+      "dockerImage": {
+        "name": "centos:7",
+        "file": "bos://batch-compute/image/docker.io_centos_7.tar",
+        "additionalPackages": []
+      },
+      "mount": {
+        "JobShareVolume://": "/jobShare",
+        "JobVMVolume://": "/jobLocal"
+      },
+      "env": {},
+      "cmd": "echo hello_batch_compute_demo",
+      "stopJobOnUserProgramError": true,
+      "workDir": "/home",
+      "copyStdoutTo": "",
+      "copyStderrTo": ""
+    }
+  },
+  "dependencies": {
+    "demo":[]
+  }
+}

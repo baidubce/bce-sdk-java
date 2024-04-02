@@ -23,7 +23,7 @@ public class NodeInfo {
     private int sysDiskInGB;
     // 本地盘
     private List<EphemeralDisk> ephemeralDisks;
-    private String instanceType;
+    private int instanceType;
     private String gpuCard = "";
     private int gpuCount;
     // fpga卡的属性
@@ -48,6 +48,11 @@ public class NodeInfo {
     private String securityGroupName;
     private int totalCount;
     private String aspId = "";
+    private String productType ;
+    private int priorities;
+    private String zoneSubnet;
+    private String bidModel;
+    private double bidPrice;
 
     @Data
     @ToString

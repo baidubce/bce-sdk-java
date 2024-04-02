@@ -282,12 +282,29 @@ public class EipClient extends AbstractBceClient {
 
     /**
      * bind the eip to a specified instanceId and instanceType(BCC|BLB).
+     *
      * @param eip eip address to be bound
      * @param instanceId id of instance to be bound
      * @param instanceType type of instance to be bound
      */
     public void bindEip(String eip, String instanceId, String instanceType) {
         this.bindEip(new BindEipRequest().withEip(eip).withInstanceId(instanceId).withInstanceType(instanceType));
+    }
+
+    /**
+     * bind the eip to a specified instanceId and instanceType(BCC|BLB).
+     *
+     * @param eip eip address to be bound
+     * @param instanceId id of instance to be bound
+     * @param instanceIp ip of instance to be bound
+     * @param instanceType type of instance to be bound
+     */
+    public void bindEip(String eip, String instanceId, String instanceIp, String instanceType) {
+        this.bindEip(new BindEipRequest()
+                .withEip(eip)
+                .withInstanceId(instanceId)
+                .withInstanceIp(instanceIp)
+                .withInstanceType(instanceType));
     }
 
     /**

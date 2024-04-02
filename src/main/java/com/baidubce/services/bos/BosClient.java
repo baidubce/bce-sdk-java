@@ -3403,6 +3403,10 @@ public class BosClient extends AbstractBceClient {
             internalRequest.addHeader(Headers.BOS_PROCESS, request.getVideoProcess());
         }
 
+        if (request.getxBceAcl() != null){
+            internalRequest.addHeader(Headers.BCE_ACL, request.getxBceAcl());
+        }
+
         if (request.getxBceCrc32cFlag()) {
             internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
         }

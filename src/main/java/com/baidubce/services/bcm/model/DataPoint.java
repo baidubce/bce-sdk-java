@@ -15,6 +15,8 @@ public class DataPoint {
 
     public Integer sampleCount;
 
+    public Double value;
+
     /**
      * DateTime,请参考日期与时间，UTC日期表示
      */
@@ -66,5 +68,12 @@ public class DataPoint {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Double getValue(){
+        return value;
+    }
+    public void setValue(Double value) {
+        this.value = value;
     }
 }

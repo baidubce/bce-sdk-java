@@ -13,7 +13,6 @@ package com.baidubce.services.as.model.asgroup;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bcc.model.VpcInfo;
 import com.baidubce.services.as.model.zone.ZoneInfo;
-
 import java.util.List;
 
 /**
@@ -29,9 +28,35 @@ public class GetAsGroupResponse extends AbstractBceResponse {
     private String scsIds;
     private String createTime;
     private List<ZoneInfo> zoneInfo;
-    private GroupConfig groupConfig;
     private String blbId;
     private int nodeNum;
+    private GroupConfig config;
+    private String expansionStrategy;
+    private String shrinkageStrategy;
+
+    public GroupConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(GroupConfig config) {
+        this.config = config;
+    }
+
+    public String getExpansionStrategy() {
+        return expansionStrategy;
+    }
+
+    public void setExpansionStrategy(String expansionStrategy) {
+        this.expansionStrategy = expansionStrategy;
+    }
+
+    public String getShrinkageStrategy() {
+        return shrinkageStrategy;
+    }
+
+    public void setShrinkageStrategy(String shrinkageStrategy) {
+        this.shrinkageStrategy = shrinkageStrategy;
+    }
 
     public String getGroupId() {
         return groupId;
@@ -106,11 +131,11 @@ public class GetAsGroupResponse extends AbstractBceResponse {
     }
 
     public GroupConfig getGroupConfig() {
-        return groupConfig;
+        return config;
     }
 
     public void setGroupConfig(GroupConfig groupConfig) {
-        this.groupConfig = groupConfig;
+        this.config = groupConfig;
     }
 
     public String getBlbId() {
@@ -141,9 +166,11 @@ public class GetAsGroupResponse extends AbstractBceResponse {
                 ", scsIds='" + scsIds + '\'' +
                 ", createTime='" + createTime + '\'' +
                 ", zoneInfo=" + zoneInfo +
-                ", groupConfig=" + groupConfig +
                 ", blbId='" + blbId + '\'' +
                 ", nodeNum=" + nodeNum +
+                ", config=" + config +
+                ", expansionStrategy='" + expansionStrategy + '\'' +
+                ", shrinkageStrategy='" + shrinkageStrategy + '\'' +
                 '}';
     }
 }

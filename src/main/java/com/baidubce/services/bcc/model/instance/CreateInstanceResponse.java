@@ -13,17 +13,21 @@
 package com.baidubce.services.bcc.model.instance;
 
 import com.baidubce.model.AbstractBceResponse;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * The response for CreateInstanceRequest.
  */
+@Data
 public class CreateInstanceResponse extends AbstractBceResponse {
     /**
      * List of id of instances created.
      */
     private List<String> instanceIds;
+
+    private List<String> warningList;
 
     public List<String> getInstanceIds() {
         return instanceIds;

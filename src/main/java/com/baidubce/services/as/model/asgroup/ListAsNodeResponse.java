@@ -10,33 +10,31 @@
  */
 package com.baidubce.services.as.model.asgroup;
 
-import com.baidubce.model.ListResponse;
+import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.as.model.NodeModel;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * The response of getting the asNode list.
  */
-public class ListAsNodeResponse extends ListResponse {
+@Data
+public class ListAsNodeResponse extends AbstractBceResponse {
     /**
      * node information
      */
     private List<NodeModel> result;
 
-    public List<NodeModel> getResult() {
-        return result;
-    }
-
-    public void setResult(List<NodeModel> result) {
-        this.result = result;
-    }
-
-    @Override
-    public String toString() {
-        return "ListAsNodeResponse{" +
-                "result=" + result +
-                '}';
-    }
+    // 排序字段
+    private String orderBy = "";
+    // 升序asc 或 降序desc 排序
+    private String order = "";
+    // 页码
+    private int pageNo = 1;
+    // 一页条目数量
+    private int pageSize = 0;
+    // 总条目数量
+    private int totalCount = 0;
 
 }

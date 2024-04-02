@@ -68,6 +68,8 @@ import com.baidubce.services.bcc.model.image.ListSharedUserResponse;
 import com.baidubce.services.bcc.model.image.RemoteCopyImageRequest;
 import com.baidubce.services.bcc.model.image.ShareImageRequest;
 import com.baidubce.services.bcc.model.image.UnShareImageRequest;
+import com.baidubce.services.bcc.model.instance.BatchRefundResourceRequest;
+import com.baidubce.services.bcc.model.instance.BatchRefundResourceResponse;
 import com.baidubce.services.bcc.model.instance.BccPriceRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceResponse;
 import com.baidubce.services.bcc.model.instance.BindSecurityGroupRequest;
@@ -174,6 +176,7 @@ import com.baidubce.services.bcc.model.volume.ReleaseVolumeRequest;
 import com.baidubce.services.bcc.model.volume.RenameVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ResizeVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.ResizeVolumeRequest;
+import com.baidubce.services.bcc.model.volume.ResizeVolumeResponse;
 import com.baidubce.services.bcc.model.volume.RollbackVolumeRequest;
 import com.baidubce.services.bcc.model.volume.VolumeAction;
 import com.baidubce.services.bcc.model.zone.ListZonesResponse;
@@ -2135,8 +2138,8 @@ public class BccClient extends AbstractBceClient {
      * @param volumeId       The id of volume which you want to resize.
      * @param newCdsSizeInGB The new volume size you want to resize in GB.
      */
-    public void resizeVolume(String volumeId, int newCdsSizeInGB) {
-        this.resizeVolume(new ResizeVolumeRequest()
+    public ResizeVolumeResponse resizeVolume(String volumeId, int newCdsSizeInGB) {
+        return this.resizeVolume(new ResizeVolumeRequest()
                 .withVolumeId(volumeId).withNewCdsSizeInGB(newCdsSizeInGB));
     }
 
@@ -2153,7 +2156,7 @@ public class BccClient extends AbstractBceClient {
      *
      * @param request The request containing all options for resize the specified volume.
      */
-    public void resizeVolume(ResizeVolumeRequest request) {
+    public ResizeVolumeResponse resizeVolume(ResizeVolumeRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
@@ -2165,7 +2168,7 @@ public class BccClient extends AbstractBceClient {
         internalRequest.addParameter(VolumeAction.resize.name(), null);
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
-        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+        return invokeHttpClient(internalRequest, ResizeVolumeResponse.class);
     }
 
     /**
@@ -3626,6 +3629,16 @@ public class BccClient extends AbstractBceClient {
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.DELETE, VOLUME_CLUSTER_PREFIX, request.getClusterId());
         invokeHttpClient(internalRequest, GetVolumeClusterResponse.class);
+    }
+
+    public BatchRefundResourceResponse batchRefundResource(BatchRefundResourceRequest request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, "batchRefundResource");
+
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, BatchRefundResourceResponse.class);
     }
 
     public GetAvailableImagesBySpecResponse getAvailableImagesBySpec(

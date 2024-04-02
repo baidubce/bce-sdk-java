@@ -22,6 +22,34 @@ public class ZoneInfo {
      */
     private String subnetId;
 
+    private String subnetUuid;
+    private String subnetName;
+    private Short subnetType;
+
+    public String getSubnetUuid() {
+        return subnetUuid;
+    }
+
+    public void setSubnetUuid(String subnetUuid) {
+        this.subnetUuid = subnetUuid;
+    }
+
+    public String getSubnetName() {
+        return subnetName;
+    }
+
+    public void setSubnetName(String subnetName) {
+        this.subnetName = subnetName;
+    }
+
+    public Short getSubnetType() {
+        return subnetType;
+    }
+
+    public void setSubnetType(Short subnetType) {
+        this.subnetType = subnetType;
+    }
+
     public String getZone() {
         return zone;
     }
@@ -43,6 +71,9 @@ public class ZoneInfo {
         return "ZoneInfo{" +
                 "zone='" + zone + '\'' +
                 ", subnetId='" + subnetId + '\'' +
+                ", subnetUuid='" + subnetUuid + '\'' +
+                ", subnetName='" + subnetName + '\'' +
+                ", subnetType=" + subnetType +
                 '}';
     }
 }

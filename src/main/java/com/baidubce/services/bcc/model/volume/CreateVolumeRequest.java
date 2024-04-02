@@ -54,6 +54,7 @@ public class CreateVolumeRequest extends AbstractBceRequest {
     /**
      * The detail model to specify the billing.
      */
+    @Deprecated
     private Billing billing;
 
     /**
@@ -74,6 +75,18 @@ public class CreateVolumeRequest extends AbstractBceRequest {
      * The id of cluster.
      */
     private String clusterId;
+
+    /**
+     * The optional parameter to specify the payment for the volume.
+     * The billing type and payment method, including Prepaid and Postpaid,
+     * need to be specified only when the instanceId is not empty and the corresponding instance type is prepaid.
+     * If instanceId is empty:
+     * create a post payment type CDS;
+     * If the instanceId is not empty:
+     * If the instance is prepaid, a chargeType needs to be specified;
+     * If the instance is post paid, create a post paid CDS
+     */
+    private String chargeType;
 
     public String getClientToken() {
         return clientToken;
@@ -218,6 +231,19 @@ public class CreateVolumeRequest extends AbstractBceRequest {
 
     public CreateVolumeRequest withClusterId(String clusterId) {
         this.clusterId = clusterId;
+        return this;
+    }
+
+    public String getChargeType() {
+        return chargeType;
+    }
+
+    public void setChargeType(String chargeType) {
+        this.chargeType = chargeType;
+    }
+
+    public CreateVolumeRequest withChargeType(String chargeType) {
+        this.chargeType = chargeType;
         return this;
     }
 

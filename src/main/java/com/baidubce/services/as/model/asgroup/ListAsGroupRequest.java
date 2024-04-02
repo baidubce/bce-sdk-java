@@ -11,34 +11,39 @@
 package com.baidubce.services.as.model.asgroup;
 
 import com.baidubce.auth.BceCredentials;
-import com.baidubce.model.ListRequest;
+import com.baidubce.model.AbstractBceRequest;
+import lombok.Data;
 
 /**
  * The request for getting the asGroup list.
  */
-public class ListAsGroupRequest extends ListRequest {
-
+@Data
+public class ListAsGroupRequest extends AbstractBceRequest {
     /**
-     * The name of auto scaling group.
-     */
-    private String groupName;
+     * 过滤规则的关键词
+     * */
+    private String keyword;
+    /**
+     * 关键词的类型
+     * */
+    private String keywordType;
+    /**
+     * 规则的顺序，默认为"desc"
+     * */
+    private String order;
+    /**
+     * 排序规则的字段，默认为"createTime"
+     * */
+    private String orderBy;
+    /**
+     * 页码，默认为1
+     * */
+    private Integer pageNo;
+    /**
+     * 页面大小，默认为1000
+     * */
+    private Integer pageSize;
 
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    @Override
-    public String toString() {
-        return "ListAsGroupRequest{" +
-                "marker='" + this.getMarker() + '\'' +
-                ", maxKeys=" + this.getMaxKeys() +
-                ", groupName='" + groupName + '\'' +
-                '}';
-    }
 
     @Override
     public ListAsGroupRequest withRequestCredentials(BceCredentials credentials) {

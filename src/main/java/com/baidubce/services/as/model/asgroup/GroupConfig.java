@@ -20,4 +20,5 @@ public class GroupConfig {
     private int minNodeNum;
     private int maxNodeNum;
     private int cooldownInSec;
+    private int expectNum = -1;
 }

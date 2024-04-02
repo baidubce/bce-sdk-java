@@ -11,33 +11,43 @@
 package com.baidubce.services.as.model.asgroup;
 
 import com.baidubce.auth.BceCredentials;
-import com.baidubce.model.ListRequest;
+import com.baidubce.model.AbstractBceRequest;
+import lombok.Data;
 
 /**
  * The request for getting the asNode list.
  */
-public class ListAsNodeRequest extends ListRequest {
+@Data
+public class ListAsNodeRequest extends AbstractBceRequest {
     /**
      * The ID of auto scaling group.
      */
     private String groupId;
 
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    @Override
-    public String toString() {
-        return "ListAsNodeRequest{" +
-                "groupId='" + groupId + '\'' +
-                ", marker='" + this.getMarker() + '\'' +
-                ", maxKeys=" + this.getMaxKeys() +
-                '}';
-    }
+    /**
+     * 过滤规则的关键词
+     * */
+    private String keyword;
+    /**
+     * 关键词的类型
+     * */
+    private String keywordType;
+    /**
+     * 规则的顺序，默认为"desc"
+     * */
+    private String order;
+    /**
+     * 排序规则的字段，默认为"createTime"
+     * */
+    private String orderBy;
+    /**
+     * 页码，默认为1
+     * */
+    private Integer pageNo;
+    /**
+     * 页面大小，默认为1000
+     * */
+    private Integer pageSize;
 
     @Override
     public ListAsNodeRequest withRequestCredentials(BceCredentials credentials) {

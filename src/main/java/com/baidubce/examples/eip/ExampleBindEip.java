@@ -23,6 +23,7 @@ public class ExampleBindEip {
         BindEipRequest request = new BindEipRequest();
         request.setEip("10.107.245.97"); // eip地址
         request.setInstanceId("i-VPKFiIGz"); // eip要绑定的实例id
+        request.setInstanceIp("192.169.0.9"); // eip要绑定的实例中的ip，可选字段，如绑定BCC主网卡中辅助ip或者ipv6可以用这个
         request.setInstanceType("BCC"); // eip要绑定的实例类型
 
         try {

@@ -29,6 +29,8 @@ public class CreateVolumeResponse extends AbstractBceResponse {
 
     private List<Volume> volumes;
 
+    private List<String> warningList;
+
     @Data
     public static class Volume {
         private String volumeId;
