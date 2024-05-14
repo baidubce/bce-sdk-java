@@ -310,6 +310,25 @@ public class SmsV3ClientTest {
         createBlackRequest.setSmsType("CommonNotice");
         smsClient.createMobileBlack(createBlackRequest);
 
+        createBlackRequest = new CreateBlackRequest();
+        createBlackRequest.setType("MerchantBlack");
+        createBlackRequest.setPhone("17600000001");
+        createBlackRequest.setCountryType("DOMESTIC");
+        createBlackRequest.setSmsType("CommonNotice");
+        smsClient.createMobileBlack(createBlackRequest);
+
+        try {
+            createBlackRequest = new CreateBlackRequest();
+            createBlackRequest.setType("MerchantBlack");
+            createBlackRequest.setPhone("17600000002");
+            createBlackRequest.setCountryType("INTERNATIONAL");
+            createBlackRequest.setSmsType("CommonNotice");
+            smsClient.createMobileBlack(createBlackRequest);
+        } catch (Exception e) {
+            // 号码和类型不一致
+            System.out.println(e.getMessage());
+        }
+
         try {
             createBlackRequest = new CreateBlackRequest();
             createBlackRequest.setType("SignatureBlack");

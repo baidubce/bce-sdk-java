@@ -23,6 +23,12 @@ public class ListBlackRequest extends SmsRequest {
     private String phone;
 
     /**
+     * countryType of black mobile
+     * The value of type could be DOMESTIC or INTERNATIONAL
+     */
+    private String countryType;
+
+    /**
      * smsType
      */
     private String smsType;
@@ -107,5 +113,13 @@ public class ListBlackRequest extends SmsRequest {
 
     public void setSignatureIdStr(String signatureIdStr) {
         this.signatureIdStr = signatureIdStr;
+    }
+
+    public String getCountryType() {
+        return countryType;
+    }
+
+    public void setCountryType(String countryType) {
+        this.countryType = countryType;
     }
 }

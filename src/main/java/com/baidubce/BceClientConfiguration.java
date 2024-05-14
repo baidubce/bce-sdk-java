@@ -162,6 +162,12 @@ public class BceClientConfiguration {
      */
     private boolean redirectsEnabled = true;
 
+    /**
+     * defalut io thread count
+     *
+     */
+    private int ioThreadCount = Runtime.getRuntime().availableProcessors();
+
     // Initialize DEFAULT_USER_AGENT
     static {
         String language = System.getProperty("user.language");
@@ -194,6 +200,7 @@ public class BceClientConfiguration {
     public BceClientConfiguration(BceClientConfiguration other) {
         this.connectionTimeoutInMillis = other.connectionTimeoutInMillis;
         this.maxConnections = other.maxConnections;
+        this.ioThreadCount = other.ioThreadCount;
         this.retryPolicy = other.retryPolicy;
         this.localAddress = other.localAddress;
         this.protocol = other.protocol;
@@ -225,6 +232,7 @@ public class BceClientConfiguration {
         this.endpoint = endpoint;
         this.connectionTimeoutInMillis = other.connectionTimeoutInMillis;
         this.maxConnections = other.maxConnections;
+        this.ioThreadCount = other.ioThreadCount;
         this.retryPolicy = other.retryPolicy;
         this.localAddress = other.localAddress;
         this.protocol = other.protocol;
@@ -302,6 +310,38 @@ public class BceClientConfiguration {
      */
     public BceClientConfiguration withMaxConnections(int maxConnections) {
         this.setMaxConnections(maxConnections);
+        return this;
+    }
+
+    /**
+     * Returns the maximum number of io thread.
+     *
+     * @return the maximum number of io thread.
+     */
+    public int getIoThreadCount() {
+        return this.ioThreadCount;
+    }
+
+    /**
+     * Sets the maximum number of open io thread.
+     *
+     * @param ioThreadCount the maximum number of open HTTP connections.
+     * @throws IllegalArgumentException if ioThreadCount is negative.
+     */
+    public void setIoThreadCount(int ioThreadCount) {
+        checkArgument(ioThreadCount >= 0, "ioThreadCount should not be negative.");
+        this.ioThreadCount = ioThreadCount;
+    }
+
+    /**
+     * Sets the maximum number of io thread, and returns the updated configuration instance.
+     *
+     * @param ioThreadCount the maximum number of io thread.
+     * @return the updated configuration instance.
+     * @throws IllegalArgumentException if ioThreadCount is negative.
+     */
+    public BceClientConfiguration withIoThreadCount(int ioThreadCount) {
+        this.setIoThreadCount(ioThreadCount);
         return this;
     }
 
@@ -880,7 +920,8 @@ public class BceClientConfiguration {
                 + ", \n  proxyDomain=" + proxyDomain + ", \n  proxyWorkstation="
                 + proxyWorkstation + ", \n  proxyPreemptiveAuthenticationEnabled="
                 + proxyPreemptiveAuthenticationEnabled + ", \n  maxConnections="
-                + maxConnections + ", \n  socketTimeoutInMillis="
+                + maxConnections + ", \n ioThreadCount="
+                + ioThreadCount + ", \n  socketTimeoutInMillis="
                 + socketTimeoutInMillis + ", \n  connectionTimeoutInMillis="
                 + connectionTimeoutInMillis + ", \n  socketBufferSizeInBytes="
                 + socketBufferSizeInBytes + ", \n  endpoint=" + endpoint

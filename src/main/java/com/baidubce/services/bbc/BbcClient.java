@@ -62,8 +62,10 @@ import com.baidubce.services.bcc.model.instance.RebootInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
+import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+import com.baidubce.util.Validate;
 import com.google.common.base.Strings;
 import org.apache.commons.codec.binary.Hex;
 
@@ -77,8 +79,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.collections.CollectionUtils;
 
 import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
+import static com.baidubce.util.Validate.checkMultyParamsNotBothEmpty;
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -106,7 +110,7 @@ public class BbcClient extends AbstractBceClient {
     private static final String POST_PAID = "Postpaid";
     private static final String BIND = "bind";
     private static final String UNBIND = "unbind";
-
+    private static final String RESERVED_TAG_PREFIX = "bbc/reserved/tag";
     /**
      * Exception messages.
      */
@@ -740,5 +744,40 @@ public class BbcClient extends AbstractBceClient {
             internalRequest.addHeader(Headers.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
             internalRequest.setContent(RestartableInputStream.wrap(requestJson));
         }
+    }
+
+    public void bindReservedInstanceToTags(ReservedTagsRequest request) {
+        Validate.checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkMultyParamsNotBothEmpty(request.getReservedInstanceIds(), "reservedInstanceIds should NOT be null.");
+        if (CollectionUtils.isEmpty(request.getChangeTags())) {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        for (TagModel tag : request.getChangeTags()) {
+            checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+        }
+
+        InternalRequest internalRequest = this.createV2Request(request, HttpMethodName.PUT,
+                RESERVED_TAG_PREFIX);
+        internalRequest.addParameter(BIND, null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void unbindReservedInstanceFromTags(ReservedTagsRequest request) {
+        Validate.checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkMultyParamsNotBothEmpty(request.getReservedInstanceIds(), "reservedInstanceIds should NOT be null.");
+        if (CollectionUtils.isEmpty(request.getChangeTags())) {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        for (TagModel tag : request.getChangeTags()) {
+            checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+        }
+
+        InternalRequest internalRequest = this.createV2Request(request, HttpMethodName.PUT,
+                RESERVED_TAG_PREFIX);
+        internalRequest.addParameter(UNBIND, null);
+
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 }

@@ -29,6 +29,12 @@ public class CreateBlackRequest extends SmsRequest {
     private String phone;
 
     /**
+     * countryType of black mobile
+     * The value of type could be DOMESTIC or INTERNATIONAL
+     */
+    private String countryType;
+
+    /**
      * string-based Signature ID
      * When the value of "type" is "SignatureBlack", this field is required.
      */
@@ -70,5 +76,13 @@ public class CreateBlackRequest extends SmsRequest {
 
     public void setSmsType(String smsType) {
         this.smsType = smsType;
+    }
+
+    public String getCountryType() {
+        return countryType;
+    }
+
+    public void setCountryType(String countryType) {
+        this.countryType = countryType;
     }
 }

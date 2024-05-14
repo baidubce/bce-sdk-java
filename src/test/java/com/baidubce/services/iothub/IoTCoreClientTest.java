@@ -41,8 +41,8 @@ import org.junit.Test;
 
 public class IoTCoreClientTest {
 
-    private static final String AK = "c4324c85e3454b25af6a39becd225365";
-    private static final String SK = "99fc53b372d94be38cd965a224b3f6c7";
+    private static final String AK = "";
+    private static final String SK = "";
     private static final String ENDPOINT = "http://10.135.112.3:8589";
 
     private static final String TEST_IOT_CORE_ID = "ambzykv";

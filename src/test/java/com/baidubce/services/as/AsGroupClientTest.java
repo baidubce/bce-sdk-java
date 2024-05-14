@@ -66,8 +66,8 @@ public class AsGroupClientTest {
 
     protected static final Logger logger = LoggerFactory.getLogger(AsGroupClientTest.class);
     protected static String endpoint = "http://gzbh-sandbox15-6271.gzbh:8376";
-    protected final String ak = "7807d1ccd46042378c9f6dfb5684496d";
-    protected final String sk = "b51dc6642339468289f946f0a6303115";
+    protected final String ak = "";
+    protected final String sk = "";
     private final String ruleId = "asrule-Iv0qihED";
 
     private AsGroupClient client;

@@ -15,11 +15,11 @@ package com.baidubce.conf;
 public class BmrConf {
 //  qasandbox
     public static final String BMR_ENDPOINT = "http://bmr.bce-api.baidu.com";
-    public static final String BMR_AK = "8e93c6c470cf47e287c30db89b0eee47";
-    public static final String BMR_SK = "e9ddc6246b4249bfa1830ff4592d611e";
+    public static final String BMR_AK = "";
+    public static final String BMR_SK = "";
 
 //    online: liukun01
 //    public static final String BMR_ENDPOINT = "http://bmr.bj.baidubce.com";
-//    public static final String BMR_AK = "64b0e7820b9a405a81fca0d199b93db1";
-//    public static final String BMR_SK = "7ae445ef9ae1452ab23658ee20ae6ace";
+//    public static final String BMR_AK = "";
+//    public static final String BMR_SK = "";
 }

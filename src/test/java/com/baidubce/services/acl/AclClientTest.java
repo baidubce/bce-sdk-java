@@ -22,8 +22,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class AclClientTest {
 
     private static final Logger logger = LoggerFactory.getLogger(AclClientTest.class);
-    private static final String ak = "d1dd575046864692b5fe235089d87a12";
-    private static final String sk = "96581de66d5f48d4b5184dd1b6b74f4c";
+    private static final String ak = "";
+    private static final String sk = "";
     private AclClient aclClient;
 
     @Before

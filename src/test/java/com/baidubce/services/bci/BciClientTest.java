@@ -28,8 +28,8 @@ import java.util.Collections;
  */
 public class BciClientTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BciClientTest.class);
-    private static final String BCI_AK = "255bd4530b9047c083d588efab180060";
-    private static final String BCI_SK = "8456fb70f30c4f9aa709f9076d8e38b5";
+    private static final String BCI_AK = "";
+    private static final String BCI_SK = "";
     private static final String BCI_ENDPOINT = "http://10.221.50.25:8784";
 
     private static final String ZONE_NAME = "zoneB";

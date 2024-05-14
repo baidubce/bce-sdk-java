@@ -22,6 +22,7 @@ import com.baidubce.auth.Signer;
 import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bos.model.GetObjectResponse;
 import com.baidubce.util.HttpUtils;
 
 import org.apache.http.HttpEntity;
@@ -222,6 +223,7 @@ public class BceHttpClient {
             credentials = request.getCredentials();
         }
         long delayForNextRetryInMillis = 0;
+        boolean isBosHead404 = false;
         for (int attempt = 1; ; ++attempt) {
             HttpRequestBase httpRequest = null;
             CloseableHttpResponse httpResponse = null;
@@ -249,6 +251,7 @@ public class BceHttpClient {
                 BceHttpResponse bceHttpResponse = new BceHttpResponse(httpResponse);
 
                 T response = responseClass.newInstance();
+                isBosHead404 = HttpMethodName.HEAD.equals(request.getHttpMethod()) && response instanceof GetObjectResponse && bceHttpResponse.getStatusCode() == 404;
                 for (HttpResponseHandler handler : responseHandlers) {
                     if (handler.handle(bceHttpResponse, response)) {
                         break;
@@ -258,7 +261,7 @@ public class BceHttpClient {
                 // everything is ok
                 return response;
             } catch (Exception e) {
-                if (logger.isInfoEnabled()) {
+                if (logger.isInfoEnabled() && !isBosHead404) {
                     logger.info("Unable to execute HTTP request", e);
                 }
 
@@ -415,6 +418,7 @@ public class BceHttpClient {
         ConnectingIOReactor ioReactor =
                 new DefaultConnectingIOReactor(IOReactorConfig.custom()
                         .setSoReuseAddress(true)
+                        .setIoThreadCount(this.config.getIoThreadCount())
                         .setSoTimeout(this.config.getSocketTimeoutInMillis()).setTcpNoDelay(true).build());
         PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(ioReactor);
         connectionManager.setDefaultMaxPerRoute(this.config.getMaxConnections());

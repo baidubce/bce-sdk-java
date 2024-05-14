@@ -52,13 +52,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class ModbusClientTest  {
     // qa-sandbox
-//    private static final String AK = "a6efb01da029490e9dd9e9605698f36c";
-//    private static final String SK = "6db5c95fd8504352b2da1e2afe52b59e";
+//    private static final String AK = "";
+//    private static final String SK = "";
 //    private static final String ENDPOINT = "http://nmg01-hpc-w1134.nmg01.baidu.com:8008";
 
     // online
-    private static final String AK = "06b53a1ed70f4d3292a";
-    private static final String SK = "051305eed3694bdb68e";
+    private static final String AK = "";
+    private static final String SK = "";
     private static final String ENDPOINT = "http://parser.iot.gz.baidubce.com";
     public ModbusClient modbusClient;
     public ObjectMapper mapper = new ObjectMapper();

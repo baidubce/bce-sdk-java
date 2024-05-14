@@ -59,8 +59,8 @@ import static org.hamcrest.Matchers.notNullValue;
 public class IotHubClientTest {
 
     // qa-sandbox
-    private static final String AK = "37b8d6193a81407ab2b642b6e792a839";
-    private static final String SK = "7fa0fa651ff64aba932aed8ac1d186a4";
+    private static final String AK = "";
+    private static final String SK = "";
     private static final String ENDPOINT = "http://nmg01-hpc-w1134.nmg01.baidu.com:8004";
 
     private static final String TEST_ENDPOINT_NAME = "sdk_test_endpoint_10";

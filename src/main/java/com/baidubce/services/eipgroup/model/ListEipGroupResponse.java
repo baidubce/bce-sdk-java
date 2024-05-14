@@ -12,27 +12,23 @@
  */
 package com.baidubce.services.eipgroup.model;
 
-import java.util.List;
-
 import com.baidubce.model.ListResponse;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 /**
  * The response for list eip group request.
  */
+@Getter
+@Setter
 public class ListEipGroupResponse extends ListResponse {
 
     /**
      * List of eip group info
      */
     private List<EipGroup> eipgroups;
-
-    public List<EipGroup> getEipgroups() {
-        return eipgroups;
-    }
-
-    public void setEipgroups(List<EipGroup> eipgroups) {
-        this.eipgroups = eipgroups;
-    }
 
     @Override
     public String toString() {

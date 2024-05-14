@@ -50,8 +50,8 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class IotDmV2ClientTest {
     // qa-sandbox
-    private static final String ACCESSKEY = "2647e9da8eab431cbe58eaa6c1d46cdc";
-    private static final String SECRETKEY = "72c14ce4b2d2417c92dbe9828d45bd5a";
+    private static final String ACCESSKEY = "";
+    private static final String SECRETKEY = "";
     private static final String ENDPOINT = "10.73.203.34:8010";
     private static final String NEW_HUB = "true";
     private static final String CLEAN_HUB = "true";

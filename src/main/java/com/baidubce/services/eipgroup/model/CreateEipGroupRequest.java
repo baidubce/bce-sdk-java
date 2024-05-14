@@ -14,12 +14,19 @@ package com.baidubce.services.eipgroup.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bcc.model.TagModel;
 import com.baidubce.services.eip.model.Billing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 /**
  * The request for creating a nat.
  */
+@Getter
+@Setter
 public class CreateEipGroupRequest extends AbstractBceRequest {
 
     /**
@@ -53,6 +60,16 @@ public class CreateEipGroupRequest extends AbstractBceRequest {
      * The billing of eip group
      */
     private Billing billing;
+
+    /**
+     * The tags which will be bound to eipGroup.
+     */
+    private List<TagModel> tags;
+
+    /**
+     * The ID of resourceGroup which will be bound to eipGroup.
+     */
+    private String resourceGroupId;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -104,43 +121,25 @@ public class CreateEipGroupRequest extends AbstractBceRequest {
         return this;
     }
 
-    public String getClientToken() {
-        return clientToken;
+    /**
+     * Configure tags for the request.
+     *
+     * @param tags The tags which will be bound to eipGroup.
+     * @return CreateEipGroupRequest with specific tags.
+     */
+    public CreateEipGroupRequest withTags(List<TagModel> tags) {
+        this.tags = tags;
+        return this;
     }
 
-    public void setClientToken(String clientToken) {
-        this.clientToken = clientToken;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getEipCount() {
-        return eipCount;
-    }
-
-    public void setEipCount(int eipCount) {
-        this.eipCount = eipCount;
-    }
-
-    public int getBandwidthInMbps() {
-        return bandwidthInMbps;
-    }
-
-    public void setBandwidthInMbps(int bandwidthInMbps) {
-        this.bandwidthInMbps = bandwidthInMbps;
-    }
-
-    public Billing getBilling() {
-        return billing;
-    }
-
-    public void setBilling(Billing billing) {
-        this.billing = billing;
+    /**
+     * Configure resourceGroupId for the request.
+     *
+     * @param resourceGroupId The ID of resourceGroup which will be bound to eipGroup.
+     * @return CreateEipGroupRequest with specific resourceGroupId.
+     */
+    public CreateEipGroupRequest withResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+        return this;
     }
 }

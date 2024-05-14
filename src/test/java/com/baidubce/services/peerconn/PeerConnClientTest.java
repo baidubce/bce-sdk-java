@@ -44,11 +44,11 @@ import java.util.List;
 public class PeerConnClientTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(PeerConnClientTest.class);
-    private static final String AK = "5a6f0606bf5e48f29dd132aa76aa5182";
-    private static final String SK = "328057dfa861459d9622353570842988";
+    private static final String AK = "";
+    private static final String SK = "";
 
-    private static final String PEER_AK = "1678d6c6a38c48eb9f30ce87518e2bab";
-    private static final String PEER_SK = "1161439741594f62839855481d1c5b85";
+    private static final String PEER_AK = "";
+    private static final String PEER_SK = "";
 
     private PeerConnClient client;
 

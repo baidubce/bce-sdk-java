@@ -32,8 +32,8 @@ public class VodProClientTest {
         @Rule
         public ExpectedException thrown = ExpectedException.none();
 
-        protected static final String AK = "9bf038392d714684a49b43717ba22396";
-        protected static final String SK = "1ae2b66c6ba245fd9bc2169f20efd8f5";
+        protected static final String AK = "";
+        protected static final String SK = "";
         protected static final String ENDPOINT = "http://10.107.43.49:8181";
 
         protected VodproClient vodproClient;

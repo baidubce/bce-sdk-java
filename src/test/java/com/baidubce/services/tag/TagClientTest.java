@@ -47,8 +47,8 @@ public class TagClientTest {
 
     @Ignore
     public static class TagBase {
-        protected static final String ak = "62f0900586964cb2b76bcd221969eb0f";
-        protected static final String sk = "8756f18f02f74519b8ecbb47d4e971c1";
+        protected static final String ak = "";
+        protected static final String sk = "";
         static String endpoint = "http://tag.sandbox.bcetest.baidu-int.com";
         protected TagClientConfiguration config;
         protected TagClient client;

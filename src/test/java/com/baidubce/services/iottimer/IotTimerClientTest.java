@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class IotTimerClientTest {
-    private static final String AK = "fc375540f44e4728884a4b86dc50340b";
-    private static final String SK = "9db8de13f5d141b5a3d38f6dd937fba2";
+    private static final String AK = "";
+    private static final String SK = "";
     private static final String ENDPOINT = "http://nmg01-hpc-w1134.nmg01.baidu.com:8009";
 
     private static final String ENDPOINT_NAME = "yyj";

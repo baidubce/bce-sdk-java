@@ -7,11 +7,11 @@ public class SmsConf {
 	public static final String SMS_ENDPOINT = "http://nmg02-bce-test8.nmg02.baidu.com:8887";
 
 
-	public static final String SMS_AK = "2009f87ec5b543d596dec65078ca358c";
-	public static final String SMS_SK = "ff3e9e8255824f8081586c6d8a72d092";
+	public static final String SMS_AK = "";
+	public static final String SMS_SK = "";
 
-//	public static final String SMS_AK = "a1c32642748d4a3298a77e608f861ad3";
-//	public static final String SMS_SK = "76734dede5b643ec999d6f1742d61f96";
+//	public static final String SMS_AK = "";
+//	public static final String SMS_SK = "";
 
 
 	public static final String SMS_REDIS_HOST="10.107.37.45";

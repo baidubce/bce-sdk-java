@@ -52,8 +52,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class IotDmClientTest {
 
     // qa-sandbox
-    private static final String ACCESSKEY = "30dce1fd5b584210905fe8ef3042bc46";
-    private static final String SECRETKEY = "51dfc469a93249d88b36be3249412a2a";
+    private static final String ACCESSKEY = "";
+    private static final String SECRETKEY = "";
     private static final String ENDPOINT = "10.73.203.34:8010";
 
     private static final String TEST_DEVICE_NAME = "my_test_device";

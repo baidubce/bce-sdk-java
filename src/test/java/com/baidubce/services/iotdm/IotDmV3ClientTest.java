@@ -72,8 +72,8 @@ import com.google.common.collect.Maps;
 public class IotDmV3ClientTest {
 
     // qa-sandbox
-    private static final String ACCESSKEY = "2647e9da8eab431cbe58eaa6c1d46cdc";
-    private static final String SECRETKEY = "72c14ce4b2d2417c92dbe9828d45bd5a";
+    private static final String ACCESSKEY = "";
+    private static final String SECRETKEY = "";
     private static final String ENDPOINT = "10.73.203.34:8010";
     private static final String TEST_TSDB_DOMAIN = "test222.tsdb-106tunjjq367.tsdb.iot.gz.baidubce.com";
 

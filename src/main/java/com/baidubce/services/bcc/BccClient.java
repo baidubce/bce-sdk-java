@@ -30,6 +30,7 @@ import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bcc.model.Billing;
 import com.baidubce.services.bcc.model.Reservation;
 import com.baidubce.services.bcc.model.TagModel;
+import com.baidubce.services.bcc.model.TagsOperationRequest;
 import com.baidubce.services.bcc.model.asp.AspAction;
 import com.baidubce.services.bcc.model.asp.AttachAspRequest;
 import com.baidubce.services.bcc.model.asp.CreateAspRequest;
@@ -130,6 +131,7 @@ import com.baidubce.services.bcc.model.keypair.KeypairModel;
 import com.baidubce.services.bcc.model.keypair.KeypairRenameRequest;
 import com.baidubce.services.bcc.model.keypair.KeypairResponse;
 import com.baidubce.services.bcc.model.keypair.KeypairUpdateDescRequest;
+import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupResponse;
 import com.baidubce.services.bcc.model.securitygroup.DeleteSecurityGroupRequest;
@@ -184,6 +186,7 @@ import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,7 +204,9 @@ import java.util.UUID;
 
 import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
 import static com.baidubce.util.Validate.checkIsTrue;
+import static com.baidubce.util.Validate.checkMultyParamsNotBothEmpty;
 import static com.baidubce.util.Validate.checkNotNull;
+import static com.baidubce.util.Validate.checkResourceType;
 import static com.baidubce.util.Validate.checkStringNotEmpty;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -214,6 +219,7 @@ public class BccClient extends AbstractBceClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(BccClient.class);
 
     private static final String VERSION = "v2";
+    private static final String VERSION_V3 = "v3";
     private static final String INSTANCE_PREFIX = "instance";
     private static final String LIST_BY_INSTANCE_ID_PREFIX = "listByInstanceId";
     private static final String INSTANCE_BY_SPEC_PREFIX = "instanceBySpec";
@@ -292,6 +298,14 @@ public class BccClient extends AbstractBceClient {
     private static final String UUID_FLAG = "uuidFlag";
 
 
+    private static final String BCC_RESERVED_TAG_PREFIX = "bcc/reserved/tag";
+    private static final String BBC_RESERVED_TAG_PREFIX = "bbc/reserved/tag";
+    private static final String V3_TAG_PREFIX = "bcc/tag";
+    private static final String BIND = "bind";
+    private static final String UNBIND = "unbind";
+    private static final String ACTION = "action";
+    private static final String ATTACH = "AttachTags";
+    private static final String DETACH = "DetachTags";
     /**
      * Generate signature with specified headers.
      */
@@ -339,6 +353,26 @@ public class BccClient extends AbstractBceClient {
         List<String> path = new ArrayList<String>();
 
         path.add(VERSION);
+
+        if (pathVariables != null) {
+            for (String pathVariable : pathVariables) {
+                path.add(pathVariable);
+            }
+        }
+        URI uri = HttpUtils.appendUri(this.getEndpoint(), path.toArray(new String[path.size()]));
+        InternalRequest request = new InternalRequest(httpMethod, uri);
+        SignOptions signOptions = new SignOptions();
+        signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
+        request.setSignOptions(signOptions);
+        request.setCredentials(bceRequest.getRequestCredentials());
+        return request;
+    }
+
+    private InternalRequest createRequestV3(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
+                                          String... pathVariables) {
+        List<String> path = new ArrayList<String>();
+
+        path.add(VERSION_V3);
 
         if (pathVariables != null) {
             for (String pathVariable : pathVariables) {
@@ -3663,4 +3697,73 @@ public class BccClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, GetAvailableImagesBySpecResponse.class);
     }
 
+    public void bindReservedInstanceToTags(ReservedTagsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkMultyParamsNotBothEmpty(request.getReservedInstanceIds(), "reservedInstanceIds should NOT be null.");
+        if (CollectionUtils.isEmpty(request.getChangeTags())) {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        for (TagModel tag : request.getChangeTags()) {
+            checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                BCC_RESERVED_TAG_PREFIX);
+        internalRequest.addParameter(BIND, null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void unbindReservedInstanceFromTags(ReservedTagsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkMultyParamsNotBothEmpty(request.getReservedInstanceIds(), "reservedInstanceIds should NOT be null.");
+        if (CollectionUtils.isEmpty(request.getChangeTags())) {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        for (TagModel tag : request.getChangeTags()) {
+            checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                BCC_RESERVED_TAG_PREFIX);
+        internalRequest.addParameter(UNBIND, null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void bindTagsBatchByResourceType(TagsOperationRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkMultyParamsNotBothEmpty(request.getResourceIds(), "resourceIds should NOT be null.");
+        checkResourceType(request.getResourceType());
+        if (CollectionUtils.isEmpty(request.getTags())) {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        for (TagModel tag : request.getTags()) {
+            checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+        }
+
+        InternalRequest internalRequest = this.createRequestV3(request, HttpMethodName.POST,
+                V3_TAG_PREFIX);
+        internalRequest.addParameter(ACTION, ATTACH);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void unbindTagsBatchByResourceType(TagsOperationRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkMultyParamsNotBothEmpty(request.getResourceIds(), "resourceIds should NOT be null.");
+        checkResourceType(request.getResourceType());
+        if (CollectionUtils.isEmpty(request.getTags())) {
+            throw new IllegalArgumentException(CHANGETAGS_NULL_ERROR_MESSAGE);
+        }
+        for (TagModel tag : request.getTags()) {
+            checkStringNotEmpty(tag.getTagKey(), checkEmptyExceptionMessageFormat(TAGKEY_MESSAGE_KEY));
+        }
+
+        InternalRequest internalRequest = this.createRequestV3(request, HttpMethodName.POST,
+                V3_TAG_PREFIX);
+        internalRequest.addParameter(ACTION, DETACH);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
 }

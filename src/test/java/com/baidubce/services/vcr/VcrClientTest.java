@@ -39,8 +39,8 @@ import static org.junit.Assert.assertThat;
 public class VcrClientTest {
 
     // qa-sandbox
-    private static final String AK = "6107180b80ae42c0a821a5fe53ba615e";
-    private static final String SK = "a88ed698c0fd4774a4f1bdcebcae5922";
+    private static final String AK = "";
+    private static final String SK = "";
     private static final String ENDPOINT = "http://10.105.98.47";
 
     private VcrClient vcrClient;

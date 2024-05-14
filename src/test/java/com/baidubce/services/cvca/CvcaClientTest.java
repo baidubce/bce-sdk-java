@@ -14,8 +14,8 @@ import com.baidubce.services.cvca.model.ChatResponse;
  * @author wujinlin
  */
 public class CvcaClientTest {
-    private static final String TEST_ACCESSKEY = "bae11bc2c07e41598190f1dae049b171";
-    private static final String TEST_SECRETKEY = "bb2b3e9438c24e2d987b47407526ee01";
+    private static final String TEST_ACCESSKEY = "";
+    private static final String TEST_SECRETKEY = "";
     private static final String TEST_ENVIROMENT_ENDPOINT = "http://cp01-cvca.epc.baidu.com:8088";
 
     private CvcaClient client;

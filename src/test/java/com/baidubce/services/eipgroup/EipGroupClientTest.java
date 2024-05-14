@@ -44,8 +44,8 @@ import java.util.List;
 public class EipGroupClientTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(EipGroupClientTest.class);
-    private static final String AK = "1678d6c6a38c48eb9f30ce87518e2bab";
-    private static final String SK = "1161439741594f62839855481d1c5b85";
+    private static final String AK = "";
+    private static final String SK = "";
     private EipGroupClient client;
 
     private String egId = "eg-7e358ead";

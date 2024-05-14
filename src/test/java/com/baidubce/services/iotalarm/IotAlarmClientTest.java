@@ -24,8 +24,8 @@ import java.util.List;
  * Created by yuanyoujun on 2017/6/20.
  */
 public class IotAlarmClientTest {
-    private static final String TEST_ACCESSKEY = "2647e9da8eab431cbe58eaa6c1d46cdc";
-    private static final String TEST_SECRETKEY = "72c14ce4b2d2417c92dbe9828d45bd5a";
+    private static final String TEST_ACCESSKEY = "";
+    private static final String TEST_SECRETKEY = "";
     private static final String TEST_ENVIROMENT_ENDPOINT = "http://nmg01-hpc-w1134.nmg01.baidu.com:8009";
     private static final String MQTT_ENDPOINT = "alarmtest";
 

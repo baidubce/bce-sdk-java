@@ -290,6 +290,10 @@ public abstract class AbstractBceClient {
         }
         String host = this.endpoint.getHost();
         String uri = null;
+        if (!host.contains("bcebos.com")){
+            // this means host is diy, and should not compute virtual host
+            return;
+        }
         if (host.startsWith(bucketName) && host.split("\\.").length >= 4) {
             uri = this.config.getProtocol().toString().toLowerCase() + "://" + host;
         } else {

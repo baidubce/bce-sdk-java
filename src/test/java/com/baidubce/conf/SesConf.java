@@ -3,8 +3,8 @@ package com.baidubce.conf;
 public class SesConf {
 	//nmg09
 	public static final String SES_ENDPOINT = "http://nmg02-bce-test9.nmg02.baidu.com:8886";
-	public static final String SES_AK = "11f9634810b743ad9255266b064ddba1";
-	public static final String SES_SK = "d5b8dd75acca40f8bb6cd75269305a1c";
+	public static final String SES_AK = "";
+	public static final String SES_SK = "";
 	public static final String SES_REDIS_HOST="10.107.37.45";
 	public static final int SES_REDIS_PORT=8885;
 	public static final String SES_ACCOUNT_ID="6060ca9dce5c48dd98e53ccca6c4eb58";

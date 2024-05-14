@@ -12,14 +12,19 @@
  */
 package com.baidubce.services.eipgroup.model;
 
-import java.util.List;
-
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bcc.model.TagModel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 /**
  * Eip group model.
  */
+@Getter
+@Setter
 @ToString
 public class GetEipGroupResponse extends AbstractBceResponse {
 
@@ -63,67 +68,8 @@ public class GetEipGroupResponse extends AbstractBceResponse {
      */
     private String expireTime;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Eip> getEips() {
-        return eips;
-    }
-
-    public void setEips(List<Eip> eips) {
-        this.eips = eips;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getBandwidthInMbps() {
-        return bandwidthInMbps;
-    }
-
-    public void setBandwidthInMbps(int bandwidthInMbps) {
-        this.bandwidthInMbps = bandwidthInMbps;
-    }
-
-    public String getPaymentTiming() {
-        return paymentTiming;
-    }
-
-    public void setPaymentTiming(String paymentTiming) {
-        this.paymentTiming = paymentTiming;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getExpireTime() {
-        return expireTime;
-    }
-
-    public void setExpireTime(String expireTime) {
-        this.expireTime = expireTime;
-    }
+    /**
+     * The tags bound to eipGroup.
+     */
+    private List<TagModel> tags;
 }

@@ -34,10 +34,12 @@ import com.baidubce.services.bcc.model.instance.RebootInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
+import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import java.util.Arrays;
 import org.hamcrest.CustomMatcher;
 import org.junit.After;
 import org.junit.Before;
@@ -71,9 +73,9 @@ public class BbcClientTest {
         public ExpectedException thrown = ExpectedException.none();
 
         protected static final Logger logger = LoggerFactory.getLogger(BccClientTest.class);
-        protected final String ak = "your ak";
-        protected final String sk = "your sk";
-        protected static String endpoint = "nmg02-bce-test10.nmg02.baidu.com:8680";
+        protected final String ak = "ak";
+        protected final String sk = "sk";
+        protected static String endpoint = "bbc.bj.qasandbox.baidu-int.com";
 
         //   protected static String endpoint = "bbc.bce-api.baidu.com";
         protected BbcClientConfiguration config;
@@ -82,7 +84,7 @@ public class BbcClientTest {
         String imageId = "m-WVCLNuLY";
         String adminPass = "abc12345@";
         String deletedInstanceId = "i-eDWlSedM";
-        TagModel tagModel = new TagModel().withTagKey("abc").withTagValue("def");
+        TagModel tagModel = new TagModel().withTagKey("javaSdk").withTagValue("sdk");
         List<TagModel> changeTags = new ArrayList<TagModel>();
 
         public void setUp() {
@@ -134,6 +136,22 @@ public class BbcClientTest {
         public void tearDown() {
             // do something
             super.tearDown();
+        }
+
+        @Test
+        public void bindReservedInstanceToTags() {
+            List<String> reservedInstanceIds = Arrays.asList("r-Aev4dfQV", "r-0OlWLZ4p");
+            changeTags.add(tagModel);
+            client.bindReservedInstanceToTags(new ReservedTagsRequest().withInstanceIds(reservedInstanceIds)
+                    .withChangeTags(changeTags));
+        }
+
+        @Test
+        public void unbindReservedInstanceFromTags() {
+            List<String> reservedInstanceIds = Arrays.asList("r-Aev4dfQV", "r-0OlWLZ4p");
+            changeTags.add(tagModel);
+            client.unbindReservedInstanceFromTags(new ReservedTagsRequest().withInstanceIds(reservedInstanceIds)
+                    .withChangeTags(changeTags));
         }
 
         @Test

@@ -40,8 +40,8 @@ public class BatchClientTest {
 
     //  qasandbox, bce-batch-compute-rd@baidu.com
     public static final String BATCH_ENDPOINT = "http://nmg02-bce-test10.nmg02.baidu.com:8687";
-    public static final String BATCH_AK = "b20dca422ef64ae39429af6f8b010444";
-    public static final String BATCH_SK = "e78654df9c624a029effeb90c6c3d75e";
+    public static final String BATCH_AK = "";
+    public static final String BATCH_SK = "";
 
     protected BatchClient batchClient;
 

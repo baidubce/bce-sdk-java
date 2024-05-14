@@ -44,8 +44,8 @@ import java.util.List;
 
 public class CdnClientTest {
 
-    private static final String AK = "4cd52fbc873947e6b88be4e54e3e099b";
-    private static final String SK = "09ac6fa3a84f45c29f5411a27202bdcc";
+    private static final String AK = "";
+    private static final String SK = "";
     private static final String ENDPOINT = "http://bjyz-opencdn-rest007.bjyz.baidu.com:8899";
     private static final String DOMAIN = "test875.duanhuiyan.top";
     private static final String TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm";

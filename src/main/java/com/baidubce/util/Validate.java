@@ -15,6 +15,7 @@ package com.baidubce.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -23,6 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 public class Validate {
+
+    private static final List<String> ALLOW_RESOURCE_TYPE = Arrays.asList("bcc", "cds", "image", "snapshotchain", "bccri");
+
     public static void checkListSizeInRange(List<?> values, int max, String errorMessage) {
         if (!CollectionUtils.isEmpty(values)) {
             if (values.size() > max) {
@@ -30,6 +34,7 @@ public class Validate {
             }
         }
     }
+
     public static void checkStringNotEmpty(String value, String errorMessage) {
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(errorMessage);
@@ -79,6 +84,15 @@ public class Validate {
         }
         throw new IllegalArgumentException(errorMessage);
 
+    }
+
+    public static void checkResourceType(String resourceType) {
+        if (StringUtils.isEmpty(resourceType)) {
+            throw new IllegalArgumentException("resourceType should NOT be null.");
+        }
+        if (!ALLOW_RESOURCE_TYPE.contains(resourceType)) {
+            throw new IllegalArgumentException("Supported resource types include [bcc, cds, image, snapshotchain, bccri]");
+        }
     }
 
 }

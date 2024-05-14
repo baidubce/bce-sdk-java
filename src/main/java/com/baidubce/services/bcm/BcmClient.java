@@ -133,6 +133,8 @@ import com.baidubce.services.bcm.model.group.InstanceGroupResponse;
 import com.baidubce.services.bcm.model.group.MergedGroup;
 import com.baidubce.services.bcm.model.metrics.MultiDimensionalMetricsRequest;
 import com.baidubce.services.bcm.model.metrics.PartialDimensionsMetricsRequest;
+import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopQuery;
+import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricAllDataResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricResult;
 import com.baidubce.services.bcm.model.site.DnsTaskRequest;
@@ -180,6 +182,8 @@ import com.baidubce.services.bcm.model.siteonce.SiteOnceTaskRequest;
 import com.baidubce.services.bcm.model.siteonce.SiteOnceTaskResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -336,6 +340,7 @@ public class BcmClient extends AbstractBceClient {
     private static final String METRICS_BY_PARTIAL_DIMENSIONS_PATH = "/csm/api/v2/userId/%s/services/%s/data/metricData/PartialDimension";
     private static final String BATCH_GET_METRICS_PATH = "/csm/api/v2/data/metricAllData/batch";
     private static final String ALL_DATA_METRIC_V2_PATH = "/csm/api/v2/data/metricAllData";
+    private static final String TOPN_PATH = "/csm/api/v2/dimensions/top";
     /**
      * Exceptions
      */
@@ -3564,7 +3569,13 @@ public class BcmClient extends AbstractBceClient {
         checkListSizeInRange(request.getDimensions(), MAX_DIMENSIONS_SIZE, "the max size of dimensions is " + MAX_DIMENSIONS_SIZE);
         String url = String.format(METRICS_BY_PARTIAL_DIMENSIONS_PATH, request.getUserId(), request.getScope());
         InternalRequest internalRequest = this.createBodyRequest(request, HttpMethodName.POST, url);
-        return invokeHttpClient(internalRequest, TsdbMetricResult.class);
+        // 嵌套泛型运行时会丢失类型信息，需要手动转换
+        TsdbMetricResult<PageResultResponse<TsdbMetricAllDataResult.AllDataMetric>> tsdbMetricResult =
+                invokeHttpClient(internalRequest, TsdbMetricResult.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        tsdbMetricResult.setResult(objectMapper.convertValue(tsdbMetricResult.getResult(),
+                new TypeReference<PageResultResponse<TsdbMetricAllDataResult.AllDataMetric>>(){}));
+        return tsdbMetricResult;
     }
 
     public TsdbMetricAllDataResult batchGetMetricsAllDataV2(MultiDimensionalMetricsRequest request) {
@@ -3595,5 +3606,19 @@ public class BcmClient extends AbstractBceClient {
         checkListSizeInRange(request.getDimensions(), MAX_DIMENSIONS_SIZE, "the max size of dimensions is " + MAX_DIMENSIONS_SIZE);
         InternalRequest internalRequest = this.createBodyRequest(request, HttpMethodName.POST, ALL_DATA_METRIC_V2_PATH);
         return invokeHttpClient(internalRequest, TsdbMetricAllDataResult.class);
+    }
+
+    public TsdbDimensionTopResult getMetricDimensionTop(TsdbDimensionTopQuery request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getUserId(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "userID"));
+        checkStringNotEmpty(request.getScope(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "scope"));
+        checkStringNotEmpty(request.getRegion(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "region"));
+        checkStringNotEmpty(request.getStartTime(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "startTime"));
+        checkStringNotEmpty(request.getEndTime(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "endTime"));
+        checkStringNotEmpty(request.getMetricName(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "metricName"));
+        checkIsTrue(request.getDimensions().size() > 0, String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "dimensions"));
+        checkIsTrue(CollectionUtils.isNotEmpty(request.getLabels()), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "labels"));
+        InternalRequest internalRequest = this.createBodyRequest(request, HttpMethodName.POST, TOPN_PATH);
+        return invokeHttpClient(internalRequest, TsdbDimensionTopResult.class);
     }
 }

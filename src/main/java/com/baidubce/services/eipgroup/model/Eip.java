@@ -12,6 +12,13 @@
  */
 package com.baidubce.services.eipgroup.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class Eip {
 
     /**
@@ -73,100 +80,4 @@ public class Eip {
      * The expireTime of eip.
      */
     private String expireTime;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEip() {
-        return eip;
-    }
-
-    public void setEip(String eip) {
-        this.eip = eip;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getEipInstanceType() {
-        return eipInstanceType;
-    }
-
-    public void setEipInstanceType(String eipInstanceType) {
-        this.eipInstanceType = eipInstanceType;
-    }
-
-    public String getInstanceType() {
-        return instanceType;
-    }
-
-    public void setInstanceType(String instanceType) {
-        this.instanceType = instanceType;
-    }
-
-    public String getInstanceId() {
-        return instanceId;
-    }
-
-    public void setInstanceId(String instanceId) {
-        this.instanceId = instanceId;
-    }
-
-    public String getShareGroupId() {
-        return shareGroupId;
-    }
-
-    public void setShareGroupId(String shareGroupId) {
-        this.shareGroupId = shareGroupId;
-    }
-
-    public String getPaymentTiming() {
-        return paymentTiming;
-    }
-
-    public void setPaymentTiming(String paymentTiming) {
-        this.paymentTiming = paymentTiming;
-    }
-
-    public int getBandwidthInMbps() {
-        return bandwidthInMbps;
-    }
-
-    public void setBandwidthInMbps(int bandwidthInMbps) {
-        this.bandwidthInMbps = bandwidthInMbps;
-    }
-
-    public String getBillingMethod() {
-        return billingMethod;
-    }
-
-    public void setBillingMethod(String billingMethod) {
-        this.billingMethod = billingMethod;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getExpireTime() {
-        return expireTime;
-    }
-
-    public void setExpireTime(String expireTime) {
-        this.expireTime = expireTime;
-    }
 }

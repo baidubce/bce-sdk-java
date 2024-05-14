@@ -26,8 +26,8 @@ import com.google.common.base.Objects;
 public abstract class BaseIotPkiManageClientTest {
 
     // qa-sandbox
-    private static final String ACCESSKEY = "701107a8de6f41c29f74ec3f19da6c97";
-    private static final String SECRETKEY = "ccc32a43dcb7495cb820919e2597e99b";
+    private static final String ACCESSKEY = "";
+    private static final String SECRETKEY = "";
     private static final String ENDPOINT = "nmg01-hpc-w1134.nmg01.baidu.com:8023";
     private static final String PKI = "pki";
     protected static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";

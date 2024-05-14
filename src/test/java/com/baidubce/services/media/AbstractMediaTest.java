@@ -60,8 +60,8 @@ public abstract class AbstractMediaTest {
     static String   MEDIA_SK        = "49ce4909b87441e794c24dd673a6fa17";
 
     // hudapeng's key
-    // static String MEDIA_AK = "5976ebbb80ff49e7984bb3c1061a657d";
-    // static String MEDIA_SK = "6a15cc0d7083446590a6a46df55a5e98";
+    // static String MEDIA_AK = "";
+    // static String MEDIA_SK = "";
     // static String END_POINT = "http://multimedia.bce-testinternal.baidu.com";
     static String   MEDIA_END_POINT = "http://multimedia-process.baidu-int.com:8539/";
     static String   BOS_END_POINT   = "http://bj-bos-sandbox.baidu-int.com";

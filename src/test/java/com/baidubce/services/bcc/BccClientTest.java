@@ -23,6 +23,7 @@ import com.baidubce.services.bcc.model.Reservation;
 import com.baidubce.services.bcc.model.SecurityGroupRuleModel;
 import com.baidubce.services.bcc.model.StorageType;
 import com.baidubce.services.bcc.model.TagModel;
+import com.baidubce.services.bcc.model.TagsOperationRequest;
 import com.baidubce.services.bcc.model.asp.AttachAspRequest;
 import com.baidubce.services.bcc.model.asp.CreateAspRequest;
 import com.baidubce.services.bcc.model.asp.DeleteAspRequest;
@@ -94,6 +95,7 @@ import com.baidubce.services.bcc.model.keypair.KeypairListResponse;
 import com.baidubce.services.bcc.model.keypair.KeypairModel;
 import com.baidubce.services.bcc.model.keypair.KeypairRenameRequest;
 import com.baidubce.services.bcc.model.keypair.KeypairUpdateDescRequest;
+import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupResponse;
 import com.baidubce.services.bcc.model.securitygroup.DeleteSecurityGroupRuleRequest;
@@ -215,6 +217,119 @@ public class BccClientTest {
         }
     }
 
+    public static class ReservedTest extends BccBase {
+        protected BccClient client;
+        List<String> reservedInstanceIds = Arrays.asList("r-Qyycx1SX");
+        @Before
+        public void setUp() {
+            super.setUp();
+            client = new BccClient(config);
+        }
+
+        @After
+        public void tearDown() {
+            // do something
+            super.tearDown();
+        }
+
+        @Test
+        public void bindBccReservedInstanceToTags() {
+            changeTags.add(tagModel);
+            client.bindReservedInstanceToTags(new ReservedTagsRequest().withInstanceIds(reservedInstanceIds)
+                    .withChangeTags(changeTags));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindBccReservedInstanceToTagsWithEmptyIds() {
+            changeTags.add(tagModel);
+            client.bindReservedInstanceToTags(new ReservedTagsRequest().withInstanceIds(Collections.<String>emptyList())
+                    .withChangeTags(changeTags));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindBccReservedInstanceToTagsWithEmptyTags() {
+            changeTags.add(tagModel);
+            client.bindReservedInstanceToTags(new ReservedTagsRequest().withInstanceIds(reservedInstanceIds)
+                    .withChangeTags(Collections.<TagModel>emptyList()));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindBccReservedInstanceToTagsWithEmptyTagKey() {
+            changeTags.add(tagModel);
+            changeTags.add(new TagModel().withTagKey("").withTagValue("test007"));
+            client.bindReservedInstanceToTags(new ReservedTagsRequest().withInstanceIds(reservedInstanceIds)
+                    .withChangeTags(Collections.<TagModel>emptyList()));
+        }
+
+        @Test
+        public void unBindBccReservedInstanceFromTags() {
+            changeTags.add(tagModel);
+            client.unbindReservedInstanceFromTags(new ReservedTagsRequest().withInstanceIds(reservedInstanceIds)
+                    .withChangeTags(changeTags));
+        }
+
+        @Test
+        public void bindTagsBatchByResourceType() {
+            changeTags.add(tagModel);
+            TagsOperationRequest tagsOperationRequest = new TagsOperationRequest();
+            tagsOperationRequest.setTags(changeTags);
+            tagsOperationRequest.setResourceType("bccri");
+            tagsOperationRequest.setResourceIds(reservedInstanceIds);
+            client.bindTagsBatchByResourceType(tagsOperationRequest);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindTagsBatchByResourceTypeEmptyType() {
+            changeTags.add(tagModel);
+            TagsOperationRequest tagsOperationRequest = new TagsOperationRequest();
+            tagsOperationRequest.setTags(changeTags);
+            tagsOperationRequest.setResourceIds(reservedInstanceIds);
+            client.bindTagsBatchByResourceType(tagsOperationRequest);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindTagsBatchByResourceTypeEmptyTags() {
+            TagsOperationRequest tagsOperationRequest = new TagsOperationRequest();
+            tagsOperationRequest.setResourceType("bccri");
+            tagsOperationRequest.setResourceIds(reservedInstanceIds);
+            client.bindTagsBatchByResourceType(tagsOperationRequest);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void bindTagsBatchByResourceTypeErrorType() {
+            TagsOperationRequest tagsOperationRequest = new TagsOperationRequest();
+            tagsOperationRequest.setResourceType("error");
+            tagsOperationRequest.setResourceIds(reservedInstanceIds);
+            client.bindTagsBatchByResourceType(tagsOperationRequest);
+        }
+
+        @Test
+        public void unbindTagsBatchByResourceType() {
+            changeTags.add(tagModel);
+            TagsOperationRequest tagsOperationRequest = new TagsOperationRequest();
+            tagsOperationRequest.setTags(changeTags);
+            tagsOperationRequest.setResourceType("bccri");
+            tagsOperationRequest.setResourceIds(reservedInstanceIds);
+            client.unbindTagsBatchByResourceType(tagsOperationRequest);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void unbindTagsBatchByResourceTypeEmptyType() {
+            changeTags.add(tagModel);
+            TagsOperationRequest tagsOperationRequest = new TagsOperationRequest();
+            tagsOperationRequest.setTags(changeTags);
+            tagsOperationRequest.setResourceIds(reservedInstanceIds);
+            client.unbindTagsBatchByResourceType(tagsOperationRequest);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void unbindTagsBatchByResourceTypeEmptyTags() {
+            TagsOperationRequest tagsOperationRequest = new TagsOperationRequest();
+            tagsOperationRequest.setResourceIds(reservedInstanceIds);
+            tagsOperationRequest.setResourceType("bccri");
+            client.unbindTagsBatchByResourceType(tagsOperationRequest);
+        }
+    }
     /**
      * Test case about instance begin
      */
@@ -1623,7 +1738,6 @@ public class BccClientTest {
             toJsonPrettyString("getAvailableImagesBySpec", response);
 
         }
-
     }
 
 }

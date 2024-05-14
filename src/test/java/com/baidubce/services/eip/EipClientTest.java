@@ -35,8 +35,8 @@ import java.util.UUID;
  */
 public class EipClientTest {
     private static final Logger logger = LoggerFactory.getLogger(EipClientTest.class);
-    private static final String EIP_AK = "534dc26bcfea4ca480a3b6a17ae4471b";
-    private static final String EIP_SK = "37e40506966a4999bab0f5e21ef6e4be";
+    private static final String EIP_AK = "";
+    private static final String EIP_SK = "";
 
     protected EipClient eipClient;
 

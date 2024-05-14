@@ -151,6 +151,8 @@ import com.baidubce.services.bcm.model.group.MonitorResource;
 import com.baidubce.services.bcm.model.group.ViewType;
 import com.baidubce.services.bcm.model.metrics.MultiDimensionalMetricsRequest;
 import com.baidubce.services.bcm.model.metrics.PartialDimensionsMetricsRequest;
+import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopQuery;
+import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricAllDataResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricResult;
 import com.baidubce.services.bcm.model.site.DnsTaskRequest;
@@ -210,6 +212,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -2655,5 +2658,26 @@ public class BcmClientTest {
         request.setRegion("bj");
         TsdbMetricAllDataResult result = bcmClient.getAllDataMetricV2(request);
         printResult("get add data metrics", result);
+    }
+
+    @Test
+    public void getDimensionTopTest() {
+        TsdbDimensionTopQuery request = new TsdbDimensionTopQuery();
+        request.setUserId(userId);
+        request.setScope("BCE_PFS");
+        request.setRegion("bj");
+        request.setMetricName("WriteIO");
+        request.setStatistics("average");
+        request.setStartTime("2024-04-27T07:10:01Z");
+        request.setEndTime("2024-04-27T07:20:01Z");
+        Map<String, String> dimensionMap = new HashMap<>();
+        dimensionMap.put("InstanceId", "pfs-1****7");
+        request.setDimensions(dimensionMap);
+        Set<String> labels = new HashSet<>();
+        labels.add("FilesetId");
+        request.setLabels(labels);
+        request.setTopNum(2);
+        TsdbDimensionTopResult result = bcmClient.getMetricDimensionTop(request);
+        printResult("get top data", result);
     }
 }

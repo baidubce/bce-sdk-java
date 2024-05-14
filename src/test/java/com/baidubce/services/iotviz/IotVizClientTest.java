@@ -13,8 +13,8 @@ import static org.junit.Assert.assertThat;
  * 20/11/2017.
  */
 public class IotVizClientTest {
-    private static String AK = "2647e9da8eab431cbe58eaa6c1d46cdc";
-    private static String SK = "72c14ce4b2d2417c92dbe9828d45bd5a";
+    private static String AK = "";
+    private static String SK = "";
 
     private IotVizClient client;
 

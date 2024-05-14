@@ -13,8 +13,8 @@ public class PauseAppStreamTest extends AbstractLssTest {
 
     @Before
     public void setUp() throws Exception {
-        AK = "6107180b80ae42c0a821a5fe53ba615e";
-        SK = "a88ed698c0fd4774a4f1bdcebcae5922";
+        AK = "";
+        SK = "";
         END_POINT = "http://10.65.3.79:80";
         super.setUp();
     }

@@ -47,8 +47,8 @@ public class ExternalTest {
     @Test
     public void testRegion() throws FileNotFoundException, InterruptedException {
         // external account
-        String AK = "9ea040b91e974376a28367f23721e6fb";
-        String SK = "0b555564eefa453bbc5b2305db047c23";
+        String AK = "";
+        String SK = "";
 
         DefaultBceCredentials cred = new DefaultBceCredentials(AK, SK);
         BceClientConfiguration vodConfig = new BceClientConfiguration().withCredentials(cred);
@@ -62,8 +62,8 @@ public class ExternalTest {
     @Ignore
     public void testSample() throws FileNotFoundException, InterruptedException {
         // external account
-        String AK = "9ea040b91e974376a28367f23721e6fb";
-        String SK = "0b555564eefa453bbc5b2305db047c23";
+        String AK = "";
+        String SK = "";
 
         DefaultBceCredentials cred = new DefaultBceCredentials(AK, SK);
         BceClientConfiguration vodConfig = new BceClientConfiguration().withCredentials(cred);
@@ -117,8 +117,8 @@ public class ExternalTest {
         String sourceKey = "GailSophicha.mp4";
         
         // external account
-        final String AK = "9ea040b91e974376a28367f23721e6fb";
-        final String SK = "0b555564eefa453bbc5b2305db047c23";
+        final String AK = "";
+        final String SK = "";
 
         DefaultBceCredentials cred = new DefaultBceCredentials(AK, SK);
         BceClientConfiguration vodConfig = new BceClientConfiguration().withCredentials(cred);

@@ -541,6 +541,7 @@ public class SmsClient extends SmsClientSupport {
         checkNotNull(request, "object request should not be null");
         assertStringNotNullOrEmpty(request.getPhone(), "phone should not be null or empty");
         assertStringNotNullOrEmpty(request.getType(), "type should not be null or empty");
+        assertStringNotNullOrEmpty(request.getCountryType(), "countryType should not be null or empty");
         if ("SignatureBlack".equals(request.getType())) {
             assertStringNotNullOrEmpty(request.getSignatureIdStr(),
                     "signatureIdStr should not be null or empty, when 'type' is 'SignatureBlack'.");
@@ -573,6 +574,9 @@ public class SmsClient extends SmsClientSupport {
                 "/sms/v3/blacklist", new SmsRequest(), HttpMethodName.GET);
         if (StringUtils.isNotEmpty(request.getPhone())) {
             internalRequest.addParameter("phone", request.getPhone());
+        }
+        if (StringUtils.isNotEmpty(request.getCountryType())) {
+            internalRequest.addParameter("countryType", request.getCountryType());
         }
         if (StringUtils.isNotEmpty(request.getSmsType())) {
             internalRequest.addParameter("smsType", request.getSmsType());

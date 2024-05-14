@@ -23,8 +23,8 @@ import static org.junit.Assert.assertThat;
  */
 public class VcaClientTest {
     // qa-sandbox
-    private static final String AK = "d47d0d6c80604f7f935e787254ff1980";
-    private static final String SK = "b6a4e01c8e4f480fab67ac17992e4b88";
+    private static final String AK = "";
+    private static final String SK = "";
     private static final String ENDPOINT = "http://10.107.42.42:8756";
 
     private VcaClient vcaClient;
