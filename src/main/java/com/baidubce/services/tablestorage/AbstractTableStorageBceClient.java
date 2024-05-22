@@ -16,6 +16,7 @@ package com.baidubce.services.tablestorage;
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
+import com.baidubce.auth.SignOptions;
 import com.baidubce.http.Headers;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.http.handler.BceErrorResponseHandler;
@@ -79,6 +80,10 @@ public abstract class AbstractTableStorageBceClient extends AbstractBceClient {
 
         request.addHeader(Headers.CONTENT_TYPE, TableStorageConstants.CONTENT_TYPE_JSON);
         request.addHeader(Headers.BCE_DATE, DateUtils.formatAlternateIso8601Date(new Date()));
+        
+        SignOptions signOptions = new SignOptions();
+        signOptions.addHeadersToSign("host");
+        request.setSignOptions(signOptions);
 
         return request;
     }

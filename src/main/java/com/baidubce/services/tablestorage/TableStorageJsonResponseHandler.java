@@ -19,22 +19,28 @@ import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.tablestorage.model.BatchDeleteRowResponse;
 import com.baidubce.services.tablestorage.model.BatchGetRowResponse;
 import com.baidubce.services.tablestorage.model.BatchPutRowResponse;
+import com.baidubce.services.tablestorage.model.CreateInstanceResponse;
 import com.baidubce.services.tablestorage.model.CreateTableResponse;
 import com.baidubce.services.tablestorage.model.DeleteRowResponse;
+import com.baidubce.services.tablestorage.model.DropInstanceResponse;
 import com.baidubce.services.tablestorage.model.DropTableResponse;
 import com.baidubce.services.tablestorage.model.GetRowResponse;
+import com.baidubce.services.tablestorage.model.ListInstanceResponse;
 import com.baidubce.services.tablestorage.model.ListKeyRangesResponse;
 import com.baidubce.services.tablestorage.model.ListTablesResponse;
 import com.baidubce.services.tablestorage.model.PutRowResponse;
 import com.baidubce.services.tablestorage.model.ScanResponse;
+import com.baidubce.services.tablestorage.model.ShowInstanceResponse;
 import com.baidubce.services.tablestorage.model.ShowTableResponse;
 import com.baidubce.services.tablestorage.model.ShowTableStateResponse;
 import com.baidubce.services.tablestorage.model.UpdateTableResponse;
 import com.baidubce.services.tablestorage.model.transform.BatchGetRowResponseUnmarshaller;
 import com.baidubce.services.tablestorage.model.transform.GetRowResponseUnmarshaller;
+import com.baidubce.services.tablestorage.model.transform.ListInstanceResponseUnmarshaller;
 import com.baidubce.services.tablestorage.model.transform.ListKeyRangesResponseUnmarshaller;
 import com.baidubce.services.tablestorage.model.transform.ListTablesResponseUnmarshaller;
 import com.baidubce.services.tablestorage.model.transform.ScanResponseUnmarshaller;
+import com.baidubce.services.tablestorage.model.transform.ShowInstanceResponseUnmarshaller;
 import com.baidubce.services.tablestorage.model.transform.ShowTableResponseUnmarshaller;
 import com.baidubce.services.tablestorage.model.transform.ShowTableStateResponseUnmarshaller;
 
@@ -72,7 +78,19 @@ public class TableStorageJsonResponseHandler implements HttpResponseHandler {
                     || response.getClass() == PutRowResponse.class
                     || response.getClass() == BatchPutRowResponse.class
                     || response.getClass() == DeleteRowResponse.class
-                    || response.getClass() == BatchDeleteRowResponse.class) {
+                    || response.getClass() == BatchDeleteRowResponse.class
+                    || response.getClass() == CreateInstanceResponse.class
+                    || response.getClass() == DropInstanceResponse.class) {
+                break;
+            }
+            if (response.getClass() == ShowInstanceResponse.class) {
+                ShowInstanceResponseUnmarshaller unmarshaller = new ShowInstanceResponseUnmarshaller(response);
+                unmarshaller.unmarshall(content);
+                break;
+            }
+            if (response.getClass() == ListInstanceResponse.class) {
+                ListInstanceResponseUnmarshaller unmarshaller = new ListInstanceResponseUnmarshaller(response);
+                unmarshaller.unmarshall(content);
                 break;
             }
             if (response.getClass() == ListTablesResponse.class) {

@@ -56,6 +56,7 @@ import com.baidubce.services.bcc.model.image.ShareImageRequest;
 import com.baidubce.services.bcc.model.image.UnShareImageRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceResponse;
+import com.baidubce.services.bcc.model.instance.BccAutoRenewRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceResponse;
 import com.baidubce.services.bcc.model.instance.BindSecurityGroupRequest;
@@ -127,6 +128,7 @@ import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeRequest;
 import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeTypeRequest;
 import com.baidubce.services.bcc.model.volume.RenameVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ResizeVolumeRequest;
+import com.baidubce.services.bcc.model.volume.VolumePriceRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Objects;
@@ -793,6 +795,24 @@ public class BccClientTest {
             System.out.println(response);
         }
 
+        @Test
+        public void createAutoRenewRule() {
+            client.createAutoRenewRule(new BccAutoRenewRequest()
+                    .withInstanceId("i-dl2s537H")
+                    .withRenewTimeUnit("month")
+                    .withRenewTime(1)
+                    .withRenewEip(true)
+                    .withRenewCds(true));
+        }
+
+        @Test
+        public void deleteAutoRenewRule() {
+            client.deleteAutoRenewRule(new BccAutoRenewRequest()
+                    .withInstanceId("i-dl2s537H")
+                    .withRenewEip(true)
+                    .withRenewCds(true));
+        }
+
     }
     /**
      * Test case about instance end
@@ -973,6 +993,18 @@ public class BccClientTest {
 //            Billing billing = new Billing().withPaymentTiming("Postpaid").withReservation(new Reservation().withReservationLength(2));
 //            request.setBilling(billing);
             client.modifyVolumeChargeType(request);
+        }
+
+        @Test
+        public void getVolumePrice() {
+            VolumePriceRequest request = new VolumePriceRequest();
+            request.setPurchaseLength(12);
+            request.setStorageType("cloud_hp1");
+            request.setCdsSizeInGB(10);
+            request.setPaymentTiming("Postpaid");
+            request.setPurchaseCount(1);
+            request.setZoneName("cn-bj-b");
+            client.getCdsPrice(request);
         }
     }
 

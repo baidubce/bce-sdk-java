@@ -13,7 +13,6 @@
 package com.baidubce.services.bcc.model;
 
 import lombok.ToString;
-
 import java.util.Date;
 import java.util.List;
 
@@ -168,6 +167,29 @@ public class InstanceModel {
     private String ipv6;
 
     private Integer netEthQueueCount;
+
+    /**
+     * The instance of spec.
+     */
+    private String spec;
+    private String roleName;
+    private String createdFrom;
+    private String isomerismCard;
+    private String npuVideoMemory;
+    private String imageName;
+    private String imageType;
+    private String hostId;
+    private String switchId;
+    private String rackId;
+    private String deploysetId;
+    private String osVersion;
+    private String osArch;
+    private String osName;
+    private String hosteyeType;
+    private List<DeploySetModel> deploysetList;
+    private NicInfo nicInfo;
+    private Integer deletionProtection;
+    private List<Volume> volumes;
 
     public String getId() {
         return id;
@@ -407,6 +429,158 @@ public class InstanceModel {
 
     public void setNetEthQueueCount(Integer netEthQueueCount) {
         this.netEthQueueCount = netEthQueueCount;
+    }
+
+    public String getSpec() {
+        return spec;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getCreatedFrom() {
+        return createdFrom;
+    }
+
+    public void setCreatedFrom(String createdFrom) {
+        this.createdFrom = createdFrom;
+    }
+
+    public String getIsomerismCard() {
+        return isomerismCard;
+    }
+
+    public void setIsomerismCard(String isomerismCard) {
+        this.isomerismCard = isomerismCard;
+    }
+
+    public String getNpuVideoMemory() {
+        return npuVideoMemory;
+    }
+
+    public void setNpuVideoMemory(String npuVideoMemory) {
+        this.npuVideoMemory = npuVideoMemory;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
+    public String getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
+    }
+
+    public String getSwitchId() {
+        return switchId;
+    }
+
+    public void setSwitchId(String switchId) {
+        this.switchId = switchId;
+    }
+
+    public String getRackId() {
+        return rackId;
+    }
+
+    public void setRackId(String rackId) {
+        this.rackId = rackId;
+    }
+
+    public String getDeploysetId() {
+        return deploysetId;
+    }
+
+    public void setDeploysetId(String deploysetId) {
+        this.deploysetId = deploysetId;
+    }
+
+    public String getOsVersion() {
+        return osVersion;
+    }
+
+    public void setOsVersion(String osVersion) {
+        this.osVersion = osVersion;
+    }
+
+    public String getOsArch() {
+        return osArch;
+    }
+
+    public void setOsArch(String osArch) {
+        this.osArch = osArch;
+    }
+
+    public String getOsName() {
+        return osName;
+    }
+
+    public void setOsName(String osName) {
+        this.osName = osName;
+    }
+
+    public String getHosteyeType() {
+        return hosteyeType;
+    }
+
+    public void setHosteyeType(String hosteyeType) {
+        this.hosteyeType = hosteyeType;
+    }
+
+    public List<DeploySetModel> getDeploysetList() {
+        return deploysetList;
+    }
+
+    public void setDeploysetList(List<DeploySetModel> deploysetList) {
+        this.deploysetList = deploysetList;
+    }
+
+    public NicInfo getNicInfo() {
+        return nicInfo;
+    }
+
+    public void setNicInfo(NicInfo nicInfo) {
+        this.nicInfo = nicInfo;
+    }
+
+    public Integer getDeletionProtection() {
+        return deletionProtection;
+    }
+
+    public void setDeletionProtection(Integer deletionProtection) {
+        this.deletionProtection = deletionProtection;
+    }
+
+    public List<Volume> getVolumes() {
+        return volumes;
+    }
+
+    public void setVolumes(List<Volume> volumes) {
+        this.volumes = volumes;
     }
 
 }

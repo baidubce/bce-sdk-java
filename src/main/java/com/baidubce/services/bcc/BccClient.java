@@ -71,6 +71,7 @@ import com.baidubce.services.bcc.model.image.ShareImageRequest;
 import com.baidubce.services.bcc.model.image.UnShareImageRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceResponse;
+import com.baidubce.services.bcc.model.instance.BccAutoRenewRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceResponse;
 import com.baidubce.services.bcc.model.instance.BindSecurityGroupRequest;
@@ -181,6 +182,8 @@ import com.baidubce.services.bcc.model.volume.ResizeVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ResizeVolumeResponse;
 import com.baidubce.services.bcc.model.volume.RollbackVolumeRequest;
 import com.baidubce.services.bcc.model.volume.VolumeAction;
+import com.baidubce.services.bcc.model.volume.VolumePriceRequest;
+import com.baidubce.services.bcc.model.volume.VolumePriceResponse;
 import com.baidubce.services.bcc.model.zone.ListZonesResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -296,6 +299,9 @@ public class BccClient extends AbstractBceClient {
     private static final String CLUSTER_NAME_MESSAGE_KEY = "clusterName";
     private static final String VOLUME_CLUSTER_PREFIX = "volume/cluster";
     private static final String UUID_FLAG = "uuidFlag";
+    private static final String GET_PRICE = "getPrice";
+    private static final String CREATA_AUTO_RENEW_RULE = "batchCreateAutoRenewRules";
+    private static final String DELETE_AUTO_RENEW_RULE = "batchDeleteAutoRenewRules";
 
 
     private static final String BCC_RESERVED_TAG_PREFIX = "bcc/reserved/tag";
@@ -3749,6 +3755,27 @@ public class BccClient extends AbstractBceClient {
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    public VolumePriceResponse getCdsPrice(VolumePriceRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, VOLUME_PREFIX, GET_PRICE);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+
+        return invokeHttpClient(internalRequest, VolumePriceResponse.class);
+    }
+
+    public void createAutoRenewRule(BccAutoRenewRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, INSTANCE_PREFIX, CREATA_AUTO_RENEW_RULE);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
     public void unbindTagsBatchByResourceType(TagsOperationRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkMultyParamsNotBothEmpty(request.getResourceIds(), "resourceIds should NOT be null.");
@@ -3766,4 +3793,14 @@ public class BccClient extends AbstractBceClient {
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
+
+    public void deleteAutoRenewRule(BccAutoRenewRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, INSTANCE_PREFIX, DELETE_AUTO_RENEW_RULE);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
 }

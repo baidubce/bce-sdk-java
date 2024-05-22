@@ -134,6 +134,11 @@ public class TableStorageConstants {
     public static final String URI_INSTANCE                    = "instance";
 
     /**
+     * The instance resource identification in url
+     */
+    public static final String URI_INSTANCES                    = "instances";
+
+    /**
      * The tables resource identification in url
      */
     public static final String URI_TABLES                      = "tables";
@@ -220,9 +225,44 @@ public class TableStorageConstants {
 
 
     /**
+     * The instance id key in json response
+     */
+    public static final String JSON_INS_ID           = "id";
+
+    /**
+     * The instance name key in json response
+     */
+    public static final String JSON_INS_NAME         = "name";
+
+    /**
+     * The instance region key in json response
+     */
+    public static final String JSON_INS_REGION       = "region";
+
+    /**
+     * The instance state key in json response
+     */
+    public static final String JSON_INS_STATE        = "state";
+
+    /**
+     * The instance createTime key in json response
+     */
+    public static final String JSON_INS_CTIME        = "createTime";
+
+    /**
+     * The instnace storageType key in json response
+     */
+    public static final String JSON_INS_STORAGE_TYPE = "storageType";
+
+    /**
      * The instance key in json response
      */
     public static final String JSON_INSTANCE                   = "instance";
+
+    /**
+     * The instances key in json response
+     */
+    public static final String JSON_INSTANCES                  = "instances";
 
     /**
      * The tables key in json response

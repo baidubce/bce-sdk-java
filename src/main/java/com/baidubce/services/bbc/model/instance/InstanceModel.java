@@ -30,6 +30,7 @@ public class InstanceModel {
     private int networkCapacityInMbps;
     private String region;
     private String zone;
+    private Boolean autoRenew;
 
     public String getId() {
         return id;
@@ -141,5 +142,13 @@ public class InstanceModel {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public Boolean getAutoRenew() {
+        return autoRenew;
+    }
+
+    public void setAutoRenew(Boolean autoRenew) {
+        this.autoRenew = autoRenew;
     }
 }

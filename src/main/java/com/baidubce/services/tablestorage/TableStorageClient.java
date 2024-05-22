@@ -18,6 +18,10 @@ import com.baidubce.BceClientException;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.services.tablestorage.model.AbstractTableStorageRequest;
+import com.baidubce.services.tablestorage.model.CreateInstanceRequest;
+import com.baidubce.services.tablestorage.model.CreateInstanceResponse;
+import com.baidubce.services.tablestorage.model.ListInstanceRequest;
+import com.baidubce.services.tablestorage.model.ListInstanceResponse;
 import com.baidubce.services.tablestorage.model.BatchDeleteRowRequest;
 import com.baidubce.services.tablestorage.model.BatchDeleteRowResponse;
 import com.baidubce.services.tablestorage.model.BatchGetRowRequest;
@@ -28,6 +32,8 @@ import com.baidubce.services.tablestorage.model.CreateTableRequest;
 import com.baidubce.services.tablestorage.model.CreateTableResponse;
 import com.baidubce.services.tablestorage.model.DeleteRowRequest;
 import com.baidubce.services.tablestorage.model.DeleteRowResponse;
+import com.baidubce.services.tablestorage.model.DropInstanceRequest;
+import com.baidubce.services.tablestorage.model.DropInstanceResponse;
 import com.baidubce.services.tablestorage.model.DropTableRequest;
 import com.baidubce.services.tablestorage.model.DropTableResponse;
 import com.baidubce.services.tablestorage.model.GetRowRequest;
@@ -40,6 +46,8 @@ import com.baidubce.services.tablestorage.model.PutRowRequest;
 import com.baidubce.services.tablestorage.model.PutRowResponse;
 import com.baidubce.services.tablestorage.model.ScanRequest;
 import com.baidubce.services.tablestorage.model.ScanResponse;
+import com.baidubce.services.tablestorage.model.ShowInstanceRequest;
+import com.baidubce.services.tablestorage.model.ShowInstanceResponse;
 import com.baidubce.services.tablestorage.model.ShowTableRequest;
 import com.baidubce.services.tablestorage.model.ShowTableResponse;
 import com.baidubce.services.tablestorage.model.ShowTableStateResponse;
@@ -68,14 +76,15 @@ public class TableStorageClient extends AbstractTableStorageBceClient {
     }
 
     /**
-     * Check if input is legal.
+     * Check if instance name is legal.
      *
-     * @param request The input request.
+     * @throws throw BceClientException
      */
-    private void checkInput(AbstractTableStorageRequest request) {
+    private void checkInstance(String instanceName) {
         if (StringUtils.isBlank(instanceName)) {
             throw new BceClientException("The InstanceName's value should not be blank");
         }
+
         if (!Pattern.matches(NAME_PATTERN_STR, instanceName)) {
             throw new BceClientException("The InstanceName's value should match the pattern : "
                     + NAME_PATTERN_STR + ".");
@@ -87,27 +96,107 @@ public class TableStorageClient extends AbstractTableStorageBceClient {
                 throw new BceClientException("The InstanceName's value should not start with " + word + ".");
             }
         }
+
         for (String word : TableStorageConstants.INSTANCE_NAME_NOT_CONTAIN_WORDS) {
             if (lowerInstanceName.contains(word)) {
                 throw new BceClientException("The InstanceName's value should not contain " + word + ".");
             }
         }
+    }
 
+    /**
+     * Check if input is legal.
+     *
+     * @param request The input request.
+     */
+    private void checkInput(AbstractTableStorageRequest request) {
         checkNotNull(request, "Request should not be null");
-        if (request instanceof ListTablesRequest) {
-            if (request.getTableName() != null && !request.getTableName().isEmpty()) {
-                throw new BceClientException("The TableName's value should be empty in ListTablesRequest.");
-            }
+        if (request instanceof CreateInstanceRequest) {
+            checkInstance(((CreateInstanceRequest) request).getInstanceName());
+        } else if (request instanceof ShowInstanceRequest) {
+            checkInstance(((ShowInstanceRequest) request).getInstanceName());
+        } else if (request instanceof DropInstanceRequest) {
+            checkInstance(((DropInstanceRequest) request).getInstanceName());
+        } else if (request instanceof ListInstanceRequest) {
         } else {
-            if (StringUtils.isBlank(request.getTableName())) {
-                throw new BceClientException("The TableName's value should not be blank in "
-                        + request.getClass().getSimpleName() + ".");
-            }
-            if (!Pattern.matches(NAME_PATTERN_STR, request.getTableName())) {
-                throw new BceClientException("The TableName's value should match the pattern : "
-                        + NAME_PATTERN_STR + ".");
+            checkInstance(this.instanceName);
+            if (request instanceof ListTablesRequest) {
+                if (request.getTableName() != null && !request.getTableName().isEmpty()) {
+                    throw new BceClientException("The TableName's value should be empty in ListTablesRequest.");
+                }
+            } else {
+                if (StringUtils.isBlank(request.getTableName())) {
+                    throw new BceClientException("The TableName's value should not be blank in "
+                            + request.getClass().getSimpleName() + ".");
+                }
+                if (!Pattern.matches(NAME_PATTERN_STR, request.getTableName())) {
+                    throw new BceClientException("The TableName's value should match the pattern : "
+                            + NAME_PATTERN_STR + ".");
+                }
             }
         }
+    }
+
+    /**
+     * Create instance
+     *
+     * @param request Container for the necessary parameters to execute the create
+     *                instance method on tablestorage
+     * @return The response from the create instance method, as returned by
+     *         tablestorage.
+     */
+    public CreateInstanceResponse createInstance(CreateInstanceRequest request) {
+        checkInput(request);
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                TableStorageConstants.URI_INSTANCE, request.getInstanceName());
+        return this.invokeHttpClient(internalRequest, CreateInstanceResponse.class);
+    }
+
+    /**
+     * Show instance
+     *
+     * @param request Container for the necessary parameters to execute the show
+     *                instance method on tablestorage
+     * @return The response from the show instance method, as returned by
+     *         tablestorage
+     */
+    public ShowInstanceResponse showInstance(ShowInstanceRequest request) {
+        checkInput(request);
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                TableStorageConstants.URI_INSTANCE, request.getInstanceName());
+        return this.invokeHttpClient(internalRequest, ShowInstanceResponse.class);
+    }
+
+    /**
+     * List instance
+     *
+     * @param request Container for the necessary parameters to execute the list
+     *                instance method on
+     *                tablestorage
+     * @return The response from the list instance method, as returned by
+     *         tablestorage
+     */
+    public ListInstanceResponse listInstance(ListInstanceRequest request) {
+        checkInput(request);
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET,
+                TableStorageConstants.URI_INSTANCES);
+        return this.invokeHttpClient(internalRequest, ListInstanceResponse.class);
+    }
+
+    /**
+     * Drop instance
+     *
+     * @param request Container for the necessary parameters to execute the drop
+     *                instance method on
+     *                tablestorage
+     * @return The response from the drop instance method, as returned by
+     *         tablestorage
+     */
+    public DropInstanceResponse dropInstance(DropInstanceRequest request) {
+        checkInput(request);
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.DELETE,
+                TableStorageConstants.URI_INSTANCE, request.getInstanceName());
+        return this.invokeHttpClient(internalRequest, DropInstanceResponse.class);
     }
 
     /**

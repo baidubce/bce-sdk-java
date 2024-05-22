@@ -77,6 +77,10 @@ public class GetBbcInstanceResponse extends AbstractBceResponse {
      * The name of avaliable zone
      */
     private String zone;
+    /**
+     * whether the instacne is auto renew or not
+     */
+    private Boolean autoRenew;
 
     public String getId() {
         return id;
@@ -188,5 +192,13 @@ public class GetBbcInstanceResponse extends AbstractBceResponse {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public Boolean getAutoRenew() {
+        return autoRenew;
+    }
+
+    public void setAutoRenew(Boolean autoRenew) {
+        this.autoRenew = autoRenew;
     }
 }
