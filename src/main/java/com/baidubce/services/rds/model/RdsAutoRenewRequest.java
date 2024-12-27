@@ -2,13 +2,15 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import org.apache.htrace.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Auto renew thd rds instance
+ * Auto renew the rds instance
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsAutoRenewRequest extends AbstractBceRequest {
 
     private List<String> instanceIds;

@@ -14,13 +14,18 @@ package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.services.bec.model.vo.BecResultVo;
 import com.baidubce.services.bec.model.vo.VmInstanceBriefVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 
 /**
  * The response for getting the BEC virtual machine list of the node.
+ * Return the instance detail.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecNodeVmInstanceListResponse extends BecResultVo<List<VmInstanceBriefVo>> {
 }

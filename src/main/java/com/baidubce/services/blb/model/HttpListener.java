@@ -12,9 +12,12 @@
  */
 package com.baidubce.services.blb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Http listener info modal.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HttpListener extends ListenerBase {
 
     /**

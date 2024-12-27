@@ -26,6 +26,5 @@ public class DiskPackage {
     /**
      * Disk size.
      */
-    private int sizeInGb;
-
+    private Integer sizeInGb;
 }

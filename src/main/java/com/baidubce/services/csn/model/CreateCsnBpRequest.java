@@ -12,7 +12,10 @@
  */
 package com.baidubce.services.csn.model;
 
+import java.util.List;
+
 import com.baidubce.common.BaseBceRequest;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,14 +58,31 @@ public class CreateCsnBpRequest extends BaseBceRequest {
      */
     private Billing billing;
 
+
+    /**
+     * 带宽包的标签列表
+     */
+    private List<Tag> tags;
+
     @Getter
     @Setter
     @ToString
     @Builder
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Billing {
+        /**
+         * 付款方式，预支付（Prepaid）和后支付（Postpaid）
+         */
         private String paymentTiming;
-    
+
+        /**
+         * 付费需要传该参数。ByTraffic按量计费，ByBandwidth按带宽计费，PeakBandwidth_Percent_95 95计费，Enhanced_Percent_95增强型95计费
+         */
+        private String billingMethod;
+
+        /**
+         * 保留信息，支付方式为后支付时不需要设置，预支付时必须设置
+         */
         private Reservation reservation;
 
         @Getter
@@ -71,8 +91,14 @@ public class CreateCsnBpRequest extends BaseBceRequest {
         @Builder
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Reservation {
+            /**
+             * 时长，[1,2,3,4,5,6,7,8,9,12,24,36]
+             */
             private Integer reservationLength;
-        
+
+            /**
+             * 时间单位，当前仅支持按月，取值month
+             */
             private String reservationTimeUnit;
         }    
     }

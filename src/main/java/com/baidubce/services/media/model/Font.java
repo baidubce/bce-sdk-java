@@ -13,6 +13,8 @@
 
 package com.baidubce.services.media.model;
 
+import java.math.BigDecimal;
+
 public class Font {
     /**
      * font family
@@ -23,6 +25,65 @@ public class Font {
      * font size
      **/
     private Integer sizeInPoint = null;
+
+    private String color = null;
+
+    private BigDecimal alpha = null;
+
+    private Integer shadowX = null;
+
+    private Integer shadowY = null;
+    private String shadowColor = null;
+
+    private String fontName = null;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public BigDecimal getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(BigDecimal alpha) {
+        this.alpha = alpha;
+    }
+
+    public Integer getShadowX() {
+        return shadowX;
+    }
+
+    public void setShadowX(Integer shadowX) {
+        this.shadowX = shadowX;
+    }
+
+    public Integer getShadowY() {
+        return shadowY;
+    }
+
+    public void setShadowY(Integer shadowY) {
+        this.shadowY = shadowY;
+    }
+
+    public String getShadowColor() {
+        return shadowColor;
+    }
+
+    public void setShadowColor(String shadowColor) {
+        this.shadowColor = shadowColor;
+    }
+
+    public String getFontName() {
+        return fontName;
+    }
+
+    public void setFontName(String fontName) {
+        this.fontName = fontName;
+    }
 
     public String getFamily() {
         return family;

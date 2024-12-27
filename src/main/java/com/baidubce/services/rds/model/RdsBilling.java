@@ -1,8 +1,11 @@
 package com.baidubce.services.rds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Billing of rds
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsBilling {
 
     private RdsPaymentTiming paymentTiming;

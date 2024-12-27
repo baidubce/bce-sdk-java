@@ -62,6 +62,20 @@ public class InternalRequest {
 
     private boolean expectContinueEnabled;
 
+    /**
+     * determines whether redirects should be handled automatically
+     *
+     * @return
+     */
+    private Boolean redirectsEnabled = null;
+
+    /**
+     * determines the redirects times.
+     *
+     * @return
+     */
+    private int maxRedirects = 1;
+
     public InternalRequest(HttpMethodName httpMethod, URI uri) {
         this.httpMethod = httpMethod;
         this.uri = uri;
@@ -132,6 +146,43 @@ public class InternalRequest {
     public void setExpectContinueEnabled(boolean expectContinueEnabled) {
         this.expectContinueEnabled = expectContinueEnabled;
     }
+
+    /**
+     * Gets the flag of redirection times
+     *
+     * @return
+     */
+    public int getMaxRedirects() {
+        return this.maxRedirects;
+    }
+
+    /**
+     * Sets the flag of redirection times
+     *
+     * @param maxRedirects
+     */
+    public void setMaxRedirects(int maxRedirects) {
+        this.maxRedirects = maxRedirects;
+    }
+
+    /**
+     * Gets the flag of http redirection
+     *
+     * @return
+     */
+    public Boolean isRedirectsEnabled() {
+        return redirectsEnabled;
+    }
+
+    /**
+     * Sets the flag of http redirection
+     *
+     * @param redirectsEnabled
+     */
+    public void setRedirectsEnabled(boolean redirectsEnabled) {
+        this.redirectsEnabled = redirectsEnabled;
+    }
+
 
     @Override
     public String toString() {

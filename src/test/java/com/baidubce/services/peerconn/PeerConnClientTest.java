@@ -31,6 +31,7 @@ import com.baidubce.services.peerconn.model.ModifyBandwidthRequest;
 import com.baidubce.services.peerconn.model.ModifyPeerConnRequest;
 import com.baidubce.services.peerconn.model.PeerConnIdRequest;
 import com.baidubce.services.peerconn.model.PurchaseReservedPeerConnRequest;
+import com.baidubce.services.peerconn.model.SwitchPeerConnDeleteProtectRequest;
 import com.baidubce.services.peerconn.model.SyncDnsRequest;
 import com.baidubce.util.JsonUtils;
 
@@ -85,11 +86,10 @@ public class PeerConnClientTest {
         request.setBandwidthInMbps(10);
         request.setLocalIfName("localIfName");
         request.setLocalVpcId(VPC_ID);
+        request.setDeleteProtect(true);
         List<TagModel> tags = new ArrayList<TagModel>();
         tags.add(new TagModel().withTagKey("testKey").withTagValue("testValue"));
         request.setTags(tags);
-//        request.setPeerIfName("peerIfName");
-//        request.setPeerAccountId(peerAccountId);
         request.setPeerRegion("bj");
         request.setPeerVpcId(PEER_VPC_ID);
         CreatePeerConnResponse createPeerConnResponse = client.createPeerConn(request);
@@ -191,6 +191,14 @@ public class PeerConnClientTest {
         request.setPeerConnId(id);
         request.setRole("initiator");
         client.closeSyncDns(request);
+    }
+
+    @Test
+    public void testSwitchDeleteProtect() {
+        SwitchPeerConnDeleteProtectRequest request = new SwitchPeerConnDeleteProtectRequest();
+        request.setPeerConnId(id);
+        request.setDeleteProtect(true);
+        client.switchDeleteProtect(request);
     }
 
 }

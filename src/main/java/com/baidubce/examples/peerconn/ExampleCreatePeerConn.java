@@ -33,6 +33,7 @@ public class ExampleCreatePeerConn {
         createPeerConnRequest.setPeerVpcId("vpc-z9new983u7ne");  // 对等连接对端VPC的ID
         createPeerConnRequest.setPeerRegion("su");  // 对等连接的对端区域
         createPeerConnRequest.setPeerIfName("peer_conn_peer");  // 对等连接对端接口名称，只有本账号的对等连接才允许设置该字段
+        createPeerConnRequest.setDeleteProtect(true);  // 对等连接是否开启释放保护
 
         // 计费信息
         Billing.Reservation reservation = new Billing.Reservation();

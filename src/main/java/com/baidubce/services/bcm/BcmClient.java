@@ -42,6 +42,10 @@ import com.baidubce.services.bcm.model.alarm.request.CreateOrUpdateAlarmConfigV2
 import com.baidubce.services.bcm.model.alarm.request.ListAlarmMetricsRequest;
 import com.baidubce.services.bcm.model.alarm.request.ListSingleInstanceAlarmConfigsRequest;
 import com.baidubce.services.bcm.model.alarm.response.CreateAlarmConfigV2Response;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmDetailRequest;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmDetailResponse;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmListRequest;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmListResponse;
 import com.baidubce.services.bcm.model.application.ApplicationAlarmConfig;
 import com.baidubce.services.bcm.model.application.ApplicationDataListRequest;
 import com.baidubce.services.bcm.model.application.ApplicationDataListResponse;
@@ -137,6 +141,7 @@ import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopQuery;
 import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricAllDataResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricResult;
+import com.baidubce.services.bcm.model.metrics.TsdbQueryMetaData;
 import com.baidubce.services.bcm.model.site.DnsTaskRequest;
 import com.baidubce.services.bcm.model.site.DnsTaskResponse;
 import com.baidubce.services.bcm.model.site.FtpTaskRequest;
@@ -341,6 +346,9 @@ public class BcmClient extends AbstractBceClient {
     private static final String BATCH_GET_METRICS_PATH = "/csm/api/v2/data/metricAllData/batch";
     private static final String ALL_DATA_METRIC_V2_PATH = "/csm/api/v2/data/metricAllData";
     private static final String TOPN_PATH = "/csm/api/v2/dimensions/top";
+    private static final String TOPN_DATA_PATH = "/csm/api/v2/dimensions/top/data";
+    private static final String ALARM_HOUSE_ALARM_LIST = "/ah-api/v1/alarmhouse/alarm/list";
+    private static final String ALARM_HOUSE_ALARM_DETAIL = "/ah-api/v1/alarmhouse/alarm";
     /**
      * Exceptions
      */
@@ -3232,7 +3240,6 @@ public class BcmClient extends AbstractBceClient {
      *
      * @param request 请求参数
      * @return 返回响应结果
-     *
      */
     public HttpResponseWrapper<SiteOnceTaskResponse> againExecSiteOnce(SiteOnceTaskRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
@@ -3242,6 +3249,7 @@ public class BcmClient extends AbstractBceClient {
                 "/csm/api/v1/site/once/createFromTask");
         return invokeHttpClient(internalRequest, HttpResponseWrapper.class);
     }
+
     /**
      * 历史探测列表
      *
@@ -3278,6 +3286,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * create application data
+     *
      * @param request
      * @return ApplicationInfoResponse
      */
@@ -3294,6 +3303,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * get application data
+     *
      * @param userId
      * @param request
      * @return ApplicationDataListResponse
@@ -3308,6 +3318,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * update application data
+     *
      * @param request
      * @return ApplicationInfoUpdateResponse
      */
@@ -3324,6 +3335,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * delete application data
+     *
      * @param userId
      * @param request
      * @return ApplicationMonitorResponse
@@ -3339,6 +3351,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * get application instance list
+     *
      * @param userId
      * @param request
      * @return ApplicationInstanceListResponse
@@ -3359,6 +3372,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * create application instance
+     *
      * @param request
      * @return ApplicationMonitorResponse
      */
@@ -3372,6 +3386,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * get application created instance list
+     *
      * @param request
      * @return ApplicationInstanceListResponse
      */
@@ -3384,6 +3399,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * delete application instance
+     *
      * @param userId
      * @param request
      * @return ApplicationMonitorResponse
@@ -3400,6 +3416,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * create application instance task
+     *
      * @param userId
      * @param request
      * @return ApplicationMonitorTaskResponse
@@ -3414,7 +3431,8 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * get application monitor task detail
-      * @param request
+     *
+     * @param request
      * @return ApplicationMonitorTaskResponse
      */
     public ApplicationMonitorTaskResponse getApplicationMonitorTaskDetail(ApplicationMonitorTaskDetailRequest request) {
@@ -3429,6 +3447,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * get application monitor task list
+     *
      * @param request
      * @return
      */
@@ -3446,6 +3465,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * update application monitor task
+     *
      * @param userId
      * @param request
      * @return ApplicationMonitorTaskResponse
@@ -3468,6 +3488,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * delete application monitor task
+     *
      * @param request
      * @return ApplicationMonitorResponse
      */
@@ -3483,6 +3504,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * create application dimension table
+     *
      * @param request
      * @return ApplicationDimensionTableInfoResponse
      */
@@ -3499,6 +3521,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * get application dimension table list
+     *
      * @param request
      * @return ApplicationDimensionTableListResponse
      */
@@ -3515,7 +3538,8 @@ public class BcmClient extends AbstractBceClient {
     }
 
     /**
-     *  update application dimension table
+     * update application dimension table
+     *
      * @param request
      * @return ApplicationMonitorResponse
      */
@@ -3532,6 +3556,7 @@ public class BcmClient extends AbstractBceClient {
 
     /**
      * delete application dimension table
+     *
      * @param request
      * @return ApplicationMonitorResponse
      */
@@ -3556,6 +3581,22 @@ public class BcmClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, MultiDimensionalLatestMetricsResponse.class);
     }
 
+    /**
+     * @Description:
+     * 根据部分维度获取指标数据，返回包装了 PageResultResponse 的 TsdbMetricResult。
+     * 请求参数中的 userID、scope、startTime、endTime、metricName 不能为空字符串，
+     * 否则将抛出 IllegalArgumentException。
+     * 如果 statistics 列表为空，也将抛出 IllegalArgumentException。
+     * 维度的最大长度为 MAX_DIMENSIONS_SIZE（默认值为10），超过该限制将抛出 IllegalArgumentException。
+     *
+     * @Param request PartialDimensionsMetricsRequest 请求参数，包含用户ID、范围、开始时间、结束时间、指标名称和统计方式等信息。
+     *
+     * @Return TsdbMetricResult<PageResultResponse<TsdbMetricAllDataResult.AllDataMetric>> 返回包装了 PageResultResponse 的 TsdbMetricResult，
+     * 其中 result 是一个包含 TsdbMetricAllDataResult.AllDataMetric 对象的 PageResultResponse。
+     *
+     * @Throws IllegalArgumentException 当请求参数中的 userID、scope、startTime、endTime、metricName 为空字符串或者 statistics 列表为空时抛出。
+     * @Throws IllegalArgumentException 当维度的最大长度超过 MAX_DIMENSIONS_SIZE（默认值为10）时抛出。
+     */
     public TsdbMetricResult<PageResultResponse<TsdbMetricAllDataResult.AllDataMetric>> getMetricsByPartialDimensions(PartialDimensionsMetricsRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getUserId(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "userID"));
@@ -3564,7 +3605,7 @@ public class BcmClient extends AbstractBceClient {
         checkStringNotEmpty(request.getEndTime(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "endTime"));
         checkStringNotEmpty(request.getMetricName(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "metricName"));
         if (CollectionUtils.isEmpty(request.getStatistics())) {
-                throw new IllegalArgumentException("param statistics should not be null");
+            throw new IllegalArgumentException("param statistics should not be null");
         }
         checkListSizeInRange(request.getDimensions(), MAX_DIMENSIONS_SIZE, "the max size of dimensions is " + MAX_DIMENSIONS_SIZE);
         String url = String.format(METRICS_BY_PARTIAL_DIMENSIONS_PATH, request.getUserId(), request.getScope());
@@ -3574,7 +3615,8 @@ public class BcmClient extends AbstractBceClient {
                 invokeHttpClient(internalRequest, TsdbMetricResult.class);
         ObjectMapper objectMapper = new ObjectMapper();
         tsdbMetricResult.setResult(objectMapper.convertValue(tsdbMetricResult.getResult(),
-                new TypeReference<PageResultResponse<TsdbMetricAllDataResult.AllDataMetric>>(){}));
+                new TypeReference<PageResultResponse<TsdbMetricAllDataResult.AllDataMetric>>() {
+                }));
         return tsdbMetricResult;
     }
 
@@ -3621,4 +3663,61 @@ public class BcmClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createBodyRequest(request, HttpMethodName.POST, TOPN_PATH);
         return invokeHttpClient(internalRequest, TsdbDimensionTopResult.class);
     }
+
+    public List<TsdbQueryMetaData> getMetricDimensionTopData(TsdbDimensionTopQuery request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getUserId(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "userID"));
+        checkStringNotEmpty(request.getScope(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "scope"));
+        checkStringNotEmpty(request.getRegion(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "region"));
+        checkStringNotEmpty(request.getStartTime(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "startTime"));
+        checkStringNotEmpty(request.getEndTime(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "endTime"));
+        checkStringNotEmpty(request.getMetricName(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "metricName"));
+        checkIsTrue(request.getDimensions().size() > 0, String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "dimensions"));
+        checkIsTrue(CollectionUtils.isNotEmpty(request.getLabels()), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "labels"));
+        InternalRequest internalRequest = this.createBodyRequest(request, HttpMethodName.POST, TOPN_DATA_PATH);
+        return invokeHttpClient(internalRequest, ListResponse.class).getResult();
+    }
+
+    /**
+     * @Description: 获取报警列表，包含用户ID、报警类型、分页信息等参数。返回值为AlarmListResponse对象。
+     * @param request AlarmListRequest对象，包含用户ID、报警类型、分页信息等参数。不能为空。
+     * @return AlarmListResponse AlarmListResponse对象，包含报警列表和分页信息等。
+     * @throws IllegalArgumentException 当request中的userId或alarmType为空字符串时抛出此异常。
+     * @throws RuntimeException 当pageNo小于等于0或pageSize小于等于0时抛出RuntimeException。
+     */
+    public AlarmListResponse getAlarmList(AlarmListRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getUserId(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "userID"));
+        checkStringNotEmpty(request.getAlarmType(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "alarmType"));
+        if (request.getPageNo() <= 0) {
+            request.setPageNo(1);
+        }
+        if (request.getPageSize() <= 0) {
+            request.setPageSize(10);
+        }
+        InternalRequest internalRequest = this.createBodyRequest(request, HttpMethodName.POST, ALARM_HOUSE_ALARM_LIST);
+        return invokeHttpClient(internalRequest, AlarmListResponse.class);
+    }
+
+    /**
+     * {@literal}
+     * 获取报警详情信息
+     *
+     * @param request AlarmDetailRequest类型，包含alarmId（必传）和userId（必传）两个参数
+     * @return AlarmDetailResponse类型，包含报警详情信息
+     * @throws BceClientException 请求参数为空或者不符合要求时抛出此异常
+     */
+    public AlarmDetailResponse getAlarmDetail(AlarmDetailRequest request) {
+        checkStringNotEmpty(request.getAlarmId(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "alarmId"));
+        checkStringNotEmpty(request.getUserId(), String.format(REQUEST_PARAM_NULL_ERROR_MESSAGE, "userId"));
+        InternalRequest internalRequest =
+                this.createRequestWithUrl(request, HttpMethodName.GET, ALARM_HOUSE_ALARM_DETAIL);
+
+        internalRequest.addParameter("alarmId", request.getAlarmId());
+        internalRequest.addParameter("userId", request.getUserId());
+        return invokeHttpClient(internalRequest, AlarmDetailResponse.class);
+    }
+
+
+
 }

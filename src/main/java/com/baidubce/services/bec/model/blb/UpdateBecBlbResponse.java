@@ -13,11 +13,12 @@
 package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
+import com.baidubce.services.bec.model.vo.BlbInstanceVo;
 
 import java.util.Map;
 
 /**
  * The response for updating the BEC blb instance.
  */
-public class UpdateBecBlbResponse extends ActionInfoVo<Map<String, String>> {
+public class UpdateBecBlbResponse extends ActionInfoVo<BlbInstanceVo> {
 }

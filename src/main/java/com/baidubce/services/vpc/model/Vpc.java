@@ -1,5 +1,9 @@
 package com.baidubce.services.vpc.model;
 
+import java.util.List;
+
+import com.baidubce.services.tag.model.Tag;
+
 /**
  * vpc detail info model
  */
@@ -31,11 +35,21 @@ public class Vpc {
     private String description;
 
     /**
+     * The secondary cidrs of this vpc.
+     */
+    private List<String> secondaryCidr;
+
+    /**
      * This shows whether this vpc is a default vpc.
      * Is default vpc if the value is true
      * Is user-defined vpc if the value is false
      */
     private Boolean isDefault;
+
+    /**
+     * The tags of vpc.
+     */
+    private List<Tag> tags;
 
     public String getVpcId() {
         return vpcId;
@@ -59,6 +73,14 @@ public class Vpc {
 
     public void setCidr(String cidr) {
         this.cidr = cidr;
+    }
+
+    public List<String> getSecondaryCidr() {
+        return secondaryCidr;
+    }
+
+    public void setSecondaryCidr(List<String> secondaryCidr) {
+        this.secondaryCidr = secondaryCidr;
     }
 
     public String getDescription() {
@@ -85,14 +107,24 @@ public class Vpc {
         this.ipv6Cidr = ipv6Cidr;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "Vpc{"
                 + "vpcId='" + vpcId + '\''
                 + ", name='" + name + '\''
                 + ", cidr='" + cidr + '\''
+                + ", secondaryCidr='" + secondaryCidr + '\''
                 + ", description='" + description + '\''
                 + ", isDefault='" + isDefault + '\''
-                + '}';
+                + ", tags=" + tags +
+                +'}';
     }
 }

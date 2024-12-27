@@ -129,6 +129,11 @@ public class PrepayShareBill {
     private BigDecimal discountCouponPrice;
 
     /**
+     * the cash coupon price
+     */
+    private BigDecimal cashEquivalentCouponPrice;
+
+    /**
      * the discount price
      */
     private BigDecimal discountPrice;
@@ -154,9 +159,54 @@ public class PrepayShareBill {
     private BigDecimal shareDiscountCouponPrice;
 
     /**
+     * the cash coupon price shared in this month
+     */
+    private BigDecimal shareCashEquivalentCouponPrice;
+
+    /**
      * the discount price shared in this month
      */
     private BigDecimal shareDiscountPrice;
+
+    /**
+     * the deduct finance price shared in this month
+     */
+    private BigDecimal deductShareFinancePrice;
+
+    /**
+     * the deduct coupon price shared in this month
+     */
+    private BigDecimal deductShareCouponPrice;
+
+    /**
+     * the deduct discount coupon price shared in this month
+     */
+    private BigDecimal deductShareDiscountCouponPrice;
+
+    /**
+     * the deduct cash coupon price shared in this month
+     */
+    private BigDecimal deductShareCashEquivalentCouponPrice;
+
+    /**
+     * the deduct discount price shared in this month
+     */
+    private BigDecimal deductShareDiscountPrice;
+
+    /**
+     * the controversial flag
+     */
+    private int controversialItem;
+
+    /**
+     * the op time
+     */
+    private String opTime;
+
+    /**
+     * the time of this bill is confirmed
+     */
+    private String confirmTime;
 
     /**
      * the amount shared in this month

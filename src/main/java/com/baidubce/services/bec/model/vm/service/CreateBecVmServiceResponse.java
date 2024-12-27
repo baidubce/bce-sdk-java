@@ -14,11 +14,16 @@ package com.baidubce.services.bec.model.vm.service;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
 import com.baidubce.services.bec.model.vo.VmServiceBriefVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The response for creating the BEC service.
+ * Shared with creating the BEC service instance, return the brief content.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateBecVmServiceResponse extends ActionInfoVo<VmServiceBriefVo> {
 }

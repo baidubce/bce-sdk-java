@@ -68,5 +68,5 @@ public class ResourcePackage {
     /**
      * Network packet data.
      */
-    private int networkPacketData;
+    private Integer networkPacketData;
 }

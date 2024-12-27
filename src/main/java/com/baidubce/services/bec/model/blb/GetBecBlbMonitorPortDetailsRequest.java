@@ -14,6 +14,7 @@ package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bec.model.enums.ProtocolEnum;
 import lombok.Data;
 
 /**
@@ -30,12 +31,12 @@ public class GetBecBlbMonitorPortDetailsRequest extends AbstractBceRequest {
     /**
      * the protocol of the blb.
      */
-    private String protocol;
+    private ProtocolEnum protocol;
 
     /**
      * the port of the blb.
      */
-    private int port;
+    private Integer port;
 
     /**
      * Configure request credential for the request.

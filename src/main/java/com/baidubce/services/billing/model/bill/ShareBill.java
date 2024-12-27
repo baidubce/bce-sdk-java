@@ -219,6 +219,46 @@ public class ShareBill {
     private BigDecimal shareSysGoldPrice;
 
     /**
+     * 本月分摊应付价格（调减）
+     */
+    private BigDecimal deductShareFinancePrice;
+
+    /**
+     * 本月分摊代金券（调减）
+     */
+    private BigDecimal deductShareCouponPrice;
+
+    /**
+     * 本月分摊折扣券（调减）
+     */
+    private BigDecimal deductShareDiscountCouponPrice;
+
+    /**
+     * 本月分摊现金等额券金额（调减）
+     */
+    private BigDecimal deductShareCashEquivalentCouponPrice;
+
+    /**
+     * 本月分摊折扣金额（调减）
+     */
+    private BigDecimal deductShareDiscountPrice;
+
+    /**
+     * 账单争议标记
+     */
+    private int controversialItem;
+
+    /**
+     * 操作时间
+     */
+    private String opTime;
+
+    /**
+     * 确认时间
+     */
+    private String confirmTime;
+
+    /**
      * 本月（天）分摊用量（包括量包和所有后付费计费项）
      */
     private BigDecimal shareAmount;

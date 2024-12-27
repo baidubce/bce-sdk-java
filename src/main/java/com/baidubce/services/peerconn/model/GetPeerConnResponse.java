@@ -112,4 +112,9 @@ public class GetPeerConnResponse extends AbstractBceResponse {
      * the list of tags which are bound to peer conn instance
      */
     private List<TagModel> tags;
+
+    /**
+     * The delete protect switch status of peer conn.
+     */
+    private Boolean deleteProtect;
 }

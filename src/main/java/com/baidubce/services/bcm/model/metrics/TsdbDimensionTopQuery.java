@@ -31,6 +31,7 @@ public class TsdbDimensionTopQuery extends AbstractBceRequest  {
     private Set<String> labels;
     private int topNum;
     private String order;
+    private int cycle;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {

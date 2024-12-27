@@ -13,16 +13,6 @@
 
 package com.baidubce.services.media;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.bos.BosClient;
@@ -46,6 +36,16 @@ import com.baidubce.services.media.model.Watermarks;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public abstract class AbstractMediaTest {
     // jianbing's key
 //    static String   MEDIA_AK        = "46bd9968a6194b4bbdf0341f2286ccce";
@@ -56,8 +56,8 @@ public abstract class AbstractMediaTest {
 //    static String   MEDIA_SK        = "6a15cc0d7083446590a6a46df55a5e98";
 
     // wanglingqing's key
-    static String   MEDIA_AK        = "27add1b94dd5485d916cc866190be704";
-    static String   MEDIA_SK        = "49ce4909b87441e794c24dd673a6fa17";
+    static String   MEDIA_AK        = "input you ak";
+    static String   MEDIA_SK        = "intput you sk";
 
     // hudapeng's key
     // static String MEDIA_AK = "";

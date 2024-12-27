@@ -12,96 +12,16 @@
  */
 package com.baidubce.services.bec.model.blb;
 
-import com.baidubce.model.AbstractBceResponse;
-import com.baidubce.services.bec.model.Listeners;
+import com.baidubce.services.bec.model.vo.BlbInstanceVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * The response for getting the BEC blb instance info.
  */
 @Data
-public class GetBecBlbInstanceResponse extends AbstractBceResponse {
-
-    /**
-     * the id of the blb.
-     */
-    private String blbId;
-
-    /**
-     * The name of the blb.
-     */
-    private String blbName;
-
-    /**
-     * The status of the blb.
-     */
-    private String status;
-
-    /**
-     * Load balance type.
-     */
-    private String lbType;
-
-    /**
-     * The region of the blb.
-     */
-    private String region;
-
-    /**
-     * The service provider of the blb.
-     */
-    private String serviceProvider;
-
-    /**
-     * The city of the blb.
-     */
-    private String city;
-
-    /**
-     * Public ip.
-     */
-    private String publicIp;
-
-    /**
-     * China mobile public ip.
-     */
-    private String cmPublicIP;
-
-    /**
-     * China telecom public ip.
-     */
-    private String ctPublicIP;
-
-    /**
-     * China unicom public ip.
-     */
-    private String unPublicIP;
-
-    /**
-     * Internal ip.
-     */
-    private String internalIp;
-
-    /**
-     * Load balancing port.
-     */
-    private List<Listeners> ports;
-
-    /**
-     * The number of backend servers bound to load balancing.
-     */
-    private int podCount;
-
-    /**
-     * Load balancing maximum bandwidth limit.
-     */
-    private int bandwidthInMbpsLimit;
-
-    /**
-     * Creation time.
-     */
-    private String createTime;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class GetBecBlbInstanceResponse extends BlbInstanceVo {
 }

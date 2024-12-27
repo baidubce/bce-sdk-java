@@ -152,6 +152,7 @@ public class MmsClientTest {
         MmsBaseResponse mockReturn = new MmsBaseResponse();
         mockReturn.setStatus("SUCCESS");
         mockReturn.setTaskId("1234567890");
+        mockReturn.setMediaId("_71A-7D4EBE5284");
         mockReturn.setError(null);
 
         Mockito.when(mmsClient.insertVideo(VideoLib, request)).thenReturn(mockReturn);
@@ -159,6 +160,7 @@ public class MmsClientTest {
 
         Assert.assertEquals("SUCCESS", response.getStatus());
         Assert.assertEquals("1234567890", response.getTaskId());
+        Assert.assertEquals("_71A-7D4EBE5284", response.getMediaId());
         Assert.assertNull(response.getError());
     }
 

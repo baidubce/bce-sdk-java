@@ -1,4 +1,5 @@
 package com.baidubce.services.bec.model.network;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

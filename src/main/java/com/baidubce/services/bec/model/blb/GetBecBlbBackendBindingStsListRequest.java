@@ -17,7 +17,7 @@ import com.baidubce.model.AbstractBceRequest;
 import lombok.Data;
 
 /**
- * The request for getting the binding BEC blb backend StatefulSet/VmReplicas list.
+ * The request for getting the StatefulSet/VmReplicas list that can be bound by the designated BEC blb.
  */
 @Data
 public class GetBecBlbBackendBindingStsListRequest extends AbstractBceRequest {
@@ -30,12 +30,17 @@ public class GetBecBlbBackendBindingStsListRequest extends AbstractBceRequest {
     /**
      * page number.
      */
-    private Integer pageNo;
+    private int pageNo;
 
     /**
      * page size.
      */
-    private Integer pageSize;
+    private int pageSize;
+
+    /**
+     * Key word type，default serviceId.
+     */
+    private String keywordType;
 
     /**
      * Key word.

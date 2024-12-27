@@ -13,12 +13,17 @@
 package com.baidubce.services.bec.model.vm.service;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
-import com.baidubce.services.bec.model.vo.VmServiceBriefVo;
+import com.baidubce.services.bec.model.vo.VmServiceDetailsVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The response for updating the virtual machine service.
+ * Backend return the vm service detail.
  */
 @Data
-public class UpdateBecVmServiceResponse extends ActionInfoVo<VmServiceBriefVo> {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UpdateBecVmServiceResponse extends ActionInfoVo<VmServiceDetailsVo> {
 }

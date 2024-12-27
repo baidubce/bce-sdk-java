@@ -30,6 +30,7 @@ import com.baidubce.services.cdn.model.logmodel.GetDomainListLogResponse;
 import com.baidubce.services.cdn.model.util.*;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -41,13 +42,13 @@ import java.util.List;
 /**
  * Unit test for CDN client.
  */
-
+@Ignore
 public class CdnClientTest {
+    private static final String AK = "YOUR_ACCESS_KEY";
+    private static final String SK = "YOUR_SECRET_KEY";
+    private static final String ENDPOINT = "CDN_ENDPOINT";
+    private static final String DOMAIN = "TEST_DOMAIN";
 
-    private static final String AK = "";
-    private static final String SK = "";
-    private static final String ENDPOINT = "http://bjyz-opencdn-rest007.bjyz.baidu.com:8899";
-    private static final String DOMAIN = "test875.duanhuiyan.top";
     private static final String TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm";
 
     private CdnClient cdnClient;
@@ -481,8 +482,8 @@ public class CdnClientTest {
     public void testSetDomainCacheTTL() {
         SetDomainCacheTTLRequest request = new SetDomainCacheTTLRequest()
                 .withDomain(DOMAIN)
-                .addCacheTTL(new CacheTTL().withType("suffix").withValue(".jpg").withTtl(3600))
-                .addCacheTTL(new CacheTTL().withType("suffix").withValue(".png").withTtl(3600))
+                .addCacheTTL(new CacheTTL().withType("suffix").withValue(".jpg").withTtl(3600).withOverrideOrigin(false))
+                .addCacheTTL(new CacheTTL().withType("suffix").withValue(".png").withTtl(3600).withOverrideOrigin(true))
                 .addCacheTTL(new CacheTTL().withType("path").withValue("/").withTtl(86400).withWeigth(5));
         CdnResponse response = cdnClient.setDomainCacheTTL(request);
         System.out.println(response);

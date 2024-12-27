@@ -31,6 +31,8 @@ import com.baidubce.services.csn.model.CreateCsnRequest;
 import com.baidubce.services.csn.model.CreateCsnResponse;
 import com.baidubce.services.csn.model.CreatePropagationRequest;
 import com.baidubce.services.csn.model.CreateRouteRuleRequest;
+import com.baidubce.services.csn.model.CsnBpPriceRequest;
+import com.baidubce.services.csn.model.CsnBpPriceResponse;
 import com.baidubce.services.csn.model.DeleteCsnBpLimitRequest;
 import com.baidubce.services.csn.model.DetachInstanceRequest;
 import com.baidubce.services.csn.model.GetCsnBpResponse;
@@ -544,6 +546,20 @@ public class CsnClient extends BaseBceClient {
         InternalRequest internalRequest = createRequest(apiInfo.getMethod(), apiPath, apiInfo.getQueries(),
                 apiInfo.getHeaders(), bindCsnBpRequest);
         invokeHttpClient(internalRequest, BaseBceResponse.class);
+    }
+
+    /**
+     * 云智能网带宽包询价。
+     *
+     * @param csnBpPriceRequest 云智能网带宽包询价参数
+     * @return CsnBpPriceResponse 云智能网带宽包询价返回
+     */
+    public CsnBpPriceResponse csnBpPrice(CsnBpPriceRequest csnBpPriceRequest) {
+        ApiInfo apiInfo = new ApiInfo(CSN_APIS.get("csnBpPrice"));
+        String apiPath = apiInfo.getPath().get();
+        InternalRequest internalRequest = createRequest(apiInfo.getMethod(), apiPath, apiInfo.getQueries(),
+                apiInfo.getHeaders(), csnBpPriceRequest);
+        return invokeHttpClient(internalRequest, CsnBpPriceResponse.class);
     }
 
     /*    -------------------------- 区域带宽相关 --------------------------    */

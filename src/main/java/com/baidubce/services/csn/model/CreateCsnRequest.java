@@ -12,7 +12,10 @@
  */
 package com.baidubce.services.csn.model;
 
+import java.util.List;
+
 import com.baidubce.common.BaseBceRequest;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -26,6 +29,11 @@ public class CreateCsnRequest extends BaseBceRequest {
      * 云智能网的描述
      */
     private String description;
+
+    /**
+     * 云智能网的标签列表
+     */
+    private List<Tag> tags;
 
     public void setName(String name) {
         this.name = name;
@@ -43,12 +51,20 @@ public class CreateCsnRequest extends BaseBceRequest {
         return this.description;
     }
 
-    @Override
-    public String toString() {
-        return "CreateCsnRequest{"
-                + "name=" + name + "\n"
-                + "description=" + description + "\n"
-                + "}";
+    public List<Tag> getTags() {
+        return tags;
     }
 
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateCsnRequest{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", tags=" + tags +
+                '}';
+    }
 }

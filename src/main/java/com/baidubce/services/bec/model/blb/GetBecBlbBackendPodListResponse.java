@@ -14,9 +14,15 @@ package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.services.bec.model.vm.LogicPageResultResponse;
 import com.baidubce.services.bec.model.vo.BlbBackendPodBriefVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
 /**
  * The response for getting the bind BEC blb backend Pod/Vm list.
  */
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecBlbBackendPodListResponse extends LogicPageResultResponse<BlbBackendPodBriefVo> {
 }

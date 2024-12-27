@@ -55,6 +55,8 @@ public class ListObjectsRequest extends GenericBucketRequest {
      */
     private int maxKeys = -1;
 
+    private boolean needExtMeta = false;
+
     /**
      * Constructs a new ListObjectsRequest object and initializes all required and optional object fields.
      *
@@ -251,6 +253,14 @@ public class ListObjectsRequest extends GenericBucketRequest {
     public ListObjectsRequest withMaxKeys(int maxKeys) {
         this.setMaxKeys(maxKeys);
         return this;
+    }
+
+    public boolean isNeedExtMeta() {
+        return needExtMeta;
+    }
+
+    public void setNeedExtMeta(boolean needExtMeta) {
+        this.needExtMeta = needExtMeta;
     }
 
 }

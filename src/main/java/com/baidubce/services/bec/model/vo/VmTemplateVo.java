@@ -35,12 +35,12 @@ public class VmTemplateVo {
     /**
      * The number of CPUs of the virtual machine instance.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The memory of the virtual machine instance.
      */
-    private int memory;
+    private Integer memory;
 
     /**
      * Specifications.
@@ -120,7 +120,7 @@ public class VmTemplateVo {
     /**
      * The bandwidth of the BEC virtual template.
      */
-    private int bandwidth;
+    private Integer bandwidth;
 
     /**
      * The id of image.

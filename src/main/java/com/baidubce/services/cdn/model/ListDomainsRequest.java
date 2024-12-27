@@ -23,6 +23,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public class ListDomainsRequest extends AbstractBceRequest {
     private String marker;
+
+    /**
+     * 可选
+     * 支持IP或域名源站筛选，多个源站用‘,’分隔。
+     */
+    private String origin;
     
     /**
      * @return marker
@@ -49,7 +55,29 @@ public class ListDomainsRequest extends AbstractBceRequest {
         this.setMarker(marker);
         return this;
     }
-    
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public ListDomainsRequest withOrigin(String origin) {
+        this.setOrigin(origin);
+        return this;
+    }
+
+    public ListDomainsRequest addOrigin(String origin) {
+        if (this.origin == null || this.origin.isEmpty()) {
+            this.setOrigin(origin);
+        } else {
+            this.setOrigin(this.origin + "," + origin);
+        }
+        return this;
+    }
+
     /**
      * (non-Javadoc)
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)

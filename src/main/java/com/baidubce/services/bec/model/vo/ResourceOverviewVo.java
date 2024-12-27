@@ -25,17 +25,17 @@ public class ResourceOverviewVo extends AbstractBceResponse {
     /**
      * The number of online nodes.
      */
-    private int ready;
+    private Integer ready;
 
     /**
      * The number of nodes that are not online.
      */
-    private int notReady;
+    private Integer notReady;
 
     /**
      * The number of nodes purchased.
      */
-    private int used;
+    private Integer used;
 
     /**
      * Summary of user resource usage.

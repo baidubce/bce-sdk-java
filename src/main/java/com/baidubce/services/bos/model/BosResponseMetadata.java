@@ -20,6 +20,10 @@ public class BosResponseMetadata extends BceResponseMetadata {
 
     private Long nextAppendOffset;
 
+    private String xBceVersioning;
+
+    private String xBceVersionId;
+
     public String getBosDebugId() {
         return this.debugId;
     }
@@ -36,5 +40,19 @@ public class BosResponseMetadata extends BceResponseMetadata {
         this.nextAppendOffset = nextAppendOffset;
     }
 
+    public String getxBceVersioning() {
+        return xBceVersioning;
+    }
 
+    public void setxBceVersioning(String xBceVersioning) {
+        this.xBceVersioning = xBceVersioning;
+    }
+
+    public String getxBceVersionId() {
+        return xBceVersionId;
+    }
+
+    public void setxBceVersionId(String xBceVersionId) {
+        this.xBceVersionId = xBceVersionId;
+    }
 }

@@ -2,6 +2,7 @@ package com.baidubce.services.vpn;
 
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.eip.model.Billing;
+import com.baidubce.services.tag.model.Tag;
 import com.baidubce.services.vpn.model.*;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -52,9 +53,18 @@ public class VpnClientTest {
         CreateVpnRequest createVpnRequest = new CreateVpnRequest();
         createVpnRequest.setVpcId("vpc-m817ndhrgvd3");
         createVpnRequest.setVpnName("hzb_test_vpn_4");
+        createVpnRequest.setSubnetId("sbn-ptb45cw0icpk");
+        createVpnRequest.setType("SSL");
+        createVpnRequest.setMaxConnection(20);
         Billing billing = new Billing();
         billing.setPaymentTiming("Postpaid");
         createVpnRequest.setBilling(billing);
+        Tag tag = new Tag();
+        tag.setTagKey("tagKey");
+        tag.setTagValue("tagValue");
+        createVpnRequest.setTags(Arrays.asList(tag));
+        createVpnRequest.setResourceGroupId("RESG-xyfmAVnHGzK");
+        createVpnRequest.setDeleteProtect(true);
         toJsonPrettyString("create vpn", vpnClient.createVpn(createVpnRequest));
     }
 
@@ -241,6 +251,14 @@ public class VpnClientTest {
         request.setVpnId("vpn-id");
         ListSslVpnUserResponse sslVpnUser = vpnClient.getSslVpnUser(request);
         toJsonPrettyString("getSslVpnUser:", sslVpnUser);
+    }
+
+    @Test
+    public void switchDeleteProtectTest() {
+        SwitchVpnDeleteProtectRequest request = new SwitchVpnDeleteProtectRequest();
+        request.setVpnId("vpn-9c875b4065b5");
+        request.setDeleteProtect(true);
+        toJsonPrettyString("switch Vpn delete protect status", vpnClient.switchDeleteProtect(request));
     }
 
 }

@@ -1,11 +1,13 @@
 package com.baidubce.services.rds.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Rds engine
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public enum RdsEngine {
     MySQL("MySQL"),
     SQLServer("SQLServer"),

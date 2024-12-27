@@ -93,6 +93,8 @@ import com.baidubce.services.blb.model.UdpListener;
 import com.baidubce.services.tag.model.Tag;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 
 /**
@@ -108,6 +110,8 @@ public class AppBlbClient extends AbstractBceClient {
     private static final String PREFIX = "appblb";
 
     private static final String CLIENT_TOKEN_IDENTIFY = "clientToken";
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * Responsible for handling httpResponses from all service calls.
@@ -375,7 +379,12 @@ public class AppBlbClient extends AbstractBceClient {
      * @return The response containing a list of listener owned by the specified options.
      */
     public ListListenerResponse<TcpListener> listTcpListener(String blbId) {
-        return listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.TCP_LISTENER));
+        ListListenerResponse<TcpListener> response =
+                listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.TCP_LISTENER));
+        response.setListenerList(
+                OBJECT_MAPPER.convertValue(response.getListenerList(), new TypeReference<List<TcpListener>>() {
+                }));
+        return response;
     }
 
     /**
@@ -386,7 +395,12 @@ public class AppBlbClient extends AbstractBceClient {
      * @return The response containing a list of listener owned by the specified options.
      */
     public ListListenerResponse<UdpListener> listUdpListener(String blbId) {
-        return listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.UDP_LISTENER));
+        ListListenerResponse<UdpListener> response =
+                listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.UDP_LISTENER));
+        response.setListenerList(OBJECT_MAPPER.convertValue(response.getListenerList(),
+                new TypeReference<List<UdpListener>>() {
+                }));
+        return response;
     }
 
     /**
@@ -397,7 +411,12 @@ public class AppBlbClient extends AbstractBceClient {
      * @return The response containing a list of listener owned by the specified options.
      */
     public ListListenerResponse<HttpListener> listHttpListener(String blbId) {
-        return listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.HTTP_LISTENER));
+        ListListenerResponse<HttpListener> response =
+                listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.HTTP_LISTENER));
+        response.setListenerList(
+                OBJECT_MAPPER.convertValue(response.getListenerList(), new TypeReference<List<HttpListener>>() {
+                }));
+        return response;
     }
 
     /**
@@ -408,7 +427,12 @@ public class AppBlbClient extends AbstractBceClient {
      * @return The response containing a list of listener owned by the specified options.
      */
     public ListListenerResponse<HttpsListener> listHttpsListener(String blbId) {
-        return listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.HTTPS_LISTENER));
+        ListListenerResponse<HttpsListener> response =
+                listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.HTTPS_LISTENER));
+        response.setListenerList(
+                OBJECT_MAPPER.convertValue(response.getListenerList(), new TypeReference<List<HttpsListener>>() {
+                }));
+        return response;
     }
 
     /**
@@ -419,7 +443,12 @@ public class AppBlbClient extends AbstractBceClient {
      * @return The response containing a list of listener owned by the specified options.
      */
     public ListListenerResponse<SslListener> listSslListener(String blbId) {
-        return listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.SSL_LISTENER));
+        ListListenerResponse<SslListener> response =
+                listListener(new ListListenerRequest().withBlbId(blbId).withType(ListenerConstant.SSL_LISTENER));
+        response.setListenerList(
+                OBJECT_MAPPER.convertValue(response.getListenerList(), new TypeReference<List<SslListener>>() {
+                }));
+        return response;
     }
 
     /**
@@ -454,7 +483,11 @@ public class AppBlbClient extends AbstractBceClient {
         if (request.getMaxKeys() > 0) {
             internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
         }
-        return invokeHttpClient(internalRequest, ListListenerResponse.class);
+        ListListenerResponse<AllListener> response = invokeHttpClient(internalRequest, ListListenerResponse.class);
+        response.setListenerList(OBJECT_MAPPER.convertValue(response.getListenerList(),
+                new TypeReference<List<AllListener>>() {
+                }));
+        return response;
     }
 
     /**

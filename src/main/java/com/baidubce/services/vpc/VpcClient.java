@@ -18,20 +18,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-import com.baidubce.services.vpc.model.CreateVpcRequest;
-import com.baidubce.services.vpc.model.CreateVpcResponse;
-import com.baidubce.services.vpc.model.DeleteVpcRequest;
-import com.baidubce.services.vpc.model.GetVpcPrivateAddressInfoResponse;
-import com.baidubce.services.vpc.model.GetVpcPrivateIpAddressInfoRequest;
-import com.baidubce.services.vpc.model.GetVpcRequest;
-import com.baidubce.services.vpc.model.GetVpcResponse;
-import com.baidubce.services.vpc.model.ListVpcRequest;
-import com.baidubce.services.vpc.model.ListVpcResponse;
-import com.baidubce.services.vpc.model.ModifyVpcAttributesRequest;
-import com.baidubce.services.vpc.model.NetworkAction;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
+import com.baidubce.auth.SignOptions;
 import com.baidubce.http.Headers;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.http.handler.BceErrorResponseHandler;
@@ -50,6 +42,20 @@ import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.vpc.model.CreateVpcRequest;
+import com.baidubce.services.vpc.model.CreateVpcResponse;
+import com.baidubce.services.vpc.model.DeleteVpcRequest;
+import com.baidubce.services.vpc.model.GetVpcPrivateAddressInfoResponse;
+import com.baidubce.services.vpc.model.GetVpcPrivateIpAddressInfoRequest;
+import com.baidubce.services.vpc.model.GetVpcRequest;
+import com.baidubce.services.vpc.model.GetVpcResourceIpRequest;
+import com.baidubce.services.vpc.model.GetVpcResourceIpResponse;
+import com.baidubce.services.vpc.model.GetVpcResponse;
+import com.baidubce.services.vpc.model.ListVpcRequest;
+import com.baidubce.services.vpc.model.ListVpcResponse;
+import com.baidubce.services.vpc.model.ModifyVpcAttributesRequest;
+import com.baidubce.services.vpc.model.NetworkAction;
+import com.baidubce.services.vpc.model.SwitchVpcRelayRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -64,6 +70,11 @@ public class VpcClient extends AbstractBceClient {
     private static final String VERSION = "v1";
     private static final String VPC_PREFIX = "vpc";
     private static final String VPC_PRIVATE_IP_PREFIX = "privateIpAddressInfo";
+    private static final String OPEN_VPC_RELAY_PREFIX = "openRelay";
+    private static final String SHUTDOWN_VPC_RELAY_PREFIX = "shutdownRelay";
+    private static final String VPC_RESOURCE_IP_PREFIX = "resourceIp";
+
+    private static final String[] HEADERS_TO_SIGN = {"host", "x-bce-date"};
 
     /**
      * Responsible for handling httpResponses from all network service calls.
@@ -115,6 +126,9 @@ public class VpcClient extends AbstractBceClient {
         }
         URI uri = HttpUtils.appendUri(this.getEndpoint(), path.toArray(new String[path.size()]));
         InternalRequest request = new InternalRequest(httpMethod, uri);
+        SignOptions signOptions = new SignOptions();
+        signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
+        request.setSignOptions(signOptions);
         request.setCredentials(bceRequest.getRequestCredentials());
         return request;
     }
@@ -260,7 +274,7 @@ public class VpcClient extends AbstractBceClient {
      * can be deleted.
      *<p>
      *
-     * @param deleteVpcRequest The request containing all options for deleting own's vpc.
+     * @param deleteVpcRequest The request containing all options for deleting owner's vpc.
      */
     public void deleteVpc(DeleteVpcRequest deleteVpcRequest) {
         checkNotNull(deleteVpcRequest, "request should not be null.");
@@ -328,5 +342,80 @@ public class VpcClient extends AbstractBceClient {
             internalRequest.addParameter("privateIpRange", request.getPrivateIpRange());
         }
         return this.invokeHttpClient(internalRequest, GetVpcPrivateAddressInfoResponse.class);
+    }
+
+    /**
+     * Open the relay switch the specified vpc owned by the user.
+     *
+     * @param vpcId The id of the vpc to open relay switch.
+     */
+    public void openVpcRelay(String vpcId) {
+        this.openVpcRelay(new SwitchVpcRelayRequest().withVpcId(vpcId));
+    }
+
+    /**
+     * Open the relay switch the specified vpc owned by the user.
+     *
+     * @param request The request containing all options for opening relay switch.
+     */
+    public void openVpcRelay(SwitchVpcRelayRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpcId(), "request vpcId should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, VPC_PREFIX, OPEN_VPC_RELAY_PREFIX, request.getVpcId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Shut down the relay switch the specified vpc owned by the user.
+     *
+     * @param vpcId The id of the vpc to shut down relay switch.
+     */
+    public void shutDownVpcRelay(String vpcId) {
+        this.shutDownVpcRelay(new SwitchVpcRelayRequest().withVpcId(vpcId));
+    }
+
+    /**
+     * Shut down the relay switch the specified vpc owned by the user.
+     *
+     * @param request The request containing all options for shutting down relay switch.
+     */
+    public void shutDownVpcRelay(SwitchVpcRelayRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getVpcId(), "request vpcId should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, VPC_PREFIX, SHUTDOWN_VPC_RELAY_PREFIX, request.getVpcId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Return a list of vpc resource ip address info which belongs to the corresponding vpc by vpc id.
+     *
+     * @param request The request contains vpc id, subnet id, resource type, page params to be queried.
+     */
+    public GetVpcResourceIpResponse getVpcResourceIpInfo(GetVpcResourceIpRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getVpcId(), "request vpcId should not be empty.");
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, VPC_PREFIX, VPC_RESOURCE_IP_PREFIX);
+        internalRequest.addParameter("vpcId", request.getVpcId());
+        if (StringUtils.isNotBlank(request.getSubnetId())) {
+            internalRequest.addParameter("subnetId", request.getSubnetId());
+        }
+        if (StringUtils.isNotBlank(request.getResourceType())) {
+            internalRequest.addParameter("resourceType", request.getResourceType());
+        }
+        internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+
+        return this.invokeHttpClient(internalRequest, GetVpcResourceIpResponse.class);
     }
 }

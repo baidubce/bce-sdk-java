@@ -31,7 +31,7 @@ public class DeleteBecVmInstanceRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return DeleteBecVmInstanceRequest with credentials.
      */
     public DeleteBecVmInstanceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

@@ -38,6 +38,11 @@ public class Condition {
     private List<String> ipAddress;
 
     /**
+     * the notIpAddress of Bucket Acl, just for Bucket Acl json
+     */
+    private List<String> notIpAddress;
+
+    /**
      * the secureTransport of Bucket Acl
      */
     private boolean secureTransport;
@@ -69,6 +74,32 @@ public class Condition {
     }
 
     /**
+     * Gets notIpAddress of Bucket Acl, just for Bucket Acl json
+     * @return notIpAddress of Bucket Acl.
+     */
+    public List<String> getNotIpAddress() {
+        return notIpAddress;
+    }
+
+    /**
+     * Sets notIpAddress of Bucket Acl, just for Bucket Acl json
+     * @param notIpAddress The ipAddress of Bucket Acl.
+     */
+    public void setNotIpAddress(List<String> notIpAddress) {
+        this.notIpAddress = notIpAddress;
+    }
+
+    /**
+     * Sets notIpAddress of Bucket Acl, just for Bucket Acl json
+     * @param notIpAddress The ipAddress of Bucket Acl.
+     * @return this object.
+     */
+    public Condition withNotIpAddress(List<String> notIpAddress) {
+        this.setNotIpAddress(notIpAddress);
+        return this;
+    }
+
+    /**
      * Gets ipAddress of Bucket Acl, just for Bucket Acl json
      * @return ipAddress of Bucket Acl.
      */
@@ -93,6 +124,7 @@ public class Condition {
         this.setIpAddress(ipAddress);
         return this;
     }
+
     /**
      * Gets referer of Bucket Acl.
      * @return referer of Bucket Acl.

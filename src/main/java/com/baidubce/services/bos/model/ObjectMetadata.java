@@ -119,6 +119,11 @@ public class ObjectMetadata {
      */
     private String xBceCrc32c;
 
+    /**
+     * The version id
+     */
+    private String versionId;
+
     public ObjectMetadata() {
     }
 
@@ -143,6 +148,7 @@ public class ObjectMetadata {
         this.setxBceCrc(other.getxBceCrc());
         this.setRestore(other.getRestore());
         this.setxBceAcl(other.getxBceAcl());
+        this.setVersionId(other.getVersionId());
     }
 
     /**
@@ -158,7 +164,7 @@ public class ObjectMetadata {
      * Sets the custom user-metadata for the associated object.
      *
      * @param userMetadata The custom user-metadata for the associated object. Note that
-     * the key should not include the internal Bos HTTP header prefix.
+     *                     the key should not include the internal Bos HTTP header prefix.
      */
     public void setUserMetadata(Map<String, String> userMetadata) {
         checkNotNull(userMetadata, "userMetadata should not be null.");
@@ -170,8 +176,8 @@ public class ObjectMetadata {
      * object. If the entry in the custom user-metadata map already contains the
      * specified key, it will be replaced with these new contents.
      *
-     * @param key The key for the custom user metadata entry. Note that the key
-     * should not include the internal Bos HTTP header prefix.
+     * @param key   The key for the custom user metadata entry. Note that the key
+     *              should not include the internal Bos HTTP header prefix.
      * @param value The value for the custom user-metadata entry.
      */
     public void addUserMetadata(String key, String value) {
@@ -287,7 +293,7 @@ public class ObjectMetadata {
      * associated object in bytes.
      *
      * @param contentLength The Content-Length HTTP header indicating the size of the
-     * associated object in bytes.
+     *                      associated object in bytes.
      */
     public void setContentLength(long contentLength) {
         this.contentLength = contentLength;
@@ -314,7 +320,7 @@ public class ObjectMetadata {
      * MD5 digest is removed from the metadata.
      *
      * @param contentMd5 The base64 encoded MD5 hash of the content for the object
-     * associated with this metadata.
+     *                   associated with this metadata.
      */
     public void setContentMd5(String contentMd5) {
         this.contentMd5 = contentMd5;
@@ -338,7 +344,7 @@ public class ObjectMetadata {
      * MIME type.
      *
      * @param contentType The HTTP Content-Type header indicating the type of content
-     * stored in the associated Bos object.
+     *                    stored in the associated Bos object.
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
@@ -372,7 +378,7 @@ public class ObjectMetadata {
      * base64 encoded 128-bit MD5 digest as calculated on the caller's side.
      *
      * @param eTag The hex encoded MD5 hash of the content for the associated object
-     * as calculated by Baidu Bos.
+     *             as calculated by Baidu Bos.
      */
     public void setETag(String eTag) {
         this.eTag = eTag;
@@ -416,7 +422,7 @@ public class ObjectMetadata {
      * modification to the associated object.
      *
      * @param lastModified The date and time at which Baidu Bos last recorded a
-     * modification to the associated object.
+     *                     modification to the associated object.
      */
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
@@ -471,6 +477,9 @@ public class ObjectMetadata {
         if (this.xBceAcl != null) {
             builder.append(", xBceAcl=").append(this.xBceAcl);
         }
+        if (this.versionId != null) {
+            builder.append(", versionId=").append(this.versionId);
+        }
         builder.append(']');
         return builder.toString();
     }
@@ -517,6 +526,7 @@ public class ObjectMetadata {
 
     /**
      * Gets the crc of object.
+     *
      * @return the crc of object.
      */
     public String getxBceCrc() {
@@ -525,6 +535,7 @@ public class ObjectMetadata {
 
     /**
      * Sets the crc of object.
+     *
      * @return the crc of object.
      */
     public void setxBceCrc(String xBceCrc) {
@@ -532,7 +543,8 @@ public class ObjectMetadata {
     }
 
     /**
-     *  Gets archive object restore status
+     * Gets archive object restore status
+     *
      * @return
      */
     public String getRestore() {
@@ -540,15 +552,17 @@ public class ObjectMetadata {
     }
 
     /**
-     *  Sets archive object restore status
+     * Sets archive object restore status
+     *
      * @param restore
      */
     public void setRestore(String restore) {
-            this.restore = restore;
+        this.restore = restore;
     }
 
     /**
      * Get the canned acl of object.
+     *
      * @return the canned acl of object.
      */
     public String getxBceAcl() {
@@ -564,6 +578,7 @@ public class ObjectMetadata {
 
     /**
      * Gets the crc32c of object.
+     *
      * @return the crc32c of object.
      */
     public String getxBceCrc32c() {
@@ -572,9 +587,30 @@ public class ObjectMetadata {
 
     /**
      * Sets the crc32c of object.
+     *
      * @return the crc32c of object.
      */
     public void setxBceCrc32c(String xBceCrc32c) {
         this.xBceCrc32c = xBceCrc32c;
     }
+
+    /**
+     * Gets the versionId of object.
+     *
+     * @return the versionId of object.
+     */
+    public String getVersionId() {
+        return versionId;
+    }
+
+    /**
+     * Sets the versionId of object.
+     *
+     * @return the versionId of object.
+     */
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
+    }
+
+
 }

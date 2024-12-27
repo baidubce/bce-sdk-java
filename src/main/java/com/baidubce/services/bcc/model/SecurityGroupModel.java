@@ -14,10 +14,12 @@ package com.baidubce.services.bcc.model;
 
 import java.util.List;
 
+import com.baidubce.model.AbstractBceResponse;
+
 /**
- * The detail model for describing SecurityGroup.
+ * The list model for describing SecurityGroup.
  */
-public class SecurityGroupModel {
+public class SecurityGroupModel extends AbstractBceResponse {
 
     /**
      * The id of the SecurityGroup.
@@ -38,6 +40,16 @@ public class SecurityGroupModel {
      * The description of the SecurityGroup.
      */
     private String desc;
+
+    /**
+     * The number of instances which bind to the SecurityGroup.
+     */
+    private Integer bindInstanceNum;
+
+    /**
+     * The creation time of the SecurityGroup.
+     */
+    private String createdTime;
 
     /**
      * List of rules which describe how the SecurityGroup works.
@@ -82,6 +94,22 @@ public class SecurityGroupModel {
         this.desc = desc;
     }
 
+    public Integer getBindInstanceNum() {
+        return bindInstanceNum;
+    }
+
+    public void setBindInstanceNum(Integer bindInstanceNum) {
+        this.bindInstanceNum = bindInstanceNum;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
     public List<SecurityGroupRuleModel> getRules() {
         return rules;
     }
@@ -105,6 +133,8 @@ public class SecurityGroupModel {
                 ", name='" + name + '\'' +
                 ", vpcId='" + vpcId + '\'' +
                 ", desc='" + desc + '\'' +
+                ", bindInstanceNum='" + bindInstanceNum + '\'' +
+                ", createdTime='" + createdTime + '\'' +
                 ", rules=" + rules +
                 ", tags=" + tags +
                 '}';

@@ -13,11 +13,17 @@
 package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
 import java.util.Map;
 
 /**
  * The response for modifying the weight of the Pod/Vm.
  */
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UpdateBecBlbBindPodWeightResponse extends ActionInfoVo<Map<String, String>> {
 }

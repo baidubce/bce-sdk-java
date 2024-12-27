@@ -53,6 +53,9 @@ public class BosObjectResponseHandler implements HttpResponseHandler {
         objectMetadata.setxBceCrc(httpResponse.getHeader(Headers.BCE_CONTENT_CRC32));
         objectMetadata.setxBceCrc32c(httpResponse.getHeader(Headers.BCE_CONTENT_CRC32C));
         objectMetadata.setRestore(httpResponse.getHeader(Headers.BCE_RESTORE));
+        if (httpResponse.getHeader(Headers.BCE_VERSION_ID) != null) {
+            objectMetadata.setVersionId(httpResponse.getHeader(Headers.BCE_VERSION_ID));
+        }
         // set whatever the BOS server returns if not null
         String storageClass = httpResponse.getHeader(Headers.BCE_STORAGE_CLASS);
         if (storageClass == null) {

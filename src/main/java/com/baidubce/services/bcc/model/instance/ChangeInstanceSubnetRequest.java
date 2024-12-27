@@ -14,6 +14,7 @@ package com.baidubce.services.bcc.model.instance;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import java.util.List;
 
 /**
  * The request for changing the instance subnet.
@@ -34,6 +35,26 @@ public class ChangeInstanceSubnetRequest extends AbstractBceRequest {
      * Whether to reboot automatically or not. If <code>true</code>, it means reboot automatically.
      */
     private boolean reboot;
+
+    private List<String> securityGroupIds;
+
+    public List<String> getSecurityGroupIds() {
+        return securityGroupIds;
+    }
+
+    public void setSecurityGroupIds(List<String> securityGroupIds) {
+        this.securityGroupIds = securityGroupIds;
+    }
+
+    public List<String> getEnterpriseSecurityGroupIds() {
+        return enterpriseSecurityGroupIds;
+    }
+
+    public void setEnterpriseSecurityGroupIds(List<String> enterpriseSecurityGroupIds) {
+        this.enterpriseSecurityGroupIds = enterpriseSecurityGroupIds;
+    }
+
+    private List<String> enterpriseSecurityGroupIds;
 
     public String getInstanceId() {
         return instanceId;
@@ -82,6 +103,16 @@ public class ChangeInstanceSubnetRequest extends AbstractBceRequest {
      */
     public ChangeInstanceSubnetRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
+        return this;
+    }
+
+    public ChangeInstanceSubnetRequest withEnterpriseSecurityGroupIds(List<String> enterpriseSecurityGroupIds) {
+        this.enterpriseSecurityGroupIds = enterpriseSecurityGroupIds;
+        return this;
+    }
+
+    public ChangeInstanceSubnetRequest withSecurityGroupIds(List<String> securityGroupIds) {
+        this.securityGroupIds = securityGroupIds;
         return this;
     }
 }

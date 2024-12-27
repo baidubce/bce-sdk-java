@@ -144,6 +144,14 @@ public interface Headers {
 
     public static final String BCE_CONTENT_CRC32C_FLAG = "x-bce-content-crc32c-flag";
 
+    public static final String BCE_CONSISTENCY_VIEW = "x-bce-consistency-view";
+
+    public static final String BCE_LIST_WITH_EXT_META = "x-bce-list-with-ext-meta";
+
+    public static final String BCE_VERSIONING = "x-bce-versioning";
+
+    public static final String BCE_VERSION_ID = "x-bce-version-id";
+
     /*
      * CFC HTTP Headers
      */

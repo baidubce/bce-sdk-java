@@ -13,11 +13,13 @@
 
 package com.baidubce.services.media.model;
 
+import java.util.List;
+
 public class Audio {
     /**
      * audio target bitrate in bps
      **/
-    private Integer bitRateInBps   = null;
+    private Integer bitRateInBps = null;
 
     /**
      * audio sample rate in hz
@@ -27,12 +29,12 @@ public class Audio {
     /**
      * channels of audio
      **/
-    private Integer channels       = null;
+    private Integer channels = null;
 
     /**
      * PCM format, options include s16le, can only be set when container is "pcm"
      **/
-    private String pcmFormat       = null;
+    private String pcmFormat = null;
 
     /**
      * settings about audio volume
@@ -43,6 +45,112 @@ public class Audio {
      * setting about audio codec
      */
     private String codec;
+
+    private List<InputIndex> mapping;
+
+    private boolean mixAllTracks;
+
+    private List<Tracks> tracks;
+
+    public static class Tracks {
+        private int bitRateInBps;
+        private int sampleRateInHz;
+        private int channels;
+        private String codec;
+        private VolumeAdjust volumeAdjust;
+        private List<InputIndex> mapping;
+
+        public Tracks() {
+        }
+
+        public int getBitRateInBps() {
+            return bitRateInBps;
+        }
+
+        public void setBitRateInBps(int bitRateInBps) {
+            this.bitRateInBps = bitRateInBps;
+        }
+
+        public int getSampleRateInHz() {
+            return sampleRateInHz;
+        }
+
+        public void setSampleRateInHz(int sampleRateInHz) {
+            this.sampleRateInHz = sampleRateInHz;
+        }
+
+        public int getChannels() {
+            return channels;
+        }
+
+        public void setChannels(int channels) {
+            this.channels = channels;
+        }
+
+        public String getCodec() {
+            return codec;
+        }
+
+        public void setCodec(String codec) {
+            this.codec = codec;
+        }
+
+        public VolumeAdjust getVolumeAdjust() {
+            return volumeAdjust;
+        }
+
+        public void setVolumeAdjust(VolumeAdjust volumeAdjust) {
+            this.volumeAdjust = volumeAdjust;
+        }
+
+        public List<InputIndex> getMapping() {
+            return mapping;
+        }
+
+        public void setMapping(List<InputIndex> mapping) {
+            this.mapping = mapping;
+        }
+    }
+
+    public static class InputIndex {
+        private int inputIndex;
+        private String padPolicy;
+
+        public String getPadPolicy() {
+            return padPolicy;
+        }
+
+        public void setPadPolicy(String padPolicy) {
+            this.padPolicy = padPolicy;
+        }
+
+        public int getInputIndex() {
+            return inputIndex;
+        }
+
+        public void setInputIndex(int inputIndex) {
+            this.inputIndex = inputIndex;
+        }
+
+        public InputIndex() {
+        }
+    }
+
+    public boolean isMixAllTracks() {
+        return mixAllTracks;
+    }
+
+    public void setMixAllTracks(boolean mixAllTracks) {
+        this.mixAllTracks = mixAllTracks;
+    }
+
+    public List<Tracks> getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(List<Tracks> tracks) {
+        this.tracks = tracks;
+    }
 
     public Integer getBitRateInBps() {
         return bitRateInBps;
@@ -108,13 +216,21 @@ public class Audio {
         this.volumeAdjust = volumeAdjust;
         return this;
     }
-    
+
     public String getCodec() {
         return codec;
     }
 
     public void setCodec(String codec) {
         this.codec = codec;
+    }
+
+    public List<InputIndex> getMapping() {
+        return mapping;
+    }
+
+    public void setMapping(List<InputIndex> mapping) {
+        this.mapping = mapping;
     }
 
     @Override
@@ -128,6 +244,7 @@ public class Audio {
         sb.append("    pcmFormat: ").append(pcmFormat).append("\n");
         sb.append("    volumeAdjust: ").append(volumeAdjust).append("\n");
         sb.append("    codec: ").append(codec).append("\n");
+        sb.append("    mapping: ").append(mapping).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

@@ -1,10 +1,12 @@
 package com.baidubce.services.rds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The privileges of rds database
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsDatabasePrivileges {
 
     @JsonProperty("dbName")

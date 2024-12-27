@@ -8,6 +8,8 @@ import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.csn.CsnClient;
 import com.baidubce.services.csn.model.CreateCsnRequest;
 import com.baidubce.services.csn.model.CreateCsnResponse;
+import com.baidubce.services.tag.model.Tag;
+import com.google.common.collect.Lists;
 
 public class ExampleCreateCsn {
     public static void main(String[] args) {
@@ -23,6 +25,12 @@ public class ExampleCreateCsn {
         CreateCsnRequest request = new CreateCsnRequest();
         request.setName("javaSdkTest"); // 云智能网的名称
         request.setDescription("java sdk test"); // 云智能网的描述
+
+        Tag tag = new Tag();
+        tag.setTagKey("tagKey");
+        tag.setTagValue("tagValue");
+        request.setTags(Lists.newArrayList(tag)); // 云智能网的标签
+
         String clientToken = UUID.randomUUID().toString(); // 幂等性Token
 
         try {

@@ -1,8 +1,11 @@
 package com.baidubce.services.rds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Rds endpoint info
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsEndpoint {
 
     private String address;

@@ -16,6 +16,10 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import lombok.Data;
 
+/**
+ * The core keywords which were used in list selection scene.
+ * It is not recommended to amend the class unless if it is necessary.
+ */
 @Data
 public class ListRequest extends AbstractBceRequest {
 

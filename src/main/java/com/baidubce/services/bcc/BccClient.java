@@ -29,6 +29,7 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bcc.model.Billing;
 import com.baidubce.services.bcc.model.Reservation;
+import com.baidubce.services.bcc.model.SecurityGroupModel;
 import com.baidubce.services.bcc.model.TagModel;
 import com.baidubce.services.bcc.model.TagsOperationRequest;
 import com.baidubce.services.bcc.model.asp.AspAction;
@@ -69,8 +70,14 @@ import com.baidubce.services.bcc.model.image.ListSharedUserResponse;
 import com.baidubce.services.bcc.model.image.RemoteCopyImageRequest;
 import com.baidubce.services.bcc.model.image.ShareImageRequest;
 import com.baidubce.services.bcc.model.image.UnShareImageRequest;
+import com.baidubce.services.bcc.model.instance.BatchAddIpRequest;
+import com.baidubce.services.bcc.model.instance.BatchAddIpResponse;
+import com.baidubce.services.bcc.model.instance.BatchChangeToPrepaidRequest;
+import com.baidubce.services.bcc.model.instance.BatchChangeToPrepaidResponse;
+import com.baidubce.services.bcc.model.instance.BatchDeleteIpRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceResponse;
+import com.baidubce.services.bcc.model.instance.BatchStopInstanceRequest;
 import com.baidubce.services.bcc.model.instance.BccAutoRenewRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceResponse;
@@ -81,8 +88,16 @@ import com.baidubce.services.bcc.model.instance.CancelBidOrderResponse;
 import com.baidubce.services.bcc.model.instance.ChangeInstanceSubnetRequest;
 import com.baidubce.services.bcc.model.instance.ChangeToPrepaidRequest;
 import com.baidubce.services.bcc.model.instance.ChangeToPrepaidResponse;
+import com.baidubce.services.bcc.model.instance.ChangeVpcRequest;
+import com.baidubce.services.bcc.model.instance.CreateEhcClusterRequest;
+import com.baidubce.services.bcc.model.instance.CreateEhcClusterResponse;
 import com.baidubce.services.bcc.model.instance.CreateInstanceRequest;
 import com.baidubce.services.bcc.model.instance.CreateInstanceResponse;
+import com.baidubce.services.bcc.model.instance.DeleteEhcClusterRequest;
+import com.baidubce.services.bcc.model.instance.DeleteInstanceDeploysetRequest;
+import com.baidubce.services.bcc.model.instance.DeleteRecycledInstanceRequest;
+import com.baidubce.services.bcc.model.instance.DescribeEhcClusterListRequest;
+import com.baidubce.services.bcc.model.instance.DescribeEhcClusterListResponse;
 import com.baidubce.services.bcc.model.instance.FpgaCardType;
 import com.baidubce.services.bcc.model.instance.GetBidInstancePriceRequest;
 import com.baidubce.services.bcc.model.instance.GetBidInstancePriceResponse;
@@ -92,13 +107,22 @@ import com.baidubce.services.bcc.model.instance.GetInstanceVncRequest;
 import com.baidubce.services.bcc.model.instance.GetInstanceVncResponse;
 import com.baidubce.services.bcc.model.instance.GpuCardType;
 import com.baidubce.services.bcc.model.instance.InstanceAction;
+import com.baidubce.services.bcc.model.instance.InstanceAddIpv6Response;
+import com.baidubce.services.bcc.model.instance.InstanceIpv6Request;
 import com.baidubce.services.bcc.model.instance.InstanceType;
+import com.baidubce.services.bcc.model.instance.ListAvailableResizeSpecRequest;
+import com.baidubce.services.bcc.model.instance.ListAvailableResizeSpecResponse;
 import com.baidubce.services.bcc.model.instance.ListGetInstanceNoChargeRequest;
 import com.baidubce.services.bcc.model.instance.ListInstanceByIdsRequest;
+import com.baidubce.services.bcc.model.instance.ListInstanceEnisRequest;
+import com.baidubce.services.bcc.model.instance.ListInstanceEnisResponse;
 import com.baidubce.services.bcc.model.instance.ListInstanceSpecsRequest;
 import com.baidubce.services.bcc.model.instance.ListInstanceSpecsResponse;
 import com.baidubce.services.bcc.model.instance.ListInstancesRequest;
 import com.baidubce.services.bcc.model.instance.ListInstancesResponse;
+import com.baidubce.services.bcc.model.instance.ListRecycleInstanceRequest;
+import com.baidubce.services.bcc.model.instance.ListRecycleInstanceResponse;
+import com.baidubce.services.bcc.model.instance.ModifyEhcClusterRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceAttributesRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceDescRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceHostnameRequest;
@@ -132,11 +156,18 @@ import com.baidubce.services.bcc.model.keypair.KeypairModel;
 import com.baidubce.services.bcc.model.keypair.KeypairRenameRequest;
 import com.baidubce.services.bcc.model.keypair.KeypairResponse;
 import com.baidubce.services.bcc.model.keypair.KeypairUpdateDescRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsResponse;
+import com.baidubce.services.bcc.model.reversed.CreateReservedInstanceResponse;
+import com.baidubce.services.bcc.model.reversed.CreateReservedInstancesRequest;
+import com.baidubce.services.bcc.model.reversed.ModifyReservedInstancesResponse;
+import com.baidubce.services.bcc.model.reversed.ModifyReservedInstancesRequest;
 import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupResponse;
 import com.baidubce.services.bcc.model.securitygroup.DeleteSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.DeleteSecurityGroupRuleRequest;
+import com.baidubce.services.bcc.model.securitygroup.GetSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.ListSecurityGroupsRequest;
 import com.baidubce.services.bcc.model.securitygroup.ListSecurityGroupsResponse;
 import com.baidubce.services.bcc.model.securitygroup.SecurityGroupAction;
@@ -224,6 +255,12 @@ public class BccClient extends AbstractBceClient {
     private static final String VERSION = "v2";
     private static final String VERSION_V3 = "v3";
     private static final String INSTANCE_PREFIX = "instance";
+    private static final String VPC_PREFIX = "vpc";
+    private static final String ENI_PREFIX = "eni";
+    private static final String CHANGE_VPC = "changeVpc";
+    private static final String RECYCLE_INSTANCE = "recycle/instance";
+    private static final String REGION_PREFIX = "region";
+    private static final String DESCRIBE_REGIONS = "describeRegions";
     private static final String LIST_BY_INSTANCE_ID_PREFIX = "listByInstanceId";
     private static final String INSTANCE_BY_SPEC_PREFIX = "instanceBySpec";
     private static final String BID = "bid";
@@ -243,6 +280,8 @@ public class BccClient extends AbstractBceClient {
     private static final String MARKER = "marker";
     private static final String MAX_KEYS = "maxKeys";
     private static final String ZONE_NAME = "zoneName";
+
+    private static final String EHC_CLUSTER_ID = "ehcClusterId";
     private static final String INTERNAL_IP = "internalIp";
     private static final String DEDICATED_HOST_ID = "dedicatedHostId";
     private static final String IMAGE_TYPE = "imageType";
@@ -260,6 +299,7 @@ public class BccClient extends AbstractBceClient {
     private static final String REBUILD = "rebuild";
     private static final String SUBNET_PREFIX = "subnet";
     private static final String CHANGE_SUBNET = "changeSubnet";
+    private static final String DEL_RELATION = "delRelation";
     private static final String SECURITY_GROUP_RULE_PREFIX = "rule";
     private static final String SECURITY_GROUP_RULE_UPDATE_PREFIX = "update";
     private static final String SYNC_CREATE = "syncCreate";
@@ -278,6 +318,8 @@ public class BccClient extends AbstractBceClient {
     private static final String REQUEST_NULL_ERROR_MESSAGE = "request should not be null.";
     private static final String CHANGETAGS_NULL_ERROR_MESSAGE = "request changeTags should not be null.";
     private static final String INSTANCEID_MESSAGE_KEY = "instanceId";
+    private static final String INSTANCEIDLIST_MESSAGE_KEY = "instanceIdList";
+    private static final String DEPLOYSET_MESSAGE_KEY = "deployId";
     private static final String INSTANCE_TYPE_MESSAGE_KEY = "instanceType";
     private static final String ORDER_ID_MESSAGE_KEY = "orderId";
     private static final String TAGKEY_MESSAGE_KEY = "tagKey";
@@ -297,13 +339,26 @@ public class BccClient extends AbstractBceClient {
     private static final String SECURITY_GROUP_RULE_ID_MESSAGE_KEY = "securityGroupRuleId";
     private static final String CLUSTERID_MESSAGE_KEY = "clusterId";
     private static final String CLUSTER_NAME_MESSAGE_KEY = "clusterName";
+
+    private static final String ZONE_NAME_MESSAGE_KEY = "zoneName";
     private static final String VOLUME_CLUSTER_PREFIX = "volume/cluster";
     private static final String UUID_FLAG = "uuidFlag";
     private static final String GET_PRICE = "getPrice";
     private static final String CREATA_AUTO_RENEW_RULE = "batchCreateAutoRenewRules";
     private static final String DELETE_AUTO_RENEW_RULE = "batchDeleteAutoRenewRules";
 
+    private static final String BATCH_CHARGING = "batch/charging";
 
+    private static final String EHC_CLUSTER_CREATE = "ehc/cluster/create";
+
+    private static final String EHC_CLUSTER_LIST = "ehc/cluster/list";
+
+    public static final String EHC_CLUSTER_MODIFY = "ehc/cluster/modify";
+
+    private static final String EHC_CLUSTER_DELETE = "ehc/cluster/delete";
+
+    private static final String RESIZE_LIST = "resizeList";
+    private static final String BCC_RESERVED_PREFIX = "instance/reserved";
     private static final String BCC_RESERVED_TAG_PREFIX = "bcc/reserved/tag";
     private static final String BBC_RESERVED_TAG_PREFIX = "bbc/reserved/tag";
     private static final String V3_TAG_PREFIX = "bcc/tag";
@@ -676,6 +731,9 @@ public class BccClient extends AbstractBceClient {
         if (!Strings.isNullOrEmpty(request.getZoneName())) {
             internalRequest.addParameter(ZONE_NAME, request.getZoneName());
         }
+        if (!Strings.isNullOrEmpty(request.getEhcClusterId())) {
+            internalRequest.addParameter(EHC_CLUSTER_ID, request.getEhcClusterId());
+        }
         return invokeHttpClient(internalRequest, ListInstancesResponse.class);
     }
 
@@ -984,6 +1042,15 @@ public class BccClient extends AbstractBceClient {
         checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
+        internalRequest.addParameter(InstanceAction.stop.name(), null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void batchStopInstance(BatchStopInstanceRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, INSTANCE_PREFIX, "batchAction");
         internalRequest.addParameter(InstanceAction.stop.name(), null);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -1585,6 +1652,25 @@ public class BccClient extends AbstractBceClient {
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    public void deleteInstanceDeploySet(DeleteInstanceDeploysetRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getDeployId(), checkEmptyExceptionMessageFormat(DEPLOYSET_MESSAGE_KEY));
+        checkNotNull(request.getInstanceIdList(), checkEmptyExceptionMessageFormat(INSTANCEIDLIST_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, INSTANCE_PREFIX, DEPLOYSET, DEL_RELATION);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void deleteRecycledInstance(String instanceId) {
+        DeleteRecycledInstanceRequest request = new DeleteRecycledInstanceRequest();
+        checkStringNotEmpty(instanceId, checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.DELETE, RECYCLE_INSTANCE, instanceId);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
     /**
      * Resizing the instance owned by the user.
      * <p>
@@ -2086,6 +2172,26 @@ public class BccClient extends AbstractBceClient {
         internalRequest.addParameter(VolumeAction.detach.name(), null);
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * List all region's endpoint information.
+     * <p>
+     * You can get specified region's endpoint information by specified region,
+     * if the region is not exist, it's will get <code>409</code> errorCode.
+     *
+     * Use global endpoint bcc.baidubce.com to get BCC's endpoint.(PS:endpoint of CDS and
+     * ReservedInstance is the same with BCC)
+     * @param request The request for getting endpoint of different regions.
+     * @return The response containing the detail region's endpoint information.
+     */
+    public DescribeRegionsResponse describeRegions(DescribeRegionsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, REGION_PREFIX, DESCRIBE_REGIONS);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribeRegionsResponse.class);
     }
 
     /**
@@ -3053,6 +3159,31 @@ public class BccClient extends AbstractBceClient {
     }
 
     /**
+     * Get the detail information of specified SecurityGroup.
+     *
+     * @param securityGroupId The id of the SecurityGroup.
+     * @return The SecurityGroup detail model for the securityGroupId.
+     */
+    public SecurityGroupModel getSecurityGroup(String securityGroupId) {
+        return this.getSecurityGroup(new GetSecurityGroupRequest().withSecurityGroupId(securityGroupId));
+    }
+
+    /**
+     * Get the detail information of specified SecurityGroup.
+     *
+     * @param request The request containing all options for getting the SecurityGroup info.
+     * @return The SecurityGroup detail model for the securityGroupId.
+     */
+    public SecurityGroupModel getSecurityGroup(GetSecurityGroupRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getSecurityGroupId(),
+                checkEmptyExceptionMessageFormat(SECURITYGROUPID_MESSAGE_KEY));
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.GET, SECURITYGROUP_PREFIX, request.getSecurityGroupId());
+        return invokeHttpClient(internalRequest, SecurityGroupModel.class);
+    }
+
+    /**
      * Creating a newly SecurityGroup with specified rules.
      *
      * @param request The request containing all options for creating a new SecurityGroup.
@@ -3681,6 +3812,46 @@ public class BccClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, BatchRefundResourceResponse.class);
     }
 
+    public void delIpv6(InstanceIpv6Request request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, "delIpv6");
+
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public InstanceAddIpv6Response addIpv6(InstanceIpv6Request request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, "addIpv6");
+
+        fillPayload(internalRequest, request);
+        return this.invokeHttpClient(internalRequest, InstanceAddIpv6Response.class);
+    }
+
+    public void batchDeleteIp(BatchDeleteIpRequest request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                INSTANCE_PREFIX, "batchDelIp");
+
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public BatchAddIpResponse batchAddIp(BatchAddIpRequest request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                INSTANCE_PREFIX, "batchAddIp");
+
+        fillPayload(internalRequest, request);
+        return this.invokeHttpClient(internalRequest, BatchAddIpResponse.class);
+    }
+
     public GetAvailableImagesBySpecResponse getAvailableImagesBySpec(
             GetAvailableImagesBySpecRequest request) {
 
@@ -3701,6 +3872,26 @@ public class BccClient extends AbstractBceClient {
         }
 
         return invokeHttpClient(internalRequest, GetAvailableImagesBySpecResponse.class);
+    }
+
+    public CreateReservedInstanceResponse createReservedInstances(CreateReservedInstancesRequest request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.POST, BCC_RESERVED_PREFIX, "create");
+
+        fillPayload(internalRequest, request);
+        return this.invokeHttpClient(internalRequest, CreateReservedInstanceResponse.class);
+    }
+
+    public ModifyReservedInstancesResponse modifyReservedInstances(ModifyReservedInstancesRequest request) {
+
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request,
+                HttpMethodName.PUT, BCC_RESERVED_PREFIX, "modify");
+
+        fillPayload(internalRequest, request);
+        return this.invokeHttpClient(internalRequest, ModifyReservedInstancesResponse.class);
     }
 
     public void bindReservedInstanceToTags(ReservedTagsRequest request) {
@@ -3801,6 +3992,82 @@ public class BccClient extends AbstractBceClient {
                 request, HttpMethodName.POST, INSTANCE_PREFIX, DELETE_AUTO_RENEW_RULE);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public BatchChangeToPrepaidResponse batchChangeToPrepaid(BatchChangeToPrepaidRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, BATCH_CHARGING);
+        internalRequest.addParameter(InstanceAction.toPrepay.name(), null);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, BatchChangeToPrepaidResponse.class);
+    }
+
+    public ListRecycleInstanceResponse listRecycleInstance(ListRecycleInstanceRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        if (request.getMaxKeys() < 0) {
+            request.setMaxKeys(1000);
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, RECYCLE_INSTANCE);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, ListRecycleInstanceResponse.class);
+    }
+
+    public ListAvailableResizeSpecResponse listAvailableResizeSpec(ListAvailableResizeSpecRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, INSTANCE_PREFIX);
+        internalRequest.addParameter(RESIZE_LIST, null);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, ListAvailableResizeSpecResponse.class);
+    }
+
+    public AbstractBceResponse changeVpc(ChangeVpcRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, VPC_PREFIX, CHANGE_VPC);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public ListInstanceEnisResponse listInstanceEnis(ListInstanceEnisRequest request) {
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
+                ENI_PREFIX, request.getInstanceId());
+        return invokeHttpClient(internalRequest, ListInstanceEnisResponse.class);
+    }
+
+    public CreateEhcClusterResponse createEhcCluster(CreateEhcClusterRequest request) {
+        checkStringNotEmpty(request.getZoneName(), checkEmptyExceptionMessageFormat(ZONE_NAME_MESSAGE_KEY));
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, INSTANCE_PREFIX,
+                EHC_CLUSTER_CREATE);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateEhcClusterResponse.class);
+    }
+
+    public DescribeEhcClusterListResponse ehcClusterList(DescribeEhcClusterListRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, INSTANCE_PREFIX,
+                EHC_CLUSTER_LIST);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribeEhcClusterListResponse.class);
+    }
+
+    public void modifyEhcCluster(ModifyEhcClusterRequest request) {
+        checkStringNotEmpty(request.getEhcClusterId(), checkEmptyExceptionMessageFormat(ZONE_NAME_MESSAGE_KEY));
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, INSTANCE_PREFIX,
+                EHC_CLUSTER_MODIFY);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void deleteEhcCluster(DeleteEhcClusterRequest request) {
+        checkNotNull(request.getEhcClusterIdList(), checkEmptyExceptionMessageFormat(ZONE_NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, INSTANCE_PREFIX,
+                EHC_CLUSTER_DELETE);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
 }

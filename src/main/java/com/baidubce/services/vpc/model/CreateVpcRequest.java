@@ -1,7 +1,10 @@
 package com.baidubce.services.vpc.model;
 
+import java.util.List;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -41,6 +44,11 @@ public class CreateVpcRequest extends AbstractBceRequest {
      */
     private String description;
 
+    /**
+     * The tags of vpc.
+     */
+    private List<Tag> tags;
+
     public String getName() {
         return name;
     }
@@ -79,6 +87,14 @@ public class CreateVpcRequest extends AbstractBceRequest {
 
     public void setEnableIpv6(Boolean enableIpv6) {
         this.enableIpv6 = enableIpv6;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     /**

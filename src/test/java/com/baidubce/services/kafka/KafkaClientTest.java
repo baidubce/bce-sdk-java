@@ -6,6 +6,7 @@ import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.kafka.model.acl.CreateAclRequest;
 import com.baidubce.services.kafka.model.acl.DeleteAclRequest;
 import com.baidubce.services.kafka.model.acl.ListAclRequest;
+import com.baidubce.services.kafka.model.cluster.AuthMode;
 import com.baidubce.services.kafka.model.cluster.Authentication;
 import com.baidubce.services.kafka.model.cluster.Billing;
 import com.baidubce.services.kafka.model.cluster.ConfigMeta;
@@ -15,13 +16,17 @@ import com.baidubce.services.kafka.model.cluster.DeleteClusterRequest;
 import com.baidubce.services.kafka.model.cluster.ExpandBrokerDiskCapacityRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterAccessEndpointsRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsRequest;
+import com.baidubce.services.kafka.model.cluster.GetClusterCurrentControllerRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailRequest;
+import com.baidubce.services.kafka.model.cluster.GetClusterHistoryControllerRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterNodesRequest;
 import com.baidubce.services.kafka.model.cluster.IncreaseBrokerCountRequest;
 import com.baidubce.services.kafka.model.cluster.ListClustersRequest;
 import com.baidubce.services.kafka.model.cluster.Mode;
 import com.baidubce.services.kafka.model.cluster.Provisioned;
 import com.baidubce.services.kafka.model.cluster.ResizeClusterEipBandwidthRequest;
+import com.baidubce.services.kafka.model.cluster.RestartBrokerRequest;
+import com.baidubce.services.kafka.model.cluster.RestartClusterRequest;
 import com.baidubce.services.kafka.model.cluster.StartClusterRequest;
 import com.baidubce.services.kafka.model.cluster.StopClusterRequest;
 import com.baidubce.services.kafka.model.cluster.StorageAutoDelete;
@@ -30,6 +35,7 @@ import com.baidubce.services.kafka.model.cluster.StoragePolicy;
 import com.baidubce.services.kafka.model.cluster.StoragePolicyType;
 import com.baidubce.services.kafka.model.cluster.StorageType;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterEipRequest;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterIntranetIpRequest;
 import com.baidubce.services.kafka.model.cluster.Tag;
 import com.baidubce.services.kafka.model.cluster.Type;
 import com.baidubce.services.kafka.model.cluster.UpdateAccessConfigRequest;
@@ -46,6 +52,7 @@ import com.baidubce.services.kafka.model.config.GetClusterConfigRevisionResponse
 import com.baidubce.services.kafka.model.config.ListClusterConfigRevisionsRequest;
 import com.baidubce.services.kafka.model.config.ListClusterConfigsRequest;
 import com.baidubce.services.kafka.model.consumer.DeleteConsumerGroupRequest;
+import com.baidubce.services.kafka.model.consumer.GetSubscribedTopicOverviewRequest;
 import com.baidubce.services.kafka.model.consumer.ListConsumerGroupRequest;
 import com.baidubce.services.kafka.model.consumer.ListSubscribedTopicsRequest;
 import com.baidubce.services.kafka.model.consumer.ResetConsumerGroupRequest;
@@ -56,14 +63,25 @@ import com.baidubce.services.kafka.model.job.ListJobsRequest;
 import com.baidubce.services.kafka.model.job.ResumeJobRequest;
 import com.baidubce.services.kafka.model.job.StartJobRequest;
 import com.baidubce.services.kafka.model.job.SuspendJobRequest;
+import com.baidubce.services.kafka.model.quota.CreateQuotaRequest;
+import com.baidubce.services.kafka.model.quota.DeleteQuotaRequest;
+import com.baidubce.services.kafka.model.quota.ListQuotasRequest;
+import com.baidubce.services.kafka.model.quota.Quota;
+import com.baidubce.services.kafka.model.quota.UpdateQuotaRequest;
 import com.baidubce.services.kafka.model.topic.CreateTopicRequest;
 import com.baidubce.services.kafka.model.topic.DeleteTopicRequest;
 import com.baidubce.services.kafka.model.topic.GetSubscribedGroupDetailRequest;
+import com.baidubce.services.kafka.model.topic.GetSubscribedGroupOverviewRequest;
 import com.baidubce.services.kafka.model.topic.GetTopicDetailRequest;
 import com.baidubce.services.kafka.model.topic.GetTopicPartitionDetailRequest;
+import com.baidubce.services.kafka.model.topic.GetTopicPartitionOverviewRequest;
 import com.baidubce.services.kafka.model.topic.ListSubscribedGroupsRequest;
+import com.baidubce.services.kafka.model.topic.ListTopicConfigOptionsRequest;
 import com.baidubce.services.kafka.model.topic.ListTopicPartitionsRequest;
 import com.baidubce.services.kafka.model.topic.ListTopicRequest;
+import com.baidubce.services.kafka.model.topic.QueryTopicMessagesByStartOffsetRequest;
+import com.baidubce.services.kafka.model.topic.QueryTopicMessagesByStartTimeRequest;
+import com.baidubce.services.kafka.model.topic.SendTopicMessageRequest;
 import com.baidubce.services.kafka.model.topic.UpdateTopicRequest;
 import com.baidubce.services.kafka.model.user.CreateUserRequest;
 import com.baidubce.services.kafka.model.user.DeleteUserRequest;
@@ -85,9 +103,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * test class for testing kafka service
@@ -113,6 +133,7 @@ public class KafkaClientTest {
          */
         String clusteraName = "demo";
         String clusterId = "clusterId";
+        String nodeId = "nodeId";
         List<String> couponIds = Arrays.asList("couponId1", "couponId2");
         String topicName = "testTopic";
         String groupName = "testGroup";
@@ -406,6 +427,46 @@ public class KafkaClientTest {
             request.setSecurityGroupIds(Arrays.asList("g-1234567890"));
             this.client.updateSecurityGroup(request);
         }
+
+        @Test
+        public void switchClusterIntranetIpTest() {
+            SwitchClusterIntranetIpRequest request = new SwitchClusterIntranetIpRequest();
+            // 开启集群的产品间转储
+            request.setIntranetIpEnabled(true);
+            Set<AuthMode> authModes = new HashSet<>();
+            authModes.add(AuthMode.NONE);
+            request.setAuthenticationMode(authModes);
+            this.client.switchClusterIntranetIp(request);
+        }
+
+        @Test
+        public void getClusterCurrentControllerTest() {
+            GetClusterCurrentControllerRequest request = new GetClusterCurrentControllerRequest();
+            request.setClusterId(clusterId);
+            this.client.getClusterCurrentController(request);
+        }
+
+        @Test
+        public void getClusterHistoryControllerTest() {
+            GetClusterHistoryControllerRequest request = new GetClusterHistoryControllerRequest();
+            request.setClusterId(clusterId);
+            this.client.getClusterHistoryController(request);
+        }
+
+        @Test
+        public void restartClusterTest() {
+            RestartClusterRequest request = new RestartClusterRequest();
+            request.setClusterId(clusterId);
+            this.client.restartCluster(request);
+        }
+
+        @Test
+        public void restartBrokerTest() {
+            RestartBrokerRequest request = new RestartBrokerRequest();
+            request.setClusterId(clusterId);
+            request.setNodeId(nodeId);
+            this.client.restartBroker(request);
+        }
     }
     /**
      * Test case about cluster end
@@ -595,6 +656,58 @@ public class KafkaClientTest {
             request.setTopicName(topicName);
             this.client.deleteTopic(request);
         }
+
+        @Test
+        public void getTopicPartitionOverviewTest() {
+            GetTopicPartitionOverviewRequest request = new GetTopicPartitionOverviewRequest();
+            request.setClusterId(clusterId);
+            request.setTopicName(topicName);
+            this.client.getTopicPartitionOverview(request);
+        }
+
+        @Test
+        public void getSubscribedGroupOverviewTest() {
+            GetSubscribedGroupOverviewRequest request = new GetSubscribedGroupOverviewRequest();
+            request.setClusterId(clusterId);
+            request.setTopicName(topicName);
+            this.client.getSubscribedGroupOverview(request);
+        }
+
+        @Test
+        public void listTopicConfigOptionsTest() {
+            ListTopicConfigOptionsRequest request = new ListTopicConfigOptionsRequest();
+            this.client.listTopicConfigOptions();
+        }
+
+        @Test
+        public void sendTopicMessageTest() {
+            SendTopicMessageRequest request = new SendTopicMessageRequest();
+            request.setTopicName(topicName);
+            request.setKey("test_key");
+            request.setKey("test_value");
+            request.setPartitionId(0);
+            this.client.sendTopicMessage(request);
+        }
+
+        @Test
+        public void queryTopicMessagesByStartTimeTest() {
+            QueryTopicMessagesByStartTimeRequest request = new QueryTopicMessagesByStartTimeRequest();
+            request.setClusterId(clusterId);
+            request.setTopicName(topicName);
+            request.setPartitionId(0);
+            request.setStartTime(System.currentTimeMillis());
+            this.client.queryTopicMessagesByStartTime(request);
+        }
+
+        @Test
+        public void queryTopicMessagesByStartOffsetTest() {
+            QueryTopicMessagesByStartOffsetRequest request = new QueryTopicMessagesByStartOffsetRequest();
+            request.setClusterId(clusterId);
+            request.setTopicName(topicName);
+            request.setPartitionId(0);
+            request.setStartOffset(0);
+            this.client.queryTopicMessagesByStartOffset(request);
+        }
     }
     /**
      * Test case about topic end
@@ -651,6 +764,14 @@ public class KafkaClientTest {
             request.setResetStrategy("tooffset");
             request.setResetValue("1024");
             this.client.resetConsumerGroup(request);
+        }
+
+        @Test
+        public void getSubscribedTopicOverviewTest() {
+            GetSubscribedTopicOverviewRequest request = new GetSubscribedTopicOverviewRequest();
+            request.setClusterId(clusterId);
+            request.setGroupName(groupName);
+            this.client.getSubscribedTopicOverview(request);
         }
     }
     /**
@@ -847,5 +968,63 @@ public class KafkaClientTest {
     }
     /**
      * Test case about job end
+     */
+
+    /**
+     * Test case about quota begin
+     */
+    public static class QuotaTest extends KafkaBase {
+        protected KafkaClient client;
+        @Before
+        public void setUp() {
+            super.setUp();
+            client = new KafkaClient(config);
+        }
+        @After
+        public void tearDown() {
+            // do something
+            super.tearDown();
+        }
+        @Test
+        public void listQuotasTest() {
+            ListQuotasRequest request = new ListQuotasRequest();
+            request.setClusterId(clusterId);
+            request.setEntityType("user");
+            this.client.listQuotas(request);
+        }
+
+        @Test
+        public void createQuotaTest() {
+            CreateQuotaRequest request = new CreateQuotaRequest();
+            request.setClusterId(clusterId);
+            request.setUsername("username");
+            request.setClientDefault(true);
+            request.setProducerByteRate(3 * 1024 * 1024L);
+            request.setConsumerByteRate(3 * 1024 * 1024L);
+            this.client.createQuota(request);
+        }
+
+        @Test
+        public void updateQuotaTest() {
+            UpdateQuotaRequest request = new UpdateQuotaRequest();
+            request.setClusterId(clusterId);
+            request.setUsername("username");
+            request.setClientDefault(true);
+            request.setProducerByteRate(3 * 1024 * 1024L);
+            request.setConsumerByteRate(3 * 1024 * 1024L);
+            this.client.updateQuota(request);
+        }
+
+        @Test
+        public void deleteQuotaTest() {
+            DeleteQuotaRequest request = new DeleteQuotaRequest();
+            request.setClusterId(clusterId);
+            request.setUsername("username");
+            request.setClientDefault(true);
+            this.client.deleteQuota(request);
+        }
+    }
+    /**
+     * Test case about quota end
      */
 }

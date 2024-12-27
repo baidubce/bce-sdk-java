@@ -39,6 +39,7 @@ import com.baidubce.services.vpn.model.ListVpnConnResponse;
 import com.baidubce.services.vpn.model.ListVpnRequest;
 import com.baidubce.services.vpn.model.ListVpnResponse;
 import com.baidubce.services.vpn.model.RenewVpnRequest;
+import com.baidubce.services.vpn.model.SwitchVpnDeleteProtectRequest;
 import com.baidubce.services.vpn.model.UnBindEipRequest;
 import com.baidubce.services.vpn.model.UpdateSslVpnServerRequest;
 import com.baidubce.services.vpn.model.UpdateSslVpnUserRequest;
@@ -541,6 +542,27 @@ public class VpnClient extends AbstractBceClient {
         }
 
         return this.invokeHttpClient(internalRequest, ListSslVpnUserResponse.class);
+    }
+
+
+    /**
+     * Switch the specified vpn's delete protect status.
+     *
+     * @param request
+     */
+    public AbstractBceResponse switchDeleteProtect(SwitchVpnDeleteProtectRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStrIsBlank(request.getVpnId(), "vpnId");
+        checkNotNull(request.getDeleteProtect(), "request deleteProtect should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, VPN_PREFIX, request.getVpnId(), "deleteProtect");
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter("clientToken", request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+
+        return this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
 }

@@ -1,14 +1,17 @@
 package com.baidubce.services.rds.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import org.apache.htrace.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The response of rds slow log download detail
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsSlowLogDownloadDetailResponse extends AbstractBceResponse {
 
     private String url;
     private String downloadExpires;
+    private String dataBackupType;
 
     public String getUrl() {
         return url;
@@ -24,5 +27,13 @@ public class RdsSlowLogDownloadDetailResponse extends AbstractBceResponse {
 
     public void setDownloadExpires(String downloadExpires) {
         this.downloadExpires = downloadExpires;
+    }
+
+    public String getDataBackupType() {
+        return dataBackupType;
+    }
+
+    public void setDataBackupType(String dataBackupType) {
+        this.dataBackupType = dataBackupType;
     }
 }

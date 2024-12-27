@@ -138,7 +138,7 @@ public class BceHttpClient {
      * settings, etc), and request metric collector.
      *
      * @param config Configuration options specifying how this client will communicate with BCE (ex: proxy settings,
-     * retry count, etc.).
+     *               retry count, etc.).
      * @param signer signer used to sign http requests
      * @throws java.lang.IllegalArgumentException If config or signer is null.
      */
@@ -181,9 +181,9 @@ public class BceHttpClient {
     /**
      * Constructs a new BCE Http Client with httpAsyncPutEnabled.
      *
-     * @param config Configuration options specifying how this client will communicate with BCE (ex: proxy settings,
-     * retry count, etc.).
-     * @param signer signer used to sign http requests
+     * @param config                Configuration options specifying how this client will communicate with BCE (ex: proxy settings,
+     *                              retry count, etc.).
+     * @param signer                signer used to sign http requests
      * @param isHttpAsyncPutEnabled whether use Async for PUT method.
      */
     public BceHttpClient(BceClientConfiguration config, Signer signer, boolean isHttpAsyncPutEnabled) {
@@ -205,17 +205,17 @@ public class BceHttpClient {
     /**
      * Executes the request and returns the result.
      *
-     * @param <T> The type of response
-     * @param request The BCE request to send to the remote server
-     * @param responseClass A response handler to accept a successful response from the remote server
+     * @param <T>              The type of response
+     * @param request          The BCE request to send to the remote server
+     * @param responseClass    A response handler to accept a successful response from the remote server
      * @param responseHandlers A response handler to accept an unsuccessful response from the remote server
      * @return The response from the remote server
-     * @throws com.baidubce.BceClientException If any errors are encountered on the client while making the
-     * request or handling the response.
+     * @throws com.baidubce.BceClientException  If any errors are encountered on the client while making the
+     *                                          request or handling the response.
      * @throws com.baidubce.BceServiceException If any errors occurred in BCE while processing the request.
      */
     public <T extends AbstractBceResponse> T execute(InternalRequest request, Class<T> responseClass,
-            HttpResponseHandler[] responseHandlers) {
+                                                     HttpResponseHandler[] responseHandlers) {
         // Apply whatever request options we know how to handle, such as user-agent.
         request.addHeader(Headers.USER_AGENT, this.config.getUserAgent());
         BceCredentials credentials = config.getCredentials();
@@ -325,8 +325,8 @@ public class BceHttpClient {
     }
 
     /**
-    * The difference between shutdown() is that releasing all resources including nio and idle.
-    */
+     * The difference between shutdown() is that releasing all resources including nio and idle.
+     */
     public void shutdownClean() {
         shutdown();
         IdleConnectionReaper.shutdown();
@@ -349,14 +349,14 @@ public class BceHttpClient {
     /**
      * Get delay time before next retry.
      *
-     * @param method The current HTTP method being executed.
-     * @param exception The client/service exception from the failed request.
-     * @param attempt The number of times the current request has been attempted.
+     * @param method      The current HTTP method being executed.
+     * @param exception   The client/service exception from the failed request.
+     * @param attempt     The number of times the current request has been attempted.
      * @param retryPolicy The retryPolicy being used.
      * @return The deley time before next retry.
      */
     protected long getDelayBeforeNextRetryInMillis(HttpRequestBase method, BceClientException exception, int attempt,
-            RetryPolicy retryPolicy) {
+                                                   RetryPolicy retryPolicy) {
         int retries = attempt - 1;
 
         int maxErrorRetry = retryPolicy.getMaxErrorRetry();
@@ -544,8 +544,15 @@ public class BceHttpClient {
      */
     protected HttpClientContext createHttpContext(InternalRequest request) {
         HttpClientContext context = HttpClientContext.create();
-        context.setRequestConfig(this.requestConfigBuilder.setExpectContinueEnabled(request.isExpectContinueEnabled())
-                .setSocketTimeout(this.config.getSocketTimeoutInMillis()).build());
+        this.requestConfigBuilder.setExpectContinueEnabled(request.isExpectContinueEnabled())
+                .setSocketTimeout(this.config.getSocketTimeoutInMillis());
+        if (request.isRedirectsEnabled() != null) {
+            // redirect set by user
+            this.requestConfigBuilder
+                    .setMaxRedirects(request.getMaxRedirects())
+                    .setRedirectsEnabled(request.isRedirectsEnabled().booleanValue());
+        }
+        context.setRequestConfig(this.requestConfigBuilder.build());
         if (this.credentialsProvider != null) {
             context.setCredentialsProvider(this.credentialsProvider);
         }

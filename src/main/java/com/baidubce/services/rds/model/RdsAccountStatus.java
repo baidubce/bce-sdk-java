@@ -1,8 +1,10 @@
 package com.baidubce.services.rds.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public enum RdsAccountStatus {
     Creating("Creating"),
     Available("Available"),

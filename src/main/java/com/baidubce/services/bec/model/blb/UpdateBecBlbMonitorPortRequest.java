@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.bec.model.blb;
 
+import com.baidubce.services.bec.model.blb.BlbListenerRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -37,5 +38,4 @@ public class UpdateBecBlbMonitorPortRequest extends BlbListenerRequest {
      */
     @JsonIgnore
     private String clientToken;
-
 }

@@ -40,6 +40,16 @@ public class PrepayShareBillRequest extends AbstractBceRequest {
     private String queryAccountId;
 
     /**
+     * is show deduct price
+     */
+    private Boolean showDeductPrice;
+
+    /**
+     * is show controversial
+     */
+    private Boolean showControversial;
+
+    /**
      * page number
      */
     private Integer pageNo;

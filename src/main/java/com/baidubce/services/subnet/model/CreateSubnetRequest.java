@@ -1,7 +1,10 @@
 package com.baidubce.services.subnet.model;
 
+import java.util.List;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -46,6 +49,11 @@ public class CreateSubnetRequest extends AbstractBceRequest {
     private String vpcId;
 
     /**
+     * The secondary CIDR of this pc which this subnet belon.
+     */
+    private String vpcSecondaryCidr;
+
+    /**
      * The option param to describe the type of subnet create
      * See more detail on
      * <a href = "https://cloud.baidu.com/doc/VPC/API.html#.E5.88.9B.E5.BB.BA.E5.AD.90.E7.BD.91">
@@ -62,6 +70,11 @@ public class CreateSubnetRequest extends AbstractBceRequest {
      * The option param to describe the subnet
      */
     private String description;
+
+    /**
+     * The tags of subnet.
+     */
+    private List<Tag> tags;
 
     public String getName() {
         return name;
@@ -95,6 +108,14 @@ public class CreateSubnetRequest extends AbstractBceRequest {
         this.vpcId = vpcId;
     }
 
+    public String getVpcSecondaryCidr() {
+        return vpcSecondaryCidr;
+    }
+
+    public void setVpcSecondaryCidr(String vpcSecondaryCidr) {
+        this.vpcSecondaryCidr = vpcSecondaryCidr;
+    }
+
     public String getSubnetType() {
         return subnetType;
     }
@@ -125,6 +146,14 @@ public class CreateSubnetRequest extends AbstractBceRequest {
 
     public void setEnableIpv6(Boolean enableIpv6) {
         this.enableIpv6 = enableIpv6;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     /**

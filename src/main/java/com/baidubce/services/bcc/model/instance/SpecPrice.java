@@ -16,6 +16,7 @@ public class SpecPrice {
     private String spec;
     private String specPrice;
     private String status;
+    private String tradePrice;
 
     public String getSpec() {
         return spec;
@@ -41,12 +42,21 @@ public class SpecPrice {
         this.status = status;
     }
 
+    public String getTradePrice() {
+        return tradePrice;
+    }
+
+    public void setTradePrice(String tradePrice) {
+        this.tradePrice = tradePrice;
+    }
+
     @Override
     public String toString() {
         return "SpecPrice{" +
                 "spec='" + spec + '\'' +
                 ", specPrice='" + specPrice + '\'' +
                 ", status='" + status + '\'' +
+                ", tradePrice='" + tradePrice + '\'' +
                 '}';
     }
 }

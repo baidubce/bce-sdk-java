@@ -18,12 +18,12 @@ public class GetBecVmNodeLevelMetricsRequest extends AbstractBceRequest {
     /**
      * Start time, Unix timestamp.
      */
-    private Long start;
+    private long start;
 
     /**
      * Termination time, Unix timestamp.
      */
-    private Long end;
+    private long end;
 
     /**
      * Region.

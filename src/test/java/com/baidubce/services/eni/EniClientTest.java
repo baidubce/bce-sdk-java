@@ -191,6 +191,7 @@ public class EniClientTest {
                 .privateIpSet(privateIpSet)
                 .enterpriseSecurityGroupIds(Lists.newArrayList(ENTERPRISE_SECURITY_GROUP_ID))
                 .description("java sdk test create eni.")
+                .networkInterfaceTrafficMode("standard")
                 .build();
         CreateEniResponse createEniResponse1 = eniClient.createEni(createEniRequest1);
         assertThat(createEniResponse1.getEniId(), notNullValue());

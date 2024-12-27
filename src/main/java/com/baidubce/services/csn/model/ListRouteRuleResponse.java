@@ -105,7 +105,7 @@ public class ListRouteRuleResponse extends BaseBceResponse {
     
         private String csnRtId;
     
-        private BigDecimal description;
+        private String description;
     
         private String fromAttachId;
     
@@ -161,11 +161,11 @@ public class ListRouteRuleResponse extends BaseBceResponse {
             return this.csnRtId;
         }
     
-        public void setDescription(BigDecimal description) {
+        public void setDescription(String description) {
             this.description = description;
         }
     
-        public BigDecimal getDescription() {
+        public String getDescription() {
             return this.description;
         }
     

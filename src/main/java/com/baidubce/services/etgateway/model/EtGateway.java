@@ -1,5 +1,6 @@
 package com.baidubce.services.etgateway.model;
 
+import com.baidubce.services.bcc.model.TagModel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -68,4 +69,9 @@ public class EtGateway {
      * IPv6 cloud-side network
      */
     private List<String> ipv6LocalCidrs;
+
+    /**
+     * Tag list
+     */
+    private List<TagModel> tags;
 }

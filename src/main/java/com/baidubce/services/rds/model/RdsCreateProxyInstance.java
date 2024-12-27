@@ -2,7 +2,6 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
@@ -22,6 +21,9 @@ public class RdsCreateProxyInstance extends AbstractBceRequest {
     private String vpcId;
     private boolean isDirectPay;
     private List<RdsSubnet> subnets;
+    private String ovip;
+    private Integer entryPort;
+    private String resourceGroupId;
     private List<RdsTag> tags;
 
     @Override
@@ -100,6 +102,30 @@ public class RdsCreateProxyInstance extends AbstractBceRequest {
 
     public void setSubnets(List<RdsSubnet> subnets) {
         this.subnets = subnets;
+    }
+
+    public String getOvip() {
+        return ovip;
+    }
+
+    public void setOvip(String ovip) {
+        this.ovip = ovip;
+    }
+
+    public Integer getEntryPort() {
+        return entryPort;
+    }
+
+    public void setEntryPort(Integer entryPort) {
+        this.entryPort = entryPort;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
     }
 
     public List<RdsTag> getTags() {

@@ -1,8 +1,11 @@
 package com.baidubce.services.rds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Rds tag info
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsTag {
 
     private String tagKey;

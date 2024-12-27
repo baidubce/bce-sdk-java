@@ -2,13 +2,15 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 import java.util.List;
 
 /**
  * The request of create account
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsCreateAccountRequest extends AbstractBceRequest {
 
     private String instanceId;
@@ -17,7 +19,7 @@ public class RdsCreateAccountRequest extends AbstractBceRequest {
     private String password;
     private RdsAccountType accountType;
 
-    private List<RdsDatabasePrivileges> databasePrivileges;
+    private List<DatabasePrivilege> databasePrivileges;
     private String desc;
     private String type;
 
@@ -61,11 +63,11 @@ public class RdsCreateAccountRequest extends AbstractBceRequest {
         this.accountType = accountType;
     }
 
-    public List<RdsDatabasePrivileges> getDatabasePrivileges() {
+    public List<DatabasePrivilege> getDatabasePrivileges() {
         return databasePrivileges;
     }
 
-    public void setDatabasePrivileges(List<RdsDatabasePrivileges> databasePrivileges) {
+    public void setDatabasePrivileges(List<DatabasePrivilege> databasePrivileges) {
         this.databasePrivileges = databasePrivileges;
     }
 

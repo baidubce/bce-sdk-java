@@ -35,6 +35,19 @@ public class Validate {
         }
     }
 
+    /**
+     * 检查列表是否为空。
+     *
+     * @param values       要检查的列表
+     * @param errorMessage 当列表为空时抛出的异常信息
+     * @throws IllegalArgumentException 如果列表为空，则抛出此异常
+     */
+    public static void checkListNotEmpty(List<?> values, String errorMessage) {
+        if (CollectionUtils.isEmpty(values)) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
     public static void checkStringNotEmpty(String value, String errorMessage) {
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(errorMessage);

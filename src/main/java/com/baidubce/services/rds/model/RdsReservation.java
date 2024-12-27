@@ -1,8 +1,11 @@
 package com.baidubce.services.rds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * RdsReservation
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsReservation {
 
     private Integer reservationLength;

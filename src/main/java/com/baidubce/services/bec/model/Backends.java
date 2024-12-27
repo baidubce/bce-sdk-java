@@ -33,5 +33,5 @@ public class Backends {
     /**
      * The weight of the pod/vm.
      */
-    private int weight;
+    private Integer weight;
 }

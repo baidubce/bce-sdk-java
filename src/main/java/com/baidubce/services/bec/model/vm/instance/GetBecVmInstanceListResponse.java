@@ -14,9 +14,14 @@ package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.services.bec.model.vm.LogicPageResultResponse;
 import com.baidubce.services.bec.model.vo.VmInstanceBriefVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * The response for getting the list of BEC virtual machine instances.
+ * Return the instance detail.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecVmInstanceListResponse extends LogicPageResultResponse<VmInstanceBriefVo> {
 }

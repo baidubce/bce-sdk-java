@@ -30,18 +30,18 @@ public class GetBecBlbsRequest extends AbstractBceRequest {
     /**
      * page number
      */
-    private Integer pageNo;
+    private int pageNo;
 
     /**
      * page size
      */
-    private Integer pageSize;
+    private int pageSize;
 
     /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return GetBecBlbsRequest with credentials.
      */
     public GetBecBlbsRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

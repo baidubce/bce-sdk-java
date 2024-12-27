@@ -16,6 +16,7 @@ import com.baidubce.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Contains the summary of an object stored in a Baidu Bos bucket. This object doesn't contain contain the
@@ -58,6 +59,9 @@ public class BosObjectSummary {
      * The storage class of object.
      */
     protected String storageClass;
+
+    protected Map<String, String> userMeta;
+
 
     /**
      * Gets the name of the Baidu Bos bucket in which this object is stored.
@@ -184,6 +188,14 @@ public class BosObjectSummary {
      */
     public void setStorageClass(String storageClass) {
         this.storageClass = storageClass;
+    }
+
+    public Map<String, String> getUserMeta() {
+        return userMeta;
+    }
+
+    public void setUserMeta(Map<String, String> userMeta) {
+        this.userMeta = userMeta;
     }
 
     @Override

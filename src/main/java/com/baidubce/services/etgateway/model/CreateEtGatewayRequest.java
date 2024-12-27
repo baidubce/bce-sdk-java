@@ -2,6 +2,7 @@ package com.baidubce.services.etgateway.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bcc.model.TagModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,6 +64,11 @@ public class CreateEtGatewayRequest extends AbstractBceRequest {
      * This setting is only applicable when parameters etId and channelId exist
      */
     private List<String> localCidrs;
+
+    /**
+     * The tag of the dedicated line gateway.
+     */
+    private List<TagModel> tags;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {

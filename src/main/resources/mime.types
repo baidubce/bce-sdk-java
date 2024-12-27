@@ -381,6 +381,7 @@ application/xml			xml xsl
 application/xml-dtd		dtd
 application/xml-external-parsed-entity
 application/zip			zip
+application/json	    json
 audio/32kadpcm
 audio/amr
 audio/amr-wb
@@ -492,6 +493,7 @@ image/x-rgb			rgb
 image/x-xbitmap			xbm
 image/x-xpixmap			xpm
 image/x-xwindowdump		xwd
+image/webp              webp
 message/delivery-status
 message/disposition-notification
 message/external-body

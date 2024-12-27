@@ -13,12 +13,17 @@
 package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
-import com.baidubce.services.bec.model.vo.VmInstanceBriefVo;
+import com.baidubce.services.bec.model.vo.VmInstanceDetailsVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The response for updating BEC virtual machine resources.
+ * Return the instance detail.
  */
 @Data
-public class UpdateBecVmDeploymentResponse extends ActionInfoVo<VmInstanceBriefVo> {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UpdateBecVmDeploymentResponse extends ActionInfoVo<VmInstanceDetailsVo> {
 }

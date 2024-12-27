@@ -26,12 +26,16 @@ public class BccFlavor {
     private String productType;
     private String spec;
     private String specId;
+
+    private String flavorSubType;
     private String cpuModel;
     private String cpuGHz;
     private String networkBandwidth;
     private String networkPackage;
 
     private Integer netEthQueueCount;
+
+    private Boolean enableJumboFrame;
 
     private Integer netEthMaxQueueCount;
 
@@ -179,6 +183,22 @@ public class BccFlavor {
         this.netEthMaxQueueCount = netEthMaxQueueCount;
     }
 
+    public Boolean getEnableJumboFrame() {
+        return enableJumboFrame;
+    }
+
+    public void setEnableJumboFrame(Boolean enableJumboFrame) {
+        this.enableJumboFrame = enableJumboFrame;
+    }
+
+    public String getFlavorSubType() {
+        return flavorSubType;
+    }
+
+    public void setFlavorSubType(String flavorSubType) {
+        this.flavorSubType = flavorSubType;
+    }
+
     @Override
     public String toString() {
         return "BccFlavor{" +
@@ -200,6 +220,7 @@ public class BccFlavor {
                 ", networkPackage='" + networkPackage + '\'' +
                 ", netEthQueueCount=" + netEthQueueCount +
                 ", netEthMaxQueueCount=" + netEthMaxQueueCount +
+                ", flavorSubType=" + flavorSubType +
                 '}';
     }
 }

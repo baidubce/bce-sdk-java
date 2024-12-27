@@ -2,10 +2,12 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Request the rds subnet list
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsSubnetRequest extends AbstractBceRequest {
 
     private String vpcId;

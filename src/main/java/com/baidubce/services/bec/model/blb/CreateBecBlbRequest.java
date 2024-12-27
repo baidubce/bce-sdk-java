@@ -14,6 +14,7 @@ package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bec.model.enums.ServiceProviderEnum;
 import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
@@ -23,6 +24,7 @@ import java.util.List;
 
 /**
  * The request for creating BEC blb.
+ * Shared with blb and app blb creation.
  */
 @Data
 @Builder
@@ -37,6 +39,11 @@ public class CreateBecBlbRequest extends AbstractBceRequest {
      * The payment method of the blb.
      */
     private String paymentMethod;
+
+    /**
+     * The name of the blb.
+     */
+    private String blbName;
 
     /**
      * Region selection.
@@ -56,27 +63,52 @@ public class CreateBecBlbRequest extends AbstractBceRequest {
     /**
      * The serviceProvider of the blb.
      */
-    private String serviceProvider;
+    private ServiceProviderEnum serviceProvider;
 
     /**
-     * The name of the blb.
+     * The region id of the blb.
      */
-    private String blbName;
+    private String regionId;
 
     /**
      * The need for public IP.
      */
-    private boolean needPublicIp;
+    private Boolean needPublicIp;
 
     /**
-     * Load balancing maximum bandwidth limit.
+     * Load balancing maximum bandwidth limit, 1 - 20000 Mbps.
      */
-    private int bandwidthInMbpsLimit;
+    private Integer bandwidthInMbpsLimit;
 
     /**
      * tags.
      */
     private List<Tag> tags;
+
+    /**
+     * The network type, bec network type must be [classic|vpc], default classic.
+     */
+    private String networkType;
+
+    /**
+     * The vpc id.
+     */
+    private String vpcId;
+
+    /**
+     * The subnet id.
+     */
+    private String subnetId;
+
+    /**
+     * The subServiceProvider of the blb, intra represent inner net, [ct,un,cm,intra].
+     */
+    protected List<String> subServiceProviders;
+
+    /**
+     * Whether the blb need public ipv6.
+     */
+    private Boolean needIpv6PublicIp;
 
     /**
      * An ASCII string whose length is less than 64.
@@ -94,7 +126,7 @@ public class CreateBecBlbRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return CreateBecBlbRequest with credentials.
      */
     public CreateBecBlbRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

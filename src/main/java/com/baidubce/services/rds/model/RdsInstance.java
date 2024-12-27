@@ -1,5 +1,7 @@
 package com.baidubce.services.rds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 /**
  * Rds instance
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsInstance {
 
     private String instanceId;

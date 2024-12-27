@@ -127,6 +127,11 @@ public class BlbListenerRequest extends AbstractBceRequest {
      */
     private List<String> certIds;
     /**
+     * The additional certificates and domains of listener
+     * @see AdditionalCertDomain
+     */
+    private List<AdditionalCertDomain> additionalCertDomains;
+    /**
      * if the request is ie6 compatible or not.
      */
     private Boolean ie6Compatible;
@@ -305,6 +310,15 @@ public class BlbListenerRequest extends AbstractBceRequest {
 
     public void setCertIds(List<String> certIds) {
         this.certIds = certIds;
+    }
+
+    public List<AdditionalCertDomain> getAdditionalCertDomains() {
+        return additionalCertDomains;
+    }
+
+    public void setAdditionalCertDomains(
+            List<AdditionalCertDomain> additionalCertDomains) {
+        this.additionalCertDomains = additionalCertDomains;
     }
 
     public Boolean getIe6Compatible() {

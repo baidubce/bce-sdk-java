@@ -12,7 +12,11 @@
  */
 package com.baidubce.services.csn.model;
 
+import java.util.List;
+
 import com.baidubce.common.BaseBceResponse;
+import com.baidubce.services.tag.model.Tag;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -75,4 +79,9 @@ public class GetCsnBpResponse extends BaseBceResponse {
      * 带宽包的创建时间
      */
     private String createTime;
+
+    /**
+     * 带宽包的标签列表
+     */
+    private List<Tag> tags;
 }

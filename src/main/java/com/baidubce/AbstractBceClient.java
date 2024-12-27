@@ -96,16 +96,16 @@ public abstract class AbstractBceClient {
      * The constructor will extract serviceId from the class name automatically.
      * And if there is no endpoint specified in the client configuration, the constructor will create a default one.
      *
-     * @param config the client configuration. The constructor makes a copy of this parameter so that it is
-     * safe to change the configuration after then.
-     * @param responseHandlers a list of handlers for processing HTTP responses from services. See
-     * {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
+     * @param config                the client configuration. The constructor makes a copy of this parameter so that it is
+     *                              safe to change the configuration after then.
+     * @param responseHandlers      a list of handlers for processing HTTP responses from services. See
+     *                              {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
      * @param isHttpAsyncPutEnabled whether or not PUT method use Async manner.
-     * @throws IllegalStateException if the class name does not follow the naming convention for BCE clients.
+     * @throws IllegalStateException    if the class name does not follow the naming convention for BCE clients.
      * @throws IllegalArgumentException if the endpoint specified in the client configuration is not a valid URI.
      */
     public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers,
-            boolean isHttpAsyncPutEnabled) {
+                             boolean isHttpAsyncPutEnabled) {
         this.serviceId = this.computeServiceId();
         this.config = config;
         this.endpoint = this.computeEndpoint();
@@ -116,11 +116,11 @@ public abstract class AbstractBceClient {
     /**
      * Equivalent to AbstractBceClient(config, responseHandlers, false)
      *
-     * @param config the client configuration. The constructor makes a copy of this parameter so that it is
-     * safe to change the configuration after then.
+     * @param config           the client configuration. The constructor makes a copy of this parameter so that it is
+     *                         safe to change the configuration after then.
      * @param responseHandlers a list of handlers for processing HTTP responses from services. See
-     * {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
-     * @throws IllegalStateException if the class name does not follow the naming convention for BCE clients.
+     *                         {@link com.baidubce.http.BceHttpClient#execute(InternalRequest, Class, HttpResponseHandler[])}
+     * @throws IllegalStateException    if the class name does not follow the naming convention for BCE clients.
      * @throws IllegalArgumentException if the endpoint specified in the client configuration is not a valid URI.
      */
     public AbstractBceClient(BceClientConfiguration config, HttpResponseHandler[] responseHandlers) {
@@ -178,9 +178,9 @@ public abstract class AbstractBceClient {
      * <p>
      * This method will add "Content-Type" and "Date" to headers with default values if not present.
      *
-     * @param request the request to build up the HTTP request.
+     * @param request       the request to build up the HTTP request.
      * @param responseClass the response class.
-     * @param <T> the type of response
+     * @param <T>           the type of response
      * @return the final response object.
      */
     protected <T extends AbstractBceResponse> T invokeHttpClient(InternalRequest request, Class<T> responseClass) {
@@ -276,7 +276,7 @@ public abstract class AbstractBceClient {
 
     /**
      * BOS
-     *
+     * <p>
      * Returns the bucket virtual hosting service endpoint.
      * <p>
      * The endpoint will be in the form of "http(s)://<bucket>[.<Region>].bcebos.com".
@@ -289,15 +289,17 @@ public abstract class AbstractBceClient {
             return;
         }
         String host = this.endpoint.getHost();
+        String protocol = this.endpoint.getScheme();
+
         String uri = null;
-        if (!host.contains("bcebos.com")){
+        if (!host.contains("bcebos.com") && !host.contains("baidu-int.com")) {
             // this means host is diy, and should not compute virtual host
             return;
         }
         if (host.startsWith(bucketName) && host.split("\\.").length >= 4) {
-            uri = this.config.getProtocol().toString().toLowerCase() + "://" + host;
+            uri = protocol + "://" + host;
         } else {
-            uri = this.config.getProtocol().toString().toLowerCase() + "://" + bucketName + '.' + host;
+            uri = protocol + "://" + bucketName + '.' + host;
         }
         try {
             if (uri != null) {

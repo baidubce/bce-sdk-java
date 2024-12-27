@@ -26,6 +26,8 @@ import com.baidubce.BceServiceException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
+import com.baidubce.services.billing.model.bill.CostSplitBillRequest;
+import com.baidubce.services.billing.model.bill.CostSplitBillResponse;
 import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryRequest;
 import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryResponse;
 import com.baidubce.services.billing.model.bill.ResourceBillListQueryRequest;
@@ -243,6 +245,22 @@ public class BillingClientTest {
         try {
             BillingClient billingClient = getBillingClient();
             ShareBillResponse response = billingClient.queryShareBill(request);
+            logger.info("response : {} size:{}", response.getBills(), response.getBills().size());
+        } catch (BceServiceException e) {
+            logger.info("BceServiceException : {}", e.getMessage());
+        } catch (BceClientException e) {
+            logger.info("BceClientException : {}", e.getMessage());
+        }
+    }
+
+    @Test
+    public void costSplitBillTest() throws Exception {
+        CostSplitBillRequest request = new CostSplitBillRequest();
+        request.setMonth("2024-06");
+        request.setPageSize(10);
+        try {
+            BillingClient billingClient = getBillingClient();
+            CostSplitBillResponse response = billingClient.queryCostSplitBill(request);
             logger.info("response : {} size:{}", response.getBills(), response.getBills().size());
         } catch (BceServiceException e) {
             logger.info("BceServiceException : {}", e.getMessage());

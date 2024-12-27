@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 /**
- * The request for deleteSecurityGroupRule
+ * The request for delete SecurityGroupRule
  */
 public class DeleteSecurityGroupRuleRequest extends AbstractBceRequest {
 

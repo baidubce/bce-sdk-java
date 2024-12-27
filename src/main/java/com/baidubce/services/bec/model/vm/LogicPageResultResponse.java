@@ -56,7 +56,7 @@ public class LogicPageResultResponse<T> extends AbstractBceResponse {
     /**
      * Total number of results.
      */
-    private int totalCount;
+    private Integer totalCount;
 
     /**
      * The order information.
@@ -74,5 +74,4 @@ public class LogicPageResultResponse<T> extends AbstractBceResponse {
          */
         private String orderBy;
     }
-
 }

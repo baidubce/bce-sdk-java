@@ -943,7 +943,7 @@ public class BosClient extends AbstractBceClient {
      *
      * @param request The request object containing the Lifecycle to set into specified bucket.
      */
-    public void setBucketBucketLifecycle(SetBucketLifecycleRequest request) {
+    public void setBucketLifecycle(SetBucketLifecycleRequest request) {
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
         internalRequest.addParameter("lifecycle", null);
@@ -1122,8 +1122,20 @@ public class BosClient extends AbstractBceClient {
         // For presigned request, we need to remember to remove this extra slash
         // before generating the URL.
         String bucketName = ((BosClientConfiguration) this.config).isCnameEnabled() ? null : request.getBucketName();
+        URI uri = this.getEndpoint();
+        if (bucketName != null) {
+            if (this.getBktVirEndpoint(bucketName) == null) {
+                this.computeBktVirEndpoint(bucketName);
+            }
+            if (this.getBktVirEndpoint(bucketName) != null &&
+                    !((BosClientConfiguration) this.config).isPathStyleAccessEnable()) {
+                uri = this.getBktVirEndpoint(bucketName);
+                bucketName = null;
+            }
+        }
         InternalRequest internalRequest = new InternalRequest(httpMethod, HttpUtils
-                .appendUri(this.getEndpoint(), URL_PREFIX, bucketName, request.getKey()));
+                .appendUri(uri, URL_PREFIX, bucketName, request.getKey()));
+
         internalRequest.setCredentials(request.getRequestCredentials());
         SignOptions options = new SignOptions();
         options.setUseStsHeader(false);
@@ -1209,6 +1221,10 @@ public class BosClient extends AbstractBceClient {
         checkNotNull(request, "request should not be null.");
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        if (((BosClientConfiguration) this.config).getConsistencyView() != null) {
+            internalRequest.addHeader(Headers.BCE_CONSISTENCY_VIEW,
+                    ((BosClientConfiguration) this.config).getConsistencyView());
+        }
         if (request.getPrefix() != null) {
             internalRequest.addParameter("prefix", request.getPrefix());
         }
@@ -1221,16 +1237,11 @@ public class BosClient extends AbstractBceClient {
         if (request.getMaxKeys() >= 0) {
             internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
         }
-
-        ListObjectsResponse response = this.invokeHttpClient(internalRequest, ListObjectsResponse.class);
-
-        response.setBucketName(request.getBucketName());
-        List<BosObjectSummary> contents = response.getContents();
-        for (BosObjectSummary object : contents) {
-            object.setBucketName(request.getBucketName());
+        if (request.isNeedExtMeta()) {
+            internalRequest.addHeader(Headers.BCE_LIST_WITH_EXT_META, String.valueOf(request.isNeedExtMeta()));
         }
 
-        return response;
+        return this.invokeHttpClient(internalRequest, ListObjectsResponse.class);
     }
 
     /**
@@ -1333,7 +1344,7 @@ public class BosClient extends AbstractBceClient {
         checkNotNull(destinationFile, "destinationFile should not be null.");
 
         BosObject bosObject = this.getObject(request);
-        this.downloadObjectToFile(bosObject, destinationFile, request.getRange() == null);
+        this.downloadObjectToFile(bosObject, destinationFile, request.getRange() == null, request.getProgressCallback());
         return bosObject.getObjectMetadata();
     }
 
@@ -1585,6 +1596,7 @@ public class BosClient extends AbstractBceClient {
         BosResponse response = uploadObject(request, internalRequest);
         PutObjectResponse result = new PutObjectResponse();
         result.setETag(response.getMetadata().getETag());
+        result.setCallback(response.getCallback());
 
         return result;
     }
@@ -1858,8 +1870,8 @@ public class BosClient extends AbstractBceClient {
     /**
      * Deletes the specified directory in the specified namespace bucket.
      *
-     * @param bucketName The name of the Bos bucket containing the object to delete.
-     * @param key        The path of the directory to delete.
+     * @param bucketName        The name of the Bos bucket containing the object to delete.
+     * @param key               The path of the directory to delete.
      * @param isDeleteRecursive Whether delete a dir in namespace
      */
     public DeleteDirectoryResponse deleteDirectory(String bucketName, String key, boolean isDeleteRecursive) {
@@ -1869,12 +1881,13 @@ public class BosClient extends AbstractBceClient {
     /**
      * Deletes the specified object in the specified bucket.
      *
-     * @param bucketName The directory of the Bos bucket containing the object to delete.
-     * @param key        The path of the directory to delete.
+     * @param bucketName        The directory of the Bos bucket containing the object to delete.
+     * @param key               The path of the directory to delete.
      * @param isDeleteRecursive Whether delete a dir in namespace
-     * @param marker    The marker position of delete begin, must be sub of key
+     * @param marker            The marker position of delete begin, must be sub of key
      */
-    public DeleteDirectoryResponse deleteDirectory(String bucketName, String key, boolean isDeleteRecursive, String marker) {
+    public DeleteDirectoryResponse deleteDirectory(String bucketName, String key, boolean isDeleteRecursive,
+                                                   String marker) {
         return this.deleteDirectory(new DeleteDirectoryRequest(bucketName, key, isDeleteRecursive, marker));
     }
 
@@ -1987,6 +2000,9 @@ public class BosClient extends AbstractBceClient {
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
         internalRequest.addParameter("acl", null);
+        if (request.getVersionId() != null) {
+            internalRequest.addParameter("versionId", request.getVersionId());
+        }
 
         if (request.getCannedAcl() != null) {
             internalRequest.addHeader(Headers.BCE_ACL, request.getCannedAcl().toString());
@@ -2061,6 +2077,10 @@ public class BosClient extends AbstractBceClient {
         assertStringNotNullOrEmpty(request.getKey(), "object key should not be null or empty");
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
         internalRequest.addParameter("acl", null);
+        if (request.getVersionId() != null) {
+            internalRequest.addParameter("versionId", request.getVersionId());
+        }
+
 
         GetObjectAclResponse response = this.invokeHttpClient(internalRequest, GetObjectAclResponse.class);
         if (response.getVersion() > response.MAX_SUPPORTED_ACL_VERSION) {
@@ -2282,15 +2302,21 @@ public class BosClient extends AbstractBceClient {
     public ListPartsResponse listParts(ListPartsRequest request) {
         checkNotNull(request, "request should not be null.");
 
-        InternalRequest interrnalRequest = this.createRequest(request, HttpMethodName.GET);
-        interrnalRequest.addParameter("uploadId", request.getUploadId());
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+
+        if (((BosClientConfiguration) this.config).getConsistencyView() != null) {
+            internalRequest.addHeader(Headers.BCE_CONSISTENCY_VIEW,
+                    ((BosClientConfiguration) this.config).getConsistencyView());
+        }
+
+        internalRequest.addParameter("uploadId", request.getUploadId());
         int maxParts = request.getMaxParts();
         if (maxParts >= 0) {
-            interrnalRequest.addParameter("maxParts", String.valueOf(maxParts));
+            internalRequest.addParameter("maxParts", String.valueOf(maxParts));
         }
-        interrnalRequest.addParameter("partNumberMarker", String.valueOf(request.getPartNumberMarker()));
+        internalRequest.addParameter("partNumberMarker", String.valueOf(request.getPartNumberMarker()));
 
-        ListPartsResponse response = this.invokeHttpClient(interrnalRequest, ListPartsResponse.class);
+        ListPartsResponse response = this.invokeHttpClient(internalRequest, ListPartsResponse.class);
         response.setBucketName(request.getBucketName());
         return response;
     }
@@ -2556,17 +2582,20 @@ public class BosClient extends AbstractBceClient {
                 bucketName = null;
             }
         }
+
         if (bceRequest instanceof GenericObjectRequest) {
             key = ((GenericObjectRequest) bceRequest).getKey();
         }
         InternalRequest request =
                 new InternalRequest(httpMethod, HttpUtils.appendUri(uri, URL_PREFIX, bucketName, key));
         request.setCredentials(bceRequest.getRequestCredentials());
+        request.setMaxRedirects(((BosClientConfiguration) this.config).getMaxRedirects());
+        request.setRedirectsEnabled(this.config.isRedirectsEnabled());
         request.addHeader(Headers.BCE_REQUEST_ID, UUID.randomUUID().toString());
         return request;
     }
 
-    private void downloadObjectToFile(BosObject bosObject, File destinationFile, boolean verifyIntegrity) {
+    private void downloadObjectToFile(BosObject bosObject, File destinationFile, boolean verifyIntegrity, BosProgressCallback progressCallback) {
         // attempt to create the parent if it doesn't exist
         File parentDirectory = destinationFile.getParentFile();
         if (parentDirectory != null && !parentDirectory.exists()) {
@@ -2578,7 +2607,14 @@ public class BosClient extends AbstractBceClient {
             outputStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
             byte[] buffer = new byte[this.getStreamBufferSize()];
             int bytesRead;
+            if (progressCallback != null) {
+                progressCallback.setTotalSize(bosObject.getObjectMetadata().getContentLength());
+                progressCallback.setCurrentSize(0L);
+            }
             while ((bytesRead = bosObject.getObjectContent().read(buffer)) > -1) {
+                if (progressCallback != null) {
+                    progressCallback.addCurrentSize(bytesRead);
+                }
                 outputStream.write(buffer, 0, bytesRead);
             }
         } catch (IOException e) {
@@ -2763,7 +2799,12 @@ public class BosClient extends AbstractBceClient {
         // we treat consecutive "/"s in AmazonS3Client#presignRequest(...)
         String urlPath = "/" + resourcePath;
         urlPath = urlPath.replaceAll("(?<=/)/", "%2F");
-        String urlString = this.getEndpoint() + urlPath;
+//        String urlString = this.getEndpoint() + urlPath;
+        String port = "";
+        if (request.getUri().getPort() != -1) {
+            port = ":" + request.getUri().getPort();
+        }
+        String urlString = request.getUri().getScheme() + "://" + request.getUri().getHost() + port + urlPath;
 
         boolean firstParam = true;
         for (String param : request.getParameters().keySet()) {
@@ -3403,7 +3444,7 @@ public class BosClient extends AbstractBceClient {
             internalRequest.addHeader(Headers.BOS_PROCESS, request.getVideoProcess());
         }
 
-        if (request.getxBceAcl() != null){
+        if (request.getxBceAcl() != null) {
             internalRequest.addHeader(Headers.BCE_ACL, request.getxBceAcl());
         }
 
@@ -3412,6 +3453,7 @@ public class BosClient extends AbstractBceClient {
         }
 
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(metadata.getContentLength()));
+        internalRequest.addParameter(Headers.BOS_PROCESS, request.getxBceProcess());
 
         populateRequestMetadata(internalRequest, metadata);
 
@@ -4069,6 +4111,44 @@ public class BosClient extends AbstractBceClient {
         internalRequest.addHeader("x-bce-rename-key", renameSourceHeader);
         this.setZeroContentLength(internalRequest);
         return this.invokeHttpClient(internalRequest, RenameObjectResponse.class);
+    }
+
+    public void putBucketVersioning(String bucketName, String status) {
+        this.putBucketVersioning(new PutBucketVersioningRequest(bucketName, status));
+    }
+
+    public void putBucketVersioning(PutBucketVersioningRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("versioning", null);
+        byte[] json;
+
+        try {
+            json = JsonUtils.getObjectMapper().writeValueAsString(request).getBytes(DEFAULT_ENCODING);
+        } catch (JsonProcessingException e) {
+            throw new BceClientException("Fail to generate json", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get UTF-8 bytes", e);
+        }
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+        internalRequest.setContent(RestartableInputStream.wrap(json));
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    public GetBucketVersioningResponse getBucketVersioning(String bucketName) {
+        return this.getBucketVersioning(new GetBucketVersioningRequest(bucketName));
+    }
+
+    public GetBucketVersioningResponse getBucketVersioning(GetBucketVersioningRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("versioning", null);
+
+        GetBucketVersioningResponse response = this.invokeHttpClient(internalRequest, GetBucketVersioningResponse.class);
+        return response;
     }
 
 

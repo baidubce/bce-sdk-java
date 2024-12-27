@@ -1,8 +1,11 @@
 package com.baidubce.services.rds.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Rds subnet
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsSubnet {
 
     private String name;

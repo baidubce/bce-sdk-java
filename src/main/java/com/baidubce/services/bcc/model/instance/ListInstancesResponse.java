@@ -14,12 +14,14 @@ package com.baidubce.services.bcc.model.instance;
 
 import com.baidubce.model.ListResponse;
 import com.baidubce.services.bcc.model.InstanceModel;
+import lombok.ToString;
 
 import java.util.List;
 
 /**
  * response model for query instance list
  */
+@ToString
 public class ListInstancesResponse extends ListResponse {
 
     /**

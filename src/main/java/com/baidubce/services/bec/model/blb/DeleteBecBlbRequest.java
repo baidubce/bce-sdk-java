@@ -31,7 +31,7 @@ public class DeleteBecBlbRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return GetInstanceRequest with credentials.
+     * @return DeleteBecBlbRequest with credentials.
      */
     public DeleteBecBlbRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

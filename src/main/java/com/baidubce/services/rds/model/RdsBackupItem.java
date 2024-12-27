@@ -10,6 +10,8 @@ public class RdsBackupItem {
     private String backupStatus;
     private String backupStartTime;
     private String backupEndTime;
+    private String downloadUrl;
+    private String downloadExpires;
 
     public String getBackupId() {
         return backupId;
@@ -57,5 +59,21 @@ public class RdsBackupItem {
 
     public void setBackupEndTime(String backupEndTime) {
         this.backupEndTime = backupEndTime;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    public String getDownloadExpires() {
+        return downloadExpires;
+    }
+
+    public void setDownloadExpires(String downloadExpires) {
+        this.downloadExpires = downloadExpires;
     }
 }

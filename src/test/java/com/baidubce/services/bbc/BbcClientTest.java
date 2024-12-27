@@ -34,12 +34,13 @@ import com.baidubce.services.bcc.model.instance.RebootInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsResponse;
 import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import java.util.Arrays;
 import org.hamcrest.CustomMatcher;
 import org.junit.After;
 import org.junit.Before;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -117,6 +119,31 @@ public class BbcClientTest {
                             && Objects.equal(((BceServiceException) item).getErrorCode(), errorCode);
                 }
             });
+        }
+    }
+
+    public static class RegionTest extends BbcBase {
+        protected BbcClient client;
+        @Before
+        public void setUp() {
+            super.setUp();
+            String bbcGlobalRegionEndpoint = "bbc.baidubce.com";
+            config.setEndpoint(bbcGlobalRegionEndpoint);
+            client = new BbcClient(config);
+        }
+
+        @After
+        public void tearDown() {
+            // do something
+            super.tearDown();
+        }
+
+        @Test
+        public void describeRegions() {
+            DescribeRegionsRequest describeRegionsRequest = new DescribeRegionsRequest();
+            DescribeRegionsResponse describeRegionsResponse = client.describeRegions(describeRegionsRequest);
+            System.out.println(describeRegionsResponse.getRegions());
+            toJsonPrettyString("describeRegionsResponse", describeRegionsResponse);
         }
     }
 

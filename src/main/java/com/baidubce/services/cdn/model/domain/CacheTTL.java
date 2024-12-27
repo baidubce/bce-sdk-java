@@ -13,8 +13,6 @@
 
 package com.baidubce.services.cdn.model.domain;
 
-import com.baidubce.services.cdn.model.JsonObject;
-
 /**
  * @author yixing
  *
@@ -45,6 +43,12 @@ public class CacheTTL {
      * 可选
      */
     private Integer weight;
+
+    /**
+     * 缓存是否遵循源站，默认true。overrideOrigin=true表示不遵循源站，按照该条配置规则缓存
+     * 可选
+     */
+    private Boolean overrideOrigin;
     
     /**
      * @return type
@@ -135,6 +139,19 @@ public class CacheTTL {
      */
     public CacheTTL withWeigth(Integer weight) {
         setWeight(weight);
+        return this;
+    }
+
+    public Boolean getOverrideOrigin() {
+        return overrideOrigin;
+    }
+
+    public void setOverrideOrigin(Boolean overrideOrigin) {
+        this.overrideOrigin = overrideOrigin;
+    }
+
+    public CacheTTL withOverrideOrigin(Boolean overrideOrigin) {
+        setOverrideOrigin(overrideOrigin);
         return this;
     }
 }

@@ -80,6 +80,15 @@ public class CreateEniRequest extends AbstractBceRequest {
     private String description;
 
     /**
+     * The communication mode of the ENI. Valid values:
+     *
+     * standard: uses the TCP communication mode.
+     * highPerformance: uses the remote direct memory access (RDMA) communication mode with Elastic RDMA Interface
+     * (ERI) enabled.
+     */
+    private String networkInterfaceTrafficMode;
+
+    /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.

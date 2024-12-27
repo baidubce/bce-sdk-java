@@ -1,6 +1,7 @@
 package com.baidubce.services.etgateway.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bcc.model.TagModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -105,4 +106,8 @@ public class GetEtGatewayResponse extends AbstractBceResponse {
      */
     private Integer healthCheckPort;
 
+    /**
+     * Tag list
+     */
+    private List<TagModel> tags;
 }

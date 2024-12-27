@@ -2,6 +2,7 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Release the specific rds instance
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsReleaseInstanceRequest extends AbstractBceRequest {
 
     private List<String> instanceIds = new ArrayList<String>();

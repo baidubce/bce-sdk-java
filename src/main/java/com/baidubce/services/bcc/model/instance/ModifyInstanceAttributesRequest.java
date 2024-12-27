@@ -34,6 +34,8 @@ public class ModifyInstanceAttributesRequest extends AbstractBceRequest {
 
     private Integer netEthQueueCount;
 
+    private Boolean enableJumboFrame;
+
     public String getInstanceId() {
         return instanceId;
     }
@@ -83,6 +85,14 @@ public class ModifyInstanceAttributesRequest extends AbstractBceRequest {
     public ModifyInstanceAttributesRequest withNetEthQueueCount(Integer netEthQueueCount) {
         this.netEthQueueCount = netEthQueueCount;
         return this;
+    }
+
+    public Boolean getEnableJumboFrame() {
+        return enableJumboFrame;
+    }
+
+    public void setEnableJumboFrame(Boolean enableJumboFrame) {
+        this.enableJumboFrame = enableJumboFrame;
     }
 
     /**

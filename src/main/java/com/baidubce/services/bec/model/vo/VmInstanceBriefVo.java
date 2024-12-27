@@ -12,39 +12,23 @@
  */
 package com.baidubce.services.bec.model.vo;
 
-import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bec.model.ImageDetail;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Vm Instance Brief.
+ * Limited brief content return.
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VmInstanceBriefVo extends AbstractBceResponse {
-
-    /**
-     * Single-line public ip.
-     */
-    private String publicIp;
-
-    /**
-     * Internal ip.
-     */
-    private String internalIp;
-
-    /**
-     * Triple-line public ip.
-     */
-    private List<IpInfo> multiplePublicIp;
-
-    /**
-     * Service provider.
-     */
-    private String serviceProvider;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class VmInstanceBriefVo extends IpPackageVo {
 
     /**
      * The id of the virtual machine instance.
@@ -52,9 +36,20 @@ public class VmInstanceBriefVo extends AbstractBceResponse {
     private String vmId;
 
     /**
+     * The long resource uuid.
+     */
+    private String uuid;
+
+    /**
      * The name of the virtual machine instance.
      */
     private String vmName;
+
+    /**
+     * The hostname of the virtual machine instance.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String hostname;
 
     /**
      * The status of the virtual machine instance.
@@ -64,27 +59,37 @@ public class VmInstanceBriefVo extends AbstractBceResponse {
     /**
      * The number of CPUs of the virtual machine instance.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The memory of the virtual machine instance.
      */
-    private int mem;
+    private Integer mem;
 
     /**
-     * The region of the virtual machine instance.
+     * The number of GPUs the virtual machine instance.
      */
-    private String region;
+    private Integer gpu;
 
     /**
-     * The city of the virtual machine instance.
+     * The same as GpuFlavor front end.
      */
-    private String city;
+    private String gpuModel;
 
     /**
-     * The need for public IP.
+     * The region id of the virtual machine instance.
      */
-    private boolean needPublicIp;
+    private String regionId;
+
+    /**
+     * Whether the virtual machine need public ip.
+     */
+    private Boolean needPublicIp;
+
+    /**
+     * Whether the virtual machine need public ipv6.
+     */
+    private Boolean needIpv6PublicIp;
 
     /**
      * The bandwidth of the virtual machine instance.
@@ -102,45 +107,89 @@ public class VmInstanceBriefVo extends AbstractBceResponse {
     private String serviceId;
 
     /**
+     * The payment method of the virtual machine.
+     */
+    private String paymentMethod;
+
+    /**
+     * The reservation time length of the prepayment purchase.
+     */
+    private Integer reserveLength;
+
+    /**
+     * The renewal cycle of the prepayment purchase.
+     */
+    private Integer renewCycle;
+
+    /**
+     * The order ids of the virtual machine instance.
+     */
+    private List<String> orderIdList;
+
+    /**
+     * The gpu flavor.
+     */
+    private String gpuFlavor;
+
+    /**
      * Creation time.
      */
     private String createTime;
 
     /**
-     * The spec of the virtual machine instance.
+     * The deployment id of the virtual machine instance.
      */
-    private String spec;
+    private String deploymentId;
 
     /**
-     * The regionId of the virtual machine instance.
+     * The userData of the virtual machine instance.
      */
-    private String regionId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String userData;
+
+    /**
+     * The dns of the virtual machine instance.
+     */
+    private String dns;
 
     /**
      * The vpc of the virtual machine instance.
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private VpcVo vpc;
 
     /**
-     * The needIpv6PublicIp of the virtual machine instance.
+     * The subnet id of the virtual machine instance.
      */
-    private boolean needIpv6PublicIp;
+    private String subnetId;
 
     /**
-     * The hostname of the virtual machine instance.
+     * The security group ids of the virtual machine instance.
      */
-    private String hostname;
+    private String sgIds;
 
-    @Data
-    public static class IpInfo {
-        /**
-         * Service provider.
-         */
-        private String serviceProvider;
+    /**
+     * The deployment set id of the virtual machine instance.
+     */
+    private String deploysetId;
 
-        /**
-         * Public ip.
-         */
-        private String ip;
-    }
+    /**
+     * The tags of the virtual machine instance.
+     */
+    private List<Tag> tags;
+
+    /**
+     * The cuda version of the virtual machine instance.
+     */
+    private String cudaVersion;
+
+    /**
+     * The driver version of the virtual machine instance.
+     */
+    private String driverVersion;
+
+    /**
+     * The cuDNN version of the virtual machine instance.
+     */
+    private String cudnnVersion;
 }

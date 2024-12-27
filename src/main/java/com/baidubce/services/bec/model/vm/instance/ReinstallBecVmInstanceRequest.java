@@ -14,8 +14,12 @@ package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bec.model.vm.KeyConfig;
+import com.baidubce.services.bec.model.vm.image.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * The request for reinstalling the BEC virtual machine system.
@@ -31,12 +35,63 @@ public class ReinstallBecVmInstanceRequest extends AbstractBceRequest {
     /**
      * Password.
      */
+    @Deprecated
     private String adminPass;
 
     /**
+     * The new way to configure password and key.
+     */
+    private KeyConfig keyConfig;
+
+    /**
      * Image id.
+     * worked with imageType, be marked on 24.11.
      */
     private String imageId;
+
+    /**
+     * Image type, image type must be [bec|bcc|rds]
+     * worked with imageId.
+     */
+    private String imageType;
+
+    /**
+     * Data volume image info.
+     */
+    private List<Image> images;
+
+    /**
+     * Reset data disk.
+     */
+    private Boolean resetDataDisk;
+
+    /**
+     * The host name of the virtual machine.
+     */
+    private String hostname;
+
+    /**
+     * The userData of the virtual machine.
+     * <p>
+     * The custom injected data, user need to encode the original text using base64.  The encoding formula :
+     * base64(user_injected_data: base64(original text))
+     */
+    private String userData;
+
+    /**
+     * The cuda version of the virtual machine.
+     */
+    private String cudaVersion;
+
+    /**
+     * The driver version of the virtual machine.
+     */
+    private String driverVersion;
+
+    /**
+     * The cuDNN version of the virtual machine.
+     */
+    private String cudnnVersion;
 
     /**
      * An ASCII string whose length is less than 64.
@@ -54,7 +109,7 @@ public class ReinstallBecVmInstanceRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return ReinstallBecVmInstanceRequest with credentials.
      */
     public ReinstallBecVmInstanceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

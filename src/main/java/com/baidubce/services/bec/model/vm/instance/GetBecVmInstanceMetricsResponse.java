@@ -13,11 +13,15 @@
 package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.services.bec.model.vo.MetricsVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The response for getting bec virtual machine instance metrics.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecVmInstanceMetricsResponse extends MetricsVo {
 }

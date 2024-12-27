@@ -23,25 +23,35 @@ public class HealthCheck {
     /**
      * Response timeout period.
      */
-    private int timeoutInSeconds;
+    private Integer timeoutInSeconds;
 
     /**
-     * Health check time.
+     * Health check interval time.
      */
-    private int intervalInSeconds;
+    private Integer intervalInSeconds;
 
     /**
      * Unhealthy threshold.
      */
-    private int unhealthyThreshold;
+    private Integer unhealthyThreshold;
 
     /**
      * Healthy threshold.
      */
-    private int healthyThreshold;
+    private Integer healthyThreshold;
 
     /**
-     * Healthy check string.
+     * Healthy check string, udp check string.
      */
     private String healthCheckString;
+
+    /**
+     * The health check type, like tcp, http, udp.
+     */
+    private String healthCheckType;
+
+    /**
+     * The health check url path, default /.
+     */
+    private String healthCheckURI;
 }

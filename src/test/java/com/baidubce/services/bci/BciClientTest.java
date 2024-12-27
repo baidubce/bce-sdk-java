@@ -28,19 +28,20 @@ import java.util.Collections;
  */
 public class BciClientTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BciClientTest.class);
-    private static final String BCI_AK = "";
-    private static final String BCI_SK = "";
-    private static final String BCI_ENDPOINT = "http://10.221.50.25:8784";
+    private static final String BCI_AK = "2e1be1eb99e946c3a543ec5a4eaa7d39-gztest-ak";
+    private static final String BCI_SK = "2e1be1eb99e946c3a543ec5a4eaa7d39-gztest-sk";
 
-    private static final String ZONE_NAME = "zoneB";
+    private static final String BCI_ENDPOINT = "http://10.164.104.144:8784";
 
-    private static final String SUBNET_ID = "sbn-wdyeux4rxg8f";
+    private static final String ZONE_NAME = "zoneC";
 
-    private static final String SECURITY_GROUP_ID = "g-5tt0yzexw7yt";
+    private static final String SUBNET_ID = "sbn-r107hfd7a45n";
+
+    private static final String SECURITY_GROUP_ID = "g-59gf44p4jmwe";
 
     protected BciClient bciClient;
 
-    private String instanceId;
+    private String instanceId = "p-eaedblr7";
 
     @Before
     public void setUp() {
@@ -52,7 +53,8 @@ public class BciClientTest {
 
     public void toJsonPrettyString(String method, Object object) {
         try {
-            LOGGER.info("[{}]==>{}", method, JsonUtils.toJsonPrettyString(object));
+//            LOGGER.info("[{}]==>{}", method, JsonUtils.toJsonPrettyString(object));
+            System.out.println(String.format("[%s]==>%s", method, JsonUtils.toJsonPrettyString(object)));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

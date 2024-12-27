@@ -105,7 +105,7 @@ public class ListTgwResponse extends BaseBceResponse {
     
         private String region;
     
-        private BigDecimal description;
+        private String description;
     
         public void setTgwId(String tgwId) {
             this.tgwId = tgwId;
@@ -139,11 +139,11 @@ public class ListTgwResponse extends BaseBceResponse {
             return this.region;
         }
     
-        public void setDescription(BigDecimal description) {
+        public void setDescription(String description) {
             this.description = description;
         }
     
-        public BigDecimal getDescription() {
+        public String getDescription() {
             return this.description;
         }
     

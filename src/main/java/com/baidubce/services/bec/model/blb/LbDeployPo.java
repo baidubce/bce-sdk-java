@@ -12,44 +12,49 @@
  */
 package com.baidubce.services.bec.model.blb;
 
+import com.baidubce.services.bec.model.Backends;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Blb deployment
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LbDeployPo {
 
     /**
-     * The name of the service.
+     * The service name which the lb belong to.
      */
     private String serviceName;
 
     /**
-     * id
+     * The backends which can be bound to lb.
      */
-    private BigInteger id;
+    List<Backends> backends;
 
     /**
-     * The name of the deployment
+     * The name of the deployment.
      */
     private String deploymentName;
 
     /**
-     * User-defined name
+     * User-defined name.
      */
     private String customOrigName;
 
     /**
-     * The id of the service
+     * The id of the service.
      */
     private String serviceId;
 
     /**
-     * The type of the deployment
+     * The type of the deployment.
      */
     private String deploymentType;
 
@@ -69,34 +74,34 @@ public class LbDeployPo {
     private String city;
 
     /**
-     * Number of Pod\Vm instances under deployment
+     * Number of Pod\Vm instances under deployment.
      */
-    private int replicas;
+    private Integer replicas;
 
     /**
-     * Pod\vm instance cpu usage
+     * Pod\vm instance cpu usage.
      */
-    private int podCpu;
+    private Integer podCpu;
 
     /**
-     * Pod\Vm instance memory usage
+     * Pod\Vm instance memory usage.
      */
-    private int podMemory;
+    private Integer podMemory;
 
     /**
-     * Pod\vm instance gpu usage
+     * Pod\vm instance gpu usage.
      */
-    private int podGpu;
+    private Integer podGpu;
 
     /**
-     * Pod\vm instance disk usage
+     * Pod\vm instance disk usage.
      */
     private String podDataStorage;
 
     /**
      * The need for public IP.
      */
-    private boolean podIpRequired;
+    private Boolean podIpRequired;
 
     /**
      * Last billing time
@@ -104,7 +109,12 @@ public class LbDeployPo {
     private long lastBillTime;
 
     /**
-     * Deployment creation time
+     * Whether th lb need public IPv6.
+     */
+    private Boolean podIpv6Required;
+
+    /**
+     * Deployment creation time.
      */
     private Timestamp createTime;
 
@@ -112,4 +122,14 @@ public class LbDeployPo {
      * Deployment update time
      */
     private Timestamp updateTime;
+
+    /**
+     * The network type, classic/vpc.
+     */
+    private String networkType;
+
+    /**
+     * The gpu type.
+     */
+    private String gpuType;
 }

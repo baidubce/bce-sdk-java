@@ -54,7 +54,7 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * The StorageClass is an identification that distinguish between infrequent access bos
-     * and standard bos. 
+     * and standard bos.
      */
     private String storageClass;
 
@@ -74,6 +74,11 @@ public class PutObjectRequest extends GenericObjectRequest {
     private String xBceAcl = null;
 
     /**
+     * xBceProcess to set callback.
+     */
+    private String xBceProcess = null;
+
+    /**
      * The xBceCrc32cFlag, whether to calculate crc32c
      */
     private boolean xBceCrc32cFlag = false;
@@ -84,8 +89,8 @@ public class PutObjectRequest extends GenericObjectRequest {
      * users may optionally specify object metadata or a canned ACL as well.
      *
      * @param bucketName The name of an existing bucket to which the new object will be uploaded.
-     * @param key The key under which to store the new object.
-     * @param file The path of the file to upload to Baidu Bos.
+     * @param key        The key under which to store the new object.
+     * @param file       The path of the file to upload to Baidu Bos.
      */
     public PutObjectRequest(String bucketName, String key, File file) {
         this(bucketName, key, file, null, new ObjectMetadata());
@@ -98,10 +103,10 @@ public class PutObjectRequest extends GenericObjectRequest {
      * users may optionally specify object metadata or a canned ACL as well.
      *
      * @param bucketName The name of an existing bucket to which the new object will be uploaded.
-     * @param key The key under which to store the new object.
-     * @param file The path of the file to upload to Baidu Bos.
-     * @param metadata The object metadata. At minimum this specifies the
-     *     content length for the stream of data being uploaded.
+     * @param key        The key under which to store the new object.
+     * @param file       The path of the file to upload to Baidu Bos.
+     * @param metadata   The object metadata. At minimum this specifies the
+     *                   content length for the stream of data being uploaded.
      */
     public PutObjectRequest(String bucketName, String key, File file, ObjectMetadata metadata) {
         this(bucketName, key, file, null, metadata);
@@ -114,8 +119,8 @@ public class PutObjectRequest extends GenericObjectRequest {
      * the specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
      *
-     * @param bucketName The name of an existing bucket to which the new object will be uploaded.
-     * @param key The key under which to store the new object.
+     * @param bucketName  The name of an existing bucket to which the new object will be uploaded.
+     * @param key         The key under which to store the new object.
      * @param inputStream The stream of data to upload to Baidu Bos.
      */
     public PutObjectRequest(String bucketName, String key, InputStream inputStream) {
@@ -128,9 +133,9 @@ public class PutObjectRequest extends GenericObjectRequest {
      * the specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
      *
-     * @param bucketName The name of an existing bucket to which the new object will be uploaded.
-     * @param key The key under which to store the new object.
-     * @param inputStream The stream of data to upload to Baidu Bos.
+     * @param bucketName       The name of an existing bucket to which the new object will be uploaded.
+     * @param key              The key under which to store the new object.
+     * @param inputStream      The stream of data to upload to Baidu Bos.
      * @param progressCallback The BosProgressCallback, which used for get progress information.
      */
     public PutObjectRequest(String bucketName, String key, InputStream inputStream,
@@ -145,11 +150,11 @@ public class PutObjectRequest extends GenericObjectRequest {
      * the specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
      *
-     * @param bucketName The name of an existing bucket to which the new object will be uploaded.
-     * @param key The key under which to store the new object.
+     * @param bucketName  The name of an existing bucket to which the new object will be uploaded.
+     * @param key         The key under which to store the new object.
      * @param inputStream The stream of data to upload to Baidu Bos.
-     * @param metadata The object metadata. At minimum this specifies the
-     *     content length for the stream of data being uploaded.
+     * @param metadata    The object metadata. At minimum this specifies the
+     *                    content length for the stream of data being uploaded.
      */
     public PutObjectRequest(String bucketName, String key, InputStream inputStream, ObjectMetadata metadata) {
         this(bucketName, key, null, inputStream, metadata);
@@ -162,15 +167,15 @@ public class PutObjectRequest extends GenericObjectRequest {
      * the specified bucket and key. After constructing the request,
      * users may optionally specify object metadata or a canned ACL as well.
      *
-     * @param bucketName The name of an existing bucket to which the new object will be uploaded.
-     * @param key The key under which to store the new object.
-     * @param file The path of the file to upload to Baidu Bos.
-     * @param inputStream The stream of data to upload to Baidu Bos.
+     * @param bucketName     The name of an existing bucket to which the new object will be uploaded.
+     * @param key            The key under which to store the new object.
+     * @param file           The path of the file to upload to Baidu Bos.
+     * @param inputStream    The stream of data to upload to Baidu Bos.
      * @param objectMetadata The object metadata. At minimum this specifies the
-     *     content length for the stream of data being uploaded.
+     *                       content length for the stream of data being uploaded.
      */
     protected PutObjectRequest(String bucketName, String key, File file, InputStream inputStream,
-                             ObjectMetadata objectMetadata) {
+                               ObjectMetadata objectMetadata) {
         super(bucketName, key);
         this.file = file;
         this.inputStream = inputStream;
@@ -262,7 +267,7 @@ public class PutObjectRequest extends GenericObjectRequest {
      * impacts.
      *
      * @return The optional metadata instructing Baidu Bos how to handle the
-     *     uploaded data (e.g. custom user metadata, hooks for specifying content type, etc.).
+     * uploaded data (e.g. custom user metadata, hooks for specifying content type, etc.).
      */
     public ObjectMetadata getObjectMetadata() {
         return this.objectMetadata;
@@ -281,7 +286,7 @@ public class PutObjectRequest extends GenericObjectRequest {
      * impacts.
      *
      * @param objectMetadata The optional metadata instructing Baidu Bos how to handle the
-     *     uploaded data (e.g. custom user metadata, hooks for specifying content type, etc.).
+     *                       uploaded data (e.g. custom user metadata, hooks for specifying content type, etc.).
      */
     public void setObjectMetadata(ObjectMetadata objectMetadata) {
         this.objectMetadata = objectMetadata;
@@ -301,7 +306,7 @@ public class PutObjectRequest extends GenericObjectRequest {
      * impacts.
      *
      * @param objectMetadata The optional metadata instructing Baidu Bos how to handle the
-     *     uploaded data (e.g. custom user metadata, hooks for specifying content type, etc.).
+     *                       uploaded data (e.g. custom user metadata, hooks for specifying content type, etc.).
      * @return This PutObjectRequest, enabling additional method calls to be chained together.
      */
     public PutObjectRequest withObjectMetadata(ObjectMetadata objectMetadata) {
@@ -316,8 +321,8 @@ public class PutObjectRequest extends GenericObjectRequest {
      * uploaded to Baidu Bos; both cannot be specified.
      *
      * @return The input stream containing the data to be uploaded to Baidu Bos.
-     *     Either specify a file or an input stream containing the
-     *     data to be uploaded to Baidu Bos, not both.
+     * Either specify a file or an input stream containing the
+     * data to be uploaded to Baidu Bos, not both.
      */
     public InputStream getInputStream() {
         return this.inputStream;
@@ -329,7 +334,8 @@ public class PutObjectRequest extends GenericObjectRequest {
      * uploaded to Baidu Bos; both cannot be specified.
      *
      * @param inputStream The input stream containing the data to be uploaded to Baidu Bos.
-     *     Either specify a file or an input stream containing the data to be uploaded to Baidu Bos, not both.
+     *                    Either specify a file or an input stream containing the data to be uploaded to Baidu Bos,
+     *                    not both.
      */
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -350,9 +356,10 @@ public class PutObjectRequest extends GenericObjectRequest {
         this.setInputStream(inputStream);
         return this;
     }
+
     /**
      * Gets the storageClass of the input file which is be uploaded to Baidu Bos.
-     * 
+     *
      * @return storageClass  The StorageClass is an identification that distinguish between infrequent access bos
      * and standard bos.
      */
@@ -362,9 +369,9 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets the storageClass of the input file which is be uploaded to Baidu Bos.
-     * 
-     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
-     * and standard bos.
+     *
+     * @param storageClass The StorageClass is an identification that distinguish between infrequent access bos
+     *                     and standard bos.
      */
     public void setStorageClass(String storageClass) {
         this.storageClass = storageClass;
@@ -372,9 +379,9 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets the storageClass of the input file which is be uploaded to Baidu Bos.
-     * 
-     * @param storageClass  The StorageClass is an identification that distinguish between infrequent access bos 
-     * and standard bos.
+     *
+     * @param storageClass The StorageClass is an identification that distinguish between infrequent access bos
+     *                     and standard bos.
      * @return This PutObjectRequest, so that additional method calls can be chained together.
      */
     public PutObjectRequest withStorageClass(String storageClass) {
@@ -384,6 +391,7 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Gets the BosProgressCallback which used for Get upload progress.
+     *
      * @return The BosProgressCallback which used for get progress information.
      */
     public BosProgressCallback getProgressCallback() {
@@ -392,6 +400,7 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets the BosProgressCallback which used for Get upload progress.
+     *
      * @param progressCallback The BosProgressCallback, which used for get progress information.
      */
     public void setProgressCallback(BosProgressCallback progressCallback) {
@@ -399,7 +408,6 @@ public class PutObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     *
      * @param progressCallback The BosProgressCallback, which used for get progress information.
      * @return This PutObjectRequest, so that additional method calls can be chained together
      */
@@ -410,6 +418,7 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Gets the limit of put object speed.
+     *
      * @return the limit of put object speed. unit: bit/s
      */
     public long getTrafficLimitBitPS() {
@@ -418,6 +427,7 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets Gets the limit of put object speed. range: 819200 bit/s ~ 838860800 bit/s
+     *
      * @param trafficLimitBitPS the limit of put object speed. unit: bit/s
      */
     public void setTrafficLimitBitPS(long trafficLimitBitPS) {
@@ -425,7 +435,6 @@ public class PutObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     *
      * @param trafficLimitBitPS the limit of put object speed. unit: bit/s, range: 819200 bit/s ~ 838860800 bit/s
      * @return This PutObjectRequest, so that additional method calls can be chained together
      */
@@ -436,6 +445,7 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Gets the parameter of Audio and video processing
+     *
      * @return the parameter of Audio and video processing
      */
     public String getVideoProcess() {
@@ -443,7 +453,6 @@ public class PutObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     *
      * @param videoProcess The parameter of Audio and video processing
      * @return This PutObjectRequest, so that additional method calls can be chained together
      */
@@ -452,7 +461,6 @@ public class PutObjectRequest extends GenericObjectRequest {
     }
 
     /**
-     *
      * @param videoProcess The parameter of Audio and video processing
      * @return This PutObjectRequest, so that additional method calls can be chained together
      */
@@ -463,6 +471,7 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Gets xBceCrc32cFlag of the object
+     *
      * @return xBceCrc32cFlag of the object.
      */
     public boolean getxBceCrc32cFlag() {
@@ -471,7 +480,8 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Sets xBceCrc32cFlag of the object
-     * @param  xBceCrc32cFlag whether to calculate crc32c.
+     *
+     * @param xBceCrc32cFlag whether to calculate crc32c.
      */
     public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
         this.xBceCrc32cFlag = xBceCrc32cFlag;
@@ -479,16 +489,33 @@ public class PutObjectRequest extends GenericObjectRequest {
 
     /**
      * Gets xBceAcl of the object
+     *
      * @return xBceAcl of the object.
      */
-    public String getxBceAcl(){
+    public String getxBceAcl() {
         return this.xBceAcl;
     }
 
     /**
      * Sets xBceAcl of the object
      */
-    public void setxBceAcl(String acl){
+    public void setxBceAcl(String acl) {
         this.xBceAcl = acl;
+    }
+
+    /**
+     * Gets xBceProcess of the object
+     *
+     * @return xBceProcess of the object.
+     */
+    public String getxBceProcess() {
+        return this.xBceProcess;
+    }
+
+    /**
+     * Sets xBceProcess of the object
+     */
+    public void setxBceProcess(String xBceProcess) {
+        this.xBceProcess = xBceProcess;
     }
 }

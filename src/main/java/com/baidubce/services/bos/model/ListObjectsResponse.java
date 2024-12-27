@@ -12,7 +12,6 @@
  */
 package com.baidubce.services.bos.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.Lists;
 
@@ -25,6 +24,7 @@ import java.util.List;
  * request, information describing if this is a complete or partial
  * listing, and the original request parameters.
  */
+@JsonDeserialize(using = ListObjectsResponseDeserializer.class)
 public class ListObjectsResponse extends BosResponse {
 
     /**
@@ -58,8 +58,10 @@ public class ListObjectsResponse extends BosResponse {
      * A list of the common prefixes included in this object listing - common
      * prefixes will only be populated for requests that specified a delimiter.
      */
-    @JsonDeserialize(using = CommonPrefixesDeserializer.class)
+    // @JsonDeserialize(using = CommonPrefixesDeserializer.class)
     private List<String> commonPrefixes;
+
+    private List<BosPrefixInfo>  commonPrefixesWithExtMeta;
 
     /**
      * The marker parameter originally specified by the caller when this object listing was returned
@@ -164,7 +166,7 @@ public class ListObjectsResponse extends BosResponse {
      *
      * @param bucketName The name of the Baidu Bos bucket containing the objects listed in this BosObjectListing.
      */
-    @JsonProperty("name")
+    // @JsonProperty("name")
     public void setBucketName(String bucketName) {
         this.bucketName = bucketName;
     }
@@ -295,9 +297,17 @@ public class ListObjectsResponse extends BosResponse {
      * @param isTruncated The value <code>true</code> if the object listing is <b>not complete</b>.
      * The value <code>false</code> if otherwise.
      */
-    @JsonProperty("isTruncated")
+    // @JsonProperty("isTruncated")
     public void setTruncated(boolean isTruncated) {
         this.isTruncated = isTruncated;
+    }
+
+    public List<BosPrefixInfo> getCommonPrefixesWithExtMeta() {
+        return commonPrefixesWithExtMeta;
+    }
+
+    public void setCommonPrefixesWithExtMeta(List<BosPrefixInfo> commonPrefixesWithExtMeta) {
+        this.commonPrefixesWithExtMeta = commonPrefixesWithExtMeta;
     }
 
 }

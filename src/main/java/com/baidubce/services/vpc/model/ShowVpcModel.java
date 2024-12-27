@@ -36,12 +36,22 @@ public class ShowVpcModel {
      * Is default vpc if the value is true
      * Is user-defined vpc if the value is false
      */
-    private boolean isDefault;
+    private Boolean isDefault;
+
+    /**
+     * The relay switch status of this vpc.
+     */
+    private Boolean relay;
 
     /**
      * The subnet info which belong to this vpc.
      */
     private List<Subnet> subnets;
+
+    /**
+     * The secondary cidrs of this vpc.
+     */
+    private List<String> secondaryCidr;
 
     public String getVpcId() {
         return vpcId;
@@ -75,12 +85,20 @@ public class ShowVpcModel {
         this.description = description;
     }
 
-    public boolean isDefault() {
+    public Boolean getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(boolean isDefault) {
-        this.isDefault = isDefault;
+    public void setDefault(Boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public Boolean getRelay() {
+        return relay;
+    }
+
+    public void setRelay(Boolean relay) {
+        this.relay = relay;
     }
 
     public List<Subnet> getSubnets() {
@@ -89,6 +107,14 @@ public class ShowVpcModel {
 
     public void setSubnets(List<Subnet> subnets) {
         this.subnets = subnets;
+    }
+
+    public List<String> getSecondaryCidr() {
+        return secondaryCidr;
+    }
+
+    public void setSecondaryCidr(List<String> secondaryCidr) {
+        this.secondaryCidr = secondaryCidr;
     }
 
     public String getIpv6Cidr() {
@@ -101,13 +127,16 @@ public class ShowVpcModel {
 
     @Override
     public String toString() {
-        return "Vpc{"
-                + "vpcId='" + vpcId + '\''
-                + ", name='" + name + '\''
-                + ", cidr='" + cidr + '\''
-                + ", description='" + description + '\''
-                + ", isDefault='" + isDefault + '\''
-                + ", subnets='" + subnets + '\''
-                + '}';
+        return "ShowVpcModel{" +
+                "vpcId='" + vpcId + '\'' +
+                ", name='" + name + '\'' +
+                ", cidr='" + cidr + '\'' +
+                ", ipv6Cidr='" + ipv6Cidr + '\'' +
+                ", description='" + description + '\'' +
+                ", isDefault=" + isDefault +
+                ", relay=" + relay +
+                ", subnets=" + subnets +
+                ", secondaryCidr=" + secondaryCidr +
+                '}';
     }
 }

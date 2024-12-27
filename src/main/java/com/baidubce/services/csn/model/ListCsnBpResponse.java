@@ -15,6 +15,8 @@ package com.baidubce.services.csn.model;
 import java.util.List;
 
 import com.baidubce.common.BaseBceResponse;
+import com.baidubce.services.tag.model.Tag;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -73,6 +75,8 @@ public class ListCsnBpResponse extends BaseBceResponse {
         private String expiredTime;
     
         private String createTime;
+
+        private List<Tag> tags;
     }
 
 }

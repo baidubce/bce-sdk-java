@@ -1,11 +1,13 @@
 package com.baidubce.services.rds.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * The account type of rds
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public enum RdsAccountType {
 
     Common("Common"),

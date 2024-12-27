@@ -35,7 +35,7 @@ public class GetBecVmServiceMetricsRequest extends AbstractBceRequest {
     /**
      * Offset in seconds.
      */
-    private Integer offsetInSeconds;
+    private int offsetInSeconds;
 
     /**
      * ServiceProvider.
@@ -51,7 +51,7 @@ public class GetBecVmServiceMetricsRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return GetBecVmServiceMetricsRequest with credentials.
      */
     public GetBecVmServiceMetricsRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

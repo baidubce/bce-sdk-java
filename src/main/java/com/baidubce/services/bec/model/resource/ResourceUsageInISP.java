@@ -32,16 +32,16 @@ public class ResourceUsageInISP {
         /**
          * cpu usage.
          */
-        private int cpu;
+        private Integer cpu;
 
         /**
          * memory usage.
          */
-        private int memory;
+        private Integer memory;
 
         /**
          * storage usage.
          */
-        private long storage;
+        private Long storage;
     }
 }

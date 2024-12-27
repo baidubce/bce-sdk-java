@@ -88,6 +88,16 @@ public class CreatePeerConnRequest extends AbstractBceRequest {
     private List<TagModel> tags;
 
     /**
+     * The ID of resourceGroup which will be bound to peer conn.
+     */
+    private String resourceGroupId;
+
+    /**
+     * The delete protect switch of peer conn.
+     */
+    private Boolean deleteProtect;
+
+    /**
      * Configure billing for the request.
      *
      * @param billing The billing of CreatePeerConnRequest
@@ -278,5 +288,21 @@ public class CreatePeerConnRequest extends AbstractBceRequest {
 
     public void setTags(List<TagModel> tags) {
         this.tags = tags;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+    }
+
+    public Boolean getDeleteProtect() {
+        return deleteProtect;
+    }
+
+    public void setDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
     }
 }

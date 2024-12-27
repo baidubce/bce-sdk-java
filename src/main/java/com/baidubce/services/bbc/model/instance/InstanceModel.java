@@ -12,6 +12,10 @@
  */
 package com.baidubce.services.bbc.model.instance;
 
+import com.baidubce.services.bcc.model.TagModel;
+
+import java.util.List;
+
 /**
  * The model of bbc instance
  */
@@ -31,6 +35,7 @@ public class InstanceModel {
     private String region;
     private String zone;
     private Boolean autoRenew;
+    private List<TagModel> tags;
 
     public String getId() {
         return id;
@@ -150,5 +155,13 @@ public class InstanceModel {
 
     public void setAutoRenew(Boolean autoRenew) {
         this.autoRenew = autoRenew;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

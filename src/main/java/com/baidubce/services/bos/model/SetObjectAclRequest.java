@@ -22,6 +22,11 @@ import java.util.List;
 public class SetObjectAclRequest extends GenericObjectRequest {
 
     /**
+     * For versioning
+     */
+    private String versionId;
+
+    /**
      * The json format for Object Acl.
      */
     private String jsonObjectAcl;
@@ -187,6 +192,14 @@ public class SetObjectAclRequest extends GenericObjectRequest {
      */
     public void setxBceGrantFullControl(String xBceGrantFullControl) {
         this.xBceGrantFullControl = xBceGrantFullControl;
+    }
+
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
     }
 
 }

@@ -1,5 +1,18 @@
 package com.baidubce.services.peerconn;
 
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientException;
 import com.baidubce.http.Headers;
@@ -22,22 +35,11 @@ import com.baidubce.services.peerconn.model.ModifyBandwidthRequest;
 import com.baidubce.services.peerconn.model.ModifyPeerConnRequest;
 import com.baidubce.services.peerconn.model.PeerConnIdRequest;
 import com.baidubce.services.peerconn.model.PurchaseReservedPeerConnRequest;
+import com.baidubce.services.peerconn.model.SwitchPeerConnDeleteProtectRequest;
 import com.baidubce.services.peerconn.model.SyncDnsRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides the client for accessing the Baidu Cloud network Service peer conn part.
@@ -338,7 +340,22 @@ public class PeerConnClient extends AbstractBceClient {
         internalRequest.addParameter("clientToken", request.getClientToken());
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
 
-
+    /**
+     * Switch the specified peer conn delete protect status.
+     *
+     * @param request
+     */
+    public void switchDeleteProtect(SwitchPeerConnDeleteProtectRequest request) {
+        checkNotNull(request, "request should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, PREFIX, request.getPeerConnId(), "deleteProtect");
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 }

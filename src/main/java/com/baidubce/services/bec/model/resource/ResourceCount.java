@@ -23,20 +23,20 @@ public class ResourceCount {
     /**
      * total Count.
      */
-    private int total;
+    private Integer total;
 
     /**
      * running Count.
      */
-    private int runningCount;
+    private Integer runningCount;
 
     /**
      * failed Count.
      */
-    private int failedCount;
+    private Integer failedCount;
 
     /**
      * closed Count.
      */
-    private int closedCount;
+    private Integer closedCount;
 }

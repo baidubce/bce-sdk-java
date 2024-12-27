@@ -32,7 +32,9 @@ public class BosMetadataResponseHandler implements HttpResponseHandler {
             if (httpResponse.getHeader(Headers.LOCATION) != null) {
                 metadata.setLocation(httpResponse.getHeader(Headers.LOCATION));
             }
-
+            if (httpResponse.getHeader(Headers.BCE_VERSION_ID) != null) {
+                metadata.setxBceVersionId(httpResponse.getHeader(Headers.BCE_VERSION_ID));
+            }
         }
         return false;
     }

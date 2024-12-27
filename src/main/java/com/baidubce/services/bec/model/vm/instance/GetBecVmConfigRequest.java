@@ -31,7 +31,7 @@ public class GetBecVmConfigRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return GetBecVmConfigRequest with credentials.
      */
     public GetBecVmConfigRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

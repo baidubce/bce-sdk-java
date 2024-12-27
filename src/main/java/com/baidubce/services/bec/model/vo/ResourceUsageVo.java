@@ -40,20 +40,20 @@ public class ResourceUsageVo extends AbstractBceResponse {
     /**
      * Summary of current cpu usage.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * Summary of current memory usage.
      */
-    private int memory;
+    private Integer memory;
 
     /**
      * Summary of current gpu usage.
      */
-    private int gpu;
+    private Integer gpu;
 
     /**
      * Summary of current bandwidth usage.
      */
-    private long bandwidth;
+    private Long bandwidth;
 }

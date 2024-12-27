@@ -14,15 +14,22 @@ package com.baidubce.services.bec.model.vo;
 
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bec.model.ImageDetail;
+import com.baidubce.services.bec.model.enums.ResourceStatusEnum;
 import com.baidubce.services.bec.model.purchase.DeploymentInstance;
+import com.baidubce.services.tag.model.Tag;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 
 /**
  * Vm Service Brief.
+ * Limited brief content return.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VmServiceBriefVo extends AbstractBceResponse {
 
     /**
@@ -38,32 +45,37 @@ public class VmServiceBriefVo extends AbstractBceResponse {
     /**
      * The status of the BEC virtual machine service.
      */
-    private String status;
+    private ResourceStatusEnum status;
+
+    /**
+     * The payment method of the BEC virtual machine service.
+     */
+    private String paymentMethod;
 
     /**
      * Total number of cpu.
      */
-    private int totalCpu;
+    private Integer totalCpu;
 
     /**
      * Total number of memory.
      */
-    private int totalMem;
+    private Integer totalMem;
 
     /**
      * The total number of data disks.
      */
-    private int totalDisk;
+    private Integer totalDisk;
 
     /**
      * The total number of system disks.
      */
-    private int totalRootDisk;
+    private Integer totalRootDisk;
 
     /**
      * Number of regions.
      */
-    private int regions;
+    private Integer regions;
 
     /**
      * List of deployment instances.
@@ -73,12 +85,12 @@ public class VmServiceBriefVo extends AbstractBceResponse {
     /**
      * The total number of instances.
      */
-    private int totalInstances;
+    private Integer totalInstances;
 
     /**
      * Number of running instances.
      */
-    private int runningInstances;
+    private Integer runningInstances;
 
     /**
      * System image details.
@@ -86,7 +98,22 @@ public class VmServiceBriefVo extends AbstractBceResponse {
     private ImageDetail osImage;
 
     /**
+     * The simple instances info of the BEC virtual machine service.
+     */
+    private List<VmInstanceIdVo> instances;
+
+    /**
      * Creation time.
      */
     private String createTime;
+
+    /**
+     * The order ids of the BEC virtual machine service.
+     */
+    private List<String> orderIdList;
+
+    /**
+     * The tags of the BEC virtual machine service.
+     */
+    private List<Tag> tags;
 }

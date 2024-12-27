@@ -86,6 +86,21 @@ public class AutoSnapshotPolicyModel {
      */
     private int volumeCount;
 
+    private String autoSnapshotPolicyId;
+
+    public AutoSnapshotPolicyModel withAutoSnapshotPolicyId(String autoSnapshotPolicyId) {
+        this.autoSnapshotPolicyId = autoSnapshotPolicyId;
+        return this;
+    }
+
+    public String getAutoSnapshotPolicyId() {
+        return autoSnapshotPolicyId;
+    }
+
+    public void setAutoSnapshotPolicyId(String autoSnapshotPolicyId) {
+        this.autoSnapshotPolicyId = autoSnapshotPolicyId;
+    }
+
     public String getId() {
         return id;
     }

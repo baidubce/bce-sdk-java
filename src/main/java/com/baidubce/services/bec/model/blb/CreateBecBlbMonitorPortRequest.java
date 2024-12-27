@@ -20,6 +20,7 @@ import lombok.Data;
  * The request for creating the BEC blb monitor port.
  */
 @Data
+@Deprecated
 public class CreateBecBlbMonitorPortRequest extends BlbListenerRequest {
 
     /**

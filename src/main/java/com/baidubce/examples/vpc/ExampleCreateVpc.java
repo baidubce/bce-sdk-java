@@ -5,10 +5,12 @@ package com.baidubce.examples.vpc;
 
 import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
+import com.baidubce.services.tag.model.Tag;
 import com.baidubce.services.vpc.VpcClient;
 import com.baidubce.services.vpc.VpcClientConfiguration;
 import com.baidubce.services.vpc.model.CreateVpcRequest;
 import com.baidubce.services.vpc.model.CreateVpcResponse;
+import com.google.common.collect.Lists;
 
 public class ExampleCreateVpc {
     public static void main(String[] args) {
@@ -27,13 +29,17 @@ public class ExampleCreateVpc {
         createVpcRequest.setDescription("desc"); // vpc描述
         createVpcRequest.setEnableIpv6(false); // 是否分配IPv6网段
 
+        Tag tag = new Tag();
+        tag.setTagKey("tagKey");
+        tag.setTagValue("tagValue");
+        createVpcRequest.setTags(Lists.newArrayList(tag)); // 设置vpc标签
+
         try {
             CreateVpcResponse response = vpcClient.createVpc(createVpcRequest);
             System.out.println(response);
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
 

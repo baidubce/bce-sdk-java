@@ -14,19 +14,22 @@ package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bec.model.Backends;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 
 /**
- * The response for getting the binding BEC blb backend Pod/Vm list.
+ * The response for getting the binding BEC blb backend pod or vm list under the deployment status condition.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecBlbBindingPodListWithStsResponse extends AbstractBceResponse {
 
     /**
      * Backend server information
      */
     private List<Backends> result;
-
 }

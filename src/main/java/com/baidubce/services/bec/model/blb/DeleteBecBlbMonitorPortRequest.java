@@ -38,7 +38,7 @@ public class DeleteBecBlbMonitorPortRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return GetInstanceRequest with credentials.
+     * @return DeleteBecBlbMonitorPortRequest with credentials.
      */
     public DeleteBecBlbMonitorPortRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

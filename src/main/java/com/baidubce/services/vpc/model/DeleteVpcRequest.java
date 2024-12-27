@@ -53,7 +53,7 @@ public class DeleteVpcRequest extends AbstractBceRequest {
      * Configure the vpcId for the request.
      *
      * @param vpcId The id of network.
-     * @return GetVpcRequest with specified vpcId.
+     * @return DeleteVpcRequest with specified vpcId.
      */
     public DeleteVpcRequest withVpcId(String vpcId) {
         this.setVpcId(vpcId);

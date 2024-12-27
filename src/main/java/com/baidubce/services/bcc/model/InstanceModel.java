@@ -111,6 +111,11 @@ public class InstanceModel {
     private List<TagModel> tags;
 
     /**
+     * The list of resource group.
+     */
+    private List<ResourceGroupModel> resGroupInfos;
+
+    /**
      * The policy of the instance placement
      * when "default",the instance has been placed by system auto, while "dedicatedHost", stands for been placed at dcc
      */
@@ -166,6 +171,8 @@ public class InstanceModel {
      */
     private String ipv6;
 
+    private Boolean enableJumboFrame;
+
     private Integer netEthQueueCount;
 
     /**
@@ -186,10 +193,13 @@ public class InstanceModel {
     private String osArch;
     private String osName;
     private String hosteyeType;
+
+    private String flavorSubType;
     private List<DeploySetModel> deploysetList;
     private NicInfo nicInfo;
     private Integer deletionProtection;
     private List<Volume> volumes;
+    private String ehcClusterId;
 
     public String getId() {
         return id;
@@ -583,4 +593,33 @@ public class InstanceModel {
         this.volumes = volumes;
     }
 
+    public Boolean getEnableJumboFrame() {
+        return enableJumboFrame;
+    }
+
+    public void setEnableJumboFrame(Boolean enableJumboFrame) {
+        this.enableJumboFrame = enableJumboFrame;
+    }
+
+    public String getFlavorSubType() {
+        return flavorSubType;
+    }
+
+    public void setFlavorSubType(String flavorSubType) {
+        this.flavorSubType = flavorSubType;
+    }
+    public List<ResourceGroupModel> getResGroupInfos() {
+        return resGroupInfos;
+    }
+    public void setResGroupInfos(List<ResourceGroupModel> resGroupInfos) {
+        this.resGroupInfos = resGroupInfos;
+    }
+
+    public String getEhcClusterId() {
+        return ehcClusterId;
+    }
+
+    public void setEhcClusterId(String ehcClusterId) {
+        this.ehcClusterId = ehcClusterId;
+    }
 }

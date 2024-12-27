@@ -14,9 +14,12 @@ package com.baidubce.services.blb.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * All listener info modal.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AllListener extends ListenerBase {
 
     /**
@@ -91,6 +94,12 @@ public class AllListener extends ListenerBase {
      * the certificate ids of listener.
      */
     private List<String> certIds;
+    /**
+     * The additional certificates and domains of listener
+     *
+     * @see AdditionalCertDomain
+     */
+    private List<AdditionalCertDomain> additionalCertDomains;
     /**
      * open dualAuth or not.
      */
@@ -167,6 +176,15 @@ public class AllListener extends ListenerBase {
 
     public void setCertIds(List<String> certIds) {
         this.certIds = certIds;
+    }
+
+    public List<AdditionalCertDomain> getAdditionalCertDomains() {
+        return additionalCertDomains;
+    }
+
+    public void setAdditionalCertDomains(
+            List<AdditionalCertDomain> additionalCertDomains) {
+        this.additionalCertDomains = additionalCertDomains;
     }
 
     public boolean isDualAuth() {
@@ -318,6 +336,7 @@ public class AllListener extends ListenerBase {
                 ", serverTimeout=" + serverTimeout +
                 ", redirectPort=" + redirectPort +
                 ", certIds=" + certIds +
+                ", additionalCertDomains=" + additionalCertDomains +
                 ", dualAuth=" + dualAuth +
                 ", clientCertIds=" + clientCertIds +
                 ", encryptionType='" + encryptionType + '\'' +

@@ -46,5 +46,5 @@ public class BlbBackendPodBriefVo {
     /**
      * The weight of the Pod/Vm.
      */
-    private int weight;
+    private Integer weight;
 }

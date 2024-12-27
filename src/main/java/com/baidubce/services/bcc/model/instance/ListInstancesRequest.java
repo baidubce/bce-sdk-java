@@ -44,6 +44,11 @@ public class ListInstancesRequest extends ListRequest {
      */
     private boolean autoRenew;
 
+    /**
+     * The id of ehcCluster.
+     */
+    private String ehcClusterId;
+
     public String getInternalIp() {
         return internalIp;
     }
@@ -149,6 +154,19 @@ public class ListInstancesRequest extends ListRequest {
      */
     public ListInstancesRequest withAutoRenew(boolean autoRenew) {
         this.autoRenew = autoRenew;
+        return this;
+    }
+
+    public String getEhcClusterId() {
+        return ehcClusterId;
+    }
+
+    public void setEhcClusterId(String ehcClusterId) {
+        this.ehcClusterId = ehcClusterId;
+    }
+
+    public ListInstancesRequest withEhcClusterId(String ehcClusterId) {
+        this.ehcClusterId = ehcClusterId;
         return this;
     }
 

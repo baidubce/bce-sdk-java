@@ -14,6 +14,7 @@ package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bec.model.enums.LbModeEnum;
 import lombok.Data;
 
 /**
@@ -30,12 +31,17 @@ public class BlbListenerRequest extends AbstractBceRequest {
     /**
      * Backend port.
      */
-    private int backendPort;
+    private Integer backendPort;
+
+    /**
+     * Whether enable to get the true ip.
+     */
+    private Boolean enableCipTTM;
 
     /**
      * Forwarding rules.
      */
-    private String lbMode;
+    private LbModeEnum lbMode;
 
     /**
      * Health check settings.
@@ -43,10 +49,15 @@ public class BlbListenerRequest extends AbstractBceRequest {
     private HealthCheck healthCheck;
 
     /**
+     * The keepalive timeout, 10 - 4000 seconds.
+     */
+    private Integer keepaliveTimeout;
+
+    /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return GetInstanceRequest with credentials.
+     * @return BlbListenerRequest with credentials.
      */
     public BlbListenerRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

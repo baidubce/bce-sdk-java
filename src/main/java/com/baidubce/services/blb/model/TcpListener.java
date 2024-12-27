@@ -12,8 +12,11 @@
  */
 package com.baidubce.services.blb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Tcp listener info modal.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TcpListener extends ListenerBase {
 }

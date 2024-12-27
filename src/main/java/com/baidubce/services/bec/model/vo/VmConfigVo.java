@@ -16,6 +16,8 @@ import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bec.model.ImageDetail;
 import com.baidubce.services.bec.model.vm.SystemVolumeConfig;
 import com.baidubce.services.bec.model.vm.VolumeConfig;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
@@ -24,37 +26,24 @@ import java.util.List;
  * VM config.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VmConfigVo extends AbstractBceResponse {
 
     /**
      * The number of CPUs of the virtual machine instance.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The memory of the virtual machine instance.
      */
-    private int mem;
-
-    /**
-     * The region of the virtual machine instance.
-     */
-    private String region;
-
-    /**
-     * The serviceProvider of the virtual machine instance.
-     */
-    private String serviceProvider;
-
-    /**
-     * The city of the virtual machine instance.
-     */
-    private String city;
+    private Integer mem;
 
     /**
      * The need for public IP.
      */
-    private boolean needPublicIp;
+    private Boolean needPublicIp;
 
     /**
      * The bandwidth of the virtual machine instance.
@@ -75,4 +64,29 @@ public class VmConfigVo extends AbstractBceResponse {
      * System disk configuration information.
      */
     private SystemVolumeConfig systemVolume;
+
+    /**
+     * The region id of the virtual machine instance.
+     */
+    private String regionId;
+
+    /**
+     * The specification of the virtual machine instance.
+     */
+    private String spec;
+
+    /**
+     * The gpu card count of the virtual machine instance.
+     */
+    private Integer gpu;
+
+    /**
+     * The gpu type of the virtual machine instance, like nvidia.com/GA102_GeForce_RTX_3080.
+     */
+    private String gpuType;
+
+    /**
+     * The gpu model of the virtual machine instance, like NVIDIA GeForce RTX 3080.
+     */
+    private String gpuModel;
 }

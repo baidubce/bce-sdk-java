@@ -958,6 +958,30 @@ public class BosClientTest {
             this.client.putObject(this.bucketName, objectKey, "dataContent");
             assertThat("dataContent".getBytes(), is(this.client.getObjectContent(this.bucketName, objectKey)));
         }
+
+        @Test
+        public void testGetObjectCallback() {
+            String objectKey = "testGetObjectCallback";
+            GetObjectRequest getObjectRequest = new GetObjectRequest("hj-test",objectKey);
+            File file = new File("tmp-download");
+            BosProgressCallback<Object> callback = new BosProgressCallback<Object>() {
+                @Override
+                public void onProgress(long currentSize, long totalSize, Object data) {
+                    System.out.println("get " + currentSize + "/" + totalSize);
+                }
+            };
+            this.client.putObject(this.bucketName, objectKey, "dataFile");
+            getObjectRequest.setProgressCallback(callback);
+            try {
+                this.client.getObject(getObjectRequest, file);
+                assertThat(HashUtils.computeMd5Hash(new ByteArrayInputStream("dataFile".getBytes())),
+                        is(HashUtils.computeMd5Hash(new FileInputStream(file))));
+            }catch (Exception e){
+                e.printStackTrace();
+            } finally {
+                file.delete();
+            }
+        }
     }
 
     public static class GetObjectMetadataTest extends Base {
@@ -2130,7 +2154,7 @@ public class BosClientTest {
                     + ",\"condition\":{\"time\":{\"dateGreaterThan\":\"2018-09-07T00:00:00Z\"}}"
                     + ",\"action\":{\"name\":\"DeleteObject\"}}]}";
             SetBucketLifecycleRequest request = new SetBucketLifecycleRequest("huangfu-03", jsonBucketLifecylce);
-            client.setBucketBucketLifecycle(request);
+            client.setBucketLifecycle(request);
             System.out.println("put bucket lifecycle success!!!!");
         }
 
@@ -2141,7 +2165,7 @@ public class BosClientTest {
                     + ",\"condition\":{\"time\":{\"dateGreaterThan\":\"2018-09-07T00:00:00Z\"}}"
                     + ",\"action\":{\"name\":\"DeleteObject\"}}]}";
             SetBucketLifecycleRequest request = new SetBucketLifecycleRequest("huangfu-03", jsonBucketLifecylce);
-            client.setBucketBucketLifecycle(request);
+            client.setBucketLifecycle(request);
             System.out.println("put bucket lifecycle success!!!!");
 
             GetBucketLifecycleRequest getBucketLifecycleRequest = new GetBucketLifecycleRequest();
@@ -2157,7 +2181,7 @@ public class BosClientTest {
                     + ",\"condition\":{\"time\":{\"dateGreaterThan\":\"2018-09-07T00:00:00Z\"}}"
                     + ",\"action\":{\"name\":\"DeleteObject\"}}]}";
             SetBucketLifecycleRequest request = new SetBucketLifecycleRequest("huangfu-03", jsonBucketLifecylce);
-            client.setBucketBucketLifecycle(request);
+            client.setBucketLifecycle(request);
             System.out.println("put bucket lifecycle success!!!!");
 
             DeleteBucketLifecycleRequest deleteBucketLifecycleRequest = new DeleteBucketLifecycleRequest();

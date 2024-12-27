@@ -9,6 +9,8 @@ import com.baidubce.services.subnet.SubnetClient;
 import com.baidubce.services.subnet.SubnetClientConfiguration;
 import com.baidubce.services.subnet.model.CreateSubnetRequest;
 import com.baidubce.services.subnet.model.CreateSubnetResponse;
+import com.baidubce.services.tag.model.Tag;
+import com.google.common.collect.Lists;
 
 public class ExampleCreateSubnet {
     public static void main(String[] args) {
@@ -22,10 +24,16 @@ public class ExampleCreateSubnet {
         SubnetClient subnetClient = new SubnetClient(config); // 初始化SubnetClient
 
         CreateSubnetRequest createSubnetRequest = new CreateSubnetRequest();
-        createSubnetRequest.setVpcId("vpc-b9ycwxxisrb7");
-        createSubnetRequest.setCidr("192.168.1.0/24");
+        createSubnetRequest.setVpcId("vpc-6fykvyb927mk");
+        createSubnetRequest.setCidr("10.0.0.0/28");
         createSubnetRequest.setName("testSubnet");
         createSubnetRequest.setZoneName("cn-bj-a");
+        createSubnetRequest.setVpcSecondaryCidr("10.0.0.0/24");
+
+        Tag tag = new Tag();
+        tag.setTagKey("tagKey");
+        tag.setTagValue("tagValue");
+        createSubnetRequest.setTags(Lists.newArrayList(tag));
 
         try {
             CreateSubnetResponse createSubnetResponse = subnetClient.createSubnet(createSubnetRequest);

@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.bec.model;
 
+import com.baidubce.services.bec.model.enums.ProtocolEnum;
 import lombok.Data;
 
 /**
@@ -23,15 +24,15 @@ public class Stats {
     /**
      * health status.
      */
-    private boolean health;
+    private Boolean health;
 
     /**
      * port.
      */
-    private int port;
+    private Integer port;
 
     /**
      * protocol type.
      */
-    private String protocol;
+    private ProtocolEnum protocol;
 }

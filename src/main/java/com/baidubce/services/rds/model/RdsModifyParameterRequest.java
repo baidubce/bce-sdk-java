@@ -2,6 +2,7 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import org.apache.htrace.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,11 @@ import java.util.List;
 /**
  * Modify the rds parameter
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsModifyParameterRequest extends AbstractBceRequest {
 
     private String etag;
-
+    private String effectiveTime;
     private String instanceId;
     private List<RdsModifyParameter> parameters = new ArrayList<RdsModifyParameter>();
 
@@ -44,6 +46,14 @@ public class RdsModifyParameterRequest extends AbstractBceRequest {
 
     public void setParameters(List<RdsModifyParameter> parameters) {
         this.parameters = parameters;
+    }
+
+    public String getEffectiveTime() {
+        return effectiveTime;
+    }
+
+    public void setEffectiveTime(String effectiveTime) {
+        this.effectiveTime = effectiveTime;
     }
 
     public RdsModifyParameterRequest addParameters(RdsModifyParameter modifyParameter) {

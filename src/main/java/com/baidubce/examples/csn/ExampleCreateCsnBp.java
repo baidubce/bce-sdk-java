@@ -9,6 +9,8 @@ import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.csn.CsnClient;
 import com.baidubce.services.csn.model.CreateCsnBpRequest;
 import com.baidubce.services.csn.model.CreateCsnBpResponse;
+import com.baidubce.services.tag.model.Tag;
+import com.google.common.collect.Lists;
 
 import java.util.UUID;
 
@@ -42,6 +44,7 @@ public class ExampleCreateCsnBp {
                 .geographicB("China")   // 另一个网络实例所属的区域。取值 [ China | Asia-Pacific ]，分别表示中国大陆、亚太区域
                 .interworkType(interWorkType)    // 带宽包的互通类型
                 .billing(prepaidBilling)    // 计费信息
+                .tags(Lists.newArrayList(new Tag().withTagKey("test").withTagValue("test")))    // 标签信息，可为空
                 .build();
         String prepaidClientToken = UUID.randomUUID().toString();   // 幂等性Token
 
@@ -63,6 +66,7 @@ public class ExampleCreateCsnBp {
                 .geographicB("China")   // 另一个网络实例所属的区域。取值 [ China | Asia-Pacific ]，分别表示中国大陆、亚太区域
                 .interworkType(interWorkType)    // 带宽包的互通类型
                 .billing(postpaidBilling)
+                .tags(Lists.newArrayList(new Tag().withTagKey("test").withTagValue("test")))    // 标签信息，可为空
                 .build();
         String postpaidClientToken = UUID.randomUUID().toString();  // 幂等性Token
 

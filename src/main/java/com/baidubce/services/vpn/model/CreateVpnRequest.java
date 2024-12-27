@@ -1,8 +1,11 @@
 package com.baidubce.services.vpn.model;
 
+import java.util.List;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.eip.model.Billing;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -26,6 +29,37 @@ public class CreateVpnRequest extends AbstractBceRequest {
     private String description;
     /**the eip of vpn*/
     private String eip;
+
+    /**
+     * The subnet id of vpn.
+     */
+    private String subnetId;
+
+    /**
+     * The type of vpn, "IPSec" means IPSec-VPN, and "SSL" means SSL-VPN.
+     */
+    private String type;
+
+    /**
+     * The tags of vpn.
+     */
+    private List<Tag> tags;
+
+    /**
+     * The resource group id of vpn.
+     */
+    private String resourceGroupId;
+
+    /**
+     * The delete protect switch of vpn.
+     */
+    private Boolean deleteProtect;
+
+    /**
+     * The max client connection number of SSL_VPN.
+     */
+    private Integer maxConnection;
+
     /**
      * An ASCII string whose length is less than 64.
      *

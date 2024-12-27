@@ -12,9 +12,12 @@
  */
 package com.baidubce.services.blb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Ddp listener info modal.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UdpListener extends ListenerBase {
 
     /**

@@ -30,6 +30,10 @@ import com.baidubce.services.bcm.model.alarm.request.CreateOrUpdateAlarmConfigV2
 import com.baidubce.services.bcm.model.alarm.request.ListAlarmMetricsRequest;
 import com.baidubce.services.bcm.model.alarm.request.ListSingleInstanceAlarmConfigsRequest;
 import com.baidubce.services.bcm.model.alarm.response.CreateAlarmConfigV2Response;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmDetailRequest;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmDetailResponse;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmListRequest;
+import com.baidubce.services.bcm.model.alarmhouse.AlarmListResponse;
 import com.baidubce.services.bcm.model.application.AggrTag;
 import com.baidubce.services.bcm.model.application.ApplicationDataListRequest;
 import com.baidubce.services.bcm.model.application.ApplicationDataListResponse;
@@ -155,6 +159,7 @@ import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopQuery;
 import com.baidubce.services.bcm.model.metrics.TsdbDimensionTopResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricAllDataResult;
 import com.baidubce.services.bcm.model.metrics.TsdbMetricResult;
+import com.baidubce.services.bcm.model.metrics.TsdbQueryMetaData;
 import com.baidubce.services.bcm.model.site.DnsTaskRequest;
 import com.baidubce.services.bcm.model.site.DnsTaskResponse;
 import com.baidubce.services.bcm.model.site.FtpTaskRequest;
@@ -199,6 +204,7 @@ import com.baidubce.services.bcm.model.siteonce.SiteOnceRequest;
 import com.baidubce.services.bcm.model.siteonce.SiteOnceTaskList;
 import com.baidubce.services.bcm.model.siteonce.SiteOnceTaskRequest;
 import com.baidubce.services.bcm.model.siteonce.SiteOnceTaskResponse;
+import com.baidubce.services.dugo.MqttConnectionTest;
 import com.baidubce.util.DateUtils;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -2679,5 +2685,52 @@ public class BcmClientTest {
         request.setTopNum(2);
         TsdbDimensionTopResult result = bcmClient.getMetricDimensionTop(request);
         printResult("get top data", result);
+    }
+
+    @Test
+    public void getDimensionTopDataTest() {
+        TsdbDimensionTopQuery request = new TsdbDimensionTopQuery();
+        request.setUserId(userId);
+        request.setScope("BCE_PFS");
+        request.setRegion("bj");
+        request.setMetricName("WriteIO");
+        request.setStatistics("average");
+        request.setStartTime("2024-07-08T07:10:01Z");
+        request.setEndTime("2024-07-08T07:20:01Z");
+        Map<String, String> dimensionMap = new HashMap<>();
+        dimensionMap.put("InstanceId", "pfs-1234567");
+        request.setDimensions(dimensionMap);
+        Set<String> labels = new HashSet<>();
+        labels.add("FilesetId");
+        request.setLabels(labels);
+        request.setTopNum(2);
+        List<TsdbQueryMetaData> result = bcmClient.getMetricDimensionTopData(request);
+        printResult("get top data", result);
+    }
+
+    @Test
+    public void getAlarmListTest() {
+        AlarmListRequest request = new AlarmListRequest();
+        request.setUserId(userId);
+        request.setAlarmType("ALARM_TYPE_CLOUD");
+        request.setPageNo(1);
+        request.setPageSize(10);
+        request.setRegion("bj");
+        request.setScope("BCE_BCC");
+        request.setStartTime(1722844725412L);
+        request.setEndTime(1723449525412L);
+
+        AlarmListResponse alarmList = bcmClient.getAlarmList(request);
+        printResult("get alarm list", alarmList);
+    }
+
+    @Test
+    public void getAlarmDetailTest() {
+        AlarmDetailRequest request = new AlarmDetailRequest();
+        request.setAlarmId("9f7718d************************82675ee");
+        request.setUserId(userId);
+
+        AlarmDetailResponse alarmDetail = bcmClient.getAlarmDetail(request);
+        printResult("get alarm detail", alarmDetail);
     }
 }

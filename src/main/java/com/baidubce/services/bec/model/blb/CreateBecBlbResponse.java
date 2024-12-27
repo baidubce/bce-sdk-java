@@ -13,13 +13,12 @@
 package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
+import com.baidubce.services.bec.model.vo.BlbInstanceVo;
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * The response for creating BEC blb.
  */
 @Data
-public class CreateBecBlbResponse extends ActionInfoVo<Map<String, String>> {
+public class CreateBecBlbResponse extends ActionInfoVo<BlbInstanceVo> {
 }

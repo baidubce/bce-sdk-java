@@ -10,6 +10,7 @@ public class RdsBackupPolicy {
     private String backupTime;
     private Boolean persistent;
     private Integer expireInDays;
+
     @JsonProperty("freeSpaceInGB")
     private Integer freeSpace;
 

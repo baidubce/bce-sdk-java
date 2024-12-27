@@ -53,12 +53,12 @@ public class ImageDetail {
     /**
      * The number of cpu.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The number of memory.
      */
-    private int memory;
+    private Integer memory;
 
     /**
      * The type of os.
@@ -88,7 +88,7 @@ public class ImageDetail {
     /**
      * Disk size.
      */
-    private int diskSize;
+    private Integer diskSize;
 
     /**
      * Creation time.
@@ -103,17 +103,17 @@ public class ImageDetail {
     /**
      * The minimum amount of memory.
      */
-    private int minMem;
+    private Integer minMem;
 
     /**
      * The minimum number of CPUs.
      */
-    private int minCpu;
+    private Integer minCpu;
 
     /**
      * The minimum number of disks.
      */
-    private int minDiskGb;
+    private Integer minDiskGb;
 
     /**
      * Description.
@@ -128,7 +128,7 @@ public class ImageDetail {
     /**
      * ephemeralSize.
      */
-    private int ephemeralSize;
+    private Integer ephemeralSize;
 
     /**
      * Image description.
@@ -138,12 +138,12 @@ public class ImageDetail {
     /**
      * Share limit.
      */
-    private int shareToUserNumLimit;
+    private Integer shareToUserNumLimit;
 
     /**
      * Number of shares.
      */
-    private int sharedToUserNum;
+    private Integer sharedToUserNum;
 
     /**
      * fpgaType.

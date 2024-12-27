@@ -13,19 +13,26 @@
 
 package com.baidubce.services.media;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+import com.baidubce.services.media.model.Audio;
+import com.baidubce.services.media.model.CodecOptions;
+import com.baidubce.services.media.model.CreatePresetRequest;
+import com.baidubce.services.media.model.GetPresetResponse;
+import com.baidubce.services.media.model.ListPresetsResponse;
 import com.baidubce.services.media.model.UpdatePresetRequest;
+import com.baidubce.services.media.model.Video;
+import com.baidubce.services.media.model.VolumeAdjust;
+import com.baidubce.util.JsonUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.baidubce.services.media.model.GetPresetResponse;
-import com.baidubce.services.media.model.ListPresetsResponse;
-import com.baidubce.util.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * The tests of preset
@@ -56,6 +63,96 @@ public class PresetClientTest extends AbstractMediaTest {
         presetName = convertName("ForTestCreatePreset");
         createPreset();
     }
+
+    @Test
+    public void testCreateAudioInsertPreset() {
+        CreatePresetRequest request = new CreatePresetRequest();
+        request.setPresetName("test_1111_insert");
+        request.setDescription("audio insert");
+        request.setContainer("mp4");
+        Audio audio = new Audio();
+        audio.setBitRateInBps(128000);
+        audio.setSampleRateInHz(44100);
+        audio.setChannels(2);
+        audio.setCodec("aac");
+        List<Audio.InputIndex> inputIndices = new ArrayList<>();
+        Audio.InputIndex inputIndex = new Audio.InputIndex();
+        inputIndex.setInputIndex(2);
+        inputIndices.add(inputIndex);
+        audio.setMapping(inputIndices);
+        request.setAudio(audio);
+        Video video = new Video();
+        video.setCodec("h264");
+        CodecOptions codecOptions = new CodecOptions();
+        codecOptions.setProfile("baseline");
+        video.setCodecOptions(codecOptions);
+        video.setRateControl("crf");
+        video.setCrf(24);
+        video.setSizingPolicy("keep");
+        video.setAutoAdjustResolution(true);
+        request.setVideo(video);
+        mediaClient.createPreset(request);
+        checkPresetExist("test_1111_insert", true);
+    }
+
+    @Test
+    public void testCreateAudioMixPreset() {
+        CreatePresetRequest request = new CreatePresetRequest();
+        request.setPresetName("audio_mix_preset_3");
+        request.setDescription("audio insert");
+        request.setContainer("mp4");
+
+        Audio audio = new Audio();
+        Audio.Tracks firstTrack = new Audio.Tracks();
+        firstTrack.setBitRateInBps(128000);
+        firstTrack.setSampleRateInHz(44100);
+        firstTrack.setChannels(2);
+        firstTrack.setCodec("aac");
+        VolumeAdjust firstTrackVolumeAdjust = new VolumeAdjust();
+        firstTrackVolumeAdjust.setNorm(true);
+        firstTrackVolumeAdjust.setGain(-5);
+        firstTrack.setVolumeAdjust(firstTrackVolumeAdjust);
+        Audio.InputIndex firstTrackInputIndex = new Audio.InputIndex();
+        firstTrackInputIndex.setInputIndex(1);
+        List<Audio.InputIndex> firstTrackindices = new ArrayList<>();
+        firstTrackindices.add(firstTrackInputIndex);
+        firstTrack.setMapping(firstTrackindices);
+
+        Audio.Tracks secondTrack = new Audio.Tracks();
+        secondTrack.setBitRateInBps(128000);
+        secondTrack.setSampleRateInHz(44100);
+        secondTrack.setChannels(2);
+        secondTrack.setCodec("aac");
+        VolumeAdjust secondTrackTrackVolumeAdjust = new VolumeAdjust();
+        secondTrackTrackVolumeAdjust.setNorm(true);
+        secondTrackTrackVolumeAdjust.setGain(-5);
+        secondTrack.setVolumeAdjust(secondTrackTrackVolumeAdjust);
+        Audio.InputIndex secondTrackInputIndex = new Audio.InputIndex();
+        secondTrackInputIndex.setInputIndex(2);
+        List<Audio.InputIndex> secondTrackindices = new ArrayList<>();
+        secondTrackindices.add(secondTrackInputIndex);
+        secondTrack.setMapping(secondTrackindices);
+
+        List<Audio.Tracks> tracks = new ArrayList<>();
+        tracks.add(firstTrack);
+        tracks.add(secondTrack);
+        audio.setMixAllTracks(false);
+        audio.setTracks(tracks);
+        request.setAudio(audio);
+        Video video = new Video();
+        video.setCodec("h264");
+        CodecOptions codecOptions = new CodecOptions();
+        codecOptions.setProfile("baseline");
+        video.setCodecOptions(codecOptions);
+        video.setRateControl("crf");
+        video.setCrf(23);
+        video.setSizingPolicy("keep");
+        video.setAutoAdjustResolution(true);
+        request.setVideo(video);
+        mediaClient.createPreset(request);
+        checkPresetExist("audio_mix_preset", true);
+    }
+
 
     @Test
     public void testCreatePreset2() throws JsonProcessingException {
@@ -100,6 +197,13 @@ public class PresetClientTest extends AbstractMediaTest {
             assertEquals("Failed to get preset: " + preset.getPresetName(),
                     resp.getPresetName(), preset.getPresetName());
         }
+    }
+
+    @Test
+    public void testGetPresetWithName() {
+        GetPresetResponse resp = mediaClient.getPreset("audio_mix_preset");
+        System.out.println(resp);
+
     }
 
     @Test

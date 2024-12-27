@@ -41,6 +41,8 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
+import com.baidubce.services.billing.model.bill.CostSplitBillRequest;
+import com.baidubce.services.billing.model.bill.CostSplitBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
 import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryRequest;
@@ -89,6 +91,7 @@ public class BillingClient extends AbstractBceClient {
     private static final String SHARE_PREPAY = "share/prepay";
     private static final String SHARE_BILL = "share/bill";
     private static final String MONTH_SUMMARY = "month/summary";
+    private static final String COST_SPLIT_BILL = "/cost/split/bill/list";
     private static final String QUERY_RENEW = "query/renew";
     private static final String PRICE = "price";
     private static final String CPC = "cpc";
@@ -200,6 +203,12 @@ public class BillingClient extends AbstractBceClient {
         if (request.getQueryAccountId() != null) {
             internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
         }
+        if (request.getShowDeductPrice() != null) {
+            internalRequest.addParameter("showDeductPrice", String.valueOf(request.getShowDeductPrice()));
+        }
+        if (request.getShowControversial() != null) {
+            internalRequest.addParameter("showControversial", String.valueOf(request.getShowControversial()));
+        }
         if (request.getPageNo() != null) {
             internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
         }
@@ -247,6 +256,12 @@ public class BillingClient extends AbstractBceClient {
         if (request.getQueryAccountId() != null) {
             internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
         }
+        if (request.getShowDeductPrice() != null) {
+            internalRequest.addParameter("showDeductPrice", String.valueOf(request.getShowDeductPrice()));
+        }
+        if (request.getShowControversial() != null) {
+            internalRequest.addParameter("showControversial", String.valueOf(request.getShowControversial()));
+        }
         if (request.getPageNo() != null) {
             internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
         }
@@ -280,6 +295,45 @@ public class BillingClient extends AbstractBceClient {
             internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
         }
         return invokeHttpClient(internalRequest, ProductMonthBillSummaryResponse.class);
+    }
+
+    /**
+     * 成本拆分账单查询
+     *
+     * @param request 成本拆分账单查询参数
+     * @return 成本拆分账单详情
+     */
+    public CostSplitBillResponse queryCostSplitBill(CostSplitBillRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        InternalRequest internalRequest =
+                createRequest(request, HttpMethodName.GET, VERSION_V1, BILL, COST_SPLIT_BILL);
+
+        if (request.getMonth() != null) {
+            internalRequest.addParameter("month", request.getMonth());
+        }
+        if (request.getStartDay() != null) {
+            internalRequest.addParameter("startDay", request.getStartDay());
+        }
+        if (request.getEndDay() != null) {
+            internalRequest.addParameter("endDay", request.getEndDay());
+        }
+        if (request.getServiceType() != null) {
+            internalRequest.addParameter("serviceType", request.getServiceType());
+        }
+        if (request.getQueryAccountId() != null) {
+            internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
+        }
+        if (request.getInstanceId() != null) {
+            internalRequest.addParameter("instanceId", request.getInstanceId());
+        }
+        if (request.getPageNo() != null) {
+            internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        }
+        if (request.getPageSize() != null) {
+            internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        }
+        return invokeHttpClient(internalRequest, CostSplitBillResponse.class);
     }
 
     /**

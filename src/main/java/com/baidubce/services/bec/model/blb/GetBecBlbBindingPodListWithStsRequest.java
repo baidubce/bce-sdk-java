@@ -18,6 +18,7 @@ import lombok.Data;
 
 /**
  * The request for getting the binding BEC blb backend Pod/Vm list.
+ * Getting the pod or vm list that can be bound under the deployment status condition.
  */
 @Data
 public class GetBecBlbBindingPodListWithStsRequest extends AbstractBceRequest {
@@ -26,6 +27,7 @@ public class GetBecBlbBindingPodListWithStsRequest extends AbstractBceRequest {
      * the id of the blb
      */
     private String blbId;
+
     /**
      * Deployment name
      */
@@ -35,7 +37,7 @@ public class GetBecBlbBindingPodListWithStsRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return GetInstanceRequest with credentials.
+     * @return GetBecBlbBindingPodListWithStsRequest with credentials.
      */
     public GetBecBlbBindingPodListWithStsRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

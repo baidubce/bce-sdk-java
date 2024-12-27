@@ -20,6 +20,7 @@ import com.baidubce.services.bcc.model.Billing;
 import com.baidubce.services.bcc.model.CreateCdsModel;
 import com.baidubce.services.bcc.model.InstanceModel;
 import com.baidubce.services.bcc.model.Reservation;
+import com.baidubce.services.bcc.model.SecurityGroupModel;
 import com.baidubce.services.bcc.model.SecurityGroupRuleModel;
 import com.baidubce.services.bcc.model.StorageType;
 import com.baidubce.services.bcc.model.TagModel;
@@ -54,8 +55,13 @@ import com.baidubce.services.bcc.model.image.ListSharedUserResponse;
 import com.baidubce.services.bcc.model.image.RemoteCopyImageRequest;
 import com.baidubce.services.bcc.model.image.ShareImageRequest;
 import com.baidubce.services.bcc.model.image.UnShareImageRequest;
+import com.baidubce.services.bcc.model.instance.BatchAddIpRequest;
+import com.baidubce.services.bcc.model.instance.BatchAddIpResponse;
+import com.baidubce.services.bcc.model.instance.BatchChangeToPrepaidRequest;
+import com.baidubce.services.bcc.model.instance.BatchDeleteIpRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceResponse;
+import com.baidubce.services.bcc.model.instance.BatchStopInstanceRequest;
 import com.baidubce.services.bcc.model.instance.BccAutoRenewRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceRequest;
 import com.baidubce.services.bcc.model.instance.BccPriceResponse;
@@ -65,20 +71,33 @@ import com.baidubce.services.bcc.model.instance.CancelBidOrderResponse;
 import com.baidubce.services.bcc.model.instance.ChangeInstanceSubnetRequest;
 import com.baidubce.services.bcc.model.instance.ChangeToPrepaidRequest;
 import com.baidubce.services.bcc.model.instance.ChangeToPrepaidResponse;
+import com.baidubce.services.bcc.model.instance.ChangeVpcRequest;
+import com.baidubce.services.bcc.model.instance.CreateEhcClusterRequest;
+import com.baidubce.services.bcc.model.instance.CreateEhcClusterResponse;
 import com.baidubce.services.bcc.model.instance.CreateInstanceRequest;
 import com.baidubce.services.bcc.model.instance.CreateInstanceResponse;
+import com.baidubce.services.bcc.model.instance.DeleteEhcClusterRequest;
+import com.baidubce.services.bcc.model.instance.DeleteInstanceDeploysetRequest;
+import com.baidubce.services.bcc.model.instance.DescribeEhcClusterListRequest;
+import com.baidubce.services.bcc.model.instance.DescribeEhcClusterListResponse;
 import com.baidubce.services.bcc.model.instance.GetBidInstancePriceRequest;
 import com.baidubce.services.bcc.model.instance.GetBidInstancePriceResponse;
 import com.baidubce.services.bcc.model.instance.GetInstanceResponse;
 import com.baidubce.services.bcc.model.instance.GetInstanceVncResponse;
+import com.baidubce.services.bcc.model.instance.InstanceIpv6Request;
 import com.baidubce.services.bcc.model.instance.InstanceType;
+import com.baidubce.services.bcc.model.instance.ListAvailableResizeSpecRequest;
 import com.baidubce.services.bcc.model.instance.ListGetInstanceNoChargeRequest;
 import com.baidubce.services.bcc.model.instance.ListInstanceByIdsRequest;
+import com.baidubce.services.bcc.model.instance.ListInstanceEnisRequest;
 import com.baidubce.services.bcc.model.instance.ListInstanceSpecsResponse;
 import com.baidubce.services.bcc.model.instance.ListInstancesRequest;
 import com.baidubce.services.bcc.model.instance.ListInstancesResponse;
+import com.baidubce.services.bcc.model.instance.ListRecycleInstanceRequest;
+import com.baidubce.services.bcc.model.instance.ModifyEhcClusterRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceAttributesRequest;
 import com.baidubce.services.bcc.model.instance.ModifyInstanceDescRequest;
+import com.baidubce.services.bcc.model.instance.PaymentTiming;
 import com.baidubce.services.bcc.model.instance.PurchaseReservedInstanceResponse;
 import com.baidubce.services.bcc.model.instance.RelatedRenewFlagType;
 import com.baidubce.services.bcc.model.instance.ReleasePrepaidInstanceResponse;
@@ -96,6 +115,8 @@ import com.baidubce.services.bcc.model.keypair.KeypairListResponse;
 import com.baidubce.services.bcc.model.keypair.KeypairModel;
 import com.baidubce.services.bcc.model.keypair.KeypairRenameRequest;
 import com.baidubce.services.bcc.model.keypair.KeypairUpdateDescRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsResponse;
 import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupResponse;
@@ -216,6 +237,31 @@ public class BccClientTest {
                             && Objects.equal(((BceServiceException) item).getErrorCode(), errorCode);
                 }
             });
+        }
+    }
+
+    public static class RegionTest extends BccBase {
+        protected BccClient client;
+        @Before
+        public void setUp() {
+            super.setUp();
+            String bccGlobalRegionEndpoint = "bcc.baidubce.com";
+            config.setEndpoint(bccGlobalRegionEndpoint);
+            client = new BccClient(config);
+        }
+
+        @After
+        public void tearDown() {
+            // do something
+            super.tearDown();
+        }
+
+        @Test
+        public void describeRegions() {
+            DescribeRegionsRequest describeRegionsRequest = new DescribeRegionsRequest();
+            DescribeRegionsResponse describeRegionsResponse = client.describeRegions(describeRegionsRequest);
+            System.out.println(describeRegionsResponse.getRegions());
+            toJsonPrettyString("describeRegionsResponse", describeRegionsResponse);
         }
     }
 
@@ -577,6 +623,14 @@ public class BccClientTest {
         }
 
         @Test
+        public void listInstanceByEhcCluster() {
+            ListInstancesResponse response =
+                    client.listInstances(new ListInstancesRequest().withEhcClusterId("ehc-bk4hM1N3"));
+            toJsonPrettyString("listInstanceByZoneName", response);
+            System.out.println(response);
+        }
+
+        @Test
         public void getInstance() {
             GetInstanceResponse response = client.getInstance("i-CUgRx5Os");
             assertThat(response.getInstance(), notNullValue(InstanceModel.class));
@@ -597,6 +651,15 @@ public class BccClientTest {
         @Test
         public void stopInstance() {
             client.stopInstance(instanceId, true);
+        }
+
+        @Test
+        public void batchStopInstance() {
+            BatchStopInstanceRequest request = new BatchStopInstanceRequest();
+            request.setInstanceIds(Arrays.asList("i-KEmEvelA","i-0nPl9WFJ"));
+            request.setForceStop(true);
+            request.setStopWithNoCharge(false);
+            client.batchStopInstance(request);
         }
 
         //        @Test
@@ -779,7 +842,25 @@ public class BccClientTest {
         @Test
         public void updateInstanceSubnet() {
             ChangeInstanceSubnetRequest changeInstanceSubnetRequest = changeInstanceSubnetRequest();
+            changeInstanceSubnetRequest
+                    .withInstanceId("i-pKq2Bnhf")
+                    .withSubnetId("sbn-m1dr1mn5d6t9")
+                    .withSecurityGroupIds(Collections.singletonList("g-dt6xvzpcp93m"));
             client.updateInstanceSubnet(changeInstanceSubnetRequest);
+        }
+
+        @Test
+        public void deleteInstanceDeploySet() {
+            DeleteInstanceDeploysetRequest deleteInstanceDeploysetRequest = new DeleteInstanceDeploysetRequest();
+            deleteInstanceDeploysetRequest
+                    .withDeployId("dset-NXyUzFou")
+                    .withInstanceIdList(Collections.singletonList("i-pKq2Bnhf"));
+            client.deleteInstanceDeploySet(deleteInstanceDeploysetRequest);
+        }
+
+        @Test
+        public void deleteRecycledInstance() {
+            client.deleteRecycledInstance("i-P5Prfq01");
         }
 
         @Test
@@ -811,6 +892,75 @@ public class BccClientTest {
                     .withInstanceId("i-dl2s537H")
                     .withRenewEip(true)
                     .withRenewCds(true));
+        }
+
+        @Test
+        public void testBatchChangeToPrepaid() {
+            ChangeToPrepaidRequest changeToPrepaidRequest = new ChangeToPrepaidRequest()
+                    .withInstanceId("i-kfnD7UQ7")
+                    .withDuration(1)
+                    .withAutoRenew(true)
+                    .withAutoRenewPeriod(1);
+
+            BatchChangeToPrepaidRequest request = new BatchChangeToPrepaidRequest()
+                    .withConfig(Arrays.asList(changeToPrepaidRequest));
+            client.batchChangeToPrepaid(request);
+        }
+
+        @Test
+        public void testListRecycleInstance() {
+            ListRecycleInstanceRequest request = new ListRecycleInstanceRequest()
+                    .withPaymentTiming(PaymentTiming.Postpaid);
+            client.listRecycleInstance(request);
+        }
+
+        @Test
+        public void testListAvailableResizeSpec() {
+            ListAvailableResizeSpecRequest request = new ListAvailableResizeSpecRequest()
+                    .withSpec("bcc.g4.c1m1");
+            client.listAvailableResizeSpec(request);
+        }
+
+        @Test
+        public void testChangeVpc() {
+            ChangeVpcRequest request = new ChangeVpcRequest().withInstanceId("");
+            client.changeVpc(request);
+        }
+
+        @Test
+        public void testListInstanceEnis() {
+            ListInstanceEnisRequest request = new ListInstanceEnisRequest().withInstanceId("i-CH47zOoW");
+            client.listInstanceEnis(request);
+        }
+
+        @Test
+        public void testCreateEhcCluster() {
+            CreateEhcClusterRequest request = new CreateEhcClusterRequest();
+            request.withName("test-ehcCluster").withDescription("test-description").withZoneName("cn-bj-b");
+            CreateEhcClusterResponse response = client.createEhcCluster(request);
+            System.out.println(response);
+        }
+
+        @Test
+        public void testEhcClusterList() {
+            DescribeEhcClusterListRequest request = new DescribeEhcClusterListRequest();
+            request.withEhcClusterIdList(Arrays.asList("ehc-PmutHoRZ"));
+            DescribeEhcClusterListResponse describeEhcClusterListResponse = client.ehcClusterList(request);
+            System.out.println(describeEhcClusterListResponse);
+        }
+
+        @Test
+        public void testModifyEhcCluster() {
+            ModifyEhcClusterRequest request = new ModifyEhcClusterRequest();
+            request.withEhcClusterId("ehc-PmutHoRZ").withName("test-modify").withDescription("");
+            client.modifyEhcCluster(request);
+        }
+
+        @Test
+        public void testDeleteEhcCluster() {
+            DeleteEhcClusterRequest request = new DeleteEhcClusterRequest();
+            request.withEhcClusterIdList(Arrays.asList("ehc-PmutHoRZ"));
+            client.deleteEhcCluster(request);
         }
 
     }
@@ -1295,6 +1445,13 @@ public class BccClientTest {
             toJsonPrettyString("listSecurityGroup", response);
         }
 
+        @Test
+        public void getSecurityGroupTest() {
+            SecurityGroupModel response = client.getSecurityGroup("g-8vrnussccb6s");
+            assertThat(response, notNullValue());
+            toJsonPrettyString("getSecurityGroup", response);
+        }
+
 
         @Test
         public void deleteSecurityGroup() {
@@ -1748,6 +1905,7 @@ public class BccClientTest {
             request.setName("InternalIpsTest");
             request.setBilling(new Billing().withPaymentTiming("Postpaid"));
             request.setInternalIps(Collections.singletonList("192.168.0.30"));
+            request.setEhcClusterId("ehc-bk4hM1N3");
 
             client.createInstanceBySpec(request);
         }
@@ -1760,6 +1918,52 @@ public class BccClientTest {
             BatchRefundResourceResponse response = client.batchRefundResource(request);
             toJsonPrettyString("batchRefundResource", response);
         }
+
+        @Test
+        public void delIpv6Test() {
+
+            InstanceIpv6Request request = new InstanceIpv6Request();
+            request.setInstanceId("i-0nPl9WFJ");
+            request.setIpv6Address("2400:da00:e003:0:41c:4100:0:5");
+            request.setReboot(false);
+
+            client.delIpv6(request);
+        }
+
+        @Test
+        public void batchAddIpTest() {
+
+            BatchAddIpRequest request = new BatchAddIpRequest();
+            request.setInstanceId("i-udU7HS0a");
+            request.setAllocateMultiIpv6Addr(true);
+            request.setSecondaryPrivateIpAddressCount(2);
+
+            BatchAddIpResponse response = client.batchAddIp(request);
+            toJsonPrettyString("batchAddIp", response);
+        }
+
+
+        @Test
+        public void batchDelIpTest() {
+
+            BatchDeleteIpRequest request = new BatchDeleteIpRequest();
+            request.setInstanceId("i-udU7HS0a");
+            request.setPrivateIps(Collections.singletonList("2400:da00:e003:0:41c:4100:0:5"));
+
+            client.batchDeleteIp(request);
+        }
+
+        @Test
+        public void adlIpv6Test() {
+
+            InstanceIpv6Request request = new InstanceIpv6Request();
+            request.setInstanceId("i-0nPl9WFJ");
+            request.setIpv6Address("2400:da00:e003:0:41c:4100:0:5");
+            request.setReboot(false);
+
+            client.addIpv6(request);
+        }
+
 
         @Test
         public void getAvailableImagesBySpecTest() {

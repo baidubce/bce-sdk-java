@@ -13,6 +13,8 @@
 package com.baidubce.services.bec.model.vo;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,6 +24,8 @@ import java.util.List;
  * BEC metrics.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MetricsVo extends AbstractBceResponse {
 
     /**
@@ -44,13 +48,18 @@ public class MetricsVo extends AbstractBceResponse {
      */
     private BigDecimal totalValue;
 
+    /**
+     * The metric name.
+     */
+    private String name;
+
     @Data
     public static class Metric {
 
         /**
          * Timestamp.
          */
-        private int timeInSecond;
+        private Integer timeInSecond;
 
         /**
          * Metric value.

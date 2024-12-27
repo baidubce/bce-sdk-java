@@ -2,21 +2,20 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Request to create rds instance
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsCreateInstanceRequest extends AbstractBceRequest {
 
     private String clientToken;
     private RdsBilling billing;
-    /**
-     * purchase the count of rds instance
-     * default count is 1
-     */
+
     private int purchaseCount = 1;
 
     private String instanceName;
@@ -29,22 +28,27 @@ public class RdsCreateInstanceRequest extends AbstractBceRequest {
     private Integer volumeCapacity;
     private String diskIoType;
 
-    private List<String> zoneNames;
+    private List<String> zoneNames=new ArrayList<String>();
+    private String bcmGroupName;
     private String vpcId;
     private boolean isDirectPay;
     private List<RdsSubnet> subnets;
     private List<RdsTag> tags;
+    private String bgwGroupId;
+    private boolean bgwGroupExclusive;
     private String characterSetName;
     private RdsRenewTimeUnit autoRenewTimeUnit;
     private Integer autoRenewTime;
+    private Integer lowerCaseTableNames;
+    private String parameterTemplateId;
+    private String ovip;
+    private Integer entryPort;
+    private String replicationType;
+    private String resourceGroupId;
+    private RdsInitialDataReference initialDataReference;
+    private List<RdsRecoveryToSourceInstanceModel> data;
+    private String leaderInstanceId;
 
-    public String getDiskIoType() {
-        return diskIoType;
-    }
-
-    public void setDiskIoType(String diskIoType) {
-        this.diskIoType = diskIoType;
-    }
 
     public String getClientToken() {
         return clientToken;
@@ -126,12 +130,28 @@ public class RdsCreateInstanceRequest extends AbstractBceRequest {
         this.volumeCapacity = volumeCapacity;
     }
 
+    public String getDiskIoType() {
+        return diskIoType;
+    }
+
+    public void setDiskIoType(String diskIoType) {
+        this.diskIoType = diskIoType;
+    }
+
     public List<String> getZoneNames() {
         return zoneNames;
     }
 
     public void setZoneNames(List<String> zoneNames) {
         this.zoneNames = zoneNames;
+    }
+
+    public String getBcmGroupName() {
+        return bcmGroupName;
+    }
+
+    public void setBcmGroupName(String bcmGroupName) {
+        this.bcmGroupName = bcmGroupName;
     }
 
     public String getVpcId() {
@@ -142,12 +162,12 @@ public class RdsCreateInstanceRequest extends AbstractBceRequest {
         this.vpcId = vpcId;
     }
 
-    public boolean getIsDirectPay() {
-        return isDirectPay;
+    public boolean setIsDirectPay(boolean isDirectPay) {
+        return this.isDirectPay = isDirectPay;
     }
 
-    public void setIsDirectPay(boolean isDirectPay) {
-        this.isDirectPay = isDirectPay;
+    public void setDirectPay(boolean directPay) {
+        isDirectPay = directPay;
     }
 
     public List<RdsSubnet> getSubnets() {
@@ -164,6 +184,22 @@ public class RdsCreateInstanceRequest extends AbstractBceRequest {
 
     public void setTags(List<RdsTag> tags) {
         this.tags = tags;
+    }
+
+    public String getBgwGroupId() {
+        return bgwGroupId;
+    }
+
+    public void setBgwGroupId(String bgwGroupId) {
+        this.bgwGroupId = bgwGroupId;
+    }
+
+    public boolean isBgwGroupExclusive() {
+        return bgwGroupExclusive;
+    }
+
+    public void setBgwGroupExclusive(boolean bgwGroupExclusive) {
+        this.bgwGroupExclusive = bgwGroupExclusive;
     }
 
     public String getCharacterSetName() {
@@ -188,6 +224,78 @@ public class RdsCreateInstanceRequest extends AbstractBceRequest {
 
     public void setAutoRenewTime(Integer autoRenewTime) {
         this.autoRenewTime = autoRenewTime;
+    }
+
+    public Integer getLowerCaseTableNames() {
+        return lowerCaseTableNames;
+    }
+
+    public void setLowerCaseTableNames(Integer lowerCaseTableNames) {
+        this.lowerCaseTableNames = lowerCaseTableNames;
+    }
+
+    public String getParameterTemplateId() {
+        return parameterTemplateId;
+    }
+
+    public void setParameterTemplateId(String parameterTemplateId) {
+        this.parameterTemplateId = parameterTemplateId;
+    }
+
+    public String getOvip() {
+        return ovip;
+    }
+
+    public void setOvip(String ovip) {
+        this.ovip = ovip;
+    }
+
+    public Integer getEntryPort() {
+        return entryPort;
+    }
+
+    public void setEntryPort(Integer entryPort) {
+        this.entryPort = entryPort;
+    }
+
+    public String getReplicationType() {
+        return replicationType;
+    }
+
+    public void setReplicationType(String replicationType) {
+        this.replicationType = replicationType;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+    }
+
+    public RdsInitialDataReference getInitialDataReference() {
+        return initialDataReference;
+    }
+
+    public void setInitialDataReference(RdsInitialDataReference initialDataReference) {
+        this.initialDataReference = initialDataReference;
+    }
+
+    public List<RdsRecoveryToSourceInstanceModel> getData() {
+        return data;
+    }
+
+    public void setData(List<RdsRecoveryToSourceInstanceModel> data) {
+        this.data = data;
+    }
+
+    public String getLeaderInstanceId() {
+        return leaderInstanceId;
+    }
+
+    public void setLeaderInstanceId(String leaderInstanceId) {
+        this.leaderInstanceId = leaderInstanceId;
     }
 
     @Override

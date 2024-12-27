@@ -22,6 +22,8 @@ import com.baidubce.services.billing.BillingClient;
 import com.baidubce.services.billing.BillingClientConfiguration;
 import com.baidubce.services.billing.model.ResourceMonthBillRequest;
 import com.baidubce.services.billing.model.ResourceMonthBillResponse;
+import com.baidubce.services.billing.model.bill.CostSplitBillRequest;
+import com.baidubce.services.billing.model.bill.CostSplitBillResponse;
 import com.baidubce.services.billing.model.bill.PrepayShareBillRequest;
 import com.baidubce.services.billing.model.bill.PrepayShareBillResponse;
 import com.baidubce.services.billing.model.bill.ProductMonthBillSummaryRequest;
@@ -71,6 +73,7 @@ public class BillingExample {
         // sampleForSetRenewResourceRule();
         sampleForQueryPrepayShareBill();
         sampleForQueryShareBill();
+        sampleForQueryCostSplitBill();
         sampleForQueryProductMonthBillSummary();
         sampleForGetResourceMonthBills();
         sampleForQueryOrderList();
@@ -190,6 +193,28 @@ public class BillingExample {
 
         System.out.println("==================================");
         System.out.println("sampleForQueryShareBill ShareBillResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    month:  " + response.getBillMonth());
+        System.out.println("    size:  " + response.getTotalCount());
+        System.out.println("    bills:  " + response.getBills());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForQueryCostSplitBill() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        CostSplitBillRequest request = new CostSplitBillRequest();
+        request.setMonth("2022-09");
+        request.setPageNo(1);
+        request.setPageSize(50);
+
+        CostSplitBillResponse response = client.queryCostSplitBill(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForQueryCostSplitBill CostSplitBillResponse result:");
         System.out.println("    accountId:  " + response.getAccountId());
         System.out.println("    month:  " + response.getBillMonth());
         System.out.println("    size:  " + response.getTotalCount());

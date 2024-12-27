@@ -28,9 +28,9 @@ public class GetBecBlbResourceMetricsRequest extends AbstractBceRequest {
     private String blbId;
 
     /**
-     * The type of the metrics.
+     * The metrics type.
      */
-    private String type;
+    private String metricsType;
 
     /**
      * The type of the network.
@@ -38,24 +38,24 @@ public class GetBecBlbResourceMetricsRequest extends AbstractBceRequest {
     private String ipType;
 
     /**
-     * Offset in seconds.
-     */
-    private Integer offsetInSeconds;
-
-    /**
      * Query port.
      */
     private String port;
 
     /**
+     * The start time, unix timestamp, the unit is second.
+     */
+    private Long start;
+
+    /**
+     * The start time, unix timestamp, the unit is second.
+     */
+    private Long end;
+
+    /**
      * ServiceProvider.
      */
     private String serviceProvider;
-
-    /**
-     * stepInMin
-     */
-    private Integer stepInMin;
 
     /**
      * Configure request credential for the request.

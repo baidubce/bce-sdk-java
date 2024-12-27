@@ -12,7 +12,11 @@
  */
 package com.baidubce.services.bec.model.vo;
 
+import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.bec.model.Listeners;
+import com.baidubce.services.bec.model.enums.ResourceStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
@@ -21,7 +25,9 @@ import java.util.List;
  * BEC blb instance.
  */
 @Data
-public class BlbInstanceVo {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class BlbInstanceVo extends AbstractBceResponse {
 
     /**
      * The id of the blb.
@@ -36,7 +42,7 @@ public class BlbInstanceVo {
     /**
      * The status of the blb.
      */
-    private String status;
+    private ResourceStatusEnum status;
 
     /**
      * Load balance type.
@@ -44,19 +50,9 @@ public class BlbInstanceVo {
     private String lbType;
 
     /**
-     * The region of the blb.
+     * The region id.
      */
-    private String region;
-
-    /**
-     * The service provider of the blb.
-     */
-    private String serviceProvider;
-
-    /**
-     * The city provider of the blb.
-     */
-    private String city;
+    private String regionId;
 
     /**
      * Public ip.
@@ -91,16 +87,40 @@ public class BlbInstanceVo {
     /**
      * The number of backend servers bound to load balancing.
      */
-    private int podCount;
+    private Integer podCount;
 
     /**
      * Load balance maximum bandwidth limit.
      */
-    private int bandwidthInMbpsLimit;
+    private Integer bandwidthInMbpsLimit;
 
     /**
      * Creation time.
      */
     private String createTime;
 
+    /**
+     * Description.
+     */
+    private String desc;
+
+    /**
+     * The public ipv6 address.
+     */
+    private String ipv6PublicIp;
+
+    /**
+     * The China Mobile public ipv6 address.
+     */
+    private String cmIpv6PublicIP;
+
+    /**
+     * The China Telcom ipv6 address.
+     */
+    private String ctIpv6PublicIP;
+
+    /**
+     * The China Unicom public ipv6 address.
+     */
+    private String unIpv6PublicIP;
 }

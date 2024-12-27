@@ -34,12 +34,12 @@ public class CreateBecVmTemplateRequest extends AbstractBceRequest {
     /**
      * The number of CPUs of the virtual machine instance.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The memory of the virtual machine instance.
      */
-    private int memory;
+    private Integer memory;
 
     /**
      * Image id.
@@ -56,22 +56,22 @@ public class CreateBecVmTemplateRequest extends AbstractBceRequest {
     /**
      * Whether to disable the intranet，default false.
      */
-    private boolean disableIntranet;
+    private Boolean disableIntranet;
 
     /**
      * Whether public network is required.
      */
-    private boolean needPublicIp;
+    private Boolean needPublicIp;
 
     /**
      * Whether public IPv6 is required, needPublicIp needs to be true.
      */
-    private boolean needIpv6PublicIp;
+    private Boolean needIpv6PublicIp;
 
     /**
      * The bandwidth of the BEC virtual template.
      */
-    private int bandwidth;
+    private Integer bandwidth;
 
     /**
      * GPU configuration information of virtual machine.
@@ -82,7 +82,7 @@ public class CreateBecVmTemplateRequest extends AbstractBceRequest {
     public static class GpuRequest {
         private String type;
 
-        private int num;
+        private Integer num;
     }
 
     /**

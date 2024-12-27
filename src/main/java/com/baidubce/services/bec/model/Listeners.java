@@ -12,6 +12,8 @@
  */
 package com.baidubce.services.bec.model;
 
+import com.baidubce.services.bec.model.enums.LbModeEnum;
+import com.baidubce.services.bec.model.enums.ProtocolEnum;
 import lombok.Data;
 
 /**
@@ -23,40 +25,50 @@ public class Listeners {
     /**
      * Load balance protocol.
      */
-    private String protocol;
+    private ProtocolEnum protocol;
 
     /**
      * Load balance port.
      */
-    private int port;
+    private Integer port;
 
     /**
      * Backend port.
      */
-    private int backendPort;
+    private Integer backendPort;
 
     /**
      * Forwarding rules.
      */
-    private String scheduler;
+    private LbModeEnum scheduler;
 
     /**
      * Health check interval.
      */
-    private int healthCheckInterval;
+    private Integer healthCheckInterval;
 
     /**
      * Health check threshold.
      */
-    private int healthCheckRetry;
+    private Integer healthCheckRetry;
 
     /**
      * Health check timeout period.
      */
-    private int healthCheckTimeout;
+    private Integer healthCheckTimeout;
 
     /**
-     * udp Health Check String.
+     * UDP Health Check String.
      */
     private String udpHealthCheckString;
+
+    /**
+     * Health Check type, like tcp, http, udp.
+     */
+    private String healthCheckType;
+
+    /**
+     * The health check url path, default /.
+     */
+    private String healthCheckURI;
 }

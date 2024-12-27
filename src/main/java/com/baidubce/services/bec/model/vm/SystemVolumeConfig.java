@@ -12,18 +12,24 @@
  */
 package com.baidubce.services.bec.model.vm;
 
+import com.baidubce.services.bec.model.enums.DiskTypeEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * System volume config information.
+ * Shared with return vo.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SystemVolumeConfig {
 
     /**
      * The type of the Volume.
      */
-    private String volumeType;
+    private DiskTypeEnum volumeType;
 
     /**
      * The size of the Volume.
@@ -34,4 +40,9 @@ public class SystemVolumeConfig {
      * The name of the Volume.
      */
     private String name;
+
+    /**
+     * The pvc name.
+     */
+    private String pvcName;
 }

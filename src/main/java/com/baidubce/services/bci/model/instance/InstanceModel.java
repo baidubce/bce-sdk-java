@@ -56,6 +56,16 @@ public class InstanceModel {
     private String gpuType;
 
     /**
+     * The cpu count of the instance
+     */
+    private float cpu;
+
+    /**
+     * The memory count of the instance
+     */
+    private float memory;
+
+    /**
      * The bandwidthInMbps of the instance eip
      */
     private Integer bandwidthInMbps;
@@ -149,6 +159,24 @@ public class InstanceModel {
 
     public InstanceModel setGpuType(String gpuType) {
         this.gpuType = gpuType;
+        return this;
+    }
+
+    public float getCpu() {
+        return cpu;
+    }
+
+    public InstanceModel setCpu(float cpu) {
+        this.cpu = cpu;
+        return this;
+    }
+
+    public float getMemory() {
+        return memory;
+    }
+
+    public InstanceModel setMemory(float memory) {
+        this.memory = memory;
         return this;
     }
 

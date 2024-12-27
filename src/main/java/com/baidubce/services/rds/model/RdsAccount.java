@@ -1,12 +1,14 @@
 package com.baidubce.services.rds.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
 /**
  * The account info of rds
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsAccount extends AbstractBceResponse {
 
     private String accountName;
@@ -14,8 +16,9 @@ public class RdsAccount extends AbstractBceResponse {
     private RdsAccountStatus status;
     private String type;
     private RdsAccountType accountType;
-    private List<RdsDatabasePrivileges> databasePrivileges;
+    private List<DatabasePrivilege> databasePrivileges;
     private String desc;
+    private String eTag;
 
     public String getAccountName() {
         return accountName;
@@ -57,11 +60,11 @@ public class RdsAccount extends AbstractBceResponse {
         this.accountType = accountType;
     }
 
-    public List<RdsDatabasePrivileges> getDatabasePrivileges() {
+    public List<DatabasePrivilege> getDatabasePrivileges() {
         return databasePrivileges;
     }
 
-    public void setDatabasePrivileges(List<RdsDatabasePrivileges> databasePrivileges) {
+    public void setDatabasePrivileges(List<DatabasePrivilege> databasePrivileges) {
         this.databasePrivileges = databasePrivileges;
     }
 
@@ -71,5 +74,13 @@ public class RdsAccount extends AbstractBceResponse {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String geteTag() {
+        return eTag;
+    }
+
+    public void seteTag(String eTag) {
+        this.eTag = eTag;
     }
 }

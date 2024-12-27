@@ -13,12 +13,17 @@
 package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bec.model.enums.LbModeEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The response for getting the BEC blb monitor port details.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecBlbMonitorPortDetailsResponse extends AbstractBceResponse {
 
     /**
@@ -29,15 +34,20 @@ public class GetBecBlbMonitorPortDetailsResponse extends AbstractBceResponse {
     /**
      * Backend port.
      */
-    private int backendPort;
+    private Integer backendPort;
 
     /**
      * Forwarding rules.
      */
-    private String lbMode;
+    private LbModeEnum lbMode;
 
     /**
      * Health check settings.
      */
     private HealthCheck healthCheck;
+
+    /**
+     * The keepalive timeout.
+     */
+    private Integer keepaliveTimeout;
 }

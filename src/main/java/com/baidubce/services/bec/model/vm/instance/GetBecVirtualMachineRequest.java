@@ -14,12 +14,16 @@ package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The request for getting the details of the BEC virtual machine.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecVirtualMachineRequest extends AbstractBceRequest {
 
     /**
@@ -31,7 +35,7 @@ public class GetBecVirtualMachineRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return GetBecVirtualMachineRequest with credentials.
      */
     public GetBecVirtualMachineRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

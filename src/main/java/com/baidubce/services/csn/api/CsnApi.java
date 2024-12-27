@@ -292,6 +292,12 @@ public class CsnApi {
                     }
                 },
                 new HashMap<String, String>()));
+        // 带宽包询价。
+        apis.put("csnBpPrice", new ApiInfo(
+                HttpMethodName.valueOf("POST"),
+                new ApiPath("/v1/csn/bp/price"),
+                new HashMap<String, String>(),
+                new HashMap<String, String>()));
 
         /*
          ---------------------- 区域带宽相关 ---------------------

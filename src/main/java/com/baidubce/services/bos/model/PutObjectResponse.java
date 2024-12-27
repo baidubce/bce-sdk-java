@@ -25,6 +25,11 @@ public class PutObjectResponse {
     private String eTag;
 
     /**
+     * The callback value of the new object
+     */
+    private BosResponse.Callback callback;
+
+    /**
      * Gets the ETag value for the newly created object.
      *
      * @return The ETag value for the new object.
@@ -42,5 +47,25 @@ public class PutObjectResponse {
     public void setETag(String eTag) {
         this.eTag = eTag;
     }
+
+    /**
+     * Sets the callback value for the new object that was created from the
+     * associated <code>putObject</code> request.
+     *
+     * @param callback The ETag value for the new object.
+     */
+    public void setCallback(BosResponse.Callback callback) {
+        this.callback = callback;
+    }
+
+    /**
+     * Gets the callback value for the newly created object.
+     *
+     * @return The callback value for the new object.
+     */
+    public BosResponse.Callback getCallback() {
+        return this.callback;
+    }
+
 
 }

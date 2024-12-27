@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.baidubce.common.BaseBceResponse;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -108,6 +109,8 @@ public class ListCsnResponse extends BaseBceResponse {
         private BigDecimal instanceNum;
     
         private BigDecimal csnBpNum;
+
+        private List<Tag> tags;
     
         public void setCsnId(String csnId) {
             this.csnId = csnId;
@@ -156,17 +159,26 @@ public class ListCsnResponse extends BaseBceResponse {
         public BigDecimal getCsnBpNum() {
             return this.csnBpNum;
         }
-    
+
+        public List<Tag> getTags() {
+            return tags;
+        }
+
+        public void setTags(List<Tag> tags) {
+            this.tags = tags;
+        }
+
         @Override
         public String toString() {
-            return "Csn{"
-                    + "csnId=" + csnId + "\n"
-                    + "name=" + name + "\n"
-                    + "description=" + description + "\n"
-                    + "status=" + status + "\n"
-                    + "instanceNum=" + instanceNum + "\n"
-                    + "csnBpNum=" + csnBpNum + "\n"
-                    + "}";
+            return "Csn{" +
+                    "csnId='" + csnId + '\'' +
+                    ", name='" + name + '\'' +
+                    ", description='" + description + '\'' +
+                    ", status='" + status + '\'' +
+                    ", instanceNum=" + instanceNum +
+                    ", csnBpNum=" + csnBpNum +
+                    ", tags=" + tags +
+                    '}';
         }
     }
 

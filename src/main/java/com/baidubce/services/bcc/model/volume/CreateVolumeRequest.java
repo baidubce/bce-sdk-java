@@ -14,12 +14,16 @@ package com.baidubce.services.bcc.model.volume;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bcc.model.AutoSnapshotPolicyModel;
 import com.baidubce.services.bcc.model.Billing;
+import com.baidubce.services.bcc.model.TagModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import lombok.Data;
+import java.util.List;
 /**
  * The request for creating a new volume.
  */
+@Data
 public class CreateVolumeRequest extends AbstractBceRequest {
 
     /**
@@ -87,6 +91,78 @@ public class CreateVolumeRequest extends AbstractBceRequest {
      * If the instance is post paid, create a post paid CDS
      */
     private String chargeType;
+
+    private int cdsExtraIo;
+
+    private String instanceId;
+
+    private String encryptKey;
+
+    private String name;
+
+    private String description;
+
+    private int renewTime;
+
+    private String renewTimeUnit;
+
+    private Boolean relationTag;
+
+    private List<TagModel> tags;
+
+    private List<String> resGroupIds;
+
+    private AutoSnapshotPolicyModel autoSnapshotPolicy;
+
+    public CreateVolumeRequest withCdsExtraIo(int cdsExtraIo) {
+        this.cdsExtraIo = cdsExtraIo;
+        return this;
+    }
+
+    public CreateVolumeRequest withInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+        return this;
+    }
+
+    public CreateVolumeRequest withName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public CreateVolumeRequest withDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public CreateVolumeRequest withRenewTime(int renewTime) {
+        this.renewTime = renewTime;
+        return this;
+    }
+
+    public CreateVolumeRequest withRenewTimeUnit(String renewTimeUnit) {
+        this.renewTimeUnit = renewTimeUnit;
+        return this;
+    }
+
+    public CreateVolumeRequest withRelationTag(Boolean relationTag) {
+        this.relationTag = relationTag;
+        return this;
+    }
+
+    public CreateVolumeRequest withTags(List<TagModel> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public CreateVolumeRequest withResGroupIds(List<String> resGroupIds) {
+        this.resGroupIds = resGroupIds;
+        return this;
+    }
+
+    public CreateVolumeRequest withAutoSnapshotPolicy(AutoSnapshotPolicyModel autoSnapshotPolicy) {
+        this.autoSnapshotPolicy = autoSnapshotPolicy;
+        return this;
+    }
 
     public String getClientToken() {
         return clientToken;

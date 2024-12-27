@@ -17,6 +17,12 @@ import com.baidubce.auth.BceCredentials;
 public class GetObjectAclRequest extends GenericObjectRequest {
 
     /**
+     * For versioning
+     */
+    private String versionId;
+
+
+    /**
      * Constructs a void Constructor for GetObjectAclRequest.
      */
     public GetObjectAclRequest() {
@@ -48,5 +54,13 @@ public class GetObjectAclRequest extends GenericObjectRequest {
     public GetObjectAclRequest withKey(String key) {
         this.setKey(key);
         return this;
+    }
+
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
     }
 }

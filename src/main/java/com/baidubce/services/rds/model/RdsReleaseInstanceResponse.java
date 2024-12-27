@@ -1,6 +1,7 @@
 package com.baidubce.services.rds.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import org.apache.htrace.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * The response of release rds instance
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsReleaseInstanceResponse extends AbstractBceResponse {
 
     private Boolean success;

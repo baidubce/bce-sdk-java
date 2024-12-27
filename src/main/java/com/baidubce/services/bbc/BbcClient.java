@@ -62,6 +62,8 @@ import com.baidubce.services.bcc.model.instance.RebootInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsRequest;
+import com.baidubce.services.bcc.model.region.DescribeRegionsResponse;
 import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -94,6 +96,8 @@ public class BbcClient extends AbstractBceClient {
     private static final String VERSION = "v1";
     private static final String DELETE_VERSION = "v2";
     private static final String INSTANCE_PREFIX = "instance";
+    private static final String REGION_PREFIX = "region";
+    private static final String DESCRIBE_REGIONS = "describeRegions";
     private static final String FLAVOR_PREFIX = "flavor";
     private static final String FLAVOR_RAID_PREFIX = "flavorRaid";
     private static final String IMAGE_PREFIX = "image";
@@ -623,6 +627,25 @@ public class BbcClient extends AbstractBceClient {
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.DELETE, IMAGE_PREFIX, request.getImageId());
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * List all region's endpoint information.
+     * <p>
+     * You can get specified region's endpoint information by specified region,
+     * if the region is not exist, it's will get <code>409</code> errorCode.
+     *
+     * Use global endpoint bbc.baidubce.com to get BBC's endpoint.
+     * @param request The request for getting endpoint of different regions.
+     * @return The response containing the detail region's endpoint information.
+     */
+    public DescribeRegionsResponse describeRegions(DescribeRegionsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest =
+                this.createV2Request(request, HttpMethodName.POST, REGION_PREFIX, DESCRIBE_REGIONS);
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribeRegionsResponse.class);
     }
 
     /**

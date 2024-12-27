@@ -32,6 +32,11 @@ public class GetObjectRequest extends GenericObjectRequest {
      */
     private long[] range;
 
+    /**
+     * The BosProgressCallback used for get progress information
+     */
+    private BosProgressCallback progressCallback = null;
+
     public GetObjectRequest() {
         super();
     }
@@ -154,6 +159,34 @@ public class GetObjectRequest extends GenericObjectRequest {
      */
     public GetObjectRequest withTrafficLimitBitPS(long trafficLimitBitPS) {
         this.setTrafficLimitBitPS(trafficLimitBitPS);
+        return this;
+    }
+
+
+    /**
+     * Gets the BosProgressCallback which used for Get object progress.
+     *
+     * @return The BosProgressCallback which used for get progress information.
+     */
+    public BosProgressCallback getProgressCallback() {
+        return progressCallback;
+    }
+
+    /**
+     * Sets the BosProgressCallback which used for Get object progress.
+     *
+     * @param progressCallback The BosProgressCallback, which used for get progress information.
+     */
+    public void setProgressCallback(BosProgressCallback progressCallback) {
+        this.progressCallback = progressCallback;
+    }
+
+    /**
+     * @param progressCallback The BosProgressCallback, which used for get object information.
+     * @return This PutObjectRequest, so that additional method calls can be chained together
+     */
+    public GetObjectRequest withProgressCallback(BosProgressCallback progressCallback) {
+        this.setProgressCallback(progressCallback);
         return this;
     }
 

@@ -14,15 +14,25 @@
 package com.baidubce.services.mms.model;
 
 /**
- * MMS error.
+ MMS error.
  */
 public class MmsError {
     private String code;
     private String message;
+    private String requestId;
+
+    public MmsError() {
+    }
 
     public MmsError(String code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    public MmsError(String code, String message, String requestId) {
+        this.code = code;
+        this.message = message;
+        this.requestId = requestId;
     }
 
     public String getCode() {
@@ -46,6 +56,15 @@ public class MmsError {
         return "MMS Error{" +
                 "code='" + code + '\'' +
                 ", message='" + message + '\'' +
+                ", requestId='" + requestId + '\'' +
                 '}';
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

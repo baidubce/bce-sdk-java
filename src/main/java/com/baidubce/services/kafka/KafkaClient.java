@@ -31,8 +31,12 @@ import com.baidubce.services.kafka.model.cluster.GetClusterAccessEndpointsReques
 import com.baidubce.services.kafka.model.cluster.GetClusterAccessEndpointsResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsResponse;
+import com.baidubce.services.kafka.model.cluster.GetClusterCurrentControllerRequest;
+import com.baidubce.services.kafka.model.cluster.GetClusterCurrentControllerResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailResponse;
+import com.baidubce.services.kafka.model.cluster.GetClusterHistoryControllerRequest;
+import com.baidubce.services.kafka.model.cluster.GetClusterHistoryControllerResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterNodesRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterNodesResponse;
 import com.baidubce.services.kafka.model.cluster.IncreaseBrokerCountRequest;
@@ -41,12 +45,18 @@ import com.baidubce.services.kafka.model.cluster.ListClustersRequest;
 import com.baidubce.services.kafka.model.cluster.ListClustersResponse;
 import com.baidubce.services.kafka.model.cluster.ResizeClusterEipBandwidthRequest;
 import com.baidubce.services.kafka.model.cluster.ResizeClusterEipBandwidthResponse;
+import com.baidubce.services.kafka.model.cluster.RestartBrokerRequest;
+import com.baidubce.services.kafka.model.cluster.RestartBrokerResponse;
+import com.baidubce.services.kafka.model.cluster.RestartClusterRequest;
+import com.baidubce.services.kafka.model.cluster.RestartClusterResponse;
 import com.baidubce.services.kafka.model.cluster.StartClusterRequest;
 import com.baidubce.services.kafka.model.cluster.StartClusterResponse;
 import com.baidubce.services.kafka.model.cluster.StopClusterRequest;
 import com.baidubce.services.kafka.model.cluster.StopClusterResponse;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterEipRequest;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterEipResponse;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterIntranetIpRequest;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterIntranetIpResponse;
 import com.baidubce.services.kafka.model.cluster.UpdateAccessConfigRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateAccessConfigResponse;
 import com.baidubce.services.kafka.model.cluster.UpdateBrokerNodeTypeRequest;
@@ -73,6 +83,8 @@ import com.baidubce.services.kafka.model.config.ListClusterConfigsRequest;
 import com.baidubce.services.kafka.model.config.ListClusterConfigsResponse;
 import com.baidubce.services.kafka.model.consumer.DeleteConsumerGroupRequest;
 import com.baidubce.services.kafka.model.consumer.DeleteConsumerGroupResponse;
+import com.baidubce.services.kafka.model.consumer.GetSubscribedTopicOverviewRequest;
+import com.baidubce.services.kafka.model.consumer.GetSubscribedTopicOverviewResponse;
 import com.baidubce.services.kafka.model.consumer.ListConsumerGroupRequest;
 import com.baidubce.services.kafka.model.consumer.ListConsumerGroupResponse;
 import com.baidubce.services.kafka.model.consumer.ListSubscribedTopicsRequest;
@@ -93,22 +105,42 @@ import com.baidubce.services.kafka.model.job.StartJobRequest;
 import com.baidubce.services.kafka.model.job.StartJobResponse;
 import com.baidubce.services.kafka.model.job.SuspendJobRequest;
 import com.baidubce.services.kafka.model.job.SuspendJobResponse;
+import com.baidubce.services.kafka.model.quota.CreateQuotaRequest;
+import com.baidubce.services.kafka.model.quota.CreateQuotaResponse;
+import com.baidubce.services.kafka.model.quota.DeleteQuotaRequest;
+import com.baidubce.services.kafka.model.quota.DeleteQuotaResponse;
+import com.baidubce.services.kafka.model.quota.ListQuotasRequest;
+import com.baidubce.services.kafka.model.quota.ListQuotasResponse;
+import com.baidubce.services.kafka.model.quota.UpdateQuotaRequest;
+import com.baidubce.services.kafka.model.quota.UpdateQuotaResponse;
 import com.baidubce.services.kafka.model.topic.CreateTopicRequest;
 import com.baidubce.services.kafka.model.topic.CreateTopicResponse;
 import com.baidubce.services.kafka.model.topic.DeleteTopicRequest;
 import com.baidubce.services.kafka.model.topic.DeleteTopicResponse;
 import com.baidubce.services.kafka.model.topic.GetSubscribedGroupDetailRequest;
 import com.baidubce.services.kafka.model.topic.GetSubscribedGroupDetailResponse;
+import com.baidubce.services.kafka.model.topic.GetSubscribedGroupOverviewRequest;
+import com.baidubce.services.kafka.model.topic.GetSubscribedGroupOverviewResponse;
 import com.baidubce.services.kafka.model.topic.GetTopicDetailRequest;
 import com.baidubce.services.kafka.model.topic.GetTopicDetailResponse;
 import com.baidubce.services.kafka.model.topic.GetTopicPartitionDetailRequest;
 import com.baidubce.services.kafka.model.topic.GetTopicPartitionDetailResponse;
+import com.baidubce.services.kafka.model.topic.GetTopicPartitionOverviewRequest;
+import com.baidubce.services.kafka.model.topic.GetTopicPartitionOverviewResponse;
 import com.baidubce.services.kafka.model.topic.ListSubscribedGroupsRequest;
 import com.baidubce.services.kafka.model.topic.ListSubscribedGroupsResponse;
+import com.baidubce.services.kafka.model.topic.ListTopicConfigOptionsRequest;
+import com.baidubce.services.kafka.model.topic.ListTopicConfigOptionsResponse;
 import com.baidubce.services.kafka.model.topic.ListTopicPartitionsRequest;
 import com.baidubce.services.kafka.model.topic.ListTopicPartitionsResponse;
 import com.baidubce.services.kafka.model.topic.ListTopicRequest;
 import com.baidubce.services.kafka.model.topic.ListTopicResponse;
+import com.baidubce.services.kafka.model.topic.QueryTopicMessagesByStartOffsetRequest;
+import com.baidubce.services.kafka.model.topic.QueryTopicMessagesByStartOffsetResponse;
+import com.baidubce.services.kafka.model.topic.QueryTopicMessagesByStartTimeRequest;
+import com.baidubce.services.kafka.model.topic.QueryTopicMessagesByStartTimeResponse;
+import com.baidubce.services.kafka.model.topic.SendTopicMessageRequest;
+import com.baidubce.services.kafka.model.topic.SendTopicMessageResponse;
 import com.baidubce.services.kafka.model.topic.UpdateTopicRequest;
 import com.baidubce.services.kafka.model.topic.UpdateTopicResponse;
 import com.baidubce.services.kafka.model.user.CreateUserRequest;
@@ -165,6 +197,8 @@ public class KafkaClient extends AbstractBceClient {
     private static final String CONFIGURATIONS_PREFIX = "configurations";
     private static final String CONFIGS_PREFIX = "configs";
     private static final String REVISIONS_PREFIX = "revisions";
+    private static final String MESSAGES_PREFIX = "messages";
+    private static final String QUOTAS_PREFIX = "quotas";
 
     private static final String PAGE_NO = "pageNo";
     private static final String PAGE_SIZE = "pageSize";
@@ -177,6 +211,8 @@ public class KafkaClient extends AbstractBceClient {
     private static final String PAYMENT = "payment";
     private static final String TAG_KEY = "tagKey";
     private static final String TAG_VALUE = "tagValue";
+    private static final String START_TIME = "startTime";
+    private static final String START_OFFSET = "startOffset";
 
     /**
      * Exception messages.
@@ -192,6 +228,8 @@ public class KafkaClient extends AbstractBceClient {
     private static final String OPERATIONID_MESSAGE_KEY = "operationId";
     private static final String CONFIGID_MESSAGE_KEY = "configId";
     private static final String REVISIONID_MESSAGE_KEY = "revisionId";
+    private static final String NODEID_MESSAGE_KEY = "nodeId";
+    private static final String PARTITIONID_MESSAGE_KEY = "partitionId";
 
     private static final String USERNAME_MESSAGE_KEY = "username";
     private static final String PASSWORD_MESSAGE_KEY = "password";
@@ -199,6 +237,11 @@ public class KafkaClient extends AbstractBceClient {
     private static final String RESOURCE_TYPE_MESSAGE_KEY = "resourceType";
     private static final String RESOURCE_NAME_MESSAGE_KEY = "resourceName";
     private static final String OPERATION_MESSAGE_KEY = "operation";
+    private static final String QUOTA_ENTITY_TYPE_KEY = "entityType";
+    private static final String QUOTA_USERNAME_KEY = "username";
+    private static final String QUOTA_USER_DEFAULT_KEY = "userDefault";
+    private static final String QUOTA_CLIENT_ID_KEY = "clientId";
+    private static final String QUOTA_CLIENT_DEFAULT_KEY = "clientDefault";
 
 
 
@@ -623,6 +666,74 @@ public class KafkaClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, UpdateSecurityGroupResponse.class);
     }
 
+    /**
+     * 集群产品间转储开关
+     * @param request
+     * @return
+     */
+    public SwitchClusterIntranetIpResponse switchClusterIntranetIp(SwitchClusterIntranetIpRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "intranet-ips/switch");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, SwitchClusterIntranetIpResponse.class);
+    }
+
+    /**
+     * 获取集群当前 Controller 信息
+     * @param request
+     * @return
+     */
+    public GetClusterCurrentControllerResponse getClusterCurrentController(GetClusterCurrentControllerRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), "controller");
+        return invokeHttpClient(internalRequest, GetClusterCurrentControllerResponse.class);
+    }
+
+    /**
+     * 获取集群历史 Controller 信息
+     * @param request
+     * @return
+     */
+    public GetClusterHistoryControllerResponse getClusterHistoryController(GetClusterHistoryControllerRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), "controller/history");
+        return invokeHttpClient(internalRequest, GetClusterHistoryControllerResponse.class);
+    }
+
+    /**
+     * 重启整个 Kafka 集群服务
+     * @param request
+     * @return
+     */
+    public RestartClusterResponse restartCluster(RestartClusterRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "restart");
+        return invokeHttpClient(internalRequest, RestartClusterResponse.class);
+    }
+
+    /**
+     * 重启指定 Broker 节点服务
+     * @param request
+     * @return
+     */
+    public RestartBrokerResponse restartBroker(RestartBrokerRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getNodeId(), checkEmptyExceptionMessageFormat(NODEID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), NODES_PREFIX,
+                request.getNodeId(), "restart-broker");
+        return invokeHttpClient(internalRequest, RestartBrokerResponse.class);
+    }
+
     /** ========================================= config API ======================================================== */
 
     /**
@@ -741,7 +852,7 @@ public class KafkaClient extends AbstractBceClient {
     public UpdateTopicResponse updateTopic(UpdateTopicRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPICS_PREFIX));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX, request.getTopicName());
         if (request.getPartitionNum() != null || MapUtils.isNotEmpty(request.getOtherConfigs())) {
@@ -760,8 +871,8 @@ public class KafkaClient extends AbstractBceClient {
     public GetSubscribedGroupDetailResponse getSubscribedGroupDetail(GetSubscribedGroupDetailRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPICS_PREFIX));
-        checkStringNotEmpty(request.getGroupName(), checkEmptyExceptionMessageFormat(CONSUMER_GROUPS_PREFIX));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
+        checkStringNotEmpty(request.getGroupName(), checkEmptyExceptionMessageFormat(GROUP_NAME_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX, request.getTopicName(),
                 CONSUMER_GROUPS_PREFIX, request.getGroupName(), "subscribe-details");
@@ -776,7 +887,7 @@ public class KafkaClient extends AbstractBceClient {
     public ListTopicPartitionsResponse listTopicPartitions(ListTopicPartitionsRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPICS_PREFIX));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX, request.getTopicName(), "partitions", "statuses");
         internalRequest.addParameter(PAGE_NO, String.valueOf(request.getPageNo()));
@@ -794,8 +905,8 @@ public class KafkaClient extends AbstractBceClient {
     public GetTopicPartitionDetailResponse getTopicPartitionDetail(GetTopicPartitionDetailRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPICS_PREFIX));
-        checkStringNotEmpty(request.getPartitionId(), checkEmptyExceptionMessageFormat(PARTITONS_PREFIX));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
+        checkStringNotEmpty(request.getPartitionId(), checkEmptyExceptionMessageFormat(PARTITIONID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX, request.getTopicName(),
                 "partitions", request.getPartitionId(), "statuses");
@@ -877,6 +988,109 @@ public class KafkaClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, DeleteTopicResponse.class);
     }
 
+    /**
+     * 查询主题分区信息概览
+     * @param request
+     * @return
+     */
+    public GetTopicPartitionOverviewResponse getTopicPartitionOverview(GetTopicPartitionOverviewRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX,
+                request.getTopicName(), PARTITONS_PREFIX, "statuses/overview");
+        return invokeHttpClient(internalRequest, GetTopicPartitionOverviewResponse.class);
+    }
+
+    /**
+     * 查询主题订阅关系概览
+     * @param request
+     * @return
+     */
+    public GetSubscribedGroupOverviewResponse getSubscribedGroupOverview(GetSubscribedGroupOverviewRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX,
+                request.getTopicName(), CONSUMER_GROUPS_PREFIX, "overview");
+        return invokeHttpClient(internalRequest, GetSubscribedGroupOverviewResponse.class);
+    }
+
+    /**
+     * 查询主题支持的参数信息
+     * @return
+     */
+    public ListTopicConfigOptionsResponse listTopicConfigOptions() {
+        ListTopicConfigOptionsRequest request = new ListTopicConfigOptionsRequest();
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, CLUSTERS_PREFIX,
+                TOPICS_PREFIX, "config-options");
+        return invokeHttpClient(internalRequest, ListTopicConfigOptionsResponse.class);
+    }
+
+    /**
+     * 消息发送
+     * @param request
+     * @return
+     */
+    public SendTopicMessageResponse sendTopicMessage(SendTopicMessageRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
+        if (Strings.isNullOrEmpty(request.getValue())) {
+            throw new IllegalArgumentException("Value cannot be null or empty.");
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, CLUSTERS_PREFIX,
+                request.getClusterId(), TOPICS_PREFIX, request.getTopicName(), MESSAGES_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, SendTopicMessageResponse.class);
+    }
+
+    /**
+     * 根据时间进行消息查询
+     * @param request
+     * @return
+     */
+    public QueryTopicMessagesByStartTimeResponse queryTopicMessagesByStartTime(QueryTopicMessagesByStartTimeRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
+        if (request.getStartTime() <= 0) {
+            throw new IllegalArgumentException("Start time must be positive.");
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX,
+                request.getTopicName(), MESSAGES_PREFIX, "query-by-start-time");
+        if (request.getPartitionId() != null) {
+            internalRequest.addParameter(PARTITIONID_MESSAGE_KEY, String.valueOf(request.getPartitionId()));
+        }
+        internalRequest.addParameter("startTime", String.valueOf(request.getStartTime()));
+        return invokeHttpClient(internalRequest, QueryTopicMessagesByStartTimeResponse.class);
+    }
+
+    /**
+     * 根据位点进行消息查询
+     * @param request
+     * @return
+     */
+    public QueryTopicMessagesByStartOffsetResponse queryTopicMessagesByStartOffset(QueryTopicMessagesByStartOffsetRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getTopicName(), checkEmptyExceptionMessageFormat(TOPIC_NAME_MESSAGE_KEY));
+        if (request.getPartitionId() < 0) {
+            throw new IllegalArgumentException("Partition id must be positive.");
+        }
+        if (request.getStartOffset() < 0) {
+            throw new IllegalArgumentException("Start offset must be positive.");
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), TOPICS_PREFIX,
+                request.getTopicName(), MESSAGES_PREFIX, "query-by-start-offset");
+        internalRequest.addParameter(PARTITIONID_MESSAGE_KEY, String.valueOf(request.getPartitionId()));
+        internalRequest.addParameter(START_OFFSET, String.valueOf(request.getStartOffset()));
+        return invokeHttpClient(internalRequest, QueryTopicMessagesByStartOffsetResponse.class);
+    }
 
     /** ========================================= consumer API ==================================================== */
 
@@ -941,6 +1155,20 @@ public class KafkaClient extends AbstractBceClient {
         return invokeHttpClient(internalRequest, ResetConsumerGroupResponse.class);
     }
 
+    /**
+     * 查询消费组订阅关系概览
+     * @param request
+     * @return
+     */
+    public GetSubscribedTopicOverviewResponse getSubscribedTopicOverview(GetSubscribedTopicOverviewRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getGroupName(), checkEmptyExceptionMessageFormat(GROUP_NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), CONSUMER_GROUPS_PREFIX,
+                request.getGroupName(), "topics/overview");
+        return invokeHttpClient(internalRequest, GetSubscribedTopicOverviewResponse.class);
+    }
 
     /** ========================================= user API ======================================================== */
 
@@ -1005,7 +1233,7 @@ public class KafkaClient extends AbstractBceClient {
         checkStringNotEmpty(request.getUsername(), checkEmptyExceptionMessageFormat(USERNAME_MESSAGE_KEY));
         checkStringNotEmpty(request.getPassword(), checkEmptyExceptionMessageFormat(PASSWORD_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), USERS_PREFIX);
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), USERS_PREFIX, request.getUsername());
         BceCredentials credentials = config.getCredentials();
         if (internalRequest.getCredentials() != null) {
             credentials = internalRequest.getCredentials();
@@ -1026,6 +1254,7 @@ public class KafkaClient extends AbstractBceClient {
      * @param clusterId The id of cluster.
      * @return The response containing a list of users owned by the cluster.
      */
+    @Deprecated
     public ListUserResponse listUsers(String clusterId) {
         return listUsers(ListUsersRequest.builder().clusterId(clusterId).build());
     }
@@ -1229,6 +1458,77 @@ public class KafkaClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getJobId(), "resume");
         return invokeHttpClient(internalRequest, ResumeJobResponse.class);
+    }
+
+    /** ========================================= job API ======================================================== */
+
+    /**
+     * 查询 Quota 列表
+     * @param request
+     * @return
+     */
+    public ListQuotasResponse listQuotas(ListQuotasRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), QUOTAS_PREFIX);
+        if (!Strings.isNullOrEmpty(request.getEntityType())) {
+            internalRequest.addParameter(QUOTA_ENTITY_TYPE_KEY, request.getEntityType());
+        }
+        return invokeHttpClient(internalRequest, ListQuotasResponse.class);
+    }
+
+    /**
+     * 创建 Quota
+     * @param request
+     * @return
+     */
+    public CreateQuotaResponse createQuota(CreateQuotaRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.POST, CLUSTERS_PREFIX, request.getClusterId(), QUOTAS_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateQuotaResponse.class);
+    }
+
+    /**
+     * 更新 Quota
+     * @param request
+     * @return
+     */
+    public UpdateQuotaResponse updateQuota(UpdateQuotaRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), QUOTAS_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateQuotaResponse.class);
+    }
+
+    /**
+     * 删除 Quota
+     * @param request
+     * @return
+     */
+    public DeleteQuotaResponse deleteQuota(DeleteQuotaRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.DELETE, CLUSTERS_PREFIX, request.getClusterId(), QUOTAS_PREFIX);
+        if (!Strings.isNullOrEmpty(request.getUsername())) {
+            internalRequest.addParameter(QUOTA_USERNAME_KEY, request.getUsername());
+        }
+        if (request.getUserDefault() != null) {
+            internalRequest.addParameter(QUOTA_USER_DEFAULT_KEY, String.valueOf(request.getUserDefault()));
+        }
+        if (!Strings.isNullOrEmpty(request.getClientId())) {
+            internalRequest.addParameter(QUOTA_CLIENT_ID_KEY, request.getClientId());
+        }
+        if (request.getClientDefault() != null) {
+            internalRequest.addParameter(QUOTA_CLIENT_DEFAULT_KEY, String.valueOf(request.getClientDefault()));
+        }
+        return invokeHttpClient(internalRequest, DeleteQuotaResponse.class);
     }
 
 }

@@ -13,11 +13,16 @@
 package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.services.bec.model.vo.ActionInfoVo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The response for reinstalling the BEC virtual machine system.
+ * Return the instance detail.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReinstallBecVmInstanceResponse extends ActionInfoVo {
 }

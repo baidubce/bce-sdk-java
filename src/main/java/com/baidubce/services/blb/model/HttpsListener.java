@@ -15,9 +15,12 @@ package com.baidubce.services.blb.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Https listener info modal.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HttpsListener extends ListenerBase {
 
     /**
@@ -64,6 +67,12 @@ public class HttpsListener extends ListenerBase {
      * the certificate ids of listener.
      */
     private List<String> certIds;
+    /**
+     * The additional certificates and domains of listener
+     *
+     * @see AdditionalCertDomain
+     */
+    private List<AdditionalCertDomain> additionalCertDomains;
     /**
      * if the request is ie6 compatible or not.
      */
@@ -157,6 +166,15 @@ public class HttpsListener extends ListenerBase {
         this.certIds = certIds;
     }
 
+    public List<AdditionalCertDomain> getAdditionalCertDomains() {
+        return additionalCertDomains;
+    }
+
+    public void setAdditionalCertDomains(
+            List<AdditionalCertDomain> additionalCertDomains) {
+        this.additionalCertDomains = additionalCertDomains;
+    }
+
     public boolean isIe6Compatible() {
         return ie6Compatible;
     }
@@ -179,6 +197,7 @@ public class HttpsListener extends ListenerBase {
                 ", healthCheckNormalStatus='" + healthCheckNormalStatus + '\'' +
                 ", serverTimeout=" + serverTimeout +
                 ", certIds=" + certIds +
+                ", additionalCertDomains=" + additionalCertDomains +
                 ", ie6Compatible=" + ie6Compatible +
                 '}';
     }

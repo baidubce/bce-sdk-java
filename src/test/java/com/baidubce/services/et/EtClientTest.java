@@ -2,6 +2,8 @@ package com.baidubce.services.et;
 
 import java.util.UUID;
 
+import com.baidubce.services.et.model.AssociateEtChannelRequest;
+import com.baidubce.services.et.model.DisassociateEtChannelRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -229,5 +231,25 @@ public class EtClientTest {
         request.setRouteRuleId("dcrr-bf5545b8-de8");
 
         client.deleteEtRouteRule(request);
+    }
+
+    @Test
+    public void associateEtChannel(){
+        AssociateEtChannelRequest request = new AssociateEtChannelRequest();
+        request.setEtId("dcphy-zzdark9nuk1g");
+        request.setEtChannelId("dedicatedconn-hzf4aigzqttd");
+        request.setExtraChannelId("dedicatedconn-i05sdfw25kqz");
+
+        client.associateEtChannel(request);
+    }
+
+    @Test
+    public void disassociateEtChannel(){
+        DisassociateEtChannelRequest request = new DisassociateEtChannelRequest();
+        request.setEtId("dcphy-zzdark9nuk1g");
+        request.setEtChannelId("dedicatedconn-hzf4aigzqttd");
+        request.setExtraChannelId("dedicatedconn-i05sdfw25kqz");
+
+        client.disassociateEtChannel(request);
     }
 }

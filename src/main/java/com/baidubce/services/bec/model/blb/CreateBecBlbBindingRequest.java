@@ -14,7 +14,6 @@ package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.baidubce.services.bec.model.Backends;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -24,6 +23,7 @@ import java.util.List;
  * The request for binding the backend StatefulSet/VmReplicas.
  */
 @Data
+@Deprecated
 public class CreateBecBlbBindingRequest extends AbstractBceRequest {
 
     /**
@@ -32,19 +32,9 @@ public class CreateBecBlbBindingRequest extends AbstractBceRequest {
     private String blbId;
 
     /**
-     * The id of the deployment.
+     * The binding forms.
      */
-    private String deploymentId;
-
-    /**
-     * Default weight.
-     */
-    private int defaultWeight;
-
-    /**
-     * Backend server information
-     */
-    private List<Backends> podWeight;
+    private List<BlbBindingForm> bindingForms;
 
     /**
      * An ASCII string whose length is less than 64.
@@ -62,7 +52,7 @@ public class CreateBecBlbBindingRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return GetInstanceRequest with credentials.
+     * @return CreateBecBlbBindingRequest with credentials.
      */
     public CreateBecBlbBindingRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

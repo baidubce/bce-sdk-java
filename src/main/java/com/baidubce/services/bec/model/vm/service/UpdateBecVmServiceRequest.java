@@ -15,6 +15,7 @@ package com.baidubce.services.bec.model.vm.service;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bec.model.purchase.DeploymentInstance;
+import com.baidubce.services.bec.model.vm.KeyConfig;
 import com.baidubce.services.bec.model.vm.VolumeConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
@@ -24,13 +25,14 @@ import java.util.List;
 
 /**
  * The request for updating BEC virtual machine service.
+ * Consistent with cloud API.
  */
 @Data
 @Builder
 public class UpdateBecVmServiceRequest extends AbstractBceRequest {
 
     /**
-     * The Id of the vm service.
+     * The id of the vm service.
      */
     private String serviceId;
 
@@ -52,12 +54,12 @@ public class UpdateBecVmServiceRequest extends AbstractBceRequest {
     /**
      * The cpu of the vm service.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The memory of the vm service.
      */
-    private int memory;
+    private Integer memory;
 
     /**
      * Data disk configuration information.
@@ -90,7 +92,7 @@ public class UpdateBecVmServiceRequest extends AbstractBceRequest {
     private String vmName;
 
     /**
-     * The spec of the vm service.
+     * The specification of the vm service.
      */
     private String spec;
 
@@ -98,6 +100,16 @@ public class UpdateBecVmServiceRequest extends AbstractBceRequest {
      * The hostname of the vm service.
      */
     private String hostname;
+
+    /**
+     * The new way to configure password and key.
+     */
+    private KeyConfig keyConfig;
+
+    /**
+     * The security group ids.
+     */
+    private List<String> securityGroupIds;
 
     /**
      * An ASCII string whose length is less than 64.

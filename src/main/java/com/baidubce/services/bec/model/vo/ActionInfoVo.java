@@ -13,18 +13,22 @@
 package com.baidubce.services.bec.model.vo;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * The base response contains the basic information about the operation.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActionInfoVo<T> extends AbstractBceResponse {
 
     /**
      * Operation result.
      */
-    private boolean result;
+    private Boolean result;
 
     /**
      * Operation type.

@@ -31,6 +31,7 @@ public class ExampleCreateEni {
         request.setDescription("desc"); // eni的描述
         request.setName("testEni"); // eni的名称
         request.setSecurityGroupIds(Arrays.asList("g-vs94kdqxw078")); // eni的安全组列表
+        request.setNetworkInterfaceTrafficMode("standard");
         List<PrivateIp> privateIpSet = Lists.newArrayList(); // Eni的Ip列表
         PrivateIp ip = new PrivateIp();
         ip.setPrimary(true); // 设置为主IP

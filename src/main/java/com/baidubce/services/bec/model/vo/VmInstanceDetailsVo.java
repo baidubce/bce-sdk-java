@@ -12,28 +12,82 @@
  */
 package com.baidubce.services.bec.model.vo;
 
+import com.baidubce.services.bec.model.network.SecurityGroupVo;
+import com.baidubce.services.bec.model.vm.KeyPair;
+import com.baidubce.services.bec.model.vm.NetworkConfig;
+import com.baidubce.services.bec.model.vm.SystemVolumeConfig;
+import com.baidubce.services.bec.model.vm.VolumeConfig;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 
 /**
  * Vm Instance Details.
+ * Limited detail return, used in getting vm instance detail.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VmInstanceDetailsVo extends VmInstanceBriefVo {
 
     /**
-     * The number of system disks.
+     * The count of system disks.
      */
-    private int rootDiskSize;
+    private Integer rootDiskSize;
 
     /**
-     * The number of data disks.
+     * The count of data disks.
      */
-    private int dataStorage;
+    private Integer dataStorage;
 
     /**
-     * The deploysetList of the virtual machine instance.
+     * The data volumes of the virtual machine instance.
      */
+    private List<VolumeConfig> dataVolumeList;
+
+    /**
+     * The system volume of the virtual machine instance.
+     */
+    private SystemVolumeConfig systemVolume;
+
+    /**
+     * The bcc key pairs of the virtual machine instance.
+     */
+    private List<KeyPair> bccKeyPairList;
+
+    /**
+     * The intranet private ips of the virtual machine instance.
+     */
+    private List<String> privateIps;
+
+    /**
+     * The virtual network configuration of the virtual machine instance.
+     */
+    private NetworkConfig networkConfig;
+
+    /**
+     * The security groups of the virtual machine instance.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<SecurityGroupVo> securityGroups;
+
+    /**
+     * The service name of the virtual machine instance.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String serviceName;
+
+    /**
+     * The specification of the virtual machine instance.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String spec;
+
+    /**
+     * The deployment set list of the virtual machine instance.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<DeploySetVo> deploysetList;
 }

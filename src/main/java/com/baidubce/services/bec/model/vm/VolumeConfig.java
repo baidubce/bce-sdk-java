@@ -12,26 +12,42 @@
  */
 package com.baidubce.services.bec.model.vm;
 
+import com.baidubce.services.bec.model.enums.DiskTypeEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * Volume config information.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VolumeConfig {
 
     /**
-     * The name of the Volume.
+     * The name of the volume.
      */
     private String name;
 
     /**
-     * The type of the Volume.
+     * The type of the volume.
      */
-    private String volumeType;
+    private DiskTypeEnum volumeType;
 
     /**
-     * The size of the Volume.
+     * The size of the volume.
      */
     private Integer sizeInGB;
+
+    /**
+     * The pass through code of the volume.
+     * Monopolized disk needs.
+     */
+    private String passthroughCode;
+
+    /**
+     * The pvc name.
+     */
+    private String pvcName;
 }

@@ -14,7 +14,6 @@ package com.baidubce.services.bcc.model.instance;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The request for changing the instance payment to prepaid.
@@ -24,7 +23,6 @@ public class ChangeToPrepaidRequest extends AbstractBceRequest {
     /**
      * The id of instance.
      */
-    @JsonIgnore
     private String instanceId;
 
     /**
@@ -35,7 +33,26 @@ public class ChangeToPrepaidRequest extends AbstractBceRequest {
     /**
      * Whether is change the related CDS or not.
      */
-    private boolean relationCds;
+    private boolean relationCds = true;
+
+    private Boolean autoPay;
+
+    private Boolean autoRenew = false;
+
+    private Integer autoRenewPeriod = 1;
+
+    public ChangeToPrepaidRequest withAutoPay(boolean autoPay) {
+        this.autoPay = autoPay;
+        return this;
+    }
+
+    public Boolean getAutoPay() {
+        return autoPay;
+    }
+
+    public void setAutoPay(Boolean autoPay) {
+        this.autoPay = autoPay;
+    }
 
     public String getInstanceId() {
         return instanceId;
@@ -86,5 +103,31 @@ public class ChangeToPrepaidRequest extends AbstractBceRequest {
     public ChangeToPrepaidRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
+    }
+
+    public ChangeToPrepaidRequest withAutoRenew(Boolean autoRenew) {
+        this.autoRenew = autoRenew;
+        return this;
+    }
+
+    public Boolean getAutoRenew() {
+        return autoRenew;
+    }
+
+    public void setAutoRenew(Boolean autoRenew) {
+        this.autoRenew = autoRenew;
+    }
+
+    public ChangeToPrepaidRequest withAutoRenewPeriod(Integer autoRenewPeriod) {
+        this.autoRenewPeriod = autoRenewPeriod;
+        return this;
+    }
+
+    public Integer getAutoRenewPeriod() {
+        return autoRenewPeriod;
+    }
+
+    public void setAutoRenewPeriod(Integer autoRenewPeriod) {
+        this.autoRenewPeriod = autoRenewPeriod;
     }
 }

@@ -14,11 +14,14 @@ package com.baidubce.services.bec.model.vm.service;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bec.model.purchase.AutoRenew;
 import com.baidubce.services.bec.model.purchase.DeploymentInstance;
+import com.baidubce.services.bec.model.vm.DnsConfig;
 import com.baidubce.services.bec.model.vm.KeyConfig;
-import com.baidubce.services.bec.model.vm.NetworkConfig.Networks;
+import com.baidubce.services.bec.model.vm.NetworkConfig;
 import com.baidubce.services.bec.model.vm.SystemVolumeConfig;
 import com.baidubce.services.bec.model.vm.VolumeConfig;
+import com.baidubce.services.tag.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
@@ -27,21 +30,21 @@ import java.util.List;
 
 /**
  * The request for creating a newly vm service.
+ * Shared with creating vm instances.
  */
 @Data
 @Builder
 public class CreateBecVmServiceRequest extends AbstractBceRequest {
 
+    /**
+     * The id of the service.
+     */
+    private String serviceId;
 
     /**
      * The name of the service.
      */
     private String serviceName;
-
-    /**
-     * The id of the service.
-     */
-    private String serviceId;
 
     /**
      * The name of the vm.
@@ -54,29 +57,50 @@ public class CreateBecVmServiceRequest extends AbstractBceRequest {
     private String templateId;
 
     /**
+     * Password.
+     */
+    @Deprecated
+    private String adminPass;
+
+    /**
      * The payment method of the service.
      */
     private String paymentMethod;
 
     /**
-     * The need for public IP.
+     * The prepayment reservation configuration of the virtual machine service
      */
-    private boolean needPublicIp;
+    private Reservation reservation;
+
+    /**
+     * The autoRenew configuration.
+     */
+    private AutoRenew autoRenew;
+
+    /**
+     * Whether the vm service need public ip.
+     */
+    private Boolean needPublicIp;
+
+    /**
+     * Whether the vm service need public ipv6.
+     */
+    private Boolean needIpv6PublicIp;
 
     /**
      * Disable Intra net.
      */
-    private boolean disableIntranet;
+    private Boolean disableIntranet;
 
     /**
      * Disable Cloud Init.
      */
-    private boolean disableCloudInit;
+    private Boolean disableCloudInit;
 
     /**
      * The bandwidth of the service.
      */
-    private int bandwidth;
+    private Integer bandwidth;
 
     /**
      * List of deployment instances.
@@ -86,12 +110,12 @@ public class CreateBecVmServiceRequest extends AbstractBceRequest {
     /**
      * The cpu of the service.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The memory of the service.
      */
-    private int memory;
+    private Integer memory;
 
     /**
      * The imageId of the service.
@@ -114,24 +138,14 @@ public class CreateBecVmServiceRequest extends AbstractBceRequest {
     private SystemVolumeConfig systemVolume;
 
     /**
-     * The password of the vm service.
-     */
-    private String adminPass;
-
-    /**
      * The keyConfig of the vm service.
      */
     private KeyConfig keyConfig;
 
     /**
-     * The spec of the vm service.
+     * The specification of the vm service.
      */
     private String spec;
-
-    /**
-     * The needIpv6PublicIp of the vm service.
-     */
-    private boolean needIpv6PublicIp;
 
     /**
      * The hostname of the vm service.
@@ -139,19 +153,52 @@ public class CreateBecVmServiceRequest extends AbstractBceRequest {
     private String hostname;
 
     /**
-     * The deploysetIdList of the vm service.
+     * The network config list of the virtual machine service.
+     */
+    private List<NetworkConfig> networkConfigList;
+
+    /**
+     * The dns configuration of the virtual machine service.
+     */
+    private DnsConfig dnsConfig;
+
+    /**
+     * The security group ids of the vm.
+     */
+    private List<String> securityGroupIds;
+
+    /**
+     * The user script of the vm.
+     * <p>
+     * The custom injected data, user need to encode the original text using base64.  The encoding formula :
+     * base64(user_injected_data: base64(original text))
+     */
+    private String userData;
+
+    /**
+     * The cuda version of the virtual machine.
+     */
+    private String cudaVersion;
+
+    /**
+     * The driver version of the virtual machine.
+     */
+    private String driverVersion;
+
+    /**
+     * The cuDNN version of the virtual machine.
+     */
+    private String cudnnVersion;
+
+    /**
+     * The deployment set ids of the vm service.
      */
     private List<String> deploysetIdList;
 
     /**
-     * The networksList of the vm.
+     * The tags of the virtual machine.
      */
-    private List<Networks> networksList;
-
-    /**
-     * The securityGroupIds of the vm.
-     */
-    private List<String> securityGroupIds;
+    private List<Tag> tags;
 
     /**
      * An ASCII string whose length is less than 64.

@@ -13,11 +13,15 @@
 package com.baidubce.services.bec.model.blb;
 
 import com.baidubce.services.bec.model.vm.LogicPageResultResponse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
- * The response for getting the the binding BEC blb backend StatefulSet/VmReplicas list.
+ * The response for getting the StatefulSet/VmReplicas list that can be bound by the designated BEC blb.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetBecBlbBackendBindingStsListResponse extends LogicPageResultResponse<LbDeployPo> {
 }

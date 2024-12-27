@@ -2,6 +2,7 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Create the rds database
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsCreateDatabaseRequest extends AbstractBceRequest {
 
     private String instanceId;
@@ -16,6 +18,9 @@ public class RdsCreateDatabaseRequest extends AbstractBceRequest {
     private RdsCharacterSet characterSetName;
     private String dbName;
     private String remark;
+    private String ctype;
+    private String collate;
+    private String owner;
 
     public String getInstanceId() {
         return instanceId;
@@ -55,6 +60,30 @@ public class RdsCreateDatabaseRequest extends AbstractBceRequest {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getCtype() {
+        return ctype;
+    }
+
+    public void setCtype(String ctype) {
+        this.ctype = ctype;
+    }
+
+    public String getCollate() {
+        return collate;
+    }
+
+    public void setCollate(String collate) {
+        this.collate = collate;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     @Override

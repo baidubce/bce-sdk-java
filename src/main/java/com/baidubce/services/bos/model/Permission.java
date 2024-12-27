@@ -12,38 +12,82 @@
  */
 package com.baidubce.services.bos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Specifies constants defining an access permission,. Only a limited set of permission are available;
  * each one is represented as a value in this enumeration.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public enum Permission {
     FULL_CONTROL,
     READ,
     WRITE,
     LIST,
+    MODIFY,
 
-    GetBucket,
-    GetBucketAcl,
-    GetBucketCors,
-    GetBucketStyle,
-    GetBucketMirroring,
-    GetCopyRightProtection,
-    PutBucket,
-    PutBucketAcl,
-    PutBucketCors,
-    PutBucketStyle,
-    PutBucketMirroring,
-    PutCopyRightProtection,
-    ListBucket,
-
+    // Object
     GetObject,
+    GetObjectMeta,
     PutObject,
     DeleteObject,
     RenameObject,
-    GetObjectAcl,
-    PutObjectAcl,
     RestoreObject,
+    PutObjectAcl,
+    GetObjectAcl,
+    PutObjectTagging,
+    GetObjectTagging,
+    DeleteObjectTagging,
     ListParts,
 
-    MODIFY;
+    // Bucket
+    GetBucket,
+    PutBucket,
+    ListBucket,
+    GetBucketAcl,
+    PutBucketAcl,
+    GetBucketCors,
+    PutBucketCors,
+    GetBucketStyle,
+    PutBucketStyle,
+    GetBucketMirroring,
+    PutBucketMirroring,
+    GetCopyRightProtection,
+    PutCopyRightProtection,
+    GetObjectVersion,
+    DeleteObjectVersion,
+    ListObjectVersions,
+    GetObjectVersionAcl,
+    PutObjectVersionAcl,
+    PutBucketVersioning,
+    GetBucketVersioning,
+    PutBucketLifecycle,
+    GetBucketLifecycle,
+    PutBucketReplication,
+    GetBucketReplication,
+    PutBucketEncryption,
+    GetBucketEncryption,
+    PutBucketStaticWebsite,
+    GetBucketStaticWebsite,
+    PutBucketLogging,
+    GetBucketLogging,
+    PutBucketRequestPayment,
+    GetBucketRequestPayment,
+    PutBucketTagging,
+    GetBucketTagging,
+    PutNotification,
+    GetNotification,
+    PutBucketObjectLock,
+    GetBucketObjectLock,
+    PutBucketInventory,
+    GetBucketInventory,
+    GetBucketStorageAnalysis,
+    PutBucketStorageAnalysis,
+    GetBucketStorageClass,
+    PutBucketStorageClass,
+    PutBucketTrash,
+    GetBucketTrash,
+    PutBucketQuota,
+    GetBucketQuota;
 }
+

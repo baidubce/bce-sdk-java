@@ -24,6 +24,23 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class BosClientConfiguration extends BceClientConfiguration {
     public static final int DEFAULT_STREAM_BUFFER_SIZE = 5 * 1024 * 1024;
+
+    public static final String STRONG_CONSISTENCY_VIEW = "strong";
+
+    /**
+     * determines whether redirects should be handled automatically
+     *
+     * @return
+     */
+    private boolean redirectsEnabled = true;
+
+    /**
+     * determines the redirects times.
+     *
+     * @return
+     */
+    private int maxRedirects = 1;
+
     private int streamBufferSize = DEFAULT_STREAM_BUFFER_SIZE;
     private static final String DEFAULT_ENDPOINT = "bj.bcebos.com";
 
@@ -36,15 +53,16 @@ public class BosClientConfiguration extends BceClientConfiguration {
     /**
      * whether to enable using nio to http async put, default value is true for async put
      */
-    private boolean enableHttpAsyncPut = true;
+    private boolean enableHttpAsyncPut = false;
 
     /**
      * whether use path style host in BOS. <region>.bcebos.com
      */
     private boolean pathStyleAccessEnable = false;
 
+    private String consistencyView;
+
     /**
-     *
      * whether use path style host in BOS. <region>.bcebos.com
      *
      * @return the result of use path style host in BOS.
@@ -70,15 +88,15 @@ public class BosClientConfiguration extends BceClientConfiguration {
         super();
         this.setEndpoint(DEFAULT_ENDPOINT);
     }
-    
+
     public BosClientConfiguration(BceClientConfiguration clientConfiguration) {
         super(clientConfiguration, null);
     }
-    
+
     public BosClientConfiguration(BceClientConfiguration clientConfiguration, String bosEndpoint) {
         super(clientConfiguration, bosEndpoint);
     }
-    
+
     public void setStreamBufferSize(int streamBufferSize) {
         checkArgument(streamBufferSize > 0, "streamBufferSize should be positive.");
         this.streamBufferSize = streamBufferSize;
@@ -115,6 +133,7 @@ public class BosClientConfiguration extends BceClientConfiguration {
 
     /**
      * Returns whether to enable http async put
+     *
      * @return whether to enable http async put
      */
     public boolean isEnableHttpAsyncPut() {
@@ -123,6 +142,7 @@ public class BosClientConfiguration extends BceClientConfiguration {
 
     /**
      * Set whether to enable http async put
+     *
      * @param enableHttpAsyncPut whether to enable http async put
      */
     public void setEnableHttpAsyncPut(boolean enableHttpAsyncPut) {
@@ -240,6 +260,55 @@ public class BosClientConfiguration extends BceClientConfiguration {
     @Override
     public BosClientConfiguration withCredentials(BceCredentials credentials) {
         this.setCredentials(credentials);
+        return this;
+    }
+
+    public String getConsistencyView() {
+        return consistencyView;
+    }
+
+    public void setConsistencyView(String consistencyView) {
+        this.consistencyView = consistencyView;
+    }
+
+    /**
+     * Gets the flag of redirection times
+     *
+     * @return
+     */
+    public int getMaxRedirects() {
+        return this.maxRedirects;
+    }
+
+    /**
+     * Sets the flag of redirection times
+     *
+     * @param maxRedirects
+     */
+    public void setMaxRedirects(int maxRedirects) {
+        this.maxRedirects = maxRedirects;
+    }
+
+    /**
+     * Gets the flag of http redirection
+     *
+     * @return
+     */
+    public boolean isRedirectsEnabled() {
+        return redirectsEnabled;
+    }
+
+    /**
+     * Sets the flag of http redirection
+     *
+     * @param redirectsEnabled
+     */
+    public void setRedirectsEnabled(boolean redirectsEnabled) {
+        this.redirectsEnabled = redirectsEnabled;
+    }
+
+    public BosClientConfiguration withConsistencyView(String consistencyView) {
+        this.setConsistencyView(consistencyView);
         return this;
     }
 

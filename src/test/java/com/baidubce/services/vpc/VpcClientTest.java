@@ -1,17 +1,22 @@
 package com.baidubce.services.vpc;
 
-import com.baidubce.auth.DefaultBceCredentials;
-import com.baidubce.services.subnet.SubnetClientTest;
-import com.baidubce.services.vpc.model.CreateVpcRequest;
-import com.baidubce.services.vpc.model.GetVpcPrivateIpAddressInfoRequest;
-import com.baidubce.services.vpc.model.ModifyVpcAttributesRequest;
-import com.baidubce.util.JsonUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Arrays;
+
+import com.baidubce.auth.DefaultBceCredentials;
+import com.baidubce.services.subnet.SubnetClientTest;
+import com.baidubce.services.tag.model.Tag;
+import com.baidubce.services.vpc.model.CreateVpcRequest;
+import com.baidubce.services.vpc.model.GetVpcPrivateIpAddressInfoRequest;
+import com.baidubce.services.vpc.model.GetVpcResourceIpRequest;
+import com.baidubce.services.vpc.model.ModifyVpcAttributesRequest;
+import com.baidubce.util.JsonUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.Lists;
 
 /**
  * Created by zhangjing60 on 17/8/10.
@@ -70,12 +75,17 @@ public class VpcClientTest {
         createVpcRequest.setEnableIpv6(true);
         createVpcRequest.setName("testVpcSdk");
         createVpcRequest.setCidr("192.168.0.0/16");
+
+        Tag tag = new Tag();
+        tag.setTagKey("tagKey");
+        tag.setTagValue("tagValue");
+        createVpcRequest.setTags(Lists.newArrayList(tag));
+
         toJsonPrettyString("create vpc test", vpcClient.createVpc(createVpcRequest));
     }
 
     @Test
     public void testUpdateVpc() {
-
         ModifyVpcAttributesRequest modifyVpcAttributesRequest = new ModifyVpcAttributesRequest();
         modifyVpcAttributesRequest.setEnableIpv6(false);
         modifyVpcAttributesRequest.setVpcId("vpc-8d97jq9a9zpf");
@@ -87,8 +97,29 @@ public class VpcClientTest {
     public void testGetVpcPrivateIpAddressInfo() {
         GetVpcPrivateIpAddressInfoRequest request = new GetVpcPrivateIpAddressInfoRequest();
         request.setVpcId("vpc-cxvqgxipk36r");
-        request.setPrivateIpAddresses(Arrays.asList("192.168.0.4","192.168.0.57"));
+        request.setPrivateIpAddresses(Arrays.asList("192.168.0.4", "192.168.0.57"));
         request.setPrivateIpRange("192.168.0.57-192.168.0.60");
-        toJsonPrettyString("get vpc private ip address info test",  vpcClient.getVpcPrivateIpAddressInfo(request));
+        toJsonPrettyString("get vpc private ip address info test", vpcClient.getVpcPrivateIpAddressInfo(request));
+    }
+
+    @Test
+    public void testOpenVpcRelay() {
+        vpcClient.openVpcRelay("vpc-12in0aj6nywq");
+    }
+
+    @Test
+    public void testShutDownVpcRelay() {
+        vpcClient.shutDownVpcRelay("vpc-12in0aj6nywq");
+    }
+
+    @Test
+    public void testGetVpcResourceIpInfo() {
+        GetVpcResourceIpRequest request = new GetVpcResourceIpRequest();
+        request.setVpcId("vpc-12in0aj6nywq");
+        request.setResourceType("enic");
+        request.setSubnetId("sbn-kr0sm4rk5888");
+        request.setPageNo(1);
+        request.setPageSize(100);
+        toJsonPrettyString("get vpc resource ip address info test", vpcClient.getVpcResourceIpInfo(request));
     }
 }

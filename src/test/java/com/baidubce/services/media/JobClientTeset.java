@@ -13,18 +13,6 @@
 
 package com.baidubce.services.media;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.baidubce.BceServiceException;
 import com.baidubce.services.media.model.Area;
 import com.baidubce.services.media.model.CreateTranscodingJobRequest;
@@ -40,6 +28,17 @@ import com.baidubce.services.media.model.SourceClip;
 import com.baidubce.services.media.model.Target;
 import com.baidubce.services.media.model.Timeline;
 import com.baidubce.util.JsonUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class JobClientTeset extends AbstractMediaTest {
 
@@ -284,7 +283,47 @@ public class JobClientTeset extends AbstractMediaTest {
         GetTranscodingJobResponse resp = mediaClient.getTranscodingJob(jobId);
         assertEquals("delogo mode should be Normal", resp.getTarget().getDelogoMode(), "Inpainting");
         assertEquals("delogo area should not be null", resp.getTarget().getDelogoAreas().size(), 2);
-    } 
+    }
+
+    @Test
+    public void testCreateJob9() throws Exception {
+        CreateTranscodingJobRequest createTranscodingJobRequest = new CreateTranscodingJobRequest();
+        Insert insert = new Insert().withBucket("bvw-pag-test").withKey("mu.mp3").withType("audio").withTimeline(new Timeline().
+                withStartTimeInMillisecond(0).withDurationInMillisecond(5000));
+        List<Insert> inserts = new ArrayList<>();
+        inserts.add(insert);
+        createTranscodingJobRequest.withPipelineName("a_lyq_test")
+                .withSource(new Source().withSourceKey("60s.mp4"))
+                .withTarget(new Target().withTargetBucket("adapter-test").withTargetKey("a/out.mp4").withPresetName("test_1111_insert").withAutoDelogo(true)
+                        .withInserts(inserts));
+        Target.JobCfg jobCfg = new Target.JobCfg();
+        jobCfg.setNotification("http://www.baidu.com");
+        createTranscodingJobRequest.getTarget().setJobCfg(jobCfg);
+        String jobId = mediaClient.createTranscodingJob(createTranscodingJobRequest).getJobId();
+        assertTrue("Invalid job ID: " + jobId, jobId != null
+                && jobId.trim().length() > 0);
+        System.out.println(jobId);
+    }
+
+    @Test
+    public void testCreateJob10() throws Exception {
+        CreateTranscodingJobRequest createTranscodingJobRequest = new CreateTranscodingJobRequest();
+        Font font = new Font();
+        font.setColor("#000000");
+        Insert insert = new Insert().withBucket("bvw-pag-test").withKey("zj.srt").withType("subtitle").withFont(font);
+        List<Insert> inserts = new ArrayList<>();
+        inserts.add(insert);
+        List<SourceClip> clips = new ArrayList<>();
+        createTranscodingJobRequest.withPipelineName("a_lyq_test")
+                .withSource(new Source().withSourceKey("60s.mp4").withClips(clips))
+                .withTarget(new Target().withTargetKey("a/sub1.mp4").withPresetName("mct.video_mp4_640x360_600kbps").withAutoDelogo(true)
+                        .withInserts(inserts).withJobCfg(new Target.JobCfg().withNotification("http://www.baidu.com")));
+
+        String jobId = mediaClient.createTranscodingJob(createTranscodingJobRequest).getJobId();
+        assertTrue("Invalid job ID: " + jobId, jobId != null
+                && jobId.trim().length() > 0);
+        System.out.println(jobId);
+    }
 
     @Test
     public void testGetJob() throws Exception {

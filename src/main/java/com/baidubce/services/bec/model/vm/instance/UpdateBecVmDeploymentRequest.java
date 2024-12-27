@@ -14,10 +14,15 @@ package com.baidubce.services.bec.model.vm.instance;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bec.model.vm.DnsConfig;
+import com.baidubce.services.bec.model.vm.KeyConfig;
+import com.baidubce.services.bec.model.vm.NetworkConfig;
+import com.baidubce.services.bec.model.vm.SystemVolumeConfig;
 import com.baidubce.services.bec.model.vm.VolumeConfig;
-import com.baidubce.services.bec.model.vm.network.VmNetworkConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * The request for updating BEC virtual machine resources.
@@ -43,22 +48,28 @@ public class UpdateBecVmDeploymentRequest extends AbstractBceRequest {
     /**
      * The number of CPUs of the virtual machine instance.
      */
-    private int cpu;
+    private Integer cpu;
 
     /**
      * The memory of the virtual machine instance.
      */
-    private int memory;
+    private Integer memory;
 
     /**
-     * Data disk size.
+     * The specification of the virtual machine instance.
      */
-    private VolumeConfig dataStorage;
+    private String spec;
 
     /**
      * Password.
      */
+    @Deprecated
     private String adminPass;
+
+    /**
+     * The new way to configure password and key
+     */
+    private KeyConfig keyConfig;
 
     /**
      * Image id.
@@ -76,9 +87,14 @@ public class UpdateBecVmDeploymentRequest extends AbstractBceRequest {
     private String vmName;
 
     /**
+     * The security groupIds of the BEC virtual machine.
+     */
+    private List<String> securityGroupIds;
+
+    /**
      * Virtual machine network information configuration
      */
-    private VmNetworkConfig networkConfig;
+    private NetworkConfig networkConfig;
 
     /**
      * Whether IPV6 is required
@@ -98,10 +114,30 @@ public class UpdateBecVmDeploymentRequest extends AbstractBceRequest {
     private String clientToken;
 
     /**
+     * The data volumes of the BEC virtual machine.
+     */
+    private List<VolumeConfig> dataVolumeList;
+
+    /**
+     * The security groupIds of the BEC virtual machine.
+     */
+    private SystemVolumeConfig systemVolume;
+
+    /**
+     * The dns config of the BEC virtual machine.
+     */
+    private DnsConfig dnsConfig;
+
+    /**
+     * Whether Reboot is required
+     */
+    private Boolean reboot;
+
+    /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return UpdateBecVmDeploymentRequest with credentials.
      */
     public UpdateBecVmDeploymentRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

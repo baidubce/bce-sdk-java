@@ -14,9 +14,12 @@ package com.baidubce.services.blb.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * SSL listener info modal.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SslListener extends ListenerBase {
 
     /**

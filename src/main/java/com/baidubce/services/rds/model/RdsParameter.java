@@ -1,8 +1,11 @@
 package com.baidubce.services.rds.model;
 
+import org.apache.htrace.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Rds parameter
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RdsParameter {
 
     private String name;
@@ -15,6 +18,10 @@ public class RdsParameter {
     private String allowedValues;
     private String desc;
     private String etag;
+    private String configType;
+    private String bestValue;
+    private String attention;
+    private boolean ifCluster;
 
     public String getName() {
         return name;
@@ -94,5 +101,37 @@ public class RdsParameter {
 
     public void setEtag(String etag) {
         this.etag = etag;
+    }
+
+    public String getConfigType() {
+        return configType;
+    }
+
+    public void setConfigType(String configType) {
+        this.configType = configType;
+    }
+
+    public String getBestValue() {
+        return bestValue;
+    }
+
+    public void setBestValue(String bestValue) {
+        this.bestValue = bestValue;
+    }
+
+    public String getAttention() {
+        return attention;
+    }
+
+    public void setAttention(String attention) {
+        this.attention = attention;
+    }
+
+    public boolean isIfCluster() {
+        return ifCluster;
+    }
+
+    public void setIfCluster(boolean ifCluster) {
+        this.ifCluster = ifCluster;
     }
 }

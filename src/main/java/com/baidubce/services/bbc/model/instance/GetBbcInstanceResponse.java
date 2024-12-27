@@ -14,6 +14,9 @@ package com.baidubce.services.bbc.model.instance;
 
 
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bcc.model.TagModel;
+
+import java.util.List;
 
 /**
  * The response of bbc instance
@@ -81,6 +84,11 @@ public class GetBbcInstanceResponse extends AbstractBceResponse {
      * whether the instacne is auto renew or not
      */
     private Boolean autoRenew;
+
+    /**
+     * The list of bonded tags.
+     */
+    private List<TagModel> tags;
 
     public String getId() {
         return id;
@@ -200,5 +208,13 @@ public class GetBbcInstanceResponse extends AbstractBceResponse {
 
     public void setAutoRenew(Boolean autoRenew) {
         this.autoRenew = autoRenew;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

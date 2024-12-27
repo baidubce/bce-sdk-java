@@ -29,7 +29,7 @@ public class BecResultVo<T> extends AbstractBceResponse {
     /**
      * Whether the operation was successful.
      */
-    public boolean success;
+    public Boolean success;
 
     public BecResultVo() {
     }

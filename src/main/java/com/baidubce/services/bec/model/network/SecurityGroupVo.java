@@ -1,4 +1,7 @@
 package com.baidubce.services.bec.model.network;
+
+import com.baidubce.BceConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -35,22 +38,8 @@ public class SecurityGroupVo {
     private List<SecurityGroupRuleVo> rules;
 
     /**
-     * isDefault
+     * Creation time
      */
-    private Boolean isDefault;
-
-    /**
-     * instanceCount
-     */
-    private Integer instanceCount;
-
-    /**
-     * referCount
-     */
-    private Integer referCount;
-
-    /**
-     * createdTime
-     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = BceConstants.DEFAULT_DATETIME_FORMAT, timezone = "UTC")
     private Date createdTime;
 }

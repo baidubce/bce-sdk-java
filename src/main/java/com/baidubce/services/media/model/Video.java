@@ -24,6 +24,8 @@ public class Video {
      **/
     private CodecOptions codecOptions    = null;
 
+    private String rateControl = null;
+
     /**
      * target bitrate in bps
      **/
@@ -97,6 +99,14 @@ public class Video {
 
     public void setBitRateInBps(Integer bitRateInBps) {
         this.bitRateInBps = bitRateInBps;
+    }
+
+    public String getRateControl() {
+        return rateControl;
+    }
+
+    public void setRateControl(String rateControl) {
+        this.rateControl = rateControl;
     }
 
     public Video withBitRateInBps(Integer bitRateInBps) {
@@ -202,6 +212,7 @@ public class Video {
 
         sb.append("    codec: ").append(codec).append("\n");
         sb.append("    codecOptions: ").append(codecOptions).append("\n");
+        sb.append("    rateControl: ").append(rateControl).append("\n");
         sb.append("    bitRateInBps: ").append(bitRateInBps).append("\n");
         sb.append("    maxFrameRate: ").append(maxFrameRate).append("\n");
         sb.append("    maxWidth: ").append(maxWidthInPixel).append("\n");

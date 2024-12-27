@@ -30,18 +30,18 @@ public class GetBecBlbBackendPodListRequest extends AbstractBceRequest {
     /**
      * page number
      */
-    private Integer pageNo;
+    private int pageNo;
 
     /**
      * page size
      */
-    private Integer pageSize;
+    private int pageSize;
 
     /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return GetInstanceRequest with credentials.
+     * @return GetBecBlbPodBoundListRequest with credentials.
      */
     public GetBecBlbBackendPodListRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

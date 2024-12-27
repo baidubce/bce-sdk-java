@@ -23,6 +23,8 @@ import com.baidubce.services.csn.model.CreateCsnBpResponse;
 import com.baidubce.services.csn.model.CreateCsnRequest;
 import com.baidubce.services.csn.model.CreatePropagationRequest;
 import com.baidubce.services.csn.model.CreateRouteRuleRequest;
+import com.baidubce.services.csn.model.CsnBpPriceRequest;
+import com.baidubce.services.csn.model.CsnBpPriceResponse;
 import com.baidubce.services.csn.model.DeleteCsnBpLimitRequest;
 import com.baidubce.services.csn.model.DetachInstanceRequest;
 import com.baidubce.services.csn.model.GetCsnBpResponse;
@@ -44,6 +46,7 @@ import com.baidubce.services.csn.model.UpdateCsnBpLimitRequest;
 import com.baidubce.services.csn.model.UpdateCsnBpRequest;
 import com.baidubce.services.csn.model.UpdateCsnRequest;
 import com.baidubce.services.csn.model.UpdateTgwRequest;
+import com.baidubce.services.tag.model.Tag;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Before;
@@ -51,6 +54,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -90,6 +94,12 @@ public class CsnTest {
         CreateCsnRequest request = new CreateCsnRequest();
         request.setName("javaSdkTest");
         request.setDescription("java sdk test");
+
+        Tag tag = new Tag();
+        tag.setTagKey("key");
+        tag.setTagValue("value");
+        request.setTags(Arrays.asList(tag));
+
         String clientToken = UUID.randomUUID().toString();
         client.createCsn(request, clientToken);
     }
@@ -153,6 +163,29 @@ public class CsnTest {
                 .build();
         String clientToken = UUID.randomUUID().toString();
         client.attachInstance(testCsnId, attachInstanceRequest, clientToken);
+    }
+
+    @Test
+    public void csnBpPriceTest() {
+        CsnBpPriceRequest request = new CsnBpPriceRequest();
+        request.setName("test_prepay");
+        request.setBandwidth(10);
+        request.setGeographicA("China");
+        request.setGeographicB("China");
+
+        CreateCsnBpRequest.Billing.Reservation reservation = CreateCsnBpRequest.Billing.Reservation.builder()
+                .reservationTimeUnit("month")   // 时间单位，当前仅支持按月，取值month
+                .reservationLength(1)   // 时长，[1,2,3,4,5,6,7,8,9,12,24,36]
+                .build();
+        CreateCsnBpRequest.Billing billing = CreateCsnBpRequest.Billing.builder()
+                .paymentTiming("Prepaid")   // 付款时间，预支付（Prepaid）和后支付（Postpaid）
+                .billingMethod("ByBandwidth")   // 计费方式
+                .reservation(reservation)   // 保留信息
+                .build();
+        request.setBilling(billing);
+
+        CsnBpPriceResponse response = client.csnBpPrice(request); // 获取价格
+        toJsonPrettyString("price", response);
     }
 
     /*    -------------------------- 路由管理相关 --------------------------    */

@@ -16,13 +16,14 @@ package com.baidubce.services.mms.model;
 import com.baidubce.model.AbstractBceResponse;
 
 /**
- * MMS base response.
+ MMS base response.
  */
 public class MmsBaseResponse extends AbstractBceResponse {
 
     private String status;
     private String taskId;
     private String libId;
+    private String mediaId;
     private MmsError error;
 
     public String getStatus() {
@@ -57,11 +58,20 @@ public class MmsBaseResponse extends AbstractBceResponse {
         this.error = error;
     }
 
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
+
     @Override
     public String toString() {
         return "MmsBaseResponse{" +
                 "status='" + status + '\'' +
                 ", taskId='" + taskId + '\'' +
+                ", mediaId='" + mediaId + '\'' +
                 ", error=" + error +
                 ", metadata=" + metadata +
                 '}';

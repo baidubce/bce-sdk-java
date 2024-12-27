@@ -23,47 +23,32 @@ import java.util.List;
 public class DeploymentInstance {
 
     /**
-     * The region of the deployment.
-     */
-    private String region;
-
-    /**
-     * The service provider of the deployment.
-     */
-    private String serviceProvider;
-
-    /**
-     * Number of Pod\Vm instances under deployment
-     */
-    private int replicas;
-
-    /**
-     * The city of the deployment.
-     */
-    private String city;
-
-    /**
-     * The regionId of the deployment.
+     * The region id of the deployment.
      */
     private String regionId;
 
     /**
-     * The subServiceProvider of the deployment.
+     * Number of Pod\Vm instances under deployment.
+     */
+    private Integer replicas;
+
+    /**
+     * The subServiceProvider of the deployment, [ct,un,cm,intra].
      */
     private List<String> subServiceProviders;
 
     /**
-     * The networkType of the deployment.
+     * The network type of the deployment.
      */
     private String networkType;
 
     /**
-     * The vpcId of the deployment.
+     * The vpc id of the deployment.
      */
     private String vpcId;
 
     /**
-     * The subnetId of the deployment.
+     * The subnet id of the deployment.
      */
     private String subnetId;
 }

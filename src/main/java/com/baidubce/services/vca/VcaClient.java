@@ -3,6 +3,8 @@
  */
 package com.baidubce.services.vca;
 
+import com.baidubce.services.vca.model.AnalyzeCancelRequest;
+import com.baidubce.services.vca.model.AnalyzeCancelResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import com.baidubce.AbstractBceClient;
@@ -36,6 +38,7 @@ import com.baidubce.util.JsonUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -52,6 +55,7 @@ public class VcaClient extends AbstractBceClient {
     private static final String IMAGE = "image";
     private static final String COVER = "cover";
     private static final String HIGHLIGHT = "highlight";
+    private static final String ABSTRACT = "abstract";
 
     private static HttpResponseHandler[] vcaHandlers = new HttpResponseHandler[] {
             new BceMetadataResponseHandler(),
@@ -103,6 +107,34 @@ public class VcaClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.PUT,
                 request, MEDIA);
         return this.invokeHttpClient(internalRequest, AnalyzeResponse.class);
+    }
+
+    /**
+     * Cancel media analyze for specified source.
+     *
+     * @param request Cancel request, including media source path.
+     * @return  response.
+     */
+    public AnalyzeCancelResponse cancel(AnalyzeCancelRequest request) {
+        // base request
+        InternalRequest internalRequest = createRequest(VERSION, HttpMethodName.PUT,
+                request, MEDIA);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("source", request.getSource());
+        params.put("cancel", null);
+        internalRequest.setParameters(params);
+        return this.invokeHttpClient(internalRequest, AnalyzeCancelResponse.class);
+    }
+
+    /**
+     * Cancel media analyze for specified source.
+     *
+     * @return
+     */
+    public AnalyzeCancelResponse cancel(String source) {
+        AnalyzeCancelRequest request = new AnalyzeCancelRequest();
+        request.setSource(source);
+        return cancel(request);
     }
 
     /**
@@ -214,6 +246,59 @@ public class VcaClient extends AbstractBceClient {
         internalRequest.addParameter("sync", "");
         return this.invokeHttpClient(internalRequest, ImageAnalyzeResponse.class);
     }
+
+
+    /**
+     * Initiate image abstract analyze for specified source.
+     *
+     * @param source image source path, supporting BOS, HTTP(S) URL.
+     * @return ImageAnalyzeResponse with analyze results.
+     */
+    public ImageAnalyzeResponse analyzeImageAbstract(String source) {
+        AnalyzeRequest request = new AnalyzeRequest();
+        request.setSource(source);
+        return analyzeImageAbstract(request);
+    }
+
+
+    /**
+     * Initiate image analyze for specified AnalyzeRequest and request image sync-interface.
+     *
+     * @param request Analyze request, including image source path.
+     * @return ImageAnalyzeResponse with analyze results.
+     */
+    public ImageAnalyzeResponse analyzeImageAbstract(AnalyzeRequest request) {
+        InternalRequest internalRequest = createRequest(VERSION_1, HttpMethodName.PUT,
+                request, ABSTRACT);
+        return this.invokeHttpClient(internalRequest, ImageAnalyzeResponse.class);
+    }
+
+
+    /**
+     * Query analyze result for specified source.
+     *
+     * @param source Media source path, supporting BOS, VOD, HTTP(S) URL.
+     * @return Analyze result.
+     */
+    public QueryResultResponse queryImageAbstractResult(String source) {
+        QueryResultRequest request = new QueryResultRequest();
+        request.setSource(source);
+        return queryImageAbstractResult(request);
+    }
+
+    /**
+     * Query analyze result for specified source.
+     *
+     * @param request Query request, including media source path.
+     * @return Analyze result.
+     */
+    public QueryResultResponse queryImageAbstractResult(QueryResultRequest request) {
+        InternalRequest internalRequest = createRequest(VERSION_1, HttpMethodName.GET,
+                request, ABSTRACT);
+        internalRequest.addParameter("source", request.getSource());
+        return this.invokeHttpClient(internalRequest, QueryResultResponse.class);
+    }
+
 
     /**
      * Query analyze result for specified source.

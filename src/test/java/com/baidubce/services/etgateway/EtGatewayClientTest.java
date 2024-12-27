@@ -2,6 +2,7 @@ package com.baidubce.services.etgateway;
 
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.auth.DefaultBceCredentials;
+import com.baidubce.services.bcc.model.TagModel;
 import com.baidubce.services.etgateway.model.BindEtChannelRequest;
 import com.baidubce.services.etgateway.model.CreateEtGatewayHealthCheckRequest;
 import com.baidubce.services.etgateway.model.CreateEtGatewayRequest;
@@ -17,6 +18,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EtGatewayClientTest {
 
@@ -46,7 +50,7 @@ public class EtGatewayClientTest {
     @Test
     public void listEtGateways() {
         ListEtGatewayRequest listEtGatewayRequest = new ListEtGatewayRequest();
-        listEtGatewayRequest.setVpcId("g");
+        listEtGatewayRequest.setVpcId("vpc-et8xtvvjnx60");
         ListEtGatewayResponse listEtGatewayResponse = etGatewayClient.listEtGateways(listEtGatewayRequest);
         toJsonPrettyString("listEtGateways: ", listEtGatewayResponse);
     }
@@ -62,8 +66,25 @@ public class EtGatewayClientTest {
     }
 
     @Test
+    public void createEtGatewayWithTags() {
+        CreateEtGatewayRequest createEtGatewayRequest = new CreateEtGatewayRequest();
+        createEtGatewayRequest.setVpcId("vpc-et8xtvvjnx60");
+        createEtGatewayRequest.setName("api-create_with_tags222");
+        createEtGatewayRequest.setSpeed(30);
+        List<TagModel> tags = new ArrayList<>();
+        TagModel tag = new TagModel();
+        tag.setTagKey("keyfsfsafa");
+        tag.setTagValue("value1sfsafa");
+        tags.add(tag);
+        createEtGatewayRequest.setTags(tags);
+
+        CreateEtGatewayResponse etGateway = etGatewayClient.createEtGateway(createEtGatewayRequest);
+        toJsonPrettyString("createEtGateway:", etGateway);
+    }
+
+    @Test
     public void getEtGateway() {
-        String etGatewayId = "";
+        String etGatewayId = "dcgw-c3bqvkc6y5nm";
         GetEtGatewayResponse etGateway = etGatewayClient.getEtGateway(etGatewayId);
         toJsonPrettyString("getEtGateway:", etGateway);
     }

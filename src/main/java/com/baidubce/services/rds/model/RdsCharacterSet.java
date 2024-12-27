@@ -1,11 +1,13 @@
 package com.baidubce.services.rds.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * The character set name
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public enum RdsCharacterSet {
     UTF8("utf8"),
     GBK("gbk"),

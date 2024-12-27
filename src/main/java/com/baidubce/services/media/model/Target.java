@@ -15,16 +15,19 @@ package com.baidubce.services.media.model;
 
 import lombok.Data;
 
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.baidubce.util.Validate.checkStringNotEmpty;
 
 /**
  * The model which will be used to set target info in creating transcoding job
  */
 @Data
 public class Target {
+
+    private String targetBucket = null;
+
     /**
      * target BOS key
      **/
@@ -76,6 +79,128 @@ public class Target {
      * inserts of video, audio, image, text types
      **/
     private List<Insert> inserts = null;
+
+    private JobCfg jobCfg;
+
+    public String getTargetBucket() {
+        return targetBucket;
+    }
+
+    public void setTargetBucket(String targetBucket) {
+        this.targetBucket = targetBucket;
+    }
+
+    public String getTargetKey() {
+        return targetKey;
+    }
+
+    public void setTargetKey(String targetKey) {
+        this.targetKey = targetKey;
+    }
+
+    public String getPresetName() {
+        return presetName;
+    }
+
+    public void setPresetName(String presetName) {
+        this.presetName = presetName;
+    }
+
+    public Boolean getAutoDelogo() {
+        return autoDelogo;
+    }
+
+    public void setAutoDelogo(Boolean autoDelogo) {
+        this.autoDelogo = autoDelogo;
+    }
+
+    public String getDelogoMode() {
+        return delogoMode;
+    }
+
+    public void setDelogoMode(String delogoMode) {
+        this.delogoMode = delogoMode;
+    }
+
+    public Area getDelogoArea() {
+        return delogoArea;
+    }
+
+    public void setDelogoArea(Area delogoArea) {
+        this.delogoArea = delogoArea;
+    }
+
+    public List<Area> getDelogoAreas() {
+        return delogoAreas;
+    }
+
+    public void setDelogoAreas(List<Area> delogoAreas) {
+        this.delogoAreas = delogoAreas;
+    }
+
+    public Boolean getAutoCrop() {
+        return autoCrop;
+    }
+
+    public void setAutoCrop(Boolean autoCrop) {
+        this.autoCrop = autoCrop;
+    }
+
+    public Area getCrop() {
+        return crop;
+    }
+
+    public void setCrop(Area crop) {
+        this.crop = crop;
+    }
+
+    public List<String> getWatermarkIds() {
+        return watermarkIds;
+    }
+
+    public void setWatermarkIds(List<String> watermarkIds) {
+        this.watermarkIds = watermarkIds;
+    }
+
+    public List<Insert> getInserts() {
+        return inserts;
+    }
+
+    public void setInserts(List<Insert> inserts) {
+        this.inserts = inserts;
+    }
+
+    public static class JobCfg {
+        private String notification;
+
+        public JobCfg() {
+        }
+
+        public String getNotification() {
+            return notification;
+        }
+
+        public void setNotification(String notification) {
+            this.notification = notification;
+        }
+        public JobCfg withNotification(String notification) {
+            this.notification = notification;
+            return this;
+        }
+    }
+
+    public JobCfg getJobCfg() {
+        return jobCfg;
+    }
+
+    public void setJobCfg(JobCfg jobCfg) {
+        this.jobCfg = jobCfg;
+    }
+
+    public Target withTargetBucket(String targetBucket) {
+        this.targetBucket = targetBucket;
+        return this;
+    }
 
     public Target withTargetKey(String targetKey) {
         checkStringNotEmpty(targetKey, "The parameter targetKey should NOT be null or empty string.");
@@ -130,6 +255,11 @@ public class Target {
 
     public Target withWatermarkIds(List<String> watermarkIds) {
         this.watermarkIds = watermarkIds;
+        return this;
+    }
+
+    public Target withJobCfg(JobCfg jobCfg) {
+        this.jobCfg = jobCfg;
         return this;
     }
 

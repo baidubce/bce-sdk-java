@@ -12,12 +12,19 @@
  */
 package com.baidubce.services.bec.model.blb;
 
+import com.baidubce.services.bec.model.enums.ProtocolEnum;
 import lombok.Data;
 
 @Data
 public class Port {
 
-    private String protocol;
+    /**
+     * Listen protocol.
+     */
+    private ProtocolEnum protocol;
 
-    private int port;
+    /**
+     * Listen port, 1 - 65535.
+     */
+    private Integer port;
 }

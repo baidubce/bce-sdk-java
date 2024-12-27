@@ -49,7 +49,7 @@ public class BecVmServiceActionRequest extends AbstractBceRequest {
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
-     * @return UpdateBecVmServiceRequest with credentials.
+     * @return BecVmServiceActionRequest with credentials.
      */
     public BecVmServiceActionRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
