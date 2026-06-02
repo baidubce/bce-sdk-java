@@ -80,4 +80,24 @@ public class Eip {
      * The expireTime of eip.
      */
     private String expireTime;
+
+    /**
+     * 标记EIP是否为原生EIP
+     */
+    private Boolean nativeGroup;
+
+    /**
+     * eip原始带宽（移入group前的带宽）
+     */
+    private Integer originalBandwidth;
+
+    /**
+     * group 内 EIP 原始计费类型
+     */
+    private String originProductType;
+
+    /**
+     * group 内 EIP 原始计费子类型
+     */
+    private String originSubProductType;
 }

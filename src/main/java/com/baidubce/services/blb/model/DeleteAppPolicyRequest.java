@@ -35,6 +35,10 @@ public class DeleteAppPolicyRequest extends AbstractBceRequest {
      * the id of the policy list
      */
     private List<String> policyIdList;
+    /**
+     * the listener type of the policy, required when same port has multiple protocols
+     */
+    private String type;
 
     /**
      * An ASCII string whose length is less than 64.
@@ -63,6 +67,11 @@ public class DeleteAppPolicyRequest extends AbstractBceRequest {
         return this;
     }
 
+    public DeleteAppPolicyRequest withType(String type) {
+        this.type = type;
+        return this;
+    }
+
     public String getBlbId() {
         return blbId;
     }
@@ -85,6 +94,14 @@ public class DeleteAppPolicyRequest extends AbstractBceRequest {
 
     public void setPolicyIdList(List<String> policyIdList) {
         this.policyIdList = policyIdList;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getClientToken() {

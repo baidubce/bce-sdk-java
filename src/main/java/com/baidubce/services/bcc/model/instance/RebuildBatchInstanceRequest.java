@@ -49,6 +49,10 @@ public class RebuildBatchInstanceRequest extends AbstractBceRequest {
      */
     private String adminPass;
 
+    private String userData;
+
+    private Boolean cleanLastUserData;
+
     public List<String> getInstanceIds() {
         return instanceIds;
     }

@@ -79,6 +79,14 @@ public class AppSgPortRequest extends AbstractBceRequest {
      * the string of udp health check.
      */
     private String udpHealthCheckString;
+    /**
+     * whether to enable health check.
+     */
+    private Boolean enableHealthCheck;
+    /**
+     * the host of health check, used when healthCheck is HTTP.
+     */
+    private String healthCheckHost;
 
     /**
      * An ASCII string whose length is less than 64.
@@ -234,6 +242,32 @@ public class AppSgPortRequest extends AbstractBceRequest {
 
     public void setUdpHealthCheckString(String udpHealthCheckString) {
         this.udpHealthCheckString = udpHealthCheckString;
+    }
+
+    public Boolean getEnableHealthCheck() {
+        return enableHealthCheck;
+    }
+
+    public void setEnableHealthCheck(Boolean enableHealthCheck) {
+        this.enableHealthCheck = enableHealthCheck;
+    }
+
+    public AppSgPortRequest withEnableHealthCheck(Boolean enableHealthCheck) {
+        this.enableHealthCheck = enableHealthCheck;
+        return this;
+    }
+
+    public String getHealthCheckHost() {
+        return healthCheckHost;
+    }
+
+    public void setHealthCheckHost(String healthCheckHost) {
+        this.healthCheckHost = healthCheckHost;
+    }
+
+    public AppSgPortRequest withHealthCheckHost(String healthCheckHost) {
+        this.healthCheckHost = healthCheckHost;
+        return this;
     }
 
     public String getClientToken() {

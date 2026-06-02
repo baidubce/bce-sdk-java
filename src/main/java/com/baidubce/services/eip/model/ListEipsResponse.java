@@ -75,6 +75,22 @@ public class ListEipsResponse extends ListResponse {
          * The tags bound to eip.
          */
         private List<TagModel> tags;
+        /**
+         *  eipbp Id
+         */
+        private String bwShortId;
+        private String shareGroupId;
+        private String eipInstanceType;
+        private String region;
+        private String routeType;
+        private Boolean deleteProtect;
+        private Integer bwBandwidthInMbps;
+        private Integer domesticBwBandwidthInMbps;
+        private String clusterId;
+        private Boolean exclusiveCluster;
+        private String poolType;
+
+// 添加对应的getter和setter方法
     }
 
     @Override

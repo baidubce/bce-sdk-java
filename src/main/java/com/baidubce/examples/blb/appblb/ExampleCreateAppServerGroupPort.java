@@ -29,6 +29,8 @@ public class ExampleCreateAppServerGroupPort {
         request.setPort(90); // 端口号
         request.setType("HTTP"); // 协议类型
         request.setHealthCheck("HTTP"); // 健康检查类型
+        request.setEnableHealthCheck(true); // 是否开启健康检查，默认true
+        request.setHealthCheckHost("www.example.com"); // 7层健康检查请求的头部域host字段
         try {
             AppSgPortResponse response = appBlbClient.createAppServerGroupPort(request);
             System.out.println(response);

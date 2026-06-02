@@ -14,7 +14,7 @@ public class TestModifyAccountPassword {
             RdsModifyAccountPasswordRequest request = new RdsModifyAccountPasswordRequest();
             request.setInstanceId("rds-tXjFULZA");
             request.setAccountName("nosuper");
-            request.setPassword("123jklMN");
+            request.setPassword("");
             AbstractBceResponse response = rdsClient.modifyAccountPassword(request);
         } catch (Throwable t) {
             System.exit(1);

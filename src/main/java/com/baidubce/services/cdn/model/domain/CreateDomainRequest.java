@@ -16,6 +16,7 @@ package com.baidubce.services.cdn.model.domain;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.cdn.model.OriginPeer;
+import com.baidubce.services.cdn.model.Dsa;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -26,12 +27,14 @@ import java.util.List;
  * Updated by changxing01 on 22/4/11
  */
 public class CreateDomainRequest extends AbstractBceRequest {
-    
+
     private List<OriginPeer> origin;
     private String domain;
     private String defaultHost;
     private String form;
     private Boolean follow302;
+    private int productType;
+    private Dsa dsa;
 
     /**
      * @return defaultHost
@@ -85,14 +88,14 @@ public class CreateDomainRequest extends AbstractBceRequest {
     public String getDomain() {
         return domain;
     }
-    
+
     /**
      * @param domain the domain name
      */
     public void setDomain(String domain) {
         this.domain = domain;
     }
-    
+
     /**
      * @param domain the domain name
      * @return returns this object
@@ -108,23 +111,23 @@ public class CreateDomainRequest extends AbstractBceRequest {
     public List<OriginPeer> getOrigin() {
         return origin;
     }
-    
+
     /**
      * @param origin origin list
      */
     public void setOrigin(List<OriginPeer> origin) {
         this.origin = origin;
     }
-    
+
     /**
-     * @param origin 
+     * @param origin
      * @return returns this object
      */
     public CreateDomainRequest withOrigin(List<OriginPeer> origin) {
         this.origin = origin;
         return this;
     }
-    
+
     /**
      * @param peer
      * @return returns this object
@@ -133,7 +136,7 @@ public class CreateDomainRequest extends AbstractBceRequest {
         origin.add(peer);
         return this;
     }
-    
+
     /**
      * @param peer
      * @return returns this object
@@ -168,7 +171,53 @@ public class CreateDomainRequest extends AbstractBceRequest {
         this.follow302 = follow302;
         return this;
     }
-    
+
+    /**
+     * @return productType
+     */
+    public int getProductType() {
+        return productType;
+    }
+
+    /**
+     * @param productType the productType to set
+     */
+    public void setProductType(int productType) {
+        this.productType = productType;
+    }
+
+    /**
+     * @param productType the productType to set
+     * @return this object
+     */
+    public CreateDomainRequest withProductType(int productType) {
+        this.productType = productType;
+        return this;
+    }
+
+    /**
+     * @return Dsa
+     */
+    public Dsa getDsa() {
+        return dsa;
+    }
+
+    /**
+     * @param dsa the Dsa to set
+     */
+    public void setDsa(Dsa dsa) {
+        this.dsa = dsa;
+    }
+
+    /**
+     * @param dsa the Dsa to set
+     * @return this object
+     */
+    public CreateDomainRequest withDsa(Dsa dsa) {
+        this.dsa = dsa;
+        return this;
+    }
+
     /**
      *  (non-Javadoc)
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
@@ -191,5 +240,5 @@ public class CreateDomainRequest extends AbstractBceRequest {
             return "";
         }
     }
-    
+
 }

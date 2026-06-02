@@ -22,6 +22,8 @@ public class ExampleListEip {
         EipClient eipClient = new EipClient(config); // 初始化EipClient
 
         ListEipsRequest request = new ListEipsRequest();
+        request.setName("test-sdk-eip");
+        request.setEipIds("ip-8bpliug0");
         try {
             ListEipsResponse response = eipClient.listEips(request);
             System.out.println(response);

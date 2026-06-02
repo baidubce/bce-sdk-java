@@ -49,6 +49,9 @@ public class ReleaseMultipleInstancesRequest extends AbstractBceRequest {
      */
     private boolean deleteRelatedEnisFlag;
 
+
+    private boolean cdsAttributeActive;
+
     public List<String> getInstanceIds() {
         return instanceIds;
     }
@@ -122,6 +125,20 @@ public class ReleaseMultipleInstancesRequest extends AbstractBceRequest {
 
     public ReleaseMultipleInstancesRequest withDeleteRelatedEnisFlag(boolean deleteRelatedEnisFlag) {
         this.deleteRelatedEnisFlag = deleteRelatedEnisFlag;
+        return this;
+    }
+
+
+    public boolean isCdsAttributeActive() {
+        return cdsAttributeActive;
+    }
+
+    public void setCdsAttributeActive(boolean cdsAttributeActive) {
+        this.cdsAttributeActive = cdsAttributeActive;
+    }
+
+    public ReleaseMultipleInstancesRequest withCdsAttributeActive(boolean cdsAttributeActive) {
+        this.cdsAttributeActive = cdsAttributeActive;
         return this;
     }
 }

@@ -76,12 +76,12 @@ public class TableStorageConstants {
     /**
      * Default MaxVersions. Used in TableOption.
      */
-    public static final int DEFAULT_TABLE_MAX_VERSIONS = 0;
+    public static final int DEFAULT_TABLE_MAX_VERSIONS = 1;
 
     /**
      * Minimum value of MaxVersions. Used in TableOption.
      */
-    public static final int MIN_TABLE_MAX_VERSIONS = 0;
+    public static final int MIN_TABLE_MAX_VERSIONS = 1;
 
     /**
      * Default MaxVersions. Used in get, batchGet and scan operations.

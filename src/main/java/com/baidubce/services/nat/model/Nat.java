@@ -33,6 +33,11 @@ public class Nat {
     private String name;
 
     /**
+     * The type of this nat, enhanced or normal.
+     */
+    private String natType;
+
+    /**
      * The vpcId of this nat.
      */
     private String vpcId;
@@ -43,9 +48,19 @@ public class Nat {
     private String spec;
 
     /**
-     * The eips of this nat.
+     * The snat eips of this nat.
      */
     private List<String> eips;
+
+    /**
+     * The dnat eips of this nat.
+     */
+    private List<String> dnatEips;
+
+    /**
+     * The bind eips of this nat, only available for enhance nat.
+     */
+    private List<String> bindEips;
 
     /**
      * The paymentTiming of this nat.
@@ -58,9 +73,20 @@ public class Nat {
     private String expireTime;
 
     /**
+     * The createTime of this nat.
+     */
+    private String createTime;
+
+    /**
      * The status of this nat.
      */
     private String status;
+
+    /**
+     * ipVersion
+     * @return
+     */
+    private String ipVersion;
 
     public String getId() {
         return id;
@@ -76,6 +102,14 @@ public class Nat {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNatType() {
+        return natType;
+    }
+
+    public void setNatType(String natType) {
+        this.natType = natType;
     }
 
     public String getVpcId() {
@@ -102,6 +136,22 @@ public class Nat {
         this.eips = eips;
     }
 
+    public List<String> getDnatEips() {
+        return dnatEips;
+    }
+
+    public void setDnatEips(List<String> dnatEips) {
+        this.dnatEips = dnatEips;
+    }
+
+    public List<String> getBindEips() {
+        return bindEips;
+    }
+
+    public void setBindEips(List<String> bindEips) {
+        this.bindEips = bindEips;
+    }
+
     public String getPaymentTiming() {
         return paymentTiming;
     }
@@ -118,11 +168,27 @@ public class Nat {
         this.expireTime = expireTime;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getIpVersion() {
+        return ipVersion;
+    }
+
+    public void setIpVersion(String ipVersion) {
+        this.ipVersion = ipVersion;
     }
 }

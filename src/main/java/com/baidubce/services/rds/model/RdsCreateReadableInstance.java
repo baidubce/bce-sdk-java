@@ -35,6 +35,7 @@ public class RdsCreateReadableInstance extends AbstractBceRequest {
     private String replicaType;
     private boolean isInheritMasterAuthip;
     private List<RdsTag> tags;
+    private String resourceType;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -199,5 +200,13 @@ public class RdsCreateReadableInstance extends AbstractBceRequest {
 
     public void setTags(List<RdsTag> tags) {
         this.tags = tags;
+    }
+
+    public String getResourceType() {
+        return resourceType;
+    }
+
+    public void setResourceType(String resourceType) {
+        this.resourceType = resourceType;
     }
 }

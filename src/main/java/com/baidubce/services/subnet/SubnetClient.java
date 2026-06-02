@@ -235,6 +235,9 @@ public class SubnetClient extends AbstractBceClient {
         if (StringUtils.isNotEmpty(request.getSubnetType())) {
             internalRequest.addParameter("subnetType", request.getSubnetType());
         }
+        if (StringUtils.isNotEmpty(request.getSubnetIds())) {
+            internalRequest.addParameter("subnetIds", request.getSubnetIds());
+        }
         return invokeHttpClient(internalRequest, ListSubnetsResponse.class);
     }
 

@@ -45,12 +45,24 @@ public class DeleteListenerRequest extends AbstractBceRequest {
      */
     private List<Integer> portList;
 
+    /**
+     * the port and type list of the listener to delete.
+     * use this parameter if you want to delete listener by port and type.
+     */
+    private List<PortType> portTypeList;
+
     public DeleteListenerRequest() {
     }
 
     public DeleteListenerRequest(String blbId, List<Integer> portList) {
         this.blbId = blbId;
         this.portList = portList;
+    }
+
+    public DeleteListenerRequest(String blbId, List<Integer> portList, List<PortType> portTypeList) {
+        this.blbId = blbId;
+        this.portList = portList;
+        this.portTypeList = portTypeList;
     }
 
     public String getClientToken() {
@@ -89,6 +101,19 @@ public class DeleteListenerRequest extends AbstractBceRequest {
 
     public DeleteListenerRequest withPortList(List<Integer> portList) {
         this.setPortList(portList);
+        return this;
+    }
+
+    public List<PortType> getPortTypeList() {
+        return portTypeList;
+    }
+
+    public void setPortTypeList(List<PortType> portTypeList) {
+        this.portTypeList = portTypeList;
+    }
+
+    public DeleteListenerRequest withPortTypeList(List<PortType> portTypeList) {
+        this.setPortTypeList(portTypeList);
         return this;
     }
 

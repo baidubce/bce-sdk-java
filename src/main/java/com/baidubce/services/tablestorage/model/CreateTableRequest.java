@@ -75,7 +75,7 @@ public class CreateTableRequest extends AbstractTableStorageRequest {
         if (maxVersions > 0) {
             buffer.append(tableOption.getMaxVersions());
         } else if (tableOption.getMaxVersions() == TableStorageConstants.DEFAULT_TABLE_MAX_VERSIONS ) {
-            buffer.append(TableStorageConstants.MIN_TABLE_MAX_VERSIONS);
+            buffer.append(TableStorageConstants.DEFAULT_TABLE_MAX_VERSIONS);
         } else {
             throw new BceClientException("The maxVersions' value must be positive, or equal to "
                     + "DEFAULT_TABLE_MAX_VERSIONS " + TableStorageConstants.DEFAULT_TABLE_MAX_VERSIONS

@@ -14,6 +14,7 @@
 package com.baidubce.services.cdn.model.domain;
 
 import com.baidubce.services.cdn.model.CdnResponse;
+import com.baidubce.services.cdn.model.Dsa;
 import com.baidubce.services.cdn.model.OriginPeer;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class GetDomainConfigResponse extends CdnResponse {
     private HttpsConfig https;
     private Boolean followProtocol;
     private SeoSwitch seoSwitch;
+    private Dsa dsa;
 
     public String getDomain() {
         return domain;
@@ -158,5 +160,13 @@ public class GetDomainConfigResponse extends CdnResponse {
 
     public void setSeoSwitch(SeoSwitch seoSwitch) {
         this.seoSwitch = seoSwitch;
+    }
+
+    public Dsa getDsa() {
+        return dsa;
+    }
+
+    public void setDsa(Dsa dsa) {
+        this.dsa = dsa;
     }
 }

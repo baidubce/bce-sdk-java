@@ -56,6 +56,23 @@ public class RouteRule {
 
     private String description;
 
+    /**
+     * 路由模式类型
+     * - "normal": 单线路由
+     * - "ecmp": 多线负载均衡路由
+     * - "ha:active": 多线主备路由-主路由
+     * - "ha:standby": 多线主备路由-备路由
+     */
+    private String pathType;
+
+    public String getPathType() {
+        return pathType;
+    }
+
+    public void setPathType(String pathType) {
+        this.pathType = pathType;
+    }
+
     public String getRouteRuleId() {
         return routeRuleId;
     }
@@ -121,6 +138,7 @@ public class RouteRule {
                 ", destinationAddress='" + destinationAddress + '\'' +
                 ", nexthopId='" + nexthopId + '\'' +
                 ", nexthopType='" + nexthopType + '\'' +
+                ", pathType='" + pathType + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

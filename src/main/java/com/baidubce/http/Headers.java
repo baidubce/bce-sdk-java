@@ -128,6 +128,8 @@ public interface Headers {
 
     public static final String BCE_TAG_LIST = "x-bce-tag-list";
 
+    public static final String BCE_OBJECT_TAG = "x-bce-tagging";
+
     public static final String BCE_REFERER = "referer";
 
     public static final String BCE_FETCH_USER_AGENT = "x-bce-fetch-user-agent";
@@ -151,6 +153,14 @@ public interface Headers {
     public static final String BCE_VERSIONING = "x-bce-versioning";
 
     public static final String BCE_VERSION_ID = "x-bce-version-id";
+
+    public static final String IF_NONE_MATCH = "If-None-Match";
+
+    public static final String IF_MATCH = "If-Match";
+
+    public static final String IF_UNMODIFIED_SINCE = "If-Unmodified-Since";
+
+    public static final String IF_MODIFIED_SINCE = "If-Modified-Since";
 
     /*
      * CFC HTTP Headers

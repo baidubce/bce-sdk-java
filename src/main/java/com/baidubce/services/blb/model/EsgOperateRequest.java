@@ -40,6 +40,7 @@ public class EsgOperateRequest extends AbstractBceRequest {
     /**
      * the blb id.
      */
+    @JsonIgnore
     private String blbId;
     /**
      * the list of enterprise security group ids.

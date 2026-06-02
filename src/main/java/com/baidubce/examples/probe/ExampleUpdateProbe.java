@@ -20,9 +20,10 @@ public class ExampleUpdateProbe {
         UpdateProbeRequest updateProbeRequest = new UpdateProbeRequest();
         updateProbeRequest.setProbeId("probe-25sd634a4xasd"); // 需要更新的网络探测的ID
         updateProbeRequest.setName("name-update"); // 网络探测的name
-        probeClient.updateProbe(updateProbeRequest);
+        updateProbeRequest.setDestPort(8080); // 探测目的端口
 
         try {
+            probeClient.updateProbe(updateProbeRequest);
             GetProbeResponse probe = probeClient.getProbe(updateProbeRequest.getProbeId());
             System.out.println(probe);
         } catch (BceClientException e) {

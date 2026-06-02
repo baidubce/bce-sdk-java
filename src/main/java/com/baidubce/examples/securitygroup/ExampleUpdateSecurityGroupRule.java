@@ -21,8 +21,11 @@ public class ExampleUpdateSecurityGroupRule {
         BccClient bccClient = new BccClient(config); // 初始化SecurityGroupClient
 
         UpdateSecurityGroupRuleRequest updateSecurityGroupRuleRequest = new UpdateSecurityGroupRuleRequest();
-        updateSecurityGroupRuleRequest.setSecurityGroupRuleId("r-icyc1fkct9wk");
-        updateSecurityGroupRuleRequest.setRemark("desc");
+        updateSecurityGroupRuleRequest.setSecurityGroupRuleId("r-dw0phk0c6u6x");
+        updateSecurityGroupRuleRequest.setRemark("Updated description"); // 更新描述信息
+        updateSecurityGroupRuleRequest.setPortRange("80-8081"); // 可选，更新端口范围
+        updateSecurityGroupRuleRequest.setSourceIp("192.168.1.0/24"); // 可选，更新源IP
+        // updateSecurityGroupRuleRequest.setSgVersion(1L); // 可选，安全组版本号，用于版本控制
         try {
             bccClient.updateSecurityGroupRule(updateSecurityGroupRuleRequest);
         } catch (BceClientException e) {

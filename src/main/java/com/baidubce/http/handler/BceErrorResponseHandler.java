@@ -13,7 +13,7 @@
 package com.baidubce.http.handler;
 
 import java.io.InputStream;
-
+import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 
 import com.baidubce.BceErrorResponse;
@@ -62,6 +62,16 @@ public class BceErrorResponseHandler implements HttpResponseHandler {
         bse.setStatusCode(httpResponse.getStatusCode());
         if (bse.getStatusCode() >= 500) {
             bse.setErrorType(ErrorType.Service);
+            StringBuilder details = new StringBuilder();
+            details.append("\n=== HTTP Response Details ===\n");
+            details.append("Status Line: ").append(httpResponse.getHttpResponse().getStatusLine()).append("\n");
+            details.append("Protocol Version: ").append(httpResponse.getHttpResponse().getProtocolVersion()).append("\n");
+            details.append("Status Code: ").append(httpResponse.getHttpResponse().getStatusLine().getStatusCode()).append("\n");
+            details.append("\nHeaders:\n");
+            for (Header header : httpResponse.getHttpResponse().getAllHeaders()) {
+                details.append("  ").append(header.getName()).append(": ").append(header.getValue()).append("\n");
+            }
+            bse.setErrorMessage(details.toString());
         } else {
             bse.setErrorType(ErrorType.Client);
         }

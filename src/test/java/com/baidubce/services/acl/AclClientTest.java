@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.acl.model.AclRule;
+import com.baidubce.services.acl.model.ListAclRequest;
+import com.baidubce.services.acl.model.ModifyAclRuleAttributesRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -62,7 +64,15 @@ public class AclClientTest {
 
     @Test
     public void listAclRulesTest() {
-        toJsonPrettyString("list aclRuls Results", aclClient.listAclRules("sbn-fk8m7a9hfisj"));
+        toJsonPrettyString("list aclRules Results", aclClient.listAclRules("sbn-fk8m7a9hfisj"));
+    }
+
+    @Test
+    public void listAclRulesWithPaginationTest() {
+        ListAclRequest listAclRequest = new ListAclRequest();
+        listAclRequest.setSubnetId("sbn-fk8m7a9hfisj");
+        listAclRequest.setMaxKeys(10);
+        toJsonPrettyString("list aclRules with pagination Results", aclClient.listAclRules(listAclRequest));
     }
 
     @Test
@@ -78,7 +88,6 @@ public class AclClientTest {
     @Test
     public void modifyAclRuleAttributesTest() {
         AclRule aclRule = new AclRule();
-        aclRule.setSubnetId("sbn-fk8m7a9hfisj");
         aclRule.setDescription("desc");
         aclRule.setProtocol("all");
         aclRule.setSourceIpAddress("all");
@@ -86,9 +95,22 @@ public class AclClientTest {
         aclRule.setSourcePort("8085");
         aclRule.setDestinationPort("8085");
         aclRule.setPosition(10);
-        aclRule.setDirection("ingress");
         aclRule.setAction("allow");
         aclClient.modifyAclRuleAttributes("ar-xe7amqmxi80m", aclRule);
     }
 
+    @Test
+    public void modifyAclRuleAttributesWithRequestTest() {
+        ModifyAclRuleAttributesRequest request = new ModifyAclRuleAttributesRequest();
+        request.setAclRuleId("ar-xe7amqmxi80m");
+        request.setDescription("new desc");
+        request.setProtocol("tcp");
+        request.setSourceIpAddress("192.168.0.0");
+        request.setDestinationIpAddress("192.168.0.0/20");
+        request.setSourcePort("1-65535");
+        request.setDestinationPort("443");
+        request.setPosition(5);
+        request.setAction("allow");
+        aclClient.modifyAclRuleAttributes(request);
+    }
 }

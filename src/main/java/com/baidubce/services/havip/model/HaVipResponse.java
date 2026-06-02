@@ -3,6 +3,8 @@
  */
 package com.baidubce.services.havip.model;
 
+import java.util.List;
+
 import com.baidubce.model.AbstractBceResponse;
 
 import lombok.Getter;
@@ -20,6 +22,10 @@ public class HaVipResponse extends AbstractBceResponse {
     private String privateIpAddress;
     private String publicIpAddress;
     private String createdTime;
+    /**
+     * 高可用虚拟IP绑定的实例列表
+     */
+    private List<HaVipBindedInstance> bindedInstances;
 
     @Override
     public String toString() {
@@ -33,6 +39,7 @@ public class HaVipResponse extends AbstractBceResponse {
                 ", privateIpAddress='" + privateIpAddress + '\'' +
                 ", publicIpAddress='" + publicIpAddress + '\'' +
                 ", createdTime='" + createdTime + '\'' +
+                ", bindedInstances=" + bindedInstances +
                 '}';
     }
 }

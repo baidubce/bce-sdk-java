@@ -20,6 +20,11 @@ public class Ipv6GatewayResponse extends ListResponse {
     private List<EgressOnlyRule> egressOnlyRules;
     private List<RateLimitRule> rateLimitRules;
 
+    /**
+     * Whether delete protection is enabled.
+     */
+    private Boolean deleteProtect;
+
     public String getName() {
         return name;
     }
@@ -68,6 +73,14 @@ public class Ipv6GatewayResponse extends ListResponse {
     public void setRateLimitRules(
             List<RateLimitRule> rateLimitRules) {
         this.rateLimitRules = rateLimitRules;
+    }
+
+    public Boolean getDeleteProtect() {
+        return deleteProtect;
+    }
+
+    public void setDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
     }
 
 }

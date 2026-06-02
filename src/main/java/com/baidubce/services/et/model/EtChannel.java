@@ -32,6 +32,16 @@ public class EtChannel {
     private String status;
 
     /**
+     * BGP status. Its value range is “up”/“down”
+     */
+    private String bgpStatus;
+
+    /**
+     * IPv6 BGP status. Its value range is “up”/“down”
+     */
+    private String ipv6BgpStatus;
+
+    /**
      * Cloud network interconnection IP
      */
     private String baiduAddress;
@@ -218,5 +228,21 @@ public class EtChannel {
 
     public void setIpv6Networks(List<String> ipv6Networks) {
         this.ipv6Networks = ipv6Networks;
+    }
+
+    public String getBgpStatus() {
+        return bgpStatus;
+    }
+
+    public void setBgpStatus(String bgpStatus) {
+        this.bgpStatus = bgpStatus;
+    }
+
+    public String getIpv6BgpStatus() {
+        return ipv6BgpStatus;
+    }
+
+    public void setIpv6BgpStatus(String ipv6BgpStatus) {
+        this.ipv6BgpStatus = ipv6BgpStatus;
     }
 }

@@ -35,6 +35,11 @@ public class GetNatResponse extends AbstractBceResponse {
     private String name;
 
     /**
+     * The type of this nat, enhanced or normal.
+     */
+    private String natType;
+
+    /**
      * The vpcId of this nat.
      */
     private String vpcId;
@@ -50,6 +55,16 @@ public class GetNatResponse extends AbstractBceResponse {
     private List<String> eips;
 
     /**
+     * The dnat eips of this nat.
+     */
+    private List<String> dnatEips;
+
+    /**
+     * The bind eips of this nat, only available for enhance nat.
+     */
+    private List<String> bindEips;
+
+    /**
      * The paymentTiming of this nat.
      */
     private String paymentTiming;
@@ -60,6 +75,11 @@ public class GetNatResponse extends AbstractBceResponse {
     private String expireTime;
 
     /**
+     * The createTime of this nat.
+     */
+    private String createTime;
+
+    /**
      * The status of this nat.
      */
     private String status;
@@ -68,6 +88,11 @@ public class GetNatResponse extends AbstractBceResponse {
      * the list of tags which are bound to nat instance
      */
     private List<TagModel> tags;
+
+    /**
+     * The delete protect switch of this nat.
+     */
+    private Boolean deleteProtect;
 
     public String getId() {
         return id;
@@ -83,6 +108,14 @@ public class GetNatResponse extends AbstractBceResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNatType() {
+        return natType;
+    }
+
+    public void setNatType(String natType) {
+        this.natType = natType;
     }
 
     public String getVpcId() {
@@ -109,6 +142,22 @@ public class GetNatResponse extends AbstractBceResponse {
         this.eips = eips;
     }
 
+    public List<String> getDnatEips() {
+        return dnatEips;
+    }
+
+    public void setDnatEips(List<String> dnatEips) {
+        this.dnatEips = dnatEips;
+    }
+
+    public List<String> getBindEips() {
+        return bindEips;
+    }
+
+    public void setBindEips(List<String> bindEips) {
+        this.bindEips = bindEips;
+    }
+
     public String getPaymentTiming() {
         return paymentTiming;
     }
@@ -125,6 +174,14 @@ public class GetNatResponse extends AbstractBceResponse {
         this.expireTime = expireTime;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -139,5 +196,13 @@ public class GetNatResponse extends AbstractBceResponse {
 
     public void setTags(List<TagModel> tags) {
         this.tags = tags;
+    }
+
+    public Boolean getDeleteProtect() {
+        return deleteProtect;
+    }
+
+    public void setDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
     }
 }

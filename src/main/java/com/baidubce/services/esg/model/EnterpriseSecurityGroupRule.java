@@ -100,4 +100,36 @@ public class EnterpriseSecurityGroupRule {
      * update time of enterprise security group rule
      */
     private String updatedTime;
+
+    /**
+     * The remote IP set for the rule (CIDR format).
+     * Used for batch IP address management.
+     */
+    private String remoteIpSet;
+
+    /**
+     * The remote IP group ID for the rule.
+     * Used for referencing IP address groups.
+     */
+    private String remoteIpGroup;
+
+    /**
+     * Builder method for remoteIpSet
+     * @param remoteIpSet The remote IP set
+     * @return this object for method chaining
+     */
+    public EnterpriseSecurityGroupRule withRemoteIpSet(String remoteIpSet) {
+        this.remoteIpSet = remoteIpSet;
+        return this;
+    }
+
+    /**
+     * Builder method for remoteIpGroup
+     * @param remoteIpGroup The remote IP group ID
+     * @return this object for method chaining
+     */
+    public EnterpriseSecurityGroupRule withRemoteIpGroup(String remoteIpGroup) {
+        this.remoteIpGroup = remoteIpGroup;
+        return this;
+    }
 }

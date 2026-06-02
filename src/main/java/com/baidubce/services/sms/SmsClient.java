@@ -55,6 +55,8 @@ import com.baidubce.services.sms.model.v3.ModifySignatureRequest;
 import com.baidubce.services.sms.model.v3.ModifyTemplateRequest;
 import com.baidubce.services.sms.model.v3.QueryQuotaRateResponse;
 import com.baidubce.services.sms.model.v3.UpdateQuotaRateRequest;
+import com.baidubce.services.sms.model.v3.GetPrepaidPackageRequest;
+import com.baidubce.services.sms.model.v3.GetPrepaidPackageResponse;
 import com.baidubce.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -160,7 +162,9 @@ public class SmsClient extends SmsClientSupport {
     public SendMessageV3Response sendMessage(SendMessageV3Request request) {
         checkNotNull(request, "request is required.");
         assertStringNotNullOrEmpty(request.getMobile(), "mobile is required.");
-        assertStringNotNullOrEmpty(request.getSignatureId(), "signatureId is required.");
+        if (StringUtils.isBlank(request.getSign())) {
+            assertStringNotNullOrEmpty(request.getSignatureId(), "signatureId is required.");
+        }
         assertStringNotNullOrEmpty(request.getTemplate(), "template is required.");
         InternalRequest internalRequest = this.createGeneralRequest("api/v3/sendsms", request, HttpMethodName.POST);
         if (!StringUtils.isBlank(request.getClientToken())) {
@@ -629,6 +633,35 @@ public class SmsClient extends SmsClientSupport {
             internalRequest.addParameter("templateCode", request.getTemplateCode());
         }
         return this.invokeHttpClient(internalRequest, ListStatisticsResponse.class);
+    }
+
+    /**
+     * Get the prepaid package list of the user
+     * @param request The request object, refer to
+     * <code>com.baidubce.services.sms.model.v3.GetPrepaidPackageRequest</code>
+     *
+     * @return The response object which includes a list  of prepaid package data, refer to
+     * <code>com.baidubce.services.sms.model.v3.GetPrepaidPackageResponse</code>
+     */
+    public GetPrepaidPackageResponse getPrepaidPackages(GetPrepaidPackageRequest request) {
+        checkNotNull(request, "object request should not be null");
+        checkNotNull(request.getUserId(), "userId should not be null");
+        String pathPrefix = "/sms/v3/prepay/" + request.getUserId();
+        InternalRequest internalRequest = this.createGeneralRequest(
+                pathPrefix, new SmsRequest(), HttpMethodName.GET);
+        if (StringUtils.isNotEmpty(request.getCountryType())) {
+            internalRequest.addParameter("countryType", request.getCountryType());
+        }
+        if (StringUtils.isNotEmpty(request.getPackageStatus())) {
+            internalRequest.addParameter("packageStatus", request.getPackageStatus());
+        }
+        if (StringUtils.isNotEmpty(request.getPageNo())) {
+            internalRequest.addParameter("pageNo", request.getPageNo());
+        }
+        if (StringUtils.isNotEmpty(request.getPageSize())) {
+            internalRequest.addParameter("pageSize", request.getPageSize());
+        }
+        return this.invokeHttpClient(internalRequest, GetPrepaidPackageResponse.class);
     }
 
 }

@@ -26,8 +26,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public class HaVipClientTest {
     private static final Logger logger = LoggerFactory.getLogger(com.baidubce.services.subnet.SubnetClientTest.class);
-    private static final String ak = "359117df989c4a3db52289bbb8d286fb";
-    private static final String sk = "9dd6aaedd58f43b396f99204c7025cd6";
+    private static final String ak = "";
+    private static final String sk = "";
 
     protected HaVipClient haVipClient;
 

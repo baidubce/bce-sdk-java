@@ -64,6 +64,7 @@ public class EndpointClientTest {
         request.setService("service");
         request.setDescription("sdk create");
         request.setIpAddress("");
+        request.setBandwidth(20); // 指定服务网卡带宽
         Billing billing = new Billing();
         billing.setPaymentTiming("Postpaid");
         request.setBilling(billing);

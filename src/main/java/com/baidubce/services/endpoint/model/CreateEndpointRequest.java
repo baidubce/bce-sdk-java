@@ -3,9 +3,12 @@
  */
 package com.baidubce.services.endpoint.model;
 
+import java.util.List;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bcc.model.Billing;
+import com.baidubce.services.bcc.model.TagModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -50,9 +53,21 @@ public class CreateEndpointRequest extends AbstractBceRequest {
      */
     private String ipAddress;
     /**
+     * The bandwidth of endpoint that will be created.
+     */
+    private Integer bandwidth;
+    /**
      * The billing of endpoint that will be created.
      */
     private Billing billing;
+    /**
+     * The tags of endpoint that will be created.
+     */
+    private List<TagModel> tags;
+    /**
+     * The resourceGroupId of endpoint that will be created.
+     */
+    private String resourceGroupId;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -74,16 +89,6 @@ public class CreateEndpointRequest extends AbstractBceRequest {
 
     public void setService(String service) {
         this.service = service;
-    }
-
-    public String endpointId; // 用于更新使用
-
-    public String getEndpointId() {
-        return endpointId;
-    }
-
-    public void setEndpointId(String endpointId) {
-        this.endpointId = endpointId;
     }
 
     public String getName() {
@@ -132,5 +137,29 @@ public class CreateEndpointRequest extends AbstractBceRequest {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public Integer getBandwidth() {
+        return bandwidth;
+    }
+
+    public void setBandwidth(Integer bandwidth) {
+        this.bandwidth = bandwidth;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
     }
 }

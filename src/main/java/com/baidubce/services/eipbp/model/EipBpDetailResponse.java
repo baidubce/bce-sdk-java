@@ -65,6 +65,16 @@ public class EipBpDetailResponse extends AbstractBceResponse {
     private String autoReleaseTime;
 
     /**
+     * The type of eipBp. BandwidthPackage or AccelerationPackage.
+     */
+    private String type;
+
+    /**
+     * The region of eipBp.
+     */
+    private String region;
+
+    /**
      * The tags bound to eipBp.
      */
     private List<TagModel> tags;

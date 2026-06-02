@@ -73,6 +73,8 @@ public class CopyObjectRequest extends GenericObjectRequest {
      */
     private boolean xBceCrc32cFlag = false;
 
+    private String xBceMetadataDirective;
+
     /**
      * Constructs a new CopyObjectRequest with only basic options.
      *
@@ -426,5 +428,13 @@ public class CopyObjectRequest extends GenericObjectRequest {
      */
     public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
         this.xBceCrc32cFlag = xBceCrc32cFlag;
+    }
+
+    public String getxBceMetadataDirective() {
+        return xBceMetadataDirective;
+    }
+
+    public void setxBceMetadataDirective(String xBceMetadataDirective) {
+        this.xBceMetadataDirective = xBceMetadataDirective;
     }
 }

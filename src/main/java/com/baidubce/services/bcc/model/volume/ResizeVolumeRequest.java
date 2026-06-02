@@ -44,6 +44,11 @@ public class ResizeVolumeRequest extends AbstractBceRequest {
     private int newCdsSizeInGB;
 
     /**
+     * The number of adjusted additional IOPS, supporting configuration upgrade and downgrade.
+     */
+    private Integer newExtraIO;
+
+    /**
      * The new volumeType
      */
     private String newVolumeType;
@@ -111,6 +116,19 @@ public class ResizeVolumeRequest extends AbstractBceRequest {
 
     public String getNewVolumeType() {
         return newVolumeType;
+    }
+
+    public Integer getNewExtraIO() {
+        return newExtraIO;
+    }
+
+    public void setNewExtraIO(Integer newExtraIO) {
+        this.newExtraIO = newExtraIO;
+    }
+
+    public ResizeVolumeRequest withNewExtraIO(int newExtraIO) {
+        this.newExtraIO = newExtraIO;
+        return this;
     }
 
     public void setNewVolumeType(String newVolumeType) {

@@ -49,6 +49,19 @@ public class CreateSnapshotRequest extends AbstractBceRequest {
      */
     private String desc;
 
+    /**
+     * The optional parameter to specify the retention days of the snapshot.
+     */
+    private Integer retentionInDays;
+
+    public Integer getRetentionInDays() {
+        return retentionInDays;
+    }
+
+    public void setRetentionInDays(Integer retentionInDays) {
+        this.retentionInDays = retentionInDays;
+    }
+
     public String getClientToken() {
         return clientToken;
     }

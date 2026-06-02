@@ -69,6 +69,10 @@ public class CreateVolumeRequest extends AbstractBceRequest {
     private String snapshotId;
 
     /**
+     * The id of shared snapshot.
+     */
+    private String shareSnapshotId;
+    /**
      * the name of available zone, optional param
      * through listZones, we can get all available zone info at current region
      * e.g. "cn-gz-a"  "cn-gz-b"
@@ -113,6 +117,19 @@ public class CreateVolumeRequest extends AbstractBceRequest {
     private List<String> resGroupIds;
 
     private AutoSnapshotPolicyModel autoSnapshotPolicy;
+
+    /**
+     * 是否开启删除保护
+     */
+    private Boolean enableDeleteProtection;
+
+    public void setShareSnapshotId(String shareSnapshotId) {
+        this.shareSnapshotId = shareSnapshotId;
+    }
+
+    public String getShareSnapshotId() {
+        return shareSnapshotId;
+    }
 
     public CreateVolumeRequest withCdsExtraIo(int cdsExtraIo) {
         this.cdsExtraIo = cdsExtraIo;

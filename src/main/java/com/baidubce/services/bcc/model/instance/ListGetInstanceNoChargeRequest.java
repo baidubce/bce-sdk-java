@@ -15,6 +15,8 @@ package com.baidubce.services.bcc.model.instance;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.ListRequest;
 
+import java.util.List;
+
 /**
  * The request fot getting the list of no-charge instance.
  */
@@ -34,6 +36,11 @@ public class ListGetInstanceNoChargeRequest extends ListRequest {
      * the name of available zone
      */
     private String zoneName;
+
+    /**
+     * The ids of instance.
+     */
+    private String instanceIds;
 
     public String getInternalIp() {
         return internalIp;
@@ -89,6 +96,19 @@ public class ListGetInstanceNoChargeRequest extends ListRequest {
      */
     public ListGetInstanceNoChargeRequest withZoneName(String zoneName) {
         this.zoneName = zoneName;
+        return this;
+    }
+
+    public void setInstanceIds(String instanceIds) {
+        this.instanceIds = instanceIds;
+    }
+
+    public String getInstanceIds() {
+        return this.instanceIds;
+    }
+
+    public ListGetInstanceNoChargeRequest withInstanceIds(String instanceIds) {
+        this.instanceIds = instanceIds;
         return this;
     }
 

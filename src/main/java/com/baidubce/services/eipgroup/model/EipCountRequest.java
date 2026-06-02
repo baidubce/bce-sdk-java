@@ -44,6 +44,11 @@ public class EipCountRequest extends AbstractBceRequest {
      */
     private int eipAddCount;
 
+    /**
+     * The eipv6AddCount of eip group.
+     */
+    private int eipv6AddCount;
+
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -73,6 +78,17 @@ public class EipCountRequest extends AbstractBceRequest {
         return this;
     }
 
+    /**
+     * Configure eipv6AddCount for the request.
+     *
+     * @param eipv6AddCount The eipv6AddCount of EipCountRequest
+     * @return EipCountRequest with specific eipv6AddCount
+     */
+    public EipCountRequest withEipv6AddCount(int eipv6AddCount) {
+        this.eipv6AddCount = eipv6AddCount;
+        return this;
+    }
+
     public String getClientToken() {
         return clientToken;
     }
@@ -95,5 +111,13 @@ public class EipCountRequest extends AbstractBceRequest {
 
     public void setEipAddCount(int eipAddCount) {
         this.eipAddCount = eipAddCount;
+    }
+
+    public int getEipv6AddCount() {
+        return eipv6AddCount;
+    }
+
+    public void setEipv6AddCount(int eipv6AddCount) {
+        this.eipv6AddCount = eipv6AddCount;
     }
 }

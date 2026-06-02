@@ -19,4 +19,38 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TcpListener extends ListenerBase {
+
+    /**
+     * tcp session timeout (seconds), default 900, range 10-4000
+     */
+    private Integer tcpSessionTimeout;
+
+    /**
+     * health check type, default "TCP"
+     */
+    private String healthCheckType;
+
+    public Integer getTcpSessionTimeout() {
+        return tcpSessionTimeout;
+    }
+
+    public void setTcpSessionTimeout(Integer tcpSessionTimeout) {
+        this.tcpSessionTimeout = tcpSessionTimeout;
+    }
+
+    public String getHealthCheckType() {
+        return healthCheckType;
+    }
+
+    public void setHealthCheckType(String healthCheckType) {
+        this.healthCheckType = healthCheckType;
+    }
+
+    @Override
+    public String toString() {
+        return "TcpListener{" +
+                "tcpSessionTimeout=" + tcpSessionTimeout +
+                ", healthCheckType='" + healthCheckType + '\'' +
+                "} " + super.toString();
+    }
 }

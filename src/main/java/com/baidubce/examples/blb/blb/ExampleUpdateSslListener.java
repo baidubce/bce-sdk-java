@@ -27,6 +27,9 @@ public class ExampleUpdateSslListener {
         blbListenerRequest.setBlbId("lb-081b7605"); // 所属LoadBalancer的标识符
         blbListenerRequest.setListenerPort(32); // 监听器的监听端口
         blbListenerRequest.setBackendPort(33); // 后端服务器的监听端口
+        blbListenerRequest.setHealthCheckType("TCP"); // 健康检查协议类型，默认"TCP"
+        blbListenerRequest.setServerTimeout(900); // tcp设置连接超时时间（秒），范围10-4000
+        blbListenerRequest.setEncryptionType("tls_cipher_policy_1_2"); // 加密选项
         
         try {
             blbClient.modifyListenerAttributes(blbListenerRequest);

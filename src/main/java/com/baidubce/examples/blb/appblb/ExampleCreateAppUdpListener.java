@@ -25,8 +25,7 @@ public class ExampleCreateAppUdpListener {
         blbListenerRequest.setBlbId("lb-166d3dbe"); // 所属LoadBalancer的标识符
         blbListenerRequest.setListenerPort(82); // 监听器的监听端口
         blbListenerRequest.setScheduler("Hash"); // 负载均衡算法
-        blbListenerRequest.setHealthCheckString("\\00"); // 健康检查发送的请求字符串
-        
+
         try {
             appBlbClient.createListener(blbListenerRequest);
         } catch (BceClientException e) {

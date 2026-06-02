@@ -68,7 +68,7 @@ public class BandwidthInMbpsRequest extends AbstractBceRequest {
      * @param bandwidthInMbps The bandwidthInMbps of BandwidthInMbpsRequest
      * @return BandwidthInMbpsRequest with specific bandwidthInMbps
      */
-    public BandwidthInMbpsRequest withBandwidthInMbpst(int bandwidthInMbps) {
+    public BandwidthInMbpsRequest withBandwidthInMbps(int bandwidthInMbps) {
         this.bandwidthInMbps = bandwidthInMbps;
         return this;
     }

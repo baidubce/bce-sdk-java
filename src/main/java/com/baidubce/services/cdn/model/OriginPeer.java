@@ -18,6 +18,7 @@ package com.baidubce.services.cdn.model;
  */
 public class OriginPeer {
     private String peer;
+    private String type;
     private String host;
     private boolean backup;
     private int weight;
@@ -50,6 +51,10 @@ public class OriginPeer {
 
     public String getPeer() {
         return peer;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public void setPeer(String peer) {

@@ -133,6 +133,8 @@ public class BceHttpClient {
     private static ConcurrentHashMap<String, NHttpClientConnectionManager> managerMap =
             new ConcurrentHashMap<String, NHttpClientConnectionManager>();
 
+    private final ConcurrentHashMap<String, HttpRequestBase> activeRequests = new ConcurrentHashMap<>();
+
     /**
      * Constructs a new BCE client using the specified client configuration options (ex: max retry attempts, proxy
      * settings, etc), and request metric collector.
@@ -224,6 +226,7 @@ public class BceHttpClient {
         }
         long delayForNextRetryInMillis = 0;
         boolean isBosHead404 = false;
+        String requestId = request.getHeaders().get(Headers.BCE_REQUEST_ID);
         for (int attempt = 1; ; ++attempt) {
             HttpRequestBase httpRequest = null;
             CloseableHttpResponse httpResponse = null;
@@ -236,6 +239,9 @@ public class BceHttpClient {
                 requestLogger.debug("Sending Request: {}", request);
 
                 httpRequest = this.createHttpRequest(request);
+                if (requestId != null) {
+                    activeRequests.put(requestId, httpRequest);
+                }
 
                 HttpContext httpContext = this.createHttpContext(request);
 
@@ -259,10 +265,16 @@ public class BceHttpClient {
                 }
 
                 // everything is ok
+                if (requestId != null) {
+                    activeRequests.remove(requestId);
+                }
                 return response;
             } catch (Exception e) {
                 if (logger.isInfoEnabled() && !isBosHead404) {
                     logger.info("Unable to execute HTTP request", e);
+                }
+                if (requestId != null) {
+                    activeRequests.remove(requestId);
                 }
 
                 BceClientException bce;
@@ -569,4 +581,16 @@ public class BceHttpClient {
         this.shutdown();
         super.finalize();
     }
+
+    /**
+     * Aborts the current HTTP request
+     */
+    public void abortRequest(String requestId) {
+        HttpRequestBase current = this.activeRequests.get(requestId);
+        if (current != null) {
+            current.abort();
+            this.activeRequests.remove(requestId);
+        }
+    }
+
 }

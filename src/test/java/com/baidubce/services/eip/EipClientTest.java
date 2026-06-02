@@ -8,26 +8,36 @@ import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.eip.model.AutoRenewEipRequest;
 import com.baidubce.services.eip.model.Billing;
 import com.baidubce.services.eip.model.BindEipRequest;
+import com.baidubce.services.eip.model.ConvertToPrepayEipRequest;
+import com.baidubce.services.eip.model.CancelEipTransferRequest;
 import com.baidubce.services.eip.model.CreateEipRequest;
 import com.baidubce.services.eip.model.CreateEipResponse;
+import com.baidubce.services.eip.model.CreateEipTransferRequest;
 import com.baidubce.services.eip.model.DirectEipRequest;
+import com.baidubce.services.eip.model.ListEipTransferRequest;
+import com.baidubce.services.eip.model.ListEipTransferResponse;
 import com.baidubce.services.eip.model.ListEipsRequest;
 import com.baidubce.services.eip.model.ListEipsResponse;
 import com.baidubce.services.eip.model.ListRecycleEipsRequest;
 import com.baidubce.services.eip.model.ListRecycleEipsResponse;
 import com.baidubce.services.eip.model.OptionalReleaseEipRequest;
 import com.baidubce.services.eip.model.PurchaseReservedEipRequest;
+import com.baidubce.services.eip.model.AcceptEipTransferRequest;
 import com.baidubce.services.eip.model.RecycleOperateEipRequest;
+import com.baidubce.services.eip.model.RefundEipRequest;
+import com.baidubce.services.eip.model.RejectEipTransferRequest;
 import com.baidubce.services.eip.model.ReleaseEipRequest;
 import com.baidubce.services.eip.model.ResizeEipRequest;
 import com.baidubce.services.eip.model.StopAutoRenewEipRequest;
 import com.baidubce.services.eip.model.UnbindEipRequest;
+import com.baidubce.services.eip.model.UpdateDeleteProtectEipRequest;
 import com.baidubce.util.JsonUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -179,4 +189,77 @@ public class EipClientTest {
         eipClient.restoreEipFromRecycle(request);
     }
 
+    @Test
+    public void convertToPrepayEipTest() {
+        ConvertToPrepayEipRequest request = new ConvertToPrepayEipRequest();
+        request.setEip("100.88.11.162");
+        request.setPurchaseLength(1);
+        request.setBandWidth(50);
+        eipClient.convertToPrepayEip(request);
+    }
+
+    @Test
+    public void updateDeleteProtectTest() {
+        UpdateDeleteProtectEipRequest request = new UpdateDeleteProtectEipRequest();
+        request.setEip("180.76.122.3");
+        request.setDeleteProtect(false);
+        eipClient.updateDeleteProtect(request);
+    }
+
+    @Test
+    public void refundEipTest() {
+        RefundEipRequest request = new RefundEipRequest();
+        request.setEip("120.48.186.29");
+        eipClient.refundEip(request);
+    }
+
+    @Test
+    public void createEipTransferTest() {
+        CreateEipTransferRequest createEipTransferRequest = new CreateEipTransferRequest();
+        createEipTransferRequest.setClientToken("");
+        createEipTransferRequest.setTransferType("");
+        createEipTransferRequest.setTransferResourceList(new ArrayList<>());
+        createEipTransferRequest.setToUserId("");
+        eipClient.createEipTransfer(createEipTransferRequest);
+    }
+
+    @Test
+    public void listEipTransferTest() {
+        ListEipTransferRequest listEipTransferRequest = new ListEipTransferRequest();
+        listEipTransferRequest.setMaxKeys(10);
+        listEipTransferRequest.setMarker("");
+        listEipTransferRequest.setDirection("");
+        listEipTransferRequest.setTransferId("");
+        listEipTransferRequest.setStatus("");
+        listEipTransferRequest.setFuzzyTransferId("");
+        listEipTransferRequest.setFuzzyInstanceId("");
+        listEipTransferRequest.setFuzzyInstanceName("");
+        listEipTransferRequest.setFuzzyInstanceIp("");
+        ListEipTransferResponse response = eipClient.listEipTransfer(listEipTransferRequest);
+        System.out.println(response);
+    }
+
+    @Test
+    public void receiveEipTransferTest() {
+        AcceptEipTransferRequest acceptEipTransferRequest = new AcceptEipTransferRequest();
+        acceptEipTransferRequest.setClientToken("");
+        acceptEipTransferRequest.setTransferIdList(new ArrayList<>());
+        eipClient.acceptEipTransfer(acceptEipTransferRequest);
+    }
+
+    @Test
+    public void rejectEipTransferTest() {
+        RejectEipTransferRequest rejectEipTransferRequest = new RejectEipTransferRequest();
+        rejectEipTransferRequest.setClientToken("");
+        rejectEipTransferRequest.setTransferIdList(new ArrayList<>());
+        eipClient.rejectEipTransfer(rejectEipTransferRequest);
+    }
+
+    @Test
+    public void cancelEipTransferTest() {
+        CancelEipTransferRequest cancelEipTransferRequest = new CancelEipTransferRequest();
+        cancelEipTransferRequest.setClientToken("");
+        cancelEipTransferRequest.setTransferIdList(new ArrayList<>());
+        eipClient.cancelEipTransfer(cancelEipTransferRequest);
+    }
 }

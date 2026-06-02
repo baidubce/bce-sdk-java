@@ -39,6 +39,8 @@ public class ReleaseInstanceByPostRequest extends AbstractBceRequest {
      */
     private boolean deleteCdsSnapshotFlag;
 
+    private boolean cdsAttributeActive;
+
     public String getInstanceId() {
         return instanceId;
     }
@@ -86,6 +88,20 @@ public class ReleaseInstanceByPostRequest extends AbstractBceRequest {
      */
     public ReleaseInstanceByPostRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
+        return this;
+    }
+
+
+    public boolean isCdsAttributeActive() {
+        return cdsAttributeActive;
+    }
+
+    public void setCdsAttributeActive(boolean cdsAttributeActive) {
+        this.cdsAttributeActive = cdsAttributeActive;
+    }
+
+    public ReleaseInstanceByPostRequest withCdsAttributeActive(boolean cdsAttributeActive) {
+        this.cdsAttributeActive = cdsAttributeActive;
         return this;
     }
 }

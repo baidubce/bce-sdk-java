@@ -40,6 +40,12 @@ public class SecurityGroupRuleOperateRequest extends AbstractBceRequest {
     private String securityGroupId;
 
     /**
+     * The security group version number
+     */
+    @JsonIgnore
+    private Long sgVersion;
+
+    /**
      * security group rule info
      * through protocol/portRange/direction/sourceIp/sourceGroupId, we can confirmed one rule which will be updated
      */
@@ -68,6 +74,19 @@ public class SecurityGroupRuleOperateRequest extends AbstractBceRequest {
 
     public SecurityGroupRuleOperateRequest withSecurityGroupId(String securityGroupId) {
         this.securityGroupId = securityGroupId;
+        return this;
+    }
+
+    public Long getSgVersion() {
+        return sgVersion;
+    }
+
+    public void setSgVersion(Long sgVersion) {
+        this.sgVersion = sgVersion;
+    }
+
+    public SecurityGroupRuleOperateRequest withSgVersion(Long sgVersion) {
+        this.sgVersion = sgVersion;
         return this;
     }
 

@@ -1,5 +1,7 @@
 package com.baidubce.services.vpc.model;
 
+import java.util.List;
+
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,6 +43,11 @@ public class ModifyVpcAttributesRequest extends AbstractBceRequest {
      */
     private Boolean enableIpv6;
 
+    /**
+     * The secondary cidrs of vpc (replace update).
+     */
+    private List<String> secondaryCidr;
+
     public String getVpcId() {
         return vpcId;
     }
@@ -79,6 +86,14 @@ public class ModifyVpcAttributesRequest extends AbstractBceRequest {
 
     public void setEnableIpv6(Boolean enableIpv6) {
         this.enableIpv6 = enableIpv6;
+    }
+
+    public List<String> getSecondaryCidr() {
+        return secondaryCidr;
+    }
+
+    public void setSecondaryCidr(List<String> secondaryCidr) {
+        this.secondaryCidr = secondaryCidr;
     }
 
     /**
@@ -126,6 +141,17 @@ public class ModifyVpcAttributesRequest extends AbstractBceRequest {
      */
     public ModifyVpcAttributesRequest withDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    /**
+     * Configure secondaryCidr for the request.
+     *
+     * @param secondaryCidr the secondary CIDR list of vpc (replace update)
+     * @return ModifyVpcAttributesRequest with secondaryCidr
+     */
+    public ModifyVpcAttributesRequest withSecondaryCidr(List<String> secondaryCidr) {
+        this.secondaryCidr = secondaryCidr;
         return this;
     }
 

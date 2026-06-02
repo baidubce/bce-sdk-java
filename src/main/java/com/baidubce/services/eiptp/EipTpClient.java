@@ -15,6 +15,8 @@ import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.eiptp.model.CreateEipTpRequest;
 import com.baidubce.services.eiptp.model.CreateEipTpResponse;
 import com.baidubce.services.eiptp.model.EipTpDetailResponse;
+import com.baidubce.services.eiptp.model.GetEipTpPriceRequest;
+import com.baidubce.services.eiptp.model.GetEipTpPriceResponse;
 import com.baidubce.services.eiptp.model.GetEipTpRequest;
 import com.baidubce.services.eiptp.model.ListEipTpsRequest;
 import com.baidubce.services.eiptp.model.ListEipTpsResponse;
@@ -209,5 +211,24 @@ public class EipTpClient extends AbstractBceClient {
     public ListEipTpsResponse listEipTps() {
         ListEipTpsRequest request = new ListEipTpsRequest();
         return listEipTps(request);
+    }
+
+    /**
+     * Get the price of creating an eiptp with the specified options.
+     *
+     * @param request The request containing all options for price inquiry.
+     * @return the price of eiptp.
+     */
+    public GetEipTpPriceResponse getEipTpPrice(GetEipTpPriceRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getReservationLength(), "reservationLength should not be null.");
+        checkStringNotEmpty(request.getCapacity(), "capacity should not be empty.");
+        
+        InternalRequest internalRequest = this.createRequest(
+            request, HttpMethodName.POST, "price");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        
+        return invokeHttpClient(internalRequest, GetEipTpPriceResponse.class);
     }
 }

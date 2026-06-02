@@ -1,31 +1,37 @@
 package com.baidubce.services.route.model;
 
 import java.util.List;
-
 import com.baidubce.model.AbstractBceResponse;
 
-/**
- * Created by zhangjing60 on 17/8/2.
- */
 public class GetRouteResponse extends AbstractBceResponse {
 
     /**
+     * 路由表名称
+     */
+    private String name;
+
+    /**
      * The id of the route table
-     * there must be at least one parameter, either routeTableId or vpcId
      */
     private String routeTableId;
 
     /**
      * The vpc id
-     * there must be at least one parameter, either routeTableId or vpcId
      */
     private String vpcId;
 
     /**
      * List of route rules
-     *
      */
     private List<RouteRule> routeRules;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getRouteTableId() {
         return routeTableId;
@@ -51,4 +57,13 @@ public class GetRouteResponse extends AbstractBceResponse {
         this.routeRules = routeRules;
     }
 
+    @Override
+    public String toString() {
+        return "GetRouteResponse{" +
+                "name='" + name + '\'' +
+                ", routeTableId='" + routeTableId + '\'' +
+                ", vpcId='" + vpcId + '\'' +
+                ", routeRules=" + routeRules +
+                '}';
+    }
 }

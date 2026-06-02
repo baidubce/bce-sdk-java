@@ -63,6 +63,16 @@ public class CostSplitBillRequest extends AbstractBceRequest {
     private String instanceId;
 
     /**
+     * 是否展示标签，非必填，默认为true
+     */
+    private Boolean showTags;
+
+    /**
+     * 是否拆分配置，非必填，默认为false
+     */
+    private Boolean needSplitConfiguration;
+
+    /**
      * 分页查询的页数，从1开始计数
      * 缺省值为1
      */

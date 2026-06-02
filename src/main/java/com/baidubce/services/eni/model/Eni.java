@@ -13,6 +13,7 @@
 package com.baidubce.services.eni.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.tag.model.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -88,4 +89,15 @@ public class Eni extends AbstractBceResponse {
      * Only one of the specified IPs can be the primary IP, and the others must be secondary IPs.
      */
     private List<PrivateIp> privateIpSet;
+
+    /**
+     * IPv6 intranet IP information
+     * All IPv6 IPs are secondary IPs.
+     */
+    private List<PrivateIp> ipv6PrivateIpSet;
+
+    /**
+     * The tag of ENI
+     */
+    private List<Tag> tags;
 }

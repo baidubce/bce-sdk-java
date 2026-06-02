@@ -16,6 +16,11 @@ public class ListVpcRequest extends ListRequest {
      */
     private Boolean isDefault;
 
+    /**
+     * The option param determine the result whether only return vpc with specified ids.
+     */
+    private String vpcIds;
+
     public Boolean getIsDefault() {
         return isDefault;
     }
@@ -71,5 +76,21 @@ public class ListVpcRequest extends ListRequest {
     public ListVpcRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
+    }
+
+    /**
+     * Get the vpcIds
+     * @return
+     */
+    public String getVpcIds() {
+        return vpcIds;
+    }
+
+    /**
+     * Set the vpcIds
+     * @param vpcIds
+     */
+    public void setVpcIds(String vpcIds) {
+        this.vpcIds = vpcIds;
     }
 }

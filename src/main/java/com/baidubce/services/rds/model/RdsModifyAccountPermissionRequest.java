@@ -11,6 +11,15 @@ public class RdsModifyAccountPermissionRequest extends AbstractBceRequest {
     private String instanceId;
     private String accountName;
     private List<DatabasePrivilege> databasePrivileges;
+    private String etag;
+
+    public String getEtag() {
+        return etag;
+    }
+
+    public void setEtag(String etag) {
+        this.etag = etag;
+    }
 
     public String getInstanceId() {
         return instanceId;

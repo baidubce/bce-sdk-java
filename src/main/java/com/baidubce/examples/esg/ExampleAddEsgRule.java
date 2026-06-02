@@ -24,17 +24,22 @@ public class ExampleAddEsgRule {
         EsgClient esgClient = new EsgClient(config); // 初始化EsgClient
 
         EnterpriseSecurityGroupRule enterpriseSecurityGroupRule = new EnterpriseSecurityGroupRule(); // esg规则
-        enterpriseSecurityGroupRule.setSourceIp("all"); // 规则源IP
+        // enterpriseSecurityGroupRule.setSourceIp("all"); // 规则源IP
         enterpriseSecurityGroupRule.setDestIp("all"); // 规则目的IP
-        enterpriseSecurityGroupRule.setAction("allow"); // 规则允许
+        enterpriseSecurityGroupRule.setAction("allow"); // 规则允许（注意：action字段已添加@JsonIgnore，会被自动处理）
         enterpriseSecurityGroupRule.setDirection("ingress"); // 规则的方向
         enterpriseSecurityGroupRule.setPriority(100); // 规则优先级
         enterpriseSecurityGroupRule.setProtocol("tcp"); // 规则协议
         enterpriseSecurityGroupRule.setPortRange("2000-3000"); // 规则端口范围
         enterpriseSecurityGroupRule.setEthertype("IPv4"); // 规则IPv4版本
+        enterpriseSecurityGroupRule.setRemark("example authorize rule1"); // 规则备注
+        // 新增字段：远程IP集合，支持CIDR格式的IP地址段
+        // enterpriseSecurityGroupRule.setRemoteIpSet("ips-wzz7s2sjvsaq");
+        // 或者使用remoteIpGroup字段指定远程IP组：
+        enterpriseSecurityGroupRule.setRemoteIpGroup("ipg-ie0hnjua54wh");
 
         EsgRuleOperateRequest esgRuleOperateRequest = new EsgRuleOperateRequest();
-        esgRuleOperateRequest.setEnterpriseSecurityGroupId("esg-cza4aa7z2wtd");
+        esgRuleOperateRequest.setEnterpriseSecurityGroupId("esg-bwtif4zjhnw9");
         esgRuleOperateRequest.setRules(Arrays.asList(enterpriseSecurityGroupRule));
         try {
             esgClient.authorizeEsgRule(esgRuleOperateRequest);

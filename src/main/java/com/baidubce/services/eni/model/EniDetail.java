@@ -14,6 +14,7 @@ package com.baidubce.services.eni.model;
 
 import java.util.List;
 
+import com.baidubce.services.tag.model.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,8 +48,8 @@ public class EniDetail extends Eni {
     @Builder(builderMethodName = "EniDetailBuilder")
     public EniDetail(String eniId, String name, String zoneName, String description, String instanceId,
                      String macAddress, String vpcId, String subnetId, String status, List<PrivateIp> privateIpSet,
-                     List<String> securityGroupIds) {
-        super(eniId, name, zoneName, description, instanceId, macAddress, vpcId, subnetId, status, privateIpSet);
+                     List<PrivateIp> ipv6PrivateIpSet, List<String> securityGroupIds, List<Tag> tags) {
+        super(eniId, name, zoneName, description, instanceId, macAddress, vpcId, subnetId, status, privateIpSet, ipv6PrivateIpSet, tags);
         this.securityGroupIds = securityGroupIds;
     }
 }

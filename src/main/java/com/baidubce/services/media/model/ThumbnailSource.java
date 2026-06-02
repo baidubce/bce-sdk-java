@@ -14,6 +14,7 @@
 package com.baidubce.services.media.model;
 
 public class ThumbnailSource {
+    private String sourceBucket;
     private String key = null;
 
     public String getKey() {
@@ -23,7 +24,15 @@ public class ThumbnailSource {
     public void setKey(String key) {
         this.key = key;
     }
-    
+
+    public String getSourceBucket() {
+        return sourceBucket;
+    }
+
+    public void setSourceBucket(String sourceBucket) {
+        this.sourceBucket = sourceBucket;
+    }
+
     public ThumbnailSource withKey(String key) {
         this.key = key;
         return this;

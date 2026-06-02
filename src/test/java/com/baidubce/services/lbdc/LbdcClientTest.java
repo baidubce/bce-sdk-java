@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 public class LbdcClientTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LbdcClientTest.class);
-    private static final String ak = "3251d60a16f94c839f7aa4b87ed4913b";
-    private static final String sk = "21d8c3cdfe1242148e29465fca734e1f";
+    private static final String ak = "";
+    private static final String sk = "";
     private LbdcClient lbdcClient;
 
     @Before

@@ -3,6 +3,8 @@ package com.baidubce.services.rds.model;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 
+import java.util.List;
+
 /**
  * The request of modify backup
  */
@@ -19,6 +21,13 @@ public class RdsModifyBackupRequest extends AbstractBceRequest {
     private Integer latestDataBackupRetainDays;
     private Integer retentionPeriod;
     private String timeUnit;
+    private String dataBackupType;
+    private boolean dataBackupCopyEnable;
+    private List<String> dataBackupCopyStoragesRegions;
+    private Integer dataBackupCopyRetainDays;
+    private String binlogSizePercent;
+    private String binlogExpiredHour;
+
 
     public String getInstanceId() {
         return instanceId;
@@ -106,6 +115,54 @@ public class RdsModifyBackupRequest extends AbstractBceRequest {
 
     public void setTimeUnit(String timeUnit) {
         this.timeUnit = timeUnit;
+    }
+
+    public String getDataBackupType() {
+        return dataBackupType;
+    }
+
+    public void setDataBackupType(String dataBackupType) {
+        this.dataBackupType = dataBackupType;
+    }
+
+    public boolean getDataBackupCopyEnable() {
+        return dataBackupCopyEnable;
+    }
+
+    public void setDataBackupCopyEnable(boolean dataBackupCopyEnable) {
+        this.dataBackupCopyEnable = dataBackupCopyEnable;
+    }
+
+    public List<String> getDataBackupCopyStoragesRegions() {
+        return dataBackupCopyStoragesRegions;
+    }
+
+    public void setDataBackupCopyStoragesRegions(List<String> dataBackupCopyStoragesRegions) {
+        this.dataBackupCopyStoragesRegions = dataBackupCopyStoragesRegions;
+    }
+
+    public Integer getDataBackupCopyRetainDays() {
+        return dataBackupCopyRetainDays;
+    }
+
+    public void setDataBackupCopyRetainDays(Integer dataBackupCopyRetainDays) {
+        this.dataBackupCopyRetainDays = dataBackupCopyRetainDays;
+    }
+
+    public String getBinlogSizePercent() {
+        return binlogSizePercent;
+    }
+
+    public void setBinlogSizePercent(String binlogSizePercent) {
+        this.binlogSizePercent = binlogSizePercent;
+    }
+
+    public String getBinlogExpiredHour() {
+        return binlogExpiredHour;
+    }
+
+    public void setBinlogExpiredHour(String binlogExpiredHour) {
+        this.binlogExpiredHour = binlogExpiredHour;
     }
 
     @Override

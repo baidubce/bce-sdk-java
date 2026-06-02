@@ -33,6 +33,15 @@ public class ModifyVolumeChargeTypeRequest extends AbstractBceRequest {
      */
     private Billing billing;
 
+    /**
+     * The effective method for conversion to postpaid.
+     * Optional parameters:
+     * AtOnce (convert to pay-as-you-go immediately)
+     * AfterExpiration (convert to pay-as-you-go after expiration).
+     * If not passed, the default is conversion to pay-as-you-go after expiration.
+     */
+    private String effectiveType;
+
 
     public ModifyVolumeChargeTypeRequest withVolumeId(String volumeId) {
         this.volumeId = volumeId;
@@ -44,12 +53,26 @@ public class ModifyVolumeChargeTypeRequest extends AbstractBceRequest {
         return this;
     }
 
+    public ModifyVolumeChargeTypeRequest withEffectiveType(String effectiveType) {
+        this.effectiveType = effectiveType;
+        return this;
+    }
+
     public String getVolumeId() {
         return volumeId;
     }
 
     public void setVolumeId(String volumeId) {
         this.volumeId = volumeId;
+    }
+
+
+    public String getEffectiveType() {
+        return effectiveType;
+    }
+
+    public void setEffectiveType(String effectiveType) {
+        this.effectiveType = effectiveType;
     }
 
     public Billing getBilling() {

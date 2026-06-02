@@ -35,8 +35,8 @@ import java.util.List;
 
 /**
  * TablestorageRegionLocator derived from org.apache.hadoop.hbase.client.RegionLocator
- * @date 2019/03/14 17:40:56
- */
+* @date 2019/03/14 17:40:56
+*/
 public class TablestorageRegionLocator implements RegionLocator {
     private static long MAX_REGION_CACHE_TIME_MS = 10 * 60 * 1000;
 
@@ -48,10 +48,10 @@ public class TablestorageRegionLocator implements RegionLocator {
 
     /**
      * Construct a TablestorageRegionLocator for the target instance.
-     *
-     * @param connection The connection used to construct this TablestorageRegionLocator.
-     * @param tableName The name of the target table.
-     */
+    *
+    * @param connection The connection used to construct this TablestorageRegionLocator.
+    * @param tableName The name of the target table.
+    */
     public TablestorageRegionLocator(TablestorageConnection connection, TableName tableName) {
         this.tableName = tableName;
         this.serverName = ServerName.valueOf(connection.getTablestorageConfiguration().getEndpoint(),
@@ -61,6 +61,21 @@ public class TablestorageRegionLocator implements RegionLocator {
                 conf.getAccessKeyId(), conf.getSecretAccessKey());
         this.regions = null;
         this.regionsLastReloadTimeMS = 0;
+    }
+
+    @Override
+    public HRegionLocation getRegionLocation(byte[] row, int replicaId, boolean reload) throws IOException {
+        throw new UnsupportedOperationException("getRegionLocation(byte[] row, int replicaId, boolean reload)");
+    }
+
+    @Override
+    public List<HRegionLocation> getRegionLocations(byte[] row, boolean reload) throws IOException {
+        throw new UnsupportedOperationException("getRegionLocations(byte[] row, boolean reload)");
+    }
+
+    @Override
+    public void clearRegionLocationCache() {
+        throw new UnsupportedOperationException("clearRegionLocationCache()");
     }
 
     @Override

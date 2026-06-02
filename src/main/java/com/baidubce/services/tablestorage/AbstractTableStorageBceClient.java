@@ -33,6 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Provides the client for accessing the TableStorage api.
@@ -80,6 +81,7 @@ public abstract class AbstractTableStorageBceClient extends AbstractBceClient {
 
         request.addHeader(Headers.CONTENT_TYPE, TableStorageConstants.CONTENT_TYPE_JSON);
         request.addHeader(Headers.BCE_DATE, DateUtils.formatAlternateIso8601Date(new Date()));
+        request.addHeader(Headers.BCE_REQUEST_ID, UUID.randomUUID().toString());
         
         SignOptions signOptions = new SignOptions();
         signOptions.addHeadersToSign("host");

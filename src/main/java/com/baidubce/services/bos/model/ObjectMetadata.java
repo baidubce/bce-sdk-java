@@ -124,6 +124,12 @@ public class ObjectMetadata {
      */
     private String versionId;
 
+
+    /**
+     * The object tag
+     */
+    private String xBceTagging;
+
     public ObjectMetadata() {
     }
 
@@ -612,5 +618,11 @@ public class ObjectMetadata {
         this.versionId = versionId;
     }
 
+    public String getxBceTagging() {
+        return xBceTagging;
+    }
 
+    public void setxBceTagging(String xBceTagging) {
+        this.xBceTagging = xBceTagging;
+    }
 }

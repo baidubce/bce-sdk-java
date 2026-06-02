@@ -49,6 +49,7 @@ import com.baidubce.services.nat.model.CreateNatResponse;
 import com.baidubce.services.nat.model.CreateNatRuleResponse;
 import com.baidubce.services.nat.model.CreateSnatRuleRequest;
 import com.baidubce.services.nat.model.DeleteNatRuleRequest;
+import com.baidubce.services.nat.model.EnhanceNatBindEipRequest;
 import com.baidubce.services.nat.model.GetNatRequest;
 import com.baidubce.services.nat.model.GetNatResponse;
 import com.baidubce.services.nat.model.ListDnatRuleResponse;
@@ -59,6 +60,8 @@ import com.baidubce.services.nat.model.ListSnatRuleResponse;
 import com.baidubce.services.nat.model.ModifyNatRequest;
 import com.baidubce.services.nat.model.PurchaseReservedNatRequest;
 import com.baidubce.services.nat.model.ReleaseNatRequest;
+import com.baidubce.services.nat.model.ResizeNatRequest;
+import com.baidubce.services.nat.model.UpdateDeleteProtectRequest;
 import com.baidubce.services.nat.model.UpdateDnatRuleRequest;
 import com.baidubce.services.nat.model.UpdateSnatRuleRequest;
 import com.baidubce.util.HttpUtils;
@@ -77,6 +80,7 @@ public class NatClient extends AbstractBceClient {
     private static final String CLIENT_TOKEN = "clientToken";
     private static final String SNAT_RULE_PREFIX = "snatRule";
     private static final String DNAT_RULE_PREFIX = "dnatRule";
+    private static final String DELETE_PROTECT_PREFIX = "deleteProtect";
 
     /**
      * Responsible for handling httpResponses from all network service calls.
@@ -264,9 +268,9 @@ public class NatClient extends AbstractBceClient {
     }
 
     /**
-     * Binding the eips to specified nat.
+     * Binding the snat eips to specified nat.
      *
-     * @param request The request containing all options for binding the eips to specified nat.
+     * @param request The request containing all options for binding the snat eips to specified nat.
      */
     public void bindEip(BindEipRequest request) {
         checkNotNull(request, "request should not be null.");
@@ -283,9 +287,9 @@ public class NatClient extends AbstractBceClient {
     }
 
     /**
-     * Unbinding the eips to specified nat.
+     * Unbinding the snat eips to specified nat.
      *
-     * @param request The request containing all options for binding the eips to specified nat.
+     * @param request The request containing all options for unbinding the snat eips to specified nat.
      */
     public void unbindEip(BindEipRequest request) {
         checkNotNull(request, "request should not be null.");
@@ -374,6 +378,44 @@ public class NatClient extends AbstractBceClient {
                 request, HttpMethodName.PUT, NAT_PREFIX, request.getNatId());
         internalRequest.addParameter("unbind", null);
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Binding the eips to specified enhance nat.
+     *
+     * @param request The request containing all options for binding the eips to specified enhance nat.
+     */
+    public void enhanceNatBindEip(EnhanceNatBindEipRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getBindEips(), "bindEips should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, NAT_PREFIX, request.getNatId());
+        internalRequest.addParameter("bind", null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Unbinding the eips to specified enhance nat.
+     *
+     * @param request The request containing all options for unbinding the eips to specified enhance nat.
+     */
+    public void enhanceNatUnbindEip(EnhanceNatBindEipRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getBindEips(), "bindEips should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, NAT_PREFIX, request.getNatId());
+        internalRequest.addParameter("unbind", null);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -616,4 +658,40 @@ public class NatClient extends AbstractBceClient {
 
     }
 
+    /**
+     * Resizing the name of the specified enhance nat.
+     *
+     * @param request The request containing all options for resizing the enhance nat;
+     */
+    public void resizeNat(ResizeNatRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be null.");
+        checkNotNull(request.getCuNum(), "cuNum should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, NAT_PREFIX, request.getNatId());
+        internalRequest.addParameter("resize", null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Updating delete protect switch of the specified nat.
+     *
+     * @param request The request containing all options for updating delete protect switch;
+     */
+    public void updateDeleteProtect(UpdateDeleteProtectRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getNatId(), "natId should not be null.");
+        checkNotNull(request.getDeleteProtect(), "cuNum should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, NAT_PREFIX, request.getNatId(), DELETE_PROTECT_PREFIX);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
 }

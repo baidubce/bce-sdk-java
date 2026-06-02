@@ -3,6 +3,8 @@
  */
 package com.baidubce.services.havip.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +20,10 @@ public class HaVip {
     private String privateIpAddress;
     private String publicIpAddress;
     private String createdTime;
+    /**
+     * 高可用虚拟IP绑定的实例列表
+     */
+    private List<HaVipBindedInstance> bindedInstances;
 
     @Override
     public String toString() {
@@ -31,6 +37,7 @@ public class HaVip {
                 ", privateIpAddress='" + privateIpAddress + '\'' +
                 ", publicIpAddress='" + publicIpAddress + '\'' +
                 ", createdTime='" + createdTime + '\'' +
+                ", bindedInstances=" + bindedInstances +
                 '}';
     }
 }

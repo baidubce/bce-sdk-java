@@ -28,6 +28,8 @@ import com.baidubce.services.sms.model.v3.ModifySignatureRequest;
 import com.baidubce.services.sms.model.v3.ModifyTemplateRequest;
 import com.baidubce.services.sms.model.v3.QueryQuotaRateResponse;
 import com.baidubce.services.sms.model.v3.UpdateQuotaRateRequest;
+import com.baidubce.services.sms.model.v3.GetPrepaidPackageRequest;
+import com.baidubce.services.sms.model.v3.GetPrepaidPackageResponse;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -85,6 +87,23 @@ public class SmsV3ClientTest {
         Assert.assertEquals(responseMock.getData(), response.getData());
         Assert.assertEquals(responseMock.getCode(), response.getCode());
         Assert.assertEquals(responseMock.getRequestId(), response.getRequestId());
+
+        SmsClientConfiguration config = new SmsClientConfiguration();
+        config.setCredentials(new DefaultBceCredentials(ACCESS_KEY,SECRET_KEY));
+        config.setEndpoint(ENDPOINT);
+        SmsClient emptySmsClient = new SmsClient(config);
+
+        SendMessageV3Request request2 = new SendMessageV3Request();
+        request2.setTemplate("testTemplate");
+        request2.setMobile("13800138000");
+        HashMap<String, String> contentVar = new HashMap<String, String>();
+        contentVar.put("content", "你有兴趣参加AI培训嘛？");
+        request2.setContentVar(contentVar);
+        request2.setSign("Sign");
+        response = emptySmsClient.sendMessage(request2);
+        Assert.assertEquals("1000", response.getCode());
+        Assert.assertEquals("成功", response.getMessage());
+        Assert.assertNotNull(response.getData());
     }
 
     @Test
@@ -485,5 +504,38 @@ public class SmsV3ClientTest {
         ListStatisticsResponse response = smsClient.listStatistics(request);
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatisticsResults().size(), 2);
+    }
+
+    @Test
+    public void testGetPrepaidPackage() {
+        SmsClientConfiguration config = new SmsClientConfiguration();
+        config.setCredentials(new DefaultBceCredentials(ACCESS_KEY,SECRET_KEY));
+        config.setEndpoint(ENDPOINT);
+        SmsClient emptySmsClient = new SmsClient(config);
+        GetPrepaidPackageRequest request = new GetPrepaidPackageRequest();
+
+        // 缺少必要参数的请求
+        try {
+            emptySmsClient.getPrepaidPackages(request);
+            Assert.fail("此处需要抛出一个必要参数缺少的异常");
+        } catch(NullPointerException e) {
+            Assert.assertTrue(e.getMessage().contains("userId should not be null"));
+        }
+
+        request.setUserId("userID");
+        GetPrepaidPackageResponse response = emptySmsClient.getPrepaidPackages(request);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getTotalCount(), 185);
+        Assert.assertEquals(response.getPrepaidPackages().size(), 10);
+
+        request.setPageSize("5");
+        response = emptySmsClient.getPrepaidPackages(request);
+        Assert.assertEquals(response.getPrepaidPackages().size(), 5);
+
+        request.setPackageStatus("EXPIRED");
+        request.setCountryType("domestic");
+        response = emptySmsClient.getPrepaidPackages(request);
+        Assert.assertEquals(response.getPrepaidPackages().size(), 5);
+        Assert.assertEquals(response.getTotalCount(), 13);
     }
 }

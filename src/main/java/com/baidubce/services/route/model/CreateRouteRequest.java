@@ -3,6 +3,8 @@ package com.baidubce.services.route.model;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 
+import java.util.List;
+
 /**
  * Created by zhangjing60 on 17/8/2.
  */
@@ -69,6 +71,20 @@ public class CreateRouteRequest extends AbstractBceRequest {
     private String description;
 
     private int ipVersion = 4;
+
+    /**
+     * 多线路由下一跳信息列表
+     * 创建多线路由(主备模式、负载均衡模式)时该字段必填
+     */
+    private List<NextHop> nextHopList;
+
+    public List<NextHop> getNextHopList() {
+        return nextHopList;
+    }
+
+    public void setNextHopList(List<NextHop> nextHopList) {
+        this.nextHopList = nextHopList;
+    }
 
     public void setIpVersion(int ipVersion) {
         this.ipVersion = ipVersion;
@@ -213,6 +229,11 @@ public class CreateRouteRequest extends AbstractBceRequest {
      */
     public CreateRouteRequest withDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public CreateRouteRequest withNextHopList(List<NextHop> nextHopList) {
+        this.nextHopList = nextHopList;
         return this;
     }
 

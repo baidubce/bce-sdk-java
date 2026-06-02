@@ -70,6 +70,11 @@ public class CreateEtGatewayRequest extends AbstractBceRequest {
      */
     private List<TagModel> tags;
 
+    /**
+     * The resource group ID of the dedicated line gateway.
+     */
+    private String resourceGroupId;
+
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);

@@ -17,6 +17,8 @@
 package com.baidubce.services.tablestoragehbaseclient.util;
 
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.client.TableDescriptor;
+import org.apache.hadoop.hbase.client.TableDescriptorBuilder;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
 import org.slf4j.Logger;
@@ -51,7 +53,7 @@ public class HBaseTestUtil {
     public static boolean waitUntilAvailable(Admin admin, String tableName)
             throws IOException {
         boolean tableAvailable = true;
-        for (int retryCount = 0; retryCount < 12; ++retryCount) {
+        for (int retryCount = 0; retryCount < 1000; ++retryCount) {
             boolean exists = admin.tableExists(TableName.valueOf(tableName));
             if (exists) {
                 tableAvailable = admin.isTableAvailable(TableName.valueOf(tableName));
@@ -77,7 +79,7 @@ public class HBaseTestUtil {
     public static boolean waitUntilAvailable(Admin admin, List<String> tableNameList)
             throws IOException {
         boolean allTableAvailable = true;
-        for (int retryCount = 0; retryCount < 12; ++retryCount) {
+        for (int retryCount = 0; retryCount < 1000; ++retryCount) {
             allTableAvailable = true;
             for (String tableName : tableNameList) {
                 if (!admin.isTableAvailable(TableName.valueOf(tableName))) {
@@ -106,7 +108,7 @@ public class HBaseTestUtil {
     public static boolean waitUntilNotExist(Admin admin, String tableName)
             throws IOException {
         boolean tableNotExist = true;
-        for (int retryCount = 0; retryCount < 12; ++retryCount) {
+        for (int retryCount = 0; retryCount < 1000; ++retryCount) {
             tableNotExist = admin.tableExists(TableName.valueOf(tableName));
             if (tableNotExist) {
                 break;
@@ -129,7 +131,7 @@ public class HBaseTestUtil {
     public static boolean waitUntilNotExist(Admin admin, List<String> tableNameList)
             throws IOException {
         boolean allTableNotExist = true;
-        for (int retryCount = 0; retryCount < 12; ++retryCount) {
+        for (int retryCount = 0; retryCount < 1000; ++retryCount) {
             allTableNotExist = true;
             for (String tableName : tableNameList) {
                 if (!admin.tableExists(TableName.valueOf(tableName))) {
@@ -155,7 +157,7 @@ public class HBaseTestUtil {
         return allTableNotExist;
     }
 
-    public static boolean createTable(Admin admin, HTableDescriptor createDescriptor, boolean waitUntilAvailable)
+    public static boolean createTable(Admin admin, TableDescriptor createDescriptor, boolean waitUntilAvailable)
             throws IOException {
         admin.createTable(createDescriptor);
         if (!waitUntilAvailable) {
@@ -165,13 +167,15 @@ public class HBaseTestUtil {
     }
 
     public static boolean createTable(Admin admin, String tableName, boolean waitUntilAvailable) throws IOException {
-        HTableDescriptor createDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
-        return createTable(admin, createDescriptor, waitUntilAvailable);
+        TableDescriptor tableDescriptor = TableDescriptorBuilder.newBuilder(TableName.valueOf(tableName)).build();
+        //HTableDescriptor createDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
+        return createTable(admin, tableDescriptor, waitUntilAvailable);
     }
 
     public static boolean createTable(Admin admin, String tableName) throws IOException {
-        HTableDescriptor createDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
-        return createTable(admin, createDescriptor, true);
+        TableDescriptor tableDescriptor = TableDescriptorBuilder.newBuilder(TableName.valueOf(tableName)).build();
+        //HTableDescriptor createDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
+        return createTable(admin, tableDescriptor, true);
     }
 
     public static boolean createTables(Admin admin, List<String> tableNameList, boolean waitUntilAvailable)

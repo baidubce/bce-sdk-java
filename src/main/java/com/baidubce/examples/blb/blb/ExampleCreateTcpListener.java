@@ -28,6 +28,8 @@ public class ExampleCreateTcpListener {
         blbListenerRequest.setListenerPort(81); // 监听器的监听端口
         blbListenerRequest.setBackendPort(81); // 后端服务器的监听端口
         blbListenerRequest.setScheduler("Hash"); // 负载均衡算法
+        blbListenerRequest.setTcpSessionTimeout(900); // tcp连接超时时间（秒），默认900，范围10-4000
+        blbListenerRequest.setHealthCheckType("TCP"); // 健康检查协议类型，默认"TCP"
 
         try {
             blbClient.createListener(blbListenerRequest);

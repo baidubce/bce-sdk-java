@@ -24,7 +24,7 @@ public class ExampleUpdateSslVpnUser {
         updateSslVpnUserRequest.setUserId("vpn-ssl-user-s6uiuv9wdf1j");   // SSL-VPN用户ID
 
         // 密码，8～17位字符，英文、数字和符号必须同时存在，符号仅限!@#$%^*(_
-        updateSslVpnUserRequest.setPassword("1234567abc!");
+        updateSslVpnUserRequest.setPassword("");
 
         updateSslVpnUserRequest.setDescription("description-update");   // 描述
         updateSslVpnUserRequest.setClientToken(UUID.randomUUID().toString());  // 幂等性Token

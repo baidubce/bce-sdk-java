@@ -17,8 +17,6 @@ public class PutBucketTrashRequest extends GenericBucketRequest {
     @JsonAlias({"trashDir"})
     private String trashDir;
 
-    public PutBucketTrashRequest(){};
-
     public PutBucketTrashRequest(String bucketName) {
         super(bucketName);
     }

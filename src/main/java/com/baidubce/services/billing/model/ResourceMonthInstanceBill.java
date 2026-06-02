@@ -108,6 +108,26 @@ public class ResourceMonthInstanceBill {
     private String configurationCH;
 
     /**
+     * json format resource flavor
+     */
+    private String jsonFlavor;
+
+    /**
+     * stock sku id
+     */
+    private String skuId;
+
+    /**
+     * stock psi code
+     */
+    private String psiCode;
+
+    /**
+     * resource category，default is the same as serviceType
+     */
+    private String productCategory;
+
+    /**
      * the tag info of the resource
      */
     private String tag;
@@ -633,5 +653,37 @@ public class ResourceMonthInstanceBill {
 
     public void setDeductCashEquivalentCouponPrice(BigDecimal deductCashEquivalentCouponPrice) {
         this.deductCashEquivalentCouponPrice = deductCashEquivalentCouponPrice;
+    }
+
+    public String getJsonFlavor() {
+        return jsonFlavor;
+    }
+
+    public void setJsonFlavor(String jsonFlavor) {
+        this.jsonFlavor = jsonFlavor;
+    }
+
+    public String getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(String skuId) {
+        this.skuId = skuId;
+    }
+
+    public String getPsiCode() {
+        return psiCode;
+    }
+
+    public void setPsiCode(String psiCode) {
+        this.psiCode = psiCode;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
     }
 }

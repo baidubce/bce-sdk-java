@@ -18,6 +18,7 @@ public class UpdateEnterpriseSecurityGroups extends AbstractBceRequest {
     @JsonIgnore
     private String clientToken;
 
+    @JsonIgnore
     private String endpointId;
 
     private List<String> enterpriseSecurityGroupIds;

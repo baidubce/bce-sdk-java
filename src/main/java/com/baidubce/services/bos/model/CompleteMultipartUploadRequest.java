@@ -44,6 +44,12 @@ public class CompleteMultipartUploadRequest extends GenericUploadRequest {
      */
     private boolean xBceCrc32cFlag = false;
 
+    private String xBceCrc32 = null;
+
+    private String ifNoneMatch = null;
+
+    private String ifMatch = null;
+
     public CompleteMultipartUploadRequest() {
         super();
     }
@@ -224,5 +230,29 @@ public class CompleteMultipartUploadRequest extends GenericUploadRequest {
      */
     public void setxBceCrc32cFlag(boolean xBceCrc32cFlag) {
         this.xBceCrc32cFlag = xBceCrc32cFlag;
+    }
+
+    public String getIfNoneMatch() {
+        return ifNoneMatch;
+    }
+
+    public void setIfNoneMatch(String ifNoneMatch) {
+        this.ifNoneMatch = ifNoneMatch;
+    }
+
+    public String getIfMatch() {
+        return ifMatch;
+    }
+
+    public void setIfMatch(String ifMatch) {
+        this.ifMatch = ifMatch;
+    }
+
+    public String getxBceCrc32() {
+        return xBceCrc32;
+    }
+
+    public void setxBceCrc32(String xBceCrc32) {
+        this.xBceCrc32 = xBceCrc32;
     }
 }

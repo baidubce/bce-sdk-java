@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
- 
+
 /**
  * @file TableStorageConnection.java
  * @date 2019/02/25 17:48:07
@@ -32,6 +32,7 @@ import org.apache.hadoop.hbase.client.BufferedMutatorParams;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.RegionLocator;
 import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.TableBuilder;
 import org.apache.hadoop.hbase.security.User;
 
 import java.io.IOException;
@@ -41,10 +42,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TableStorageConnection derived from hbase.client.Connection
- * A connection encapsulating the corresponding configure to TableStorage.
- *
- * @date 2019/02/25 17:48:07
- */
+* A connection encapsulating the corresponding configure to TableStorage.
+*
+* @date 2019/02/25 17:48:07
+*/
 public class TablestorageConnection implements Connection {
     private final Configuration config;
     private final TablestorageConfiguration tablestorageConfiguration;
@@ -53,10 +54,10 @@ public class TablestorageConnection implements Connection {
 
     /**
      * Construct a connection to TableStorage with configuration.
-     *
-     * @param conf the configuration used to connect TableStorage.
-     * @throws IOException
-     */
+    *
+    * @param conf the configuration used to connect TableStorage.
+    * @throws IOException
+    */
     public TablestorageConnection(Configuration conf) throws IOException {
         config = conf;
         tablestorageConfiguration = toTablestorageConfiguration(config);
@@ -71,6 +72,11 @@ public class TablestorageConnection implements Connection {
         tablestorageConfiguration = toTablestorageConfiguration(config);
     }
 
+    public TablestorageConnection(Configuration conf, ExecutorService pool, User user) {
+         config = conf;
+         tablestorageConfiguration = toTablestorageConfiguration(config);
+    }
+
     private TablestorageConfiguration toTablestorageConfiguration(Configuration config) {
         String endpoint = config.get(TablestorageConfiguration.TABLESTORAGE_CLIENT_ENDPOINT);
         String ak = config.get(TablestorageConfiguration.TABLESTORAGE_CLIENT_ACCESSKEYID);
@@ -82,6 +88,16 @@ public class TablestorageConnection implements Connection {
 
     public TablestorageConfiguration getTablestorageConfiguration() {
         return tablestorageConfiguration;
+    }
+
+    @Override
+    public void clearRegionLocationCache() {
+        throw new UnsupportedOperationException("clearRegionLocationCache()");
+    }
+
+    @Override
+    public TableBuilder getTableBuilder(TableName tableName, ExecutorService pool) {
+        throw new UnsupportedOperationException("getTableBuilder(TableName tableName, ExecutorService pool)");
     }
 
     @Override

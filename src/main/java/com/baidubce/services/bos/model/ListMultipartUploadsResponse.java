@@ -66,7 +66,11 @@ public class ListMultipartUploadsResponse extends BosResponse {
      */
     private String nextKeyMarker;
 
-    /** The list of multipart uploads. */
+    private String uploadIdMarker;
+
+    /**
+     * The list of multipart uploads.
+     */
     @JsonProperty("uploads")
     private List<MultipartUploadSummary> multipartUploads;
 
@@ -84,7 +88,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * as specified in the original request.
      *
      * @return The name of the bucket containing the listed multipart uploads,
-     *     as specified in the original request.
+     * as specified in the original request.
      */
     public String getBucketName() {
         return this.bucketName;
@@ -95,7 +99,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * specified in the original request.
      *
      * @param bucketName The name of the bucket containing the listed multipart
-     *     uploads, as specified in the original request.
+     *                   uploads, as specified in the original request.
      */
     @JsonProperty("bucket")
     public void setBucketName(String bucketName) {
@@ -107,7 +111,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * specify where in the results to begin listing multipart uploads.
      *
      * @return The optional key marker specified in the original request to
-     *     specify where in the results to begin listing multipart uploads.
+     * specify where in the results to begin listing multipart uploads.
      */
     public String getKeyMarker() {
         return this.keyMarker;
@@ -118,7 +122,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * where in the results to begin listing multipart uploads.
      *
      * @param keyMarker The optional key marker specified in the original request to
-     *     specify where in the results to begin listing multipart uploads.
+     *                  specify where in the results to begin listing multipart uploads.
      */
     public void setKeyMarker(String keyMarker) {
         this.keyMarker = keyMarker;
@@ -130,8 +134,8 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * isTruncated indicates this listing is truncated.
      *
      * @return the next key marker that should be used in the next request to
-     *     get the next page of results. This value is only valid if
-     *     isTruncated() indicates this listing is truncated.
+     * get the next page of results. This value is only valid if
+     * isTruncated() indicates this listing is truncated.
      */
     public String getNextKeyMarker() {
         return this.nextKeyMarker;
@@ -142,7 +146,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * the next page of results.
      *
      * @param nextKeyMarker the next key marker that should be used in the next request to
-     *     get the next page of results.
+     *                      get the next page of results.
      */
     public void setNextKeyMarker(String nextKeyMarker) {
         this.nextKeyMarker = nextKeyMarker;
@@ -163,7 +167,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * the original request.
      *
      * @param maxUploads The optional maximum number of uploads to be listed, as
-     *     specified in the original request.
+     *                   specified in the original request.
      */
     public void setMaxUploads(int maxUploads) {
         this.maxUploads = maxUploads;
@@ -174,7 +178,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * be made to get more results.
      *
      * @return true if the listing is truncated, and additional requests need to
-     *     be made to get more results.
+     * be made to get more results.
      */
     public boolean isTruncated() {
         return this.isTruncated;
@@ -185,7 +189,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * be made to get more results.
      *
      * @param isTruncated true if the listing is truncated, and additional requests need
-     *     to be made to get more results.
+     *                    to be made to get more results.
      */
     @JsonProperty("isTruncated")
     public void setTruncated(boolean isTruncated) {
@@ -225,7 +229,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * similar to how a file system organizes files into directories.
      *
      * @return The list of common prefixes included in this multipart object listing,
-     *     which might be an empty list if no common prefixes were found.
+     * which might be an empty list if no common prefixes were found.
      */
     public List<String> getCommonPrefixes() {
         return this.commonPrefixes;
@@ -249,7 +253,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * start with the specified prefix.
      *
      * @return The prefix parameter originally used to request this multipart upload
-     *     listing. Returns <code>null</code> if no prefix was specified.
+     * listing. Returns <code>null</code> if no prefix was specified.
      */
     public String getPrefix() {
         return this.prefix;
@@ -279,7 +283,7 @@ public class ListMultipartUploadsResponse extends BosResponse {
      * prefix.
      *
      * @return The delimiter parameter originally used to request this multipart
-     *     upload listing. Returns <code>null</code> if no delimiter was specified.
+     * upload listing. Returns <code>null</code> if no delimiter was specified.
      */
     public String getDelimiter() {
         return delimiter;
@@ -293,5 +297,13 @@ public class ListMultipartUploadsResponse extends BosResponse {
      */
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
+    }
+
+    public String getUploadIdMarker() {
+        return uploadIdMarker;
+    }
+
+    public void setUploadIdMarker(String uploadIdMarker) {
+        this.uploadIdMarker = uploadIdMarker;
     }
 }

@@ -36,10 +36,18 @@ public class EniInstanceOperateRequest extends EniOperateRequest {
      */
     private String instanceId;
 
+    /**
+     * The type of cloud product instance.
+     * Valid values: server (cloud server), hpas (HPAS instance).
+     * Default: server
+     */
+    private String instanceType;
+
     @Builder(builderMethodName = "EniInstanceOperateRequestBuilder")
-    public EniInstanceOperateRequest(String clientToken, String action, String eniId, String instanceId) {
+    public EniInstanceOperateRequest(String clientToken, String action, String eniId, String instanceId, String instanceType) {
         super(clientToken, action, eniId);
         this.instanceId = instanceId;
+        this.instanceType = instanceType;
     }
 
 }

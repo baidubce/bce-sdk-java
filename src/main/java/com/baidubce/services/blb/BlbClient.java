@@ -742,6 +742,7 @@ public class BlbClient extends AbstractBceClient {
         }
         InternalRequest internalRequest = this.createRequest(deleteBSRequest, HttpMethodName.PUT, PREFIX,
                 deleteBSRequest.getBlbId(), "backendserver");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, deleteBSRequest.getClientToken());
         fillPayload(internalRequest, deleteBSRequest);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }

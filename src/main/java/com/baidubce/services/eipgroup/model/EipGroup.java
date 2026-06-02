@@ -43,6 +43,11 @@ public class EipGroup {
     private List<Eip> eips;
 
     /**
+     * The eipv6s of EipGroup.
+     */
+    private List<Eip> eipv6s;
+
+    /**
      * The status of EipGroup.
      */
     private String status;
@@ -56,6 +61,11 @@ public class EipGroup {
      * The paymentTiming of EipGroup.
      */
     private String paymentTiming;
+
+    /**
+     * The billingMethod of EipGroup.
+     */
+    private String billingMethod;
 
     /**
      * The createTime of EipGroup.

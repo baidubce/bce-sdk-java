@@ -1,26 +1,25 @@
 package com.baidubce.services.media.cases;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import com.baidubce.services.media.model.CreatePipelineRequest;
+import com.baidubce.services.media.model.CreateThumbnailJobRequest;
+import com.baidubce.services.media.model.GetThumbnailJobResponse;
+import com.baidubce.services.media.model.HighlightOutputCfg;
+import com.baidubce.services.media.model.ListPipelinesResponse;
+import com.baidubce.services.media.model.PipelineConfig;
+import com.baidubce.services.media.model.PipelineStatus;
+import com.baidubce.services.media.model.SpriteOutputCfg;
+import com.baidubce.services.media.model.ThumbnailCapture;
+import com.baidubce.services.media.model.ThumbnailSource;
+import com.baidubce.services.media.model.ThumbnailTarget;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.baidubce.services.media.model.CreatePipelineRequest;
-import com.baidubce.services.media.model.CreateThumbnailJobRequest;
-import com.baidubce.services.media.model.GetThumbnailJobResponse;
-import com.baidubce.services.media.model.ListPipelinesResponse;
-import com.baidubce.services.media.model.PipelineConfig;
-import com.baidubce.services.media.model.PipelineStatus;
-import com.baidubce.services.media.model.ThumbnailCapture;
-import com.baidubce.services.media.model.ThumbnailSource;
-import com.baidubce.services.media.model.ThumbnailTarget;
-import com.baidubce.services.media.model.HighlightOutputCfg;
-import com.baidubce.services.media.model.SpriteOutputCfg;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * The test cases for creating thumbnail jobs
@@ -116,6 +115,29 @@ public class CreateThumbNailJobTest extends AbstractMediaTest {
         thumbNailJobId = mediaClient.createThumbnailJob(request).getJobId();              
         assertTrue("Invalid thumbnail job ID: " + thumbNailJobId, thumbNailJobId != null
                        && thumbNailJobId.trim().length() > 0);
+    }
+
+    @Test
+    public void testCreateThumbNailJobNormal4() {
+
+        CreateThumbnailJobRequest request = new CreateThumbnailJobRequest();
+        pipelineName = "qweqwe";
+        sourceKey = "123123.mp4";
+        request.setPipelineName(pipelineName);
+        ThumbnailSource source = new ThumbnailSource();
+        source.setSourceBucket("common");
+        source.setKey(sourceKey);
+        request.setSource(source);
+        ThumbnailTarget target = new ThumbnailTarget();
+        target.setWebVttName("test-webvtt");
+        request.setTarget(target);
+        ThumbnailCapture capture = new ThumbnailCapture();
+        capture.setMode("manual");
+        request.setCapture(capture);
+        thumbNailJobId = mediaClient.createThumbnailJob(request).getJobId();
+        assertTrue("Invalid thumbnail job ID: " + thumbNailJobId, thumbNailJobId != null
+                && thumbNailJobId.trim().length() > 0);
+        System.out.println("thumbNailJobId: " + thumbNailJobId);
     }
         
     

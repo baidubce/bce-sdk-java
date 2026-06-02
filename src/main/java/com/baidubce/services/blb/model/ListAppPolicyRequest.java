@@ -29,6 +29,11 @@ public class ListAppPolicyRequest extends ListRequest {
      */
     private Integer port;
 
+    /**
+     * the listener type of the policy, required when same port has multiple protocols
+     */
+    private String type;
+
     public String getBlbId() {
         return blbId;
     }
@@ -45,6 +50,14 @@ public class ListAppPolicyRequest extends ListRequest {
         this.port = port;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public ListAppPolicyRequest withBlbId(String blbId) {
         this.setBlbId(blbId);
         return this;
@@ -52,6 +65,11 @@ public class ListAppPolicyRequest extends ListRequest {
 
     public ListAppPolicyRequest withPort(Integer port) {
         this.setPort(port);
+        return this;
+    }
+
+    public ListAppPolicyRequest withType(String type) {
+        this.setType(type);
         return this;
     }
 

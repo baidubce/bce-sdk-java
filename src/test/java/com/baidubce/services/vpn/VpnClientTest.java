@@ -216,11 +216,11 @@ public class VpnClientTest {
         BatchCreateSslVpnUserRequest request = new BatchCreateSslVpnUserRequest();
         SslVpnUser sslVpnUser1 = new SslVpnUser();
         sslVpnUser1.setUserName("user1");
-        sslVpnUser1.setPassword("qwe123Test.1");
+        sslVpnUser1.setPassword("");
         sslVpnUser1.setDescription("desc user1");
         SslVpnUser sslVpnUser2 = new SslVpnUser();
         sslVpnUser2.setUserName("user2");
-        sslVpnUser2.setPassword("qwe123Test.2");
+        sslVpnUser2.setPassword("");
         sslVpnUser2.setDescription("desc user2");
         request.setSslVpnUsers(Arrays.asList(sslVpnUser1, sslVpnUser2));
         request.setVpnId("vpn-id");

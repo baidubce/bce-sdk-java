@@ -29,9 +29,9 @@ public class EtGateway {
     private String status;
 
     /**
-     * dedicated line gateway egress bandwidt
+     * dedicated line gateway egress bandwidth
      */
-    private String speed;
+    private Integer speed;
 
     private String createTime;
 

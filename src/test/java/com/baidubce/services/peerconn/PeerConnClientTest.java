@@ -201,4 +201,11 @@ public class PeerConnClientTest {
         client.switchDeleteProtect(request);
     }
 
+    @Test
+    public void testRefund() {
+        PeerConnIdRequest request = new PeerConnIdRequest();
+        request.setPeerConnId(id);
+        client.refund(request);
+    }
+
 }

@@ -781,8 +781,8 @@ public class CnapClientTest {
     public static class Demo {
         protected CnapClient client;
 
-        protected final String ak = "6025254c24ad40c1a0732e9bdf0150ef";
-        protected final String sk = "ff9efbc8f9e44c58a0cf25aa30f6d3b0";
+        protected final String ak = "";
+        protected final String sk = "";
         protected static String endpoint = "gzns-inf-matrix0.gzns.baidu.com:8060";
 
         protected String cluster1ID;

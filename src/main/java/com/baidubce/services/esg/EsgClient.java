@@ -213,6 +213,9 @@ public class EsgClient extends AbstractBceClient {
                 checkEmptyExceptionMessageFormat(ESGID_MESSAGE_KEY));
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.DELETE, ESG_PREFIX, request.getEnterpriseSecurityGroupId());
+        if (!Strings.isNullOrEmpty(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -262,7 +265,9 @@ public class EsgClient extends AbstractBceClient {
                 checkEmptyExceptionMessageFormat(ESGID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE, ESG_RULE_PREFIX,
                 request.getEnterpriseSecurityGroupRuleId());
-        fillPayload(internalRequest, request);
+        if (!Strings.isNullOrEmpty(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -286,6 +291,9 @@ public class EsgClient extends AbstractBceClient {
                 checkEmptyExceptionMessageFormat(ESGID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, ESG_RULE_PREFIX,
                 request.getEnterpriseSecurityGroupRuleId());
+        if (!Strings.isNullOrEmpty(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }

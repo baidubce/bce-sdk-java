@@ -78,4 +78,11 @@ public class ProbeClientTest {
         probeClient.deleteProbe(probeId);
     }
 
+    @Test
+    public void deleteProbeWithClientTokenTest() {
+        String probeId = "probeId";
+        String clientToken = UUID.randomUUID().toString();
+        probeClient.deleteProbe(probeId, clientToken);
+    }
+
 }

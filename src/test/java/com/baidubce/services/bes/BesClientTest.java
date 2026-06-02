@@ -49,7 +49,7 @@ public class BesClientTest extends AbstractBesClientTest {
         DiskSlotInfo diskSlotInfo = new DiskSlotInfo();
         DiskSlotInfo diskSlotInfo2 = new DiskSlotInfo();
         createOrderRequestVo.setName("testMaster22");
-        createOrderRequestVo.setPassword("123456aA");
+        createOrderRequestVo.setPassword("");
 
         moduleInfo.setType(ModuleType.ES_NODE);
         moduleInfo.setInstanceNum(1);

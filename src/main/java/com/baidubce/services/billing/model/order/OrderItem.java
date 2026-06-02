@@ -58,6 +58,11 @@ public class OrderItem {
     private List<String> configurations;
 
     /**
+     * the origin flavor of the order item
+     */
+    private List<FlavorItem> flavors;
+
+    /**
      * the resource number of the order item
      */
     private int count;

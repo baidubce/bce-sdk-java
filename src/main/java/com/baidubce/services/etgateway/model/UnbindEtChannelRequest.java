@@ -23,6 +23,8 @@ public class UnbindEtChannelRequest extends AbstractBceRequest {
      */
     @JsonIgnore
     private String clientToken;
+
+    @JsonIgnore
     private String etGatewayId;
 
     @Override

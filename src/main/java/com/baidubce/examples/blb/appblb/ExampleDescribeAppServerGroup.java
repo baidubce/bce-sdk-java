@@ -4,6 +4,7 @@ import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.blb.AppBlbClient;
 import com.baidubce.services.blb.BlbClientConfiguration;
+import com.baidubce.services.blb.model.ListAppSgRequest;
 import com.baidubce.services.blb.model.ListAppSgResponse;
 
 /**
@@ -23,8 +24,16 @@ public class ExampleDescribeAppServerGroup {
         AppBlbClient appBlbClient = new AppBlbClient(config); // 初始化AppBlbClient
 
         try {
+            // 基本查询
             ListAppSgResponse response = appBlbClient.listAppServerGroup("lb-99fa2577", "ccqSg");
             System.out.println(response);
+
+            // 使用exactlyMatch参数进行精确匹配
+            ListAppSgRequest request = new ListAppSgRequest("lb-99fa2577");
+            request.setName("ccqSg");
+            request.setExactlyMatch(true); // 设置name是否全局匹配
+            ListAppSgResponse response2 = appBlbClient.listAppServerGroup(request);
+            System.out.println(response2);
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

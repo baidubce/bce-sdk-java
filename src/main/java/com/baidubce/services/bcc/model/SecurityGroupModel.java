@@ -52,6 +52,11 @@ public class SecurityGroupModel extends AbstractBceResponse {
     private String createdTime;
 
     /**
+     * The version number of the SecurityGroup.
+     */
+    private Long sgVersion;
+
+    /**
      * List of rules which describe how the SecurityGroup works.
      */
     private List<SecurityGroupRuleModel> rules;
@@ -110,6 +115,14 @@ public class SecurityGroupModel extends AbstractBceResponse {
         this.createdTime = createdTime;
     }
 
+    public Long getSgVersion() {
+        return sgVersion;
+    }
+
+    public void setSgVersion(Long sgVersion) {
+        this.sgVersion = sgVersion;
+    }
+
     public List<SecurityGroupRuleModel> getRules() {
         return rules;
     }
@@ -135,6 +148,7 @@ public class SecurityGroupModel extends AbstractBceResponse {
                 ", desc='" + desc + '\'' +
                 ", bindInstanceNum='" + bindInstanceNum + '\'' +
                 ", createdTime='" + createdTime + '\'' +
+                ", sgVersion=" + sgVersion +
                 ", rules=" + rules +
                 ", tags=" + tags +
                 '}';

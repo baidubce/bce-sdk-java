@@ -59,6 +59,8 @@ import com.baidubce.services.blb.model.CreateAppPolicyResponse;
 import com.baidubce.services.blb.model.CreateBlbRequest;
 import com.baidubce.services.blb.model.CreateBlbResponse;
 import com.baidubce.services.blb.model.DeleteAppPolicyRequest;
+import com.baidubce.services.blb.model.UpdateAppPolicyItem;
+import com.baidubce.services.blb.model.UpdateAppPolicyRequest;
 import com.baidubce.services.blb.model.DeleteBlbRequest;
 import com.baidubce.services.blb.model.DeleteListenerRequest;
 import com.baidubce.services.blb.model.EsgOperateRequest;
@@ -679,6 +681,10 @@ public class AppBlbClient extends AbstractBceClient {
         return listAppServerGroup(new ListAppSgRequest(blbId).withName(name));
     }
 
+    public ListAppSgResponse listAppServerGroup(String blbId, String name, Boolean exactlyMatch) {
+        return listAppServerGroup(new ListAppSgRequest(blbId).withName(name).withExactlyMatch(exactlyMatch));
+    }
+
     /**
      * Return a list of appServerGroup of the specified blb
      *
@@ -692,6 +698,9 @@ public class AppBlbClient extends AbstractBceClient {
                 listAppSgRequest.getBlbId(), "appservergroup");
         if (StringUtils.isNotEmpty(listAppSgRequest.getName())) {
             internalRequest.addParameter("name", listAppSgRequest.getName());
+        }
+        if (listAppSgRequest.getExactlyMatch() != null) {
+            internalRequest.addParameter("exactlyMatch", String.valueOf(listAppSgRequest.getExactlyMatch()));
         }
         if (listAppSgRequest.getMarker() != null) {
             internalRequest.addParameter("marker", listAppSgRequest.getMarker());
@@ -1432,6 +1441,9 @@ public class AppBlbClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(listAppPolicyRequest, HttpMethodName.GET, PREFIX,
                 listAppPolicyRequest.getBlbId(), "policys");
         internalRequest.addParameter("port", String.valueOf(listAppPolicyRequest.getPort()));
+        if (listAppPolicyRequest.getType() != null) {
+            internalRequest.addParameter("type", listAppPolicyRequest.getType());
+        }
         if (listAppPolicyRequest.getMarker() != null) {
             internalRequest.addParameter("marker", listAppPolicyRequest.getMarker());
         }
@@ -1440,6 +1452,41 @@ public class AppBlbClient extends AbstractBceClient {
         }
         return invokeHttpClient(internalRequest, ListAppPolicyResponse.class);
 
+    }
+
+    /**
+     * Update policies in batch with the specified options.
+     *
+     * @param blbId      The id of blb
+     * @param port       The listener port of policies
+     * @param type       The listener type of policies (required when same port has multiple protocols)
+     * @param policyList The list of policy items to update
+     */
+    public void updatePolicys(String blbId, Integer port, String type,
+                              List<UpdateAppPolicyItem> policyList) {
+        updatePolicys(new UpdateAppPolicyRequest().withBlbId(blbId).withPort(port)
+                .withType(type).withPolicyList(policyList));
+    }
+
+    /**
+     * Update policies in batch with the specified options.
+     *
+     * @param updateAppPolicyRequest The request containing all options for updating policies.
+     */
+    public void updatePolicys(UpdateAppPolicyRequest updateAppPolicyRequest) {
+        checkNotNull(updateAppPolicyRequest, "request should not be null.");
+        checkNotNull(updateAppPolicyRequest.getBlbId(), "request blbId should not be null.");
+        checkNotNull(updateAppPolicyRequest.getPort(), "request port should not be null.");
+        checkNotNull(updateAppPolicyRequest.getPolicyList(), "request policyList should not be null.");
+        if (Strings.isNullOrEmpty(updateAppPolicyRequest.getClientToken())) {
+            updateAppPolicyRequest.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(updateAppPolicyRequest, HttpMethodName.PUT, PREFIX,
+                updateAppPolicyRequest.getBlbId(), "policys");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, updateAppPolicyRequest.getClientToken());
+        internalRequest.addParameter("batchupdate", null);
+        fillPayload(internalRequest, updateAppPolicyRequest);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
 

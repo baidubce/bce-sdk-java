@@ -11,6 +11,7 @@ import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.blb.BlbClient;
 import com.baidubce.services.blb.BlbClientConfiguration;
+import com.baidubce.services.blb.model.AdditionalAttributes;
 import com.baidubce.services.blb.model.BlbListenerRequest;
 
 public class ExampleCreateHttpsListener {
@@ -31,6 +32,15 @@ public class ExampleCreateHttpsListener {
         blbListenerRequest.setBackendPort(22); // 后端服务器的监听端口
         blbListenerRequest.setScheduler("RoundRobin"); // 负载均衡算法
         blbListenerRequest.setCertIds(Arrays.asList("cert-btq9faddgkpb")); // 监听器要加载的证书链
+        blbListenerRequest.setxForwardFor(true); // 是否开启获取Client真实IP
+        blbListenerRequest.setxForwardedProto(true); // 将监听使用的协议通过x-forwarded-proto转发给后端服务器
+        blbListenerRequest.setHealthCheckHost("localhost"); // 7层健康检查请求的头部域host字段
+        blbListenerRequest.setEncryptionType("tls_cipher_policy_default"); // 加密选项
+        blbListenerRequest.setDualAuth(false); // 是否开启双向认证
+        // HTTPS类型监听器定制配置
+        AdditionalAttributes additionalAttributes = new AdditionalAttributes();
+        additionalAttributes.setGzipJson("on"); // gzip压缩配置，支持"on"/"off"
+        blbListenerRequest.setAdditionalAttributes(additionalAttributes);
 
         try {
             blbClient.createListener(blbListenerRequest);

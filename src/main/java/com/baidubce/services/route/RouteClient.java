@@ -152,8 +152,23 @@ public class RouteClient extends AbstractBceClient {
         checkStringNotEmpty(request.getRouteTableId(), "routeTableId should not be empty");
         checkStringNotEmpty(request.getSourceAddress(), "source address should not be empty");
         checkStringNotEmpty(request.getDestinationAddress(), "destination address should not be empty");
-        checkStringNotEmpty(request.getNexthopType(), "nexthop type  should not be empty");
-        checkStringNotEmpty(request.getDescription(), "description should not be empty");
+        // 修改校验逻辑:支持单线和多线两种模式
+        boolean isSingleRoute = !Strings.isNullOrEmpty(request.getNexthopType());
+        boolean isMultiRoute = request.getNextHopList() != null && !request.getNextHopList().isEmpty();
+
+        if (!isSingleRoute && !isMultiRoute) {
+            throw new IllegalArgumentException(
+                    "Either (nexthopType and nexthopId) for single route or nextHopList for multi-route must be provided");
+        }
+
+        if (isSingleRoute && isMultiRoute) {
+            throw new IllegalArgumentException(
+                    "Cannot specify both single route parameters and nextHopList");
+        }
+
+        if (isSingleRoute) {
+            checkStringNotEmpty(request.getNexthopType(), "nexthop type should not be empty for single route");
+        }
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, ROUTE_PREFIX, ROUTE_RULE);
         internalRequest.addParameter("clientToken", request.getClientToken());
         fillPayload(internalRequest,request);
@@ -263,6 +278,13 @@ public class RouteClient extends AbstractBceClient {
         } else if (!Strings.isNullOrEmpty(listRouteRuleReq.getRouteTableId())) {
             internalRequest.addParameter("routeTableId", listRouteRuleReq.getRouteTableId());
         }
+        // 添加分页参数
+        if (!Strings.isNullOrEmpty(listRouteRuleReq.getMarker())) {
+            internalRequest.addParameter("marker", listRouteRuleReq.getMarker());
+        }
+        if (listRouteRuleReq.getMaxKeys() > 0) {
+            internalRequest.addParameter("maxKeys", String.valueOf(listRouteRuleReq.getMaxKeys()));
+        }
         return this.invokeHttpClient(internalRequest, ListRouteRuleResponse.class);
     }
 
@@ -281,7 +303,11 @@ public class RouteClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 switchRouteHaRequest, HttpMethodName.PUT, ROUTE_PREFIX, ROUTE_RULE,
                 switchRouteHaRequest.getRouteRuleId());
+        if (Strings.isNullOrEmpty(switchRouteHaRequest.getClientToken())) {
+            switchRouteHaRequest.setClientToken(this.generateClientToken());
+        }
         internalRequest.addParameter("switchRouteHA", null);
+        internalRequest.addParameter("clientToken", switchRouteHaRequest.getClientToken());
         internalRequest.addHeader(Headers.CONTENT_LENGTH, "0");
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }

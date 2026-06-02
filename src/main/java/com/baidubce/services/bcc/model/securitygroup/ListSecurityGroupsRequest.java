@@ -32,6 +32,16 @@ public class ListSecurityGroupsRequest extends ListRequest {
      */
     private String vpcId;
 
+    /**
+     * The id of security group.
+     */
+    private String securityGroupId;
+
+    /**
+     * The ids of security group.
+     */
+    private String securityGroupIds;
+
     public String getInstanceId() {
         return instanceId;
     }
@@ -55,6 +65,38 @@ public class ListSecurityGroupsRequest extends ListRequest {
 
     public void setVpcId(String vpcId) {
         this.vpcId = vpcId;
+    }
+
+    /**
+     * Configure the request with specified vpcId.
+     * @return
+     */
+    public String getSecurityGroupId() {
+        return securityGroupId;
+    }
+
+    /**
+     * Configure the request with specified securityGroupId.
+     * @param securityGroupId
+     */
+    public void setSecurityGroupId(String securityGroupId) {
+        this.securityGroupId = securityGroupId;
+    }
+
+    /**
+     * Configure the request with specified securityGroupIds.
+     * @return
+     */
+    public String getSecurityGroupIds() {
+        return securityGroupIds;
+    }
+
+    /**
+     * Configure the request with specified securityGroupIds.
+     * @param securityGroupIds
+     */
+    public void setSecurityGroupIds(String securityGroupIds) {
+        this.securityGroupIds = securityGroupIds;
     }
 
     public ListSecurityGroupsRequest withVpcId(String vpcId) {

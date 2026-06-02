@@ -61,6 +61,19 @@ public class ResizeInstanceRequest extends AbstractBceRequest {
      */
     private List<EphemeralDisk> ephemeralDisks;
 
+    /**
+     * The parameter of specified the instance enable/disable jumbo frame.
+     * True means enable jumbo frame, false means disable jumbo frame.
+     * enable_jumbo_frame default None which means:
+     * When you change to the spec which doesn't support jumbo frame, the jumbo frame will be disabled.
+     * When the original instance don't support jumbo frame and you change to the spec which support jumbo frame,
+     * the jumbo frame will be disabled.
+     * When the original spec of the instance support jumbo frame, then you change to the spec which support jumbo
+     * frame, if the original instance enable jumbo frame, the jumbo frame will be enabled, if the original instance
+     * disable jumbo frame, the jumbo frame will be disabled.
+     */
+    private Boolean enableJumboFrame;
+
 
     public String getInstanceId() {
         return instanceId;
@@ -184,6 +197,35 @@ public class ResizeInstanceRequest extends AbstractBceRequest {
     @Override
     public ResizeInstanceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
+        return this;
+    }
+
+    public Boolean getEnableJumboFrame() {
+        return enableJumboFrame;
+    }
+
+    public void setEnableJumboFrame(Boolean enableJumboFrame) {
+        this.enableJumboFrame = enableJumboFrame;
+    }
+
+    /**
+     * Configure request enableJumboFrame for the request.
+     *
+     * @param enableJumboFrame The parameter of specified the instance enable/disable jumbo frame.
+     *                         True means enable jumbo frame, false means disable jumbo frame.
+     *                         enable_jumbo_frame default None which means:
+     *                         When you change to the spec which doesn't support jumbo frame, the jumbo frame will be
+     *                         disabled.
+     *                         When the original instance don't support jumbo frame and you change to the spec
+     *                         which support jumbo frame, the jumbo frame will be disabled.
+     *                         When the original spec of the instance support jumbo frame, then you change to the spec
+     *                         which support jumbo frame, if the original instance enable jumbo frame, the jumbo frame
+     *                         will be enabled, if the original instance disable jumbo frame, the jumbo frame will be
+     *                         disabled.
+     * @return ResizeInstanceRequest with enableJumboFrame.
+     */
+    public ResizeInstanceRequest withEnableJumboFrame(Boolean enableJumboFrame) {
+        this.setEnableJumboFrame(enableJumboFrame);
         return this;
     }
 }

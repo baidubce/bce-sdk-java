@@ -17,6 +17,7 @@ import java.util.List;
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The request for blb listener operations.
@@ -73,6 +74,7 @@ public class BlbListenerRequest extends AbstractBceRequest {
     /**
      * the duration of keep session.
      */
+    @JsonProperty("keepSessionTimeout")
     private Integer keepSessionDuration;
     /**
      * the cookie name of keep session.
@@ -83,6 +85,7 @@ public class BlbListenerRequest extends AbstractBceRequest {
      * <p>
      * the attribute exist when type is HTTP.
      */
+    @JsonProperty("xForwardedFor")
     private boolean xForwardFor;
     /**
      * the type of health check.
@@ -143,6 +146,66 @@ public class BlbListenerRequest extends AbstractBceRequest {
      * the string to health check when type is UDP
      */
     private String healthCheckString;
+
+    /**
+     * tcp session timeout (seconds), default 900, range 10-4000
+     * the attribute exist when type is TCP
+     */
+    private Integer tcpSessionTimeout;
+
+    /**
+     * udp session timeout (seconds), default 90, range 5-4000
+     * the attribute exist when type is UDP
+     */
+    private Integer udpSessionTimeout;
+
+    /**
+     * forward the protocol to backend server via x-forwarded-proto HTTP Header
+     * the attribute exist when type is HTTP/HTTPS
+     */
+    @JsonProperty("xForwardedProto")
+    private Boolean xForwardedProto;
+
+    /**
+     * additional attributes for HTTP/HTTPS listener
+     */
+    private AdditionalAttributes additionalAttributes;
+
+    /**
+     * health check host for 7-layer health check
+     * the attribute exist when type is HTTP/HTTPS
+     */
+    private String healthCheckHost;
+
+    /**
+     * encryption type for SSL/HTTPS listener
+     */
+    private String encryptionType;
+
+    /**
+     * encryption protocols for SSL/HTTPS listener when encryptionType is userDefind
+     */
+    private List<String> encryptionProtocols;
+
+    /**
+     * applied ciphers for SSL/HTTPS listener
+     */
+    private String appliedCiphers;
+
+    /**
+     * open dual auth or not for SSL/HTTPS listener
+     */
+    private Boolean dualAuth;
+
+    /**
+     * client cert ids for SSL/HTTPS listener when dualAuth is true
+     */
+    private List<String> clientCertIds;
+
+    /**
+     * the description of the listener, no more than 200 characters
+     */
+    private String description;
 
     public String getClientToken() {
         return clientToken;
@@ -343,6 +406,94 @@ public class BlbListenerRequest extends AbstractBceRequest {
 
     public void setHealthCheckString(String healthCheckString) {
         this.healthCheckString = healthCheckString;
+    }
+
+    public Integer getTcpSessionTimeout() {
+        return tcpSessionTimeout;
+    }
+
+    public void setTcpSessionTimeout(Integer tcpSessionTimeout) {
+        this.tcpSessionTimeout = tcpSessionTimeout;
+    }
+
+    public Integer getUdpSessionTimeout() {
+        return udpSessionTimeout;
+    }
+
+    public void setUdpSessionTimeout(Integer udpSessionTimeout) {
+        this.udpSessionTimeout = udpSessionTimeout;
+    }
+
+    public Boolean getxForwardedProto() {
+        return xForwardedProto;
+    }
+
+    public void setxForwardedProto(Boolean xForwardedProto) {
+        this.xForwardedProto = xForwardedProto;
+    }
+
+    public AdditionalAttributes getAdditionalAttributes() {
+        return additionalAttributes;
+    }
+
+    public void setAdditionalAttributes(AdditionalAttributes additionalAttributes) {
+        this.additionalAttributes = additionalAttributes;
+    }
+
+    public String getHealthCheckHost() {
+        return healthCheckHost;
+    }
+
+    public void setHealthCheckHost(String healthCheckHost) {
+        this.healthCheckHost = healthCheckHost;
+    }
+
+    public String getEncryptionType() {
+        return encryptionType;
+    }
+
+    public void setEncryptionType(String encryptionType) {
+        this.encryptionType = encryptionType;
+    }
+
+    public List<String> getEncryptionProtocols() {
+        return encryptionProtocols;
+    }
+
+    public void setEncryptionProtocols(List<String> encryptionProtocols) {
+        this.encryptionProtocols = encryptionProtocols;
+    }
+
+    public String getAppliedCiphers() {
+        return appliedCiphers;
+    }
+
+    public void setAppliedCiphers(String appliedCiphers) {
+        this.appliedCiphers = appliedCiphers;
+    }
+
+    public Boolean getDualAuth() {
+        return dualAuth;
+    }
+
+    public void setDualAuth(Boolean dualAuth) {
+        this.dualAuth = dualAuth;
+    }
+
+    public List<String> getClientCertIds() {
+        return clientCertIds;
+    }
+
+    public void setClientCertIds(List<String> clientCertIds) {
+        this.clientCertIds = clientCertIds;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

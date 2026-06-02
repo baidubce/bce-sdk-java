@@ -116,6 +116,17 @@ public class VolumeModel {
      */
     private boolean encrypted;
 
+
+    /**
+     * encrypt key
+     */
+    private String encryptKey;
+
+    /**
+     * encrypt key spec eg: SM4-128
+     */
+    private String encryptKeySpec;
+
     /**
      * The id of dedicated.
      * If it is not empty, this volume belongs to a dedicated cluster
@@ -141,6 +152,32 @@ public class VolumeModel {
      * the name of ebc disk size
      */
     private int ebcDiskSize;
+
+    /**
+     * the product category of volume
+     */
+    private String productCategory;
+
+    /**
+     * enableDeleteProtection
+     */
+    private Boolean enableDeleteProtection;
+
+    public void setEnableDeleteProtection(Boolean enableDeleteProtection) {
+        this.enableDeleteProtection = enableDeleteProtection;
+    }
+
+    public Boolean getEnableDeleteProtection() {
+        return enableDeleteProtection;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
 
     public String getId() {
         return id;
@@ -326,6 +363,22 @@ public class VolumeModel {
         this.ebcDiskSize = ebcDiskSize;
     }
 
+    public String getEncryptKey() {
+        return encryptKey;
+    }
+
+    public void setEncryptKey(String encryptKey) {
+        this.encryptKey = encryptKey;
+    }
+
+    public String getEncryptKeySpec() {
+        return encryptKeySpec;
+    }
+
+    public void setEncryptKeySpec(String encryptKeySpec) {
+        this.encryptKeySpec = encryptKeySpec;
+    }
+
     @Override
     public String toString() {
         return "VolumeModel{" +
@@ -352,6 +405,8 @@ public class VolumeModel {
                 ", autoRenewTime=" + autoRenewTime +
                 ", isSystemVolume=" + isSystemVolume +
                 ", ebcDiskSize=" + ebcDiskSize +
+                ", encryptKey=" + encryptKey +
+                ", encryptKeySpec=" + encryptKeySpec +
                 '}';
     }
 }

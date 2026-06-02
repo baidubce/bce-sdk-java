@@ -1,6 +1,7 @@
 package com.baidubce.services.vpc;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class VpcClientTest {
 
     @Test
     public void getVpcTest() {
-        toJsonPrettyString("get specific vpc", vpcClient.getVpc("vpc-12in0aj6nywq"));
+        toJsonPrettyString("get specific vpc", vpcClient.getVpc("vpc-90akjp09ehwx"));
     }
 
     @Test
@@ -67,6 +68,16 @@ public class VpcClientTest {
     @Test
     public void modifyInstanceAttributesTest() {
         vpcClient.modifyInstanceAttributes("test_update_2", "vpc-e8ff5i875svs");
+    }
+
+    @Test
+    public void modifyInstanceAttributesTest1() {
+        ModifyVpcAttributesRequest modifyVpcAttributesRequest = new ModifyVpcAttributesRequest();
+        modifyVpcAttributesRequest.setVpcId("vpc-90akjp09ehwx");
+        modifyVpcAttributesRequest.setName("test");
+        List<String> secondaryCidr = Lists.newArrayList("10.0.0.0/24");
+        modifyVpcAttributesRequest.setSecondaryCidr(secondaryCidr);
+        vpcClient.modifyInstanceAttributes(modifyVpcAttributesRequest);
     }
 
     @Test
@@ -96,9 +107,8 @@ public class VpcClientTest {
     @Test
     public void testGetVpcPrivateIpAddressInfo() {
         GetVpcPrivateIpAddressInfoRequest request = new GetVpcPrivateIpAddressInfoRequest();
-        request.setVpcId("vpc-cxvqgxipk36r");
+        request.setVpcId("vpc-90akjp09ehwx");
         request.setPrivateIpAddresses(Arrays.asList("192.168.0.4", "192.168.0.57"));
-        request.setPrivateIpRange("192.168.0.57-192.168.0.60");
         toJsonPrettyString("get vpc private ip address info test", vpcClient.getVpcPrivateIpAddressInfo(request));
     }
 

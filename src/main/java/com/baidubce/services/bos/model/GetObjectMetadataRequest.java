@@ -25,6 +25,14 @@ import com.baidubce.auth.BceCredentials;
  */
 public class GetObjectMetadataRequest extends GenericObjectRequest {
 
+    private String ifNoneMatch = null;
+
+    private String ifMatch = null;
+
+    private String ifUnmodifiedSince = null;
+
+    private String ifModifiedSince = null;
+
     /**
      * Constructs a new GetObjectMetadataRequest used to retrieve a specified object's metadata.
      *
@@ -65,6 +73,38 @@ public class GetObjectMetadataRequest extends GenericObjectRequest {
     public GetObjectMetadataRequest withKey(String key) {
         this.setKey(key);
         return this;
+    }
+
+    public String getIfNoneMatch() {
+        return ifNoneMatch;
+    }
+
+    public void setIfNoneMatch(String ifNoneMatch) {
+        this.ifNoneMatch = ifNoneMatch;
+    }
+
+    public String getIfMatch() {
+        return ifMatch;
+    }
+
+    public void setIfMatch(String ifMatch) {
+        this.ifMatch = ifMatch;
+    }
+
+    public String getIfUnmodifiedSince() {
+        return ifUnmodifiedSince;
+    }
+
+    public void setIfUnmodifiedSince(String ifUnmodifiedSince) {
+        this.ifUnmodifiedSince = ifUnmodifiedSince;
+    }
+
+    public String getIfModifiedSince() {
+        return ifModifiedSince;
+    }
+
+    public void setIfModifiedSince(String ifModifiedSince) {
+        this.ifModifiedSince = ifModifiedSince;
     }
 
 }

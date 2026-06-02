@@ -23,6 +23,8 @@ public class CreateEtGatewayHealthCheckRequest extends AbstractBceRequest {
      */
     @JsonIgnore
     private String clientToken;
+
+    @JsonIgnore
     private String etGatewayId;
 
     /**

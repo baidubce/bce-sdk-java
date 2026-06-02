@@ -37,6 +37,16 @@ public class GetObjectRequest extends GenericObjectRequest {
      */
     private BosProgressCallback progressCallback = null;
 
+    private String xBceProcess = null;
+
+    private String ifNoneMatch = null;
+
+    private String ifMatch = null;
+
+    private String ifUnmodifiedSince = null;
+
+    private String ifModifiedSince = null;
+
     public GetObjectRequest() {
         super();
     }
@@ -188,6 +198,46 @@ public class GetObjectRequest extends GenericObjectRequest {
     public GetObjectRequest withProgressCallback(BosProgressCallback progressCallback) {
         this.setProgressCallback(progressCallback);
         return this;
+    }
+
+    public String getxBceProcess() {
+        return xBceProcess;
+    }
+
+    public void setxBceProcess(String xBceProcess) {
+        this.xBceProcess = xBceProcess;
+    }
+
+    public String getIfNoneMatch() {
+        return ifNoneMatch;
+    }
+
+    public void setIfNoneMatch(String ifNoneMatch) {
+        this.ifNoneMatch = ifNoneMatch;
+    }
+
+    public String getIfMatch() {
+        return ifMatch;
+    }
+
+    public void setIfMatch(String ifMatch) {
+        this.ifMatch = ifMatch;
+    }
+
+    public String getIfUnmodifiedSince() {
+        return ifUnmodifiedSince;
+    }
+
+    public void setIfUnmodifiedSince(String ifUnmodifiedSince) {
+        this.ifUnmodifiedSince = ifUnmodifiedSince;
+    }
+
+    public String getIfModifiedSince() {
+        return ifModifiedSince;
+    }
+
+    public void setIfModifiedSince(String ifModifiedSince) {
+        this.ifModifiedSince = ifModifiedSince;
     }
 
 }

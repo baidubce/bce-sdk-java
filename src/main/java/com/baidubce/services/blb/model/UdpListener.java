@@ -21,9 +21,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class UdpListener extends ListenerBase {
 
     /**
+     * health check type, supports "UDP"/"ICMP"
+     */
+    private String healthCheckType;
+
+    /**
      * the string to health check.
      */
     private String healthCheckString;
+
+    /**
+     * health check port, when health check type is "UDP"
+     */
+    private Integer healthCheckPort;
+
+    /**
+     * udp session timeout (seconds), default 90, range 5-4000
+     */
+    private Integer udpSessionTimeout;
+
+    public String getHealthCheckType() {
+        return healthCheckType;
+    }
+
+    public void setHealthCheckType(String healthCheckType) {
+        this.healthCheckType = healthCheckType;
+    }
 
     public String getHealthCheckString() {
         return healthCheckString;
@@ -33,10 +56,29 @@ public class UdpListener extends ListenerBase {
         this.healthCheckString = healthCheckString;
     }
 
+    public Integer getHealthCheckPort() {
+        return healthCheckPort;
+    }
+
+    public void setHealthCheckPort(Integer healthCheckPort) {
+        this.healthCheckPort = healthCheckPort;
+    }
+
+    public Integer getUdpSessionTimeout() {
+        return udpSessionTimeout;
+    }
+
+    public void setUdpSessionTimeout(Integer udpSessionTimeout) {
+        this.udpSessionTimeout = udpSessionTimeout;
+    }
+
     @Override
     public String toString() {
         return "UdpListener{" +
-                "healthCheckString='" + healthCheckString + '\'' +
-                '}';
+                "healthCheckType='" + healthCheckType + '\'' +
+                ", healthCheckString='" + healthCheckString + '\'' +
+                ", healthCheckPort=" + healthCheckPort +
+                ", udpSessionTimeout=" + udpSessionTimeout +
+                "} " + super.toString();
     }
 }

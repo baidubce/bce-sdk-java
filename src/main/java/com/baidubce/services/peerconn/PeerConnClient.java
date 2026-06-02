@@ -168,7 +168,6 @@ public class PeerConnClient extends AbstractBceClient {
 
     public ListPeerConnResponse listPeerConn(ListPeerConnRequest request) {
         checkNotNull(request, "request should not be null.");
-        checkStringNotEmpty(request.getVpcId(), "vpcId should not be empty");
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET, PREFIX);
         if (StringUtils.isNotBlank(request.getMarker())) {
             internalRequest.addParameter("marker", request.getMarker());
@@ -176,7 +175,9 @@ public class PeerConnClient extends AbstractBceClient {
         if (request.getMaxKeys() > 0) {
             internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
         }
-        internalRequest.addParameter("vpcId", request.getVpcId());
+        if (StringUtils.isNotBlank(request.getVpcId())) {
+            internalRequest.addParameter("vpcId", request.getVpcId());
+        }
 
         return invokeHttpClient(internalRequest, ListPeerConnResponse.class);
     }
@@ -356,6 +357,23 @@ public class PeerConnClient extends AbstractBceClient {
                 request, HttpMethodName.PUT, PREFIX, request.getPeerConnId(), "deleteProtect");
         internalRequest.addParameter("clientToken", request.getClientToken());
         fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Refund the specified prepaid peer conn (non-cross-border).
+     *
+     * @param request The request containing peerConnId for refunding the peer conn;
+     */
+    public void refund(PeerConnIdRequest request) {
+        checkNotNull(request, "request should not be null.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, PREFIX, request.getPeerConnId());
+        internalRequest.addParameter("refund", null);
+        internalRequest.addParameter("clientToken", request.getClientToken());
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 }

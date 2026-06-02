@@ -40,6 +40,7 @@ public class SgOperateRequest extends AbstractBceRequest {
     /**
      * the blb id.
      */
+    @JsonIgnore
     private String blbId;
     /**
      * the list of security group ids.

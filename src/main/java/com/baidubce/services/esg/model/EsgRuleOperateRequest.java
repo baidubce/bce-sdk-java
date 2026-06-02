@@ -50,7 +50,9 @@ public class EsgRuleOperateRequest extends AbstractBceRequest {
 
   /**
    * Actions to take on an enterprise security group
+   * This field should not be serialized to request body (used as query parameter)
    */
+  @JsonIgnore
   private String action;
 
   /**

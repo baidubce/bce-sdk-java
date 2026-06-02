@@ -7,6 +7,7 @@ import com.baidubce.services.localdns.model.BindVpcRequest;
 import com.baidubce.services.localdns.model.CreatePrivateZoneRequest;
 import com.baidubce.services.localdns.model.UnbindVpcRequest;
 import com.baidubce.services.localdns.model.UpdateRecordRequest;
+import com.baidubce.services.localdns.model.ListRecordRequest;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Before;
@@ -26,8 +27,8 @@ import java.util.Arrays;
 public class LdClientTest {
 
     private static final Logger logger = LoggerFactory.getLogger(LdClientTest.class);
-    private static final String ak = "3251d60a16f94c839f7aa4b87ed4913b";
-    private static final String sk = "21d8c3cdfe1242148e29465fca734e1f";
+    private static final String ak = "";
+    private static final String sk = "";
     private LdClient ldClient;
 
     @Before
@@ -114,7 +115,11 @@ public class LdClientTest {
 
     @Test
     public void listRecordTest() {
-        toJsonPrettyString("list record result", ldClient.listRecord("zone-nqa0uqyse51z"));
+        ListRecordRequest listRecordRequest = new ListRecordRequest();
+        listRecordRequest.setZoneId("zone-huqh664jt2eh");
+        listRecordRequest.setMarker("");
+        listRecordRequest.setMaxKeys(1000);
+        toJsonPrettyString("list record result", ldClient.listRecord(listRecordRequest));
     }
 
     @Test

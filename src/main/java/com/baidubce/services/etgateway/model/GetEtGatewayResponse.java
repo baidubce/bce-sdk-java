@@ -30,9 +30,9 @@ public class GetEtGatewayResponse extends AbstractBceResponse {
     private String status;
 
     /**
-     * dedicated line gateway egress bandwidt
+     * dedicated line gateway egress bandwidth
      */
-    private String speed;
+    private Integer speed;
 
     private String createTime;
 
@@ -74,7 +74,7 @@ public class GetEtGatewayResponse extends AbstractBceResponse {
     /**
      * The source IP for health check.
      */
-    private String healthcheckourceIp;
+    private String healthCheckSourceIp;
 
     /**
      * The destination IP for health check

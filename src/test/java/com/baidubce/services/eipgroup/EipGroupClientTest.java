@@ -152,6 +152,13 @@ public class EipGroupClientTest {
     }
 
     @Test
+    public void testRefundEipGroup() {
+        EipGroupOperateRequest request = new EipGroupOperateRequest();
+        request.setId("eg-aXT5LIDG");
+        client.refundEipGroup(request);
+    }
+
+    @Test
     public void testMoveOutEips() {
         MoveOutRequest request = new MoveOutRequest();
         request.setId("eg-8yxeMV47");

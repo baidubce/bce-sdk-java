@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.bcc.model;
 
+import com.baidubce.services.bcc.model.instance.InstanceRdmaTopoUO;
 import lombok.ToString;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,11 @@ public class InstanceModel {
      * see more detail on <a href = "https://bce.baidu.com/doc/BCC/API.html#InstanceStatus">BCE API doc</>
      */
     private String status;
+
+    /**
+     * The charge status of the instance.
+     */
+    private String chargeStatus;
 
     /**
      * The description of the instance.
@@ -167,6 +173,21 @@ public class InstanceModel {
     private boolean autoRenew;
 
     /**
+     * The list of RDMA nic topo info
+     */
+    private List<InstanceRdmaTopoUO> rdmaNicTopo;
+
+    /**
+     * The pod name of the rdma
+     */
+    private String rdmaPodName;
+
+    /**
+     * The unit id of the rdma
+     */
+    private String rdmaUnitID;
+
+    /**
      * The address of the ipv6
      */
     private String ipv6;
@@ -201,6 +222,30 @@ public class InstanceModel {
     private List<Volume> volumes;
     private String ehcClusterId;
 
+    public void setRdmaNicTopo(List<InstanceRdmaTopoUO> rdmaNicTopo) {
+        this.rdmaNicTopo = rdmaNicTopo;
+    }
+
+    public List<InstanceRdmaTopoUO> getRdmaNicTopo() {
+        return rdmaNicTopo;
+    }
+
+    public void setRdmaPodName(String rdmaPodName) {
+        this.rdmaPodName = rdmaPodName;
+    }
+
+    public String getRdmaPodName() {
+        return rdmaPodName;
+    }
+
+    public void setRdmaUnitID(String rdmaUnitID) {
+        this.rdmaUnitID = rdmaUnitID;
+    }
+
+    public String getRdmaUnitID() {
+        return rdmaUnitID;
+    }
+
     public String getId() {
         return id;
     }
@@ -223,6 +268,14 @@ public class InstanceModel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getChargeStatus() {
+        return chargeStatus;
+    }
+
+    public void setChargeStatus(String chargeStatus) {
+        this.chargeStatus = chargeStatus;
     }
 
     public String getDesc() {

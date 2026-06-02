@@ -14,6 +14,7 @@ package com.baidubce.services.esg.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,15 +41,33 @@ public class UpdateEsgRuleRequest extends AbstractBceRequest {
     private String enterpriseSecurityGroupRuleId;
 
     /**
+     * An ASCII string whose length is less than 64.
+     * The request will be idempotent if client token is provided.
+     */
+    @JsonIgnore
+    private String clientToken;
+
+    /**
      * The remark for the rule
      */
     private String remark;
+
+    /**
+     * The parameter specify which protocol will the rule work on, the fault value is "" for all protocol.
+     * Available protocol are tcp,udp and icmp.
+     */
+    private String protocol;
 
     /**
      * The port range to specify the port which the rule will work on.
      * Available range is rang [0, 65535],"" for all port.
      */
     private String portRange;
+
+    /**
+     * The source port range to specify the source port which the rule will work on.
+     */
+    private String sourcePortRange;
 
     /**
      * The source ip range with CIDR formats. The default value 0.0.0.0/0 (allow all ip address),
@@ -68,6 +87,23 @@ public class UpdateEsgRuleRequest extends AbstractBceRequest {
      * Only works for  direction = "egress"
      */
     private String destIp;
+
+    /**
+     * The local IP address for the rule.
+     */
+    private String localIp;
+
+    /**
+     * The remote IP set for the rule (CIDR format).
+     * Used for batch IP address management.
+     */
+    private String remoteIpSet;
+
+    /**
+     * The remote IP group ID for the rule.
+     * Used for referencing IP address groups.
+     */
+    private String remoteIpGroup;
 
     /**
      * Allow or deny strategy, Available value are allow,deny
@@ -91,7 +127,6 @@ public class UpdateEsgRuleRequest extends AbstractBceRequest {
      * The parameter specify which protocol will the rule work on, the fault value is "" for all protocol.
      * Available protocol are tcp,udp and icmp.
      */
-    private String protocol;
 
     /**
      * Configure request credential for the request.
@@ -102,6 +137,16 @@ public class UpdateEsgRuleRequest extends AbstractBceRequest {
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
+        return this;
+    }
+
+    /**
+     * Builder method for clientToken
+     * @param clientToken The client token
+     * @return this object for method chaining
+     */
+    public UpdateEsgRuleRequest withClientToken(String clientToken) {
+        this.clientToken = clientToken;
         return this;
     }
 }

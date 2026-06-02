@@ -83,6 +83,10 @@ public class PutObjectRequest extends GenericObjectRequest {
      */
     private boolean xBceCrc32cFlag = false;
 
+    private String ifNoneMatch = null;
+
+    private String ifMatch = null;
+
     /**
      * Constructs a new PutObjectRequest object to upload a file to the
      * specified bucket and key. After constructing the request,
@@ -517,5 +521,22 @@ public class PutObjectRequest extends GenericObjectRequest {
      */
     public void setxBceProcess(String xBceProcess) {
         this.xBceProcess = xBceProcess;
+    }
+
+
+    public String getIfNoneMatch() {
+        return ifNoneMatch;
+    }
+
+    public void setIfNoneMatch(String ifNoneMatch) {
+        this.ifNoneMatch = ifNoneMatch;
+    }
+
+    public String getIfMatch() {
+        return ifMatch;
+    }
+
+    public void setIfMatch(String ifMatch) {
+        this.ifMatch = ifMatch;
     }
 }

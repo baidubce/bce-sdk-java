@@ -284,7 +284,6 @@ public class VpnClient extends AbstractBceClient {
         checkStrIsBlank(createVpnConnRequest.getVpnId(), "vpnId");
         checkStrIsBlank(createVpnConnRequest.getSecretKey(), "secretKey");
         checkListIsBlank(createVpnConnRequest.getLocalSubnets(), "localSubnets");
-        checkStrIsBlank(createVpnConnRequest.getRemoteIp(), "remoteIp");
         checkListIsBlank(createVpnConnRequest.getRemoteSubnets(), "remoteSubnets");
         checkStrIsBlank(createVpnConnRequest.getVpnConnName(), "vpnConnName");
         checkNotNull(createVpnConnRequest.getIkeConfig(), "ikeConfig should not be null.");
@@ -311,7 +310,6 @@ public class VpnClient extends AbstractBceClient {
         checkStrIsBlank(updateVpnConnRequest.getVpnId(), "vpnId");
         checkStrIsBlank(updateVpnConnRequest.getSecretKey(), "secretKey");
         checkListIsBlank(updateVpnConnRequest.getLocalSubnets(), "localSubnets");
-        checkStrIsBlank(updateVpnConnRequest.getRemoteIp(), "remoteIp");
         checkListIsBlank(updateVpnConnRequest.getRemoteSubnets(), "remoteSubnets");
         checkStrIsBlank(updateVpnConnRequest.getVpnConnName(), "vpnConnName");
         checkNotNull(updateVpnConnRequest.getIkeConfig(), "ikeConfig should not be null.");

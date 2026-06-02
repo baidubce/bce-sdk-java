@@ -175,19 +175,19 @@ public class ListRecordResponse extends BaseBceResponse {
         public String getDescription() {
             return this.description;
         }
-    
+
         @Override
         public String toString() {
-            return "Record{"
-                    + "recordId=" + recordId + "\n"
-                    + "rr=" + rr + "\n"
-                    + "value=" + value + "\n"
-                    + "status=" + status + "\n"
-                    + "type=" + type + "\n"
-                    + "ttl=" + ttl + "\n"
-                    + "priority=" + priority + "\n"
-                    + "description=" + description + "\n"
-                    + "}";
+            return "Record{" +
+                    "recordId='" + recordId + '\'' +
+                    ", rr='" + rr + '\'' +
+                    ", value='" + value + '\'' +
+                    ", status='" + status + '\'' +
+                    ", type='" + type + '\'' +
+                    ", ttl=" + ttl +
+                    ", priority=" + priority +
+                    ", description='" + description + '\'' +
+                    '}';
         }
     }
 

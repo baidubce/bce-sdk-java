@@ -29,6 +29,7 @@ import com.baidubce.services.localdns.model.ListPrivateZoneResponse;
 import com.baidubce.services.localdns.model.ListRecordResponse;
 import com.baidubce.services.localdns.model.UnbindVpcRequest;
 import com.baidubce.services.localdns.model.UpdateRecordRequest;
+import com.baidubce.services.localdns.model.ListRecordRequest;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
@@ -157,10 +158,16 @@ public class LdClient extends BaseBceClient {
         return invokeHttpClient(internalRequest, ListPrivateZoneResponse.class);
     }
 
-    public ListRecordResponse listRecord(String zoneId) {
+    public ListRecordResponse listRecord(ListRecordRequest listRecordRequest) {
         ApiInfo apiInfo = new ApiInfo(LD_APIS.get("listRecord"));
         String apiPath = apiInfo.getPath()
-                .withPathParameter("zoneId", zoneId).get();
+                .withPathParameter("zoneId", listRecordRequest.getZoneId()).get();
+        apiInfo.getQueries().put("marker", listRecordRequest.getMarker());
+        apiInfo.getQueries().put("maxKeys", String.valueOf(listRecordRequest.getMaxKeys()));
+        apiInfo.getQueries().put("rr", listRecordRequest.getRr());
+        apiInfo.getQueries().put("searchMode", listRecordRequest.getSearchMode());
+        apiInfo.getQueries().put("type", listRecordRequest.getType());
+        apiInfo.getQueries().put("value", listRecordRequest.getValue());
         InternalRequest internalRequest = createRequest(apiInfo.getMethod(), apiPath, apiInfo.getQueries(),
                 apiInfo.getHeaders(), null);
         return invokeHttpClient(internalRequest, ListRecordResponse.class);

@@ -5,6 +5,7 @@ package com.baidubce.services.eipbp.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The request for releasing eipbp.
@@ -16,6 +17,7 @@ public class ReleaseEipBpRequest extends AbstractBceRequest {
      * <a href = "https://bce.baidu.com/doc/EIP/API.html#.E9.80.9A.E7.94.A8.E8.AF.B4.E6.98.8E">
      *   BCE API doc</a>
      */
+    @JsonIgnore
     private String clientToken;
     /**
      * eipbp's id to be released

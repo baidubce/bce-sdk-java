@@ -23,6 +23,7 @@ public class ExampleResizeIpNumEipGroup {
         EipCountRequest request = new EipCountRequest();
         request.setId("eg-7e358ead"); // eipgroup实例id
         request.setEipAddCount(2); // eipgroup增加的ip数量
+        request.setEipv6AddCount(2); // eipgroup增加的ipv6数量
 
         try {
             eipGroupClient.addCount(request);

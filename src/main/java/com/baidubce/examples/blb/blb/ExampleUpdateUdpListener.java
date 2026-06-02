@@ -28,6 +28,10 @@ public class ExampleUpdateUdpListener {
         blbListenerRequest.setListenerPort(82); // 监听器的监听端口
         blbListenerRequest.setBackendPort(83); // 后端服务器的监听端口
         blbListenerRequest.setScheduler("Hash"); // 负载均衡算法
+        blbListenerRequest.setHealthCheckType("UDP"); // 健康检查协议类型，支持"UDP"/"ICMP"
+        blbListenerRequest.setHealthCheckPort(83); // 健康检查端口
+        blbListenerRequest.setHealthCheckString("\\00"); // 健康检查发送的请求字符串
+        blbListenerRequest.setUdpSessionTimeout(90); // udp会话超时时间（秒），默认90，范围5-4000
 
         try {
             blbClient.modifyListenerAttributes(blbListenerRequest);

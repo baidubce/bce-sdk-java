@@ -3,7 +3,10 @@
  */
 package com.baidubce.services.endpoint.model;
 
+import java.util.List;
+
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.bcc.model.TagModel;
 import lombok.ToString;
 
 /**
@@ -63,6 +66,11 @@ public class Endpoint extends AbstractBceResponse {
      * The vpcId of endpoint.
      */
     private String vpcId;
+
+    /**
+     * The tags of endpoint.
+     */
+    private List<TagModel> tags;
 
     public String getEndpointId() {
         return endpointId;
@@ -142,5 +150,13 @@ public class Endpoint extends AbstractBceResponse {
 
     public void setVpcId(String vpcId) {
         this.vpcId = vpcId;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

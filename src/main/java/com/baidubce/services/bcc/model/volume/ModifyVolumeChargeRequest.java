@@ -36,8 +36,22 @@ public class ModifyVolumeChargeRequest extends AbstractBceRequest {
      */
     private int reservationLength;
 
+    /**
+     * The effective method for conversion to postpaid.
+     * Optional parameters:
+     * AtOnce (convert to pay-as-you-go immediately)
+     * AfterExpiration (convert to pay-as-you-go after expiration).
+     * If not passed, the default is conversion to pay-as-you-go after expiration.
+     */
+    private String effectiveType;
+
     public ModifyVolumeChargeRequest withVolumeId(String volumeId) {
         this.volumeId = volumeId;
+        return this;
+    }
+
+    public ModifyVolumeChargeRequest withEffectiveType(String effectiveType) {
+        this.effectiveType = effectiveType;
         return this;
     }
 
@@ -87,6 +101,14 @@ public class ModifyVolumeChargeRequest extends AbstractBceRequest {
         this.volumeId = volumeId;
     }
 
+    public String getEffectiveType() {
+        return effectiveType;
+    }
+
+    public void setEffectiveType(String effectiveType) {
+        this.effectiveType = effectiveType;
+    }
+
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
@@ -108,6 +130,7 @@ public class ModifyVolumeChargeRequest extends AbstractBceRequest {
         } else if ("postpay".equals(billingMethod)) {
             reservation.withReservationLength(0);
             billing.withReservation(reservation);
+            billing.setEffectiveType(effectiveType);
         } else {
             throw new IllegalArgumentException("billingMethod can only be set to 'prepay' or 'postpay'");
         }

@@ -3084,7 +3084,7 @@ public class PlatformClientTest {
             BusinessTemplatesAppRegistryRequest request = new BusinessTemplatesAppRegistryRequest();
             request.setAddress("mock_address");
             request.setUsername("mock_username");
-            request.setPassword("mock_password");
+            request.setPassword("");
             BusinessTemplatesAppRegistry response = client.addProtocolsRegistry(protocolId, request);
         } catch (Exception e) {
             fail();

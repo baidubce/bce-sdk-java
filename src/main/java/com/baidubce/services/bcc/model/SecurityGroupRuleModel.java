@@ -81,6 +81,18 @@ public class SecurityGroupRuleModel {
      */
     private String securityGroupRuleId;
 
+    /**
+     * The creation time of the security group rule
+     */
+    private String createdTime;
+
+    /**
+     * The update time of the security group rule
+     */
+    private String updatedTime;
+
+
+
     public String getRemark() {
         return remark;
     }
@@ -213,6 +225,32 @@ public class SecurityGroupRuleModel {
         this.securityGroupRuleId = securityGroupRuleId;
     }
 
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public SecurityGroupRuleModel withCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+        return this;
+    }
+
+    public String getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(String updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public SecurityGroupRuleModel withUpdatedTime(String updatedTime) {
+        this.updatedTime = updatedTime;
+        return this;
+    }
+
     public SecurityGroupRuleModel withSecurityGroupId(String securityGroupId) {
         this.securityGroupId = securityGroupId;
         return this;
@@ -232,6 +270,8 @@ public class SecurityGroupRuleModel {
                 ", destIp='" + destIp + '\'' +
                 ", securityGroupId='" + securityGroupId + '\'' +
                 ", securityGroupRuleId='" + securityGroupRuleId + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                ", updatedTime='" + updatedTime + '\'' +
                 '}';
     }
 }

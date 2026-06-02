@@ -246,7 +246,7 @@ public class EipBpClient extends AbstractBceClient {
      */
     public void renameEipBp(UpdateEipBpNameRequest request) {
         checkNotNull(request.getId(), "id should not be blank!");
-        checkNotNull(request.getName(), "bandwidthInMbps should not be blank!");
+        checkNotNull(request.getName(), "name should not be blank!");
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(generateDefaultClientToken());
         }

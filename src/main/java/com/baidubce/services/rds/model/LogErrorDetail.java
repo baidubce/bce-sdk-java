@@ -1,6 +1,6 @@
 package com.baidubce.services.rds.model;
 
-import org.apache.htrace.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LogErrorDetail {

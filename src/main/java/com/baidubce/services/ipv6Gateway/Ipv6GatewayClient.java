@@ -51,6 +51,7 @@ import com.baidubce.services.ipv6Gateway.model.ListIpv6GatewayRequest;
 import com.baidubce.services.ipv6Gateway.model.ListRateLimitRuleResponse;
 import com.baidubce.services.ipv6Gateway.model.RateLimitRuleResponse;
 import com.baidubce.services.ipv6Gateway.model.ResizeIpv6GatewayRequest;
+import com.baidubce.services.ipv6Gateway.model.UpdateDeleteProtectRequest;
 import com.baidubce.services.ipv6Gateway.model.UpdateRateLimitRuleRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
@@ -217,14 +218,43 @@ public class Ipv6GatewayClient extends AbstractBceClient {
     }
 
     /**
-     * Add an EgressOnluRule to the Ipv6Gateway with the specified options.
+     * Update the delete protection switch of Ipv6Gateway
+     *
+     * @param gatewayId      the ipv6Gateway to be updated
+     * @param deleteProtect  whether to enable delete protection
+     */
+    public void updateDeleteProtect(String gatewayId, Boolean deleteProtect) {
+        this.updateDeleteProtect(
+                new UpdateDeleteProtectRequest().withGatewayId(gatewayId).withDeleteProtect(deleteProtect));
+    }
+
+    /**
+     * Update the delete protection switch of Ipv6Gateway
+     *
+     * @param request The request containing gatewayId and deleteProtect
+     */
+    public void updateDeleteProtect(UpdateDeleteProtectRequest request) {
+        checkStringNotEmpty(request.getGatewayId(), "gatewayId should not be empty");
+        checkNotNull(request.getDeleteProtect(), "deleteProtect should not be null");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, request.getGatewayId(), "deleteProtect");
+        internalRequest.addParameter("deleteProtect", null);
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Add an EgressOnlyRule to the Ipv6Gateway with the specified options.
      *
      * @param gatewayId specify the ipv6GatewayId to add egressOnlyRule
      * @param cidr      specify the cidr for ipv6Gateway egressOnlyRule
      *
      * @return the id of EgressOnlyRule
      */
-    public CreateEgressOnlyRuleResponse craeteEgressOnlyRule(String gatewayId, String cidr) {
+    public CreateEgressOnlyRuleResponse createEgressOnlyRule(String gatewayId, String cidr) {
         CreateEgressOnlyRuleRequest createEgressOnlyRuleRequest = new CreateEgressOnlyRuleRequest();
         createEgressOnlyRuleRequest.setGatewayId(gatewayId);
         createEgressOnlyRuleRequest.setCidr(cidr);
@@ -290,7 +320,7 @@ public class Ipv6GatewayClient extends AbstractBceClient {
      */
     public void deleteIpv6GatewayEgressOnlyRule(String gatewayId, String egressOnlyRuleId) {
         deleteIpv6GatewayEgressOnlyRule(new DeleteIpv6EgressOnlyRuleRequest().withRequestGatewayId(gatewayId)
-                .wirhRequestEgressOnlyRuleId(egressOnlyRuleId));
+                .withRequestEgressOnlyRuleId(egressOnlyRuleId));
     }
 
     public void deleteIpv6GatewayEgressOnlyRule(DeleteIpv6EgressOnlyRuleRequest deleteIpv6EgressOnlyRuleRequest) {
@@ -350,12 +380,12 @@ public class Ipv6GatewayClient extends AbstractBceClient {
      * @param gatewayId the ipv6Gateway's rateLimitRule to be deleted
      */
     public void deleteIpv6GatewayRateLimitRule(String gatewayId, String rateLimitRuleId) {
-        deleteIpv6GatewayEgressOnlyRule(new DeleteIpv6RateLimitRuleRequest().withRequestGatewayId(gatewayId)
+        deleteIpv6GatewayRateLimitRule(new DeleteIpv6RateLimitRuleRequest().withRequestGatewayId(gatewayId)
                 .withRequestRateLimitRuleId(rateLimitRuleId));
     }
 
-    public void deleteIpv6GatewayEgressOnlyRule(DeleteIpv6RateLimitRuleRequest request) {
-        checkNotNull(request, "the deleteIpv6EgressOnlyRuleRequest should not be null");
+    public void deleteIpv6GatewayRateLimitRule(DeleteIpv6RateLimitRuleRequest request) {
+        checkNotNull(request, "the deleteIpv6GatewayRateLimitRule should not be null");
         checkStringNotEmpty(request.getRateLimitRuleId(), "rateLimitRuleId should not be empty");
         checkStringNotEmpty(request.getGatewayId(), "ipv6GatewayId should not be empty");
         if (Strings.isNullOrEmpty(request.getClientToken())) {

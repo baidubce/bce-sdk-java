@@ -204,7 +204,7 @@ public class RdsClientTest extends BaseRdsTest {
         RdsCreateAccountRequest createAccountRequest = new RdsCreateAccountRequest();
         createAccountRequest.setInstanceId("rds-nr2GCznE");
         createAccountRequest.setAccountName("test_acc");
-        createAccountRequest.setPassword("rds_passwordKJH");
+        createAccountRequest.setPassword("");
         createAccountRequest.setAccountType(RdsAccountType.Common);
         DatabasePrivilege privilege = new DatabasePrivilege();
         privilege.setDbName("test");
@@ -753,7 +753,7 @@ public class RdsClientTest extends BaseRdsTest {
         RdsModifyAccountPasswordRequest request = new RdsModifyAccountPasswordRequest();
         request.setInstanceId("rds-tXjFULZA");
         request.setAccountName("nosuper");
-        request.setPassword("123jklMN");
+        request.setPassword("");
         AbstractBceResponse response = rdsClient.modifyAccountPassword(request);
     }
 
@@ -793,19 +793,24 @@ public class RdsClientTest extends BaseRdsTest {
     @Test
     public void testViewWriteList() {
         RdsViewWriteListRequest request = new RdsViewWriteListRequest();
-        request.setInstanceId("rds-5WIldjI3");
+        request.setInstanceId("rds-V5NF0bDg");
         RdsViewWriteListResponse response = rdsClient.viewWriteList(request);
         print("viewWriteList", response);
     }
 
     @Test
     public void testUpdateWriteList() {
-        RdsUpdateWriteListResquest resquest = new RdsUpdateWriteListResquest();
-        resquest.setInstanceId("rds-5WIldjI3");
+        RdsViewWriteListRequest request = new RdsViewWriteListRequest();
+        request.setInstanceId("rds-V5NF0bDg");
+        RdsViewWriteListResponse response = rdsClient.viewWriteList(request);
+
+        RdsUpdateWriteListResquest request2 = new RdsUpdateWriteListResquest();
+        request2.setInstanceId("rds-5WIldjI3");
         List<String> ips = Arrays.asList("%");
-        resquest.setSecurityIps(ips);
-        AbstractBceResponse response =rdsClient.updateWriteList(resquest);
-        print("updateWriteList", response);
+        request2.setSecurityIps(ips);
+        request2.setEtag(response.getEtag());
+        AbstractBceResponse response2 =rdsClient.updateWriteList(request2);
+        print("updateWriteList", response2);
     }
 
 //    @Test

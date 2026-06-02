@@ -14,6 +14,8 @@ package com.baidubce.services.bos.model;
 
 import com.baidubce.auth.BceCredentials;
 
+import java.util.UUID;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -47,12 +49,14 @@ public class FetchObjectRequest extends GenericObjectRequest {
 
     private String userAgent;
 
+    private String requestId;
+
     /**
      * Constructs a new FetchObjectRequest with only basic options.
      *
      * @param bucketName The name of the Bos bucket to which the new object will be fetched.
-     * @param key The destination bucket key under which the new object will be fetched.
-     * @param sourceUrl The name of the Bos bucket containing the object to fetch.
+     * @param key        The destination bucket key under which the new object will be fetched.
+     * @param sourceUrl  The name of the Bos bucket containing the object to fetch.
      */
     public FetchObjectRequest(String bucketName, String key, String sourceUrl) {
         super(bucketName, key);
@@ -175,7 +179,7 @@ public class FetchObjectRequest extends GenericObjectRequest {
      * Sets the storageClass of the input file which is to be fetched to Baidu Bos.
      *
      * @param storageClass The storageClass is an identification that distinguish between infrequent access bos
-     * and standard bos.
+     *                     and standard bos.
      */
     public void setStorageClass(String storageClass) {
         this.storageClass = storageClass;
@@ -185,7 +189,7 @@ public class FetchObjectRequest extends GenericObjectRequest {
      * Sets the storageClass of the input file which is to be fetched to Baidu Bos.
      *
      * @param storageClass The StorageClass is an identification that distinguish between infrequent access bos
-     * and standard bos.
+     *                     and standard bos.
      * @return This FetchObjectRequest, so that additional method calls can be chained together.
      */
     public FetchObjectRequest withStorageClass(String storageClass) {
@@ -215,5 +219,14 @@ public class FetchObjectRequest extends GenericObjectRequest {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public String generateRequestId() {
+        this.requestId = UUID.randomUUID().toString();
+        return this.requestId;
     }
 }

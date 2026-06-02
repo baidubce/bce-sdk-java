@@ -34,9 +34,31 @@ public class CreateCdsModel {
     private String snapshotId;
 
     /**
+     * shareSnapshotId
+     */
+    private String shareSnapshotId;
+
+    /**
      * encryption key
      */
     private String encryptKey;
+
+
+
+    /**
+     * encryption key
+     */
+    private Boolean deleteWithInstance;
+
+    private Boolean enableDeleteProtection;
+
+    public void setEnableDeleteProtection(Boolean enableDeleteProtection) {
+        this.enableDeleteProtection = enableDeleteProtection;
+    }
+
+    public Boolean getEnableDeleteProtection() {
+        return enableDeleteProtection;
+    }
 
     public int getCdsSizeInGB() {
         return cdsSizeInGB;
@@ -78,6 +100,14 @@ public class CreateCdsModel {
         return this;
     }
 
+    public void setShareSnapshotId(String shareSnapshotId) {
+        this.shareSnapshotId = shareSnapshotId;
+    }
+
+    public String getShareSnapshotId() {
+        return shareSnapshotId;
+    }
+
     public String getSnapshotId() {
         return snapshotId;
     }
@@ -114,6 +144,19 @@ public class CreateCdsModel {
      */
     public CreateCdsModel withEncryptKey(String encryptKey) {
         this.encryptKey = encryptKey;
+        return this;
+    }
+
+    public Boolean getDeleteWithInstance() {
+        return deleteWithInstance;
+    }
+
+    public void setDeleteWithInstance(Boolean deleteWithInstance) {
+        this.deleteWithInstance = deleteWithInstance;
+    }
+
+    public CreateCdsModel withDeleteWithInstanc(Boolean deleteWithInstance) {
+        this.deleteWithInstance = deleteWithInstance;
         return this;
     }
 

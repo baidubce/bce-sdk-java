@@ -43,11 +43,15 @@ public class BucketSummary {
      */
     private String location = null;
 
+    private String lccLocation = null;
+    private Boolean enableDedicated = null;
+
     /**
      * Constructs a bucket without any name specified.
      */
     public BucketSummary() {
     }
+
 
     /**
      * Creates a bucket with a name.
@@ -115,10 +119,30 @@ public class BucketSummary {
         this.location = location;
     }
 
-    @Override
-    public String toString() {
-        return "Bucket [name=" + this.name + ", creationDate=" + this.creationDate
-                + ", Location=" + this.location + "]";
+    public String getLccLocation() {
+        return lccLocation;
     }
 
+    public void setLccLocation(String lccLocation) {
+        this.lccLocation = lccLocation;
+    }
+
+    public Boolean getEnableDedicated() {
+        return enableDedicated;
+    }
+
+    public void setEnableDedicated(Boolean enableDedicated) {
+        this.enableDedicated = enableDedicated;
+    }
+
+    @Override
+    public String toString() {
+        return "BucketSummary{" +
+                "name='" + name + '\'' +
+                ", creationDate=" + creationDate +
+                ", location='" + location + '\'' +
+                ", lccLocation='" + lccLocation + '\'' +
+                ", enableDedicated=" + enableDedicated +
+                '}';
+    }
 }

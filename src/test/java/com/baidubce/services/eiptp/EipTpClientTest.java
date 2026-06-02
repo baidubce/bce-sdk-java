@@ -4,6 +4,8 @@ import com.baidubce.BceClientConfiguration;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.eiptp.model.CreateEipTpRequest;
 import com.baidubce.services.eiptp.model.CreateEipTpResponse;
+import com.baidubce.services.eiptp.model.GetEipTpPriceRequest;
+import com.baidubce.services.eiptp.model.GetEipTpPriceResponse;
 import com.baidubce.services.eiptp.model.GetEipTpRequest;
 import com.baidubce.services.eiptp.model.ListEipTpsRequest;
 import com.baidubce.util.JsonUtils;
@@ -67,5 +69,16 @@ public class EipTpClientTest {
         request.setDeductPolicy("TimeDurationPackage");
         request.setStatus("RUNNING");
         log.info(JsonUtils.toJsonString(eipTpClient.listEipTps(request)));
+    }
+
+    @Test
+    public void getEipTpPriceTest() {
+        GetEipTpPriceRequest request = new GetEipTpPriceRequest();
+        request.setReservationLength(1);
+        request.setCapacity("10G");
+        request.setDeductPolicy("FullTimeDurationPackage");
+        request.setPackageType("WebOutBytes");
+        GetEipTpPriceResponse response = eipTpClient.getEipTpPrice(request);
+        log.info("EipTp Price: " + JsonUtils.toJsonString(response));
     }
 }

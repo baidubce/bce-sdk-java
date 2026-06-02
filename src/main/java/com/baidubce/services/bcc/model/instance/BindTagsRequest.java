@@ -34,6 +34,20 @@ public class BindTagsRequest extends AbstractBceRequest {
      */
     private List<TagModel> changeTags;
 
+    /**
+     * Whether to bind the tags attached to related resources.
+     */
+    private Boolean attachRelatedResourceTag;
+
+    public Boolean getAttachRelatedResourceTag() {
+        return attachRelatedResourceTag;
+    }
+
+    public void setAttachRelatedResourceTag(Boolean attachRelatedResourceTag) {
+        this.attachRelatedResourceTag = attachRelatedResourceTag;
+    }
+
+
     public String getInstanceId() {
         return instanceId;
     }

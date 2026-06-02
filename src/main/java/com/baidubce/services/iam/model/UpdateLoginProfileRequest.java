@@ -28,6 +28,11 @@ public class UpdateLoginProfileRequest extends BaseBceRequest {
     private Boolean needResetPassword;
 
     /**
+     * enabledLogin
+     */
+    private Boolean enabledLogin;
+
+    /**
      * enabledLoginMfa
      */
     private Boolean enabledLoginMfa;
@@ -95,11 +100,20 @@ public class UpdateLoginProfileRequest extends BaseBceRequest {
         return this.thirdPartyAccount;
     }
 
+    public Boolean getEnabledLogin() {
+        return enabledLogin;
+    }
+
+    public void setEnabledLogin(Boolean enabledLogin) {
+        this.enabledLogin = enabledLogin;
+    }
+
     @Override
     public String toString() {
         return "UpdateLoginProfileRequest{"
                 + "password=" + password + "\n"
                 + "needResetPassword=" + needResetPassword + "\n"
+                + "enabledLogin=" + enabledLogin + "\n"
                 + "enabledLoginMfa=" + enabledLoginMfa + "\n"
                 + "loginMfaType=" + loginMfaType + "\n"
                 + "thirdPartyType=" + thirdPartyType + "\n"

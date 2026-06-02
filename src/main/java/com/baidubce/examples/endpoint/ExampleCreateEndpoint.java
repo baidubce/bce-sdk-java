@@ -1,8 +1,11 @@
 package com.baidubce.examples.endpoint;
 
+import java.util.Arrays;
+
 import com.baidubce.BceClientException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.bcc.model.Billing;
+import com.baidubce.services.bcc.model.TagModel;
 import com.baidubce.services.endpoint.EndpointClient;
 import com.baidubce.services.endpoint.EndpointClientConfiguration;
 import com.baidubce.services.endpoint.model.CreateEndpointRequest;
@@ -26,9 +29,20 @@ public class ExampleCreateEndpoint {
         request.setService("www.test.com"); // 挂载的服务域名
         request.setDescription("sdk create"); // 服务网卡描述
         request.setIpAddress("192.168.0.1"); // 指定服务网卡ip地址,不传自动分配ip地址
+        request.setBandwidth(20); // 指定服务网卡带宽
         Billing billing = new Billing();
         billing.setPaymentTiming("Postpaid"); // 计费信息
         request.setBilling(billing);
+        
+        // 可选：添加标签
+        TagModel tag = new TagModel();
+        tag.setTagKey("tagkey");
+        tag.setTagValue("tagvalue");
+        request.setTags(Arrays.asList(tag));
+        
+        // 可选：设置资源组
+        request.setResourceGroupId("RESG-UoMgbkuLNjj");
+        
         try {
             CreateEndpointResponse response = endpointClient.createEndpoint(request);
             System.out.println(response);

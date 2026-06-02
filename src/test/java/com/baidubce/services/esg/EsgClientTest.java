@@ -60,7 +60,6 @@ public class EsgClientTest {
     @After
     public void tearDown() {
         for (String esgId : esgIds) {
-            // delete test created esg
             esgClient.deleteEsg(esgId);
         }
         logger.info("esg test tearDown");
@@ -98,6 +97,18 @@ public class EsgClientTest {
                 .remark("java sdk esg rule allow test")
                 .sourceIp("all")
                 .build());
+
+        // Example with new fields: remoteIpSet and remoteIpGroup
+        rules.add(EnterpriseSecurityGroupRule.builder()
+                .action("allow")
+                .direction("ingress")
+                .ethertype("IPv4")
+                .portRange("80")
+                .priority(500)
+                .protocol("tcp")
+                .remark("java sdk esg rule with remoteIpSet")
+                .remoteIpSet("192.168.1.0/24,10.0.0.0/8")
+                .build());
         List<TagModel> tags = new ArrayList<TagModel>();
         tags.add(new TagModel()
                 .withTagKey("testTagKey")
@@ -133,6 +144,18 @@ public class EsgClientTest {
                 .remark("java sdk authorize esg rule test")
                 .sourceIp("all")
                 .build());
+
+        // Example with remoteIpGroup
+        rules.add(EnterpriseSecurityGroupRule.builder()
+                .action("allow")
+                .direction("egress")
+                .ethertype("IPv4")
+                .portRange("443")
+                .priority(600)
+                .protocol("tcp")
+                .remark("java sdk authorize esg rule with remoteIpGroup")
+                .remoteIpGroup("esg-group-123")
+                .build());
         EsgRuleOperateRequest operateRequest = EsgRuleOperateRequest.builder()
                 .enterpriseSecurityGroupId(esgIds.get(0))
                 .rules(rules)
@@ -153,16 +176,27 @@ public class EsgClientTest {
         for (EnterpriseSecurityGroup enterpriseSecurityGroup : enterpriseSecurityGroups) {
             if (esgId.equals(enterpriseSecurityGroup.getId())){
                 List<EnterpriseSecurityGroupRule> rules = enterpriseSecurityGroup.getRules();
-                if (rules != null){
+                if (rules != null && !rules.isEmpty()){
                     willBeUpdatedEsgRuleId = rules.get(0).getEnterpriseSecurityGroupRuleId();
                     break;
                 }
             }
         }
         if (willBeUpdatedEsgRuleId != null){
+            // Example using new fields and clientToken for idempotency
+            // Note: direction and ethertype are deprecated in UpdateEsgRuleRequest (marked with @JsonIgnore)
             UpdateEsgRuleRequest updateEsgRuleRequest = UpdateEsgRuleRequest.builder()
                     .enterpriseSecurityGroupRuleId(willBeUpdatedEsgRuleId)
-                    .remark("java sdk test update esg rule")
+                    .clientToken("java-sdk-test-update-" + System.currentTimeMillis())
+                    .remark("java sdk test update esg rule with new fields")
+                    .protocol("tcp")
+                    .portRange("8080-8090")
+                    .sourcePortRange("1024-65535")
+                    .sourceIp("192.168.0.0/16")
+                    .localIp("10.0.0.1")
+                    .remoteIpSet("172.16.0.0/12,192.168.1.0/24")
+                    .action("allow")
+                    .priority(100)
                     .build();
             esgClient.updateEsgRule(updateEsgRuleRequest);
             logger.info("test update enterprise security group rule finished.");
@@ -181,13 +215,14 @@ public class EsgClientTest {
         for (EnterpriseSecurityGroup enterpriseSecurityGroup : enterpriseSecurityGroups) {
             if (esgId.equals(enterpriseSecurityGroup.getId())){
                 List<EnterpriseSecurityGroupRule> rules = enterpriseSecurityGroup.getRules();
-                if (rules != null){
+                if (rules != null && !rules.isEmpty()){
                     willBeDeletedEsgRuleId = rules.get(0).getEnterpriseSecurityGroupRuleId();
                     break;
                 }
             }
         }
         if (willBeDeletedEsgRuleId != null){
+            // Example using clientToken for idempotency
             esgClient.deleteEsgRule(willBeDeletedEsgRuleId);
             logger.info("test delete enterprise security group rule finished.");
         }

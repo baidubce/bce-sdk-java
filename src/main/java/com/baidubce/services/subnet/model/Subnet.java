@@ -55,6 +55,16 @@ public class Subnet {
     private String description;
 
     /**
+     * The available ip count of the subnet
+     */
+    private Integer availableIp;
+
+    /**
+     * The available unreserved ip count of the subnet
+     */
+    private Integer availableUnreservedIp;
+
+    /**
      * The creation time of the subnet
      */
     private String createdTime;
@@ -144,6 +154,22 @@ public class Subnet {
         this.tags = tags;
     }
 
+    public Integer getAvailableIp() {
+        return availableIp;
+    }
+
+    public void setAvailableIp(Integer availableIp) {
+        this.availableIp = availableIp;
+    }
+
+    public Integer getAvailableUnreservedIp() {
+        return availableUnreservedIp;
+    }
+
+    public void setAvailableUnreservedIp(Integer availableUnreservedIp) {
+        this.availableUnreservedIp = availableUnreservedIp;
+    }
+
     @Override
     public String toString() {
         return "Subnet{" +
@@ -155,6 +181,8 @@ public class Subnet {
                 ", vpcId='" + vpcId + '\'' +
                 ", subnetType='" + subnetType + '\'' +
                 ", description='" + description + '\'' +
+                ", availableUnreservedIp='" + availableUnreservedIp + '\'' +
+                ", availableIp='" + availableIp + '\'' +
                 ", createdTime='" + createdTime + '\'' +
                 ", tags=" + tags +
                 '}';

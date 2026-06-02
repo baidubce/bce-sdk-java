@@ -16,6 +16,7 @@ package com.baidubce.services.blb.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Https listener info modal.
@@ -34,6 +35,7 @@ public class HttpsListener extends ListenerBase {
     /**
      * the duration of the keep session.
      */
+    @JsonProperty("keepSessionTimeout")
     private Integer keepSessionDuration;
     /**
      * the cookie name of the keep session.
@@ -42,6 +44,7 @@ public class HttpsListener extends ListenerBase {
     /**
      * if fetch the real ip or not.
      */
+    @JsonProperty("xForwardedFor")
     private Boolean xForwardFor;
     /**
      * the type of the health check.
@@ -77,6 +80,47 @@ public class HttpsListener extends ListenerBase {
      * if the request is ie6 compatible or not.
      */
     private boolean ie6Compatible;
+
+    /**
+     * forward the protocol to backend server via x-forwarded-proto HTTP Header
+     */
+    @JsonProperty("xForwardedProto")
+    private Boolean xForwardedProto;
+
+    /**
+     * additional attributes for HTTPS listener
+     */
+    private AdditionalAttributes additionalAttributes;
+
+    /**
+     * health check host for 7-layer health check
+     */
+    private String healthCheckHost;
+
+    /**
+     * encryption type for HTTPS listener
+     */
+    private String encryptionType;
+
+    /**
+     * encryption protocols for HTTPS listener when encryptionType is userDefind
+     */
+    private List<String> encryptionProtocols;
+
+    /**
+     * applied ciphers for HTTPS listener
+     */
+    private String appliedCiphers;
+
+    /**
+     * open dual auth or not for HTTPS listener
+     */
+    private Boolean dualAuth;
+
+    /**
+     * client cert ids for HTTPS listener when dualAuth is true
+     */
+    private List<String> clientCertIds;
 
     public Boolean getKeepSession() {
         return keepSession;
@@ -183,6 +227,70 @@ public class HttpsListener extends ListenerBase {
         this.ie6Compatible = ie6Compatible;
     }
 
+    public Boolean getxForwardedProto() {
+        return xForwardedProto;
+    }
+
+    public void setxForwardedProto(Boolean xForwardedProto) {
+        this.xForwardedProto = xForwardedProto;
+    }
+
+    public AdditionalAttributes getAdditionalAttributes() {
+        return additionalAttributes;
+    }
+
+    public void setAdditionalAttributes(AdditionalAttributes additionalAttributes) {
+        this.additionalAttributes = additionalAttributes;
+    }
+
+    public String getHealthCheckHost() {
+        return healthCheckHost;
+    }
+
+    public void setHealthCheckHost(String healthCheckHost) {
+        this.healthCheckHost = healthCheckHost;
+    }
+
+    public String getEncryptionType() {
+        return encryptionType;
+    }
+
+    public void setEncryptionType(String encryptionType) {
+        this.encryptionType = encryptionType;
+    }
+
+    public List<String> getEncryptionProtocols() {
+        return encryptionProtocols;
+    }
+
+    public void setEncryptionProtocols(List<String> encryptionProtocols) {
+        this.encryptionProtocols = encryptionProtocols;
+    }
+
+    public String getAppliedCiphers() {
+        return appliedCiphers;
+    }
+
+    public void setAppliedCiphers(String appliedCiphers) {
+        this.appliedCiphers = appliedCiphers;
+    }
+
+    public Boolean getDualAuth() {
+        return dualAuth;
+    }
+
+    public void setDualAuth(Boolean dualAuth) {
+        this.dualAuth = dualAuth;
+    }
+
+    public List<String> getClientCertIds() {
+        return clientCertIds;
+    }
+
+    public void setClientCertIds(List<String> clientCertIds) {
+        this.clientCertIds = clientCertIds;
+    }
+
     @Override
     public String toString() {
         return "HttpsListener{" +
@@ -191,14 +299,22 @@ public class HttpsListener extends ListenerBase {
                 ", keepSessionDuration=" + keepSessionDuration +
                 ", keepSessionCookieName='" + keepSessionCookieName + '\'' +
                 ", xForwardFor=" + xForwardFor +
+                ", xForwardedProto=" + xForwardedProto +
                 ", healthCheckType='" + healthCheckType + '\'' +
                 ", healthCheckPort=" + healthCheckPort +
                 ", healthCheckURI='" + healthCheckURI + '\'' +
                 ", healthCheckNormalStatus='" + healthCheckNormalStatus + '\'' +
+                ", healthCheckHost='" + healthCheckHost + '\'' +
                 ", serverTimeout=" + serverTimeout +
                 ", certIds=" + certIds +
                 ", additionalCertDomains=" + additionalCertDomains +
                 ", ie6Compatible=" + ie6Compatible +
-                '}';
+                ", encryptionType='" + encryptionType + '\'' +
+                ", encryptionProtocols=" + encryptionProtocols +
+                ", appliedCiphers='" + appliedCiphers + '\'' +
+                ", dualAuth=" + dualAuth +
+                ", clientCertIds=" + clientCertIds +
+                ", additionalAttributes=" + additionalAttributes +
+                "} " + super.toString();
     }
 }

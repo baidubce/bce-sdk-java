@@ -50,14 +50,20 @@ import com.baidubce.services.kms.model.ScheduleKeyDeletionResponse;
 import com.baidubce.services.kms.model.CancelKeyDeletionRequest;
 import com.baidubce.services.kms.model.DescribeKeyRequest;
 import com.baidubce.services.kms.model.DescribeKeyResponse;
+import com.baidubce.services.kms.model.SignRequest;
+import com.baidubce.services.kms.model.SignResponse;
+import com.baidubce.services.kms.model.VerifyRequest;
+import com.baidubce.services.kms.model.VerifyResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import static com.google.common.base.Preconditions.checkNotNull;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Provides the client for accessing the Key Manager Service.
@@ -80,7 +86,7 @@ public class KmsClient extends AbstractBceClient {
     public KmsClient(KmsClientConfiguration clientConfiguration) {
         super(clientConfiguration, kmsHandlers, true);
     }
-    
+
     /**
      * Creates a new master key.
      *
@@ -93,7 +99,7 @@ public class KmsClient extends AbstractBceClient {
 
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
         internalRequest.addParameter(Constants.ACTION, "CreateKey");
-        
+
         byte[] json = null;
         StringWriter writer = new StringWriter();
         JsonGenerator jsonGenerator = null;
@@ -200,7 +206,7 @@ public class KmsClient extends AbstractBceClient {
     }
 
     /**
-     * Returns DecryptResponse containing plaintext which is decrypted using ciphertext. 
+     * Returns DecryptResponse containing plaintext which is decrypted using ciphertext.
      * MasterKeyId is in ciphertext.
      *
      * @param request The request object containing ciphertext.
@@ -366,8 +372,8 @@ public class KmsClient extends AbstractBceClient {
 
         setInternalRequest(internalRequest, writer);
 
-        ScheduleKeyDeletionResponse response = this.invokeHttpClient(internalRequest, 
-                ScheduleKeyDeletionResponse.class); 
+        ScheduleKeyDeletionResponse response = this.invokeHttpClient(internalRequest,
+                ScheduleKeyDeletionResponse.class);
         return response;
     }
 
@@ -396,7 +402,7 @@ public class KmsClient extends AbstractBceClient {
                 jsonGenerator.close();
             }
         }
-        
+
         setInternalRequest(internalRequest, writer);
         this.invokeHttpClient(internalRequest, KmsResponse.class);
 
@@ -429,7 +435,7 @@ public class KmsClient extends AbstractBceClient {
                 jsonGenerator.close();
             }
         }
-        
+
         setInternalRequest(internalRequest, writer);
         DescribeKeyResponse response = this.invokeHttpClient(internalRequest, DescribeKeyResponse.class);
         return response;
@@ -571,6 +577,132 @@ public class KmsClient extends AbstractBceClient {
         UpdateRotationResponse response = this.invokeHttpClient(internalRequest, UpdateRotationResponse.class);
         return response;
     }
+
+    /**
+     * Returns SignResponse containing signature which is signed using message by master key.
+     *
+     * @param request The request object containing keyId, keyVersion, algorithm, message and messageType.
+     *
+     * @return SignResponse containing keyId, keyVersion and signature.
+     * */
+    public SignResponse sign(SignRequest request) throws Exception {
+        checkNotNull(request, Constants.REQUEST_SHOULD_NOT_BE_NULL);
+        String message = request.getMessage();
+        if (message == null) {
+            throw new BceClientException("Message cannot be null");
+        }
+
+        String messageType = request.getMessageType();
+        if (messageType == null) {
+            messageType = Constants.MessageType.RAW.toString();
+        }
+
+        if (Constants.MessageType.RAW.toString().equals(messageType)) {
+            // 检查Base64编码后字节长度
+            if (message.getBytes(StandardCharsets.UTF_8).length > 4096) {
+                throw new BceClientException("Base64 encoded raw message length exceeds 4096 bytes limit");
+            }
+        } else if (Constants.MessageType.DIGEST.toString().equals(messageType)) {
+            // Base64解码后必须是32字节
+            byte[] digestBytes = Base64.decodeBase64(message);
+            if (digestBytes.length != 32) {
+                throw new BceClientException("Digest message length must be exactly 32 bytes");
+            }
+        }
+
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter(Constants.ACTION, "Sign");
+
+        StringWriter writer = new StringWriter();
+        JsonGenerator jsonGenerator = null;
+        try {
+            jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField(Constants.FIELD_KEYID, request.getKeyId());
+            if (request.getKeyVersion() != null) {
+                jsonGenerator.writeStringField(Constants.FIELD_KEYVERSION, request.getKeyVersion());
+            }
+            jsonGenerator.writeStringField(Constants.FIELD_ALGORITHM, request.getAlgorithm());
+            jsonGenerator.writeStringField(Constants.FIELD_MESSAGE, request.getMessage());
+            if (request.getMessageType() != null) {
+                jsonGenerator.writeStringField(Constants.FIELD_MESSAGETYPE, request.getMessageType());
+            }
+            jsonGenerator.writeEndObject();
+        } catch (IOException e) {
+            throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
+        } finally {
+            if (jsonGenerator != null) {
+                jsonGenerator.close();
+            }
+        }
+
+        setInternalRequest(internalRequest, writer);
+        SignResponse response = this.invokeHttpClient(internalRequest, SignResponse.class);
+        return response;
+    }
+
+    /**
+     * 验证签名有效性
+     * @param request 包含keyId, signature, message等参数
+     * @return VerifyResponse 包含验签结果
+     */
+    public VerifyResponse verify(VerifyRequest request) throws Exception {
+        checkNotNull(request, Constants.REQUEST_SHOULD_NOT_BE_NULL);
+        String message = request.getMessage();
+        if (message == null) {
+            throw new BceClientException("Message cannot be null");
+        }
+
+        String messageType = request.getMessageType();
+        if (messageType == null) {
+            messageType = Constants.MessageType.RAW.toString();
+        }
+
+        if (Constants.MessageType.RAW.toString().equals(messageType)) {
+            // 检查Base64编码后字节长度
+            if (message.getBytes(StandardCharsets.UTF_8).length > 4096) {
+                throw new BceClientException("Base64 encoded raw message length exceeds 4096 bytes limit");
+            }
+        } else if (Constants.MessageType.DIGEST.toString().equals(messageType)) {
+            // Base64解码后必须是32字节
+            byte[] digestBytes = Base64.decodeBase64(message);
+            if (digestBytes.length != 32) {
+                throw new BceClientException("Digest message length must be exactly 32 bytes");
+            }
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST);
+        internalRequest.addParameter(Constants.ACTION, "Verify");
+
+        StringWriter writer = new StringWriter();
+        JsonGenerator jsonGenerator = null;
+        try {
+            jsonGenerator = JsonUtils.jsonGeneratorOf(writer);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeStringField(Constants.FIELD_KEYID, request.getKeyId());
+            if (request.getKeyVersion() != null) {
+                jsonGenerator.writeStringField(Constants.FIELD_KEYVERSION, request.getKeyVersion());
+            }
+            jsonGenerator.writeStringField(Constants.FIELD_ALGORITHM, request.getAlgorithm());
+            jsonGenerator.writeStringField(Constants.FIELD_SIGNATURE, request.getSignature());
+            jsonGenerator.writeStringField(Constants.FIELD_MESSAGE, request.getMessage());
+            if (request.getMessageType() != null) {
+                jsonGenerator.writeStringField(Constants.FIELD_MESSAGETYPE, request.getMessageType());
+            }
+            jsonGenerator.writeEndObject();
+        } catch (IOException e) {
+            throw new BceClientException(Constants.FAIL_TO_GENERATE_JSON, e);
+        } finally {
+            if (jsonGenerator != null) {
+                jsonGenerator.close();
+            }
+        }
+
+        setInternalRequest(internalRequest, writer);
+        return this.invokeHttpClient(internalRequest, VerifyResponse.class);
+    }
+
 
 
     /**

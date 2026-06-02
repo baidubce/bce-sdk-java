@@ -44,6 +44,11 @@ public class GetUserResponse extends BaseBceResponse {
      */
     private Boolean enabled;
 
+    /**
+     * 上次登录时间
+     */
+    private Date lastLoginTime;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -84,6 +89,14 @@ public class GetUserResponse extends BaseBceResponse {
         return this.enabled;
     }
 
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
     @Override
     public String toString() {
         return "GetUserResponse{"
@@ -91,6 +104,7 @@ public class GetUserResponse extends BaseBceResponse {
                 + "name=" + name + "\n"
                 + "description=" + description + "\n"
                 + "createTime=" + createTime + "\n"
+                + "lastLoginTime=" + lastLoginTime + "\n"
                 + "enabled=" + enabled + "\n"
                 + "}";
     }

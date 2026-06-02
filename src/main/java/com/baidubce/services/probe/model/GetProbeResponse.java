@@ -16,12 +16,13 @@ public class GetProbeResponse extends AbstractBceResponse {
     private String name;
     private String probeId;
     private String description;
-    private String destIp;
-    private String destPort;
-    private String frequency;
-    private String payload;
-    private String protocol;
-    private List<String> sourceIps;
-    private String status;
+    private String vpcId;
     private String subnetId;
+    private String protocol;
+    private Integer frequency;
+    private List<String> sourceIps;
+    private String destIp;
+    private Integer destPort;
+    private String payload;
+    private String status;
 }

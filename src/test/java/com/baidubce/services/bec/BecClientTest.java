@@ -5,24 +5,45 @@ import com.baidubce.Protocol;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.bec.model.Backends;
 import com.baidubce.services.bec.model.ListRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.BackendServerReq;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupBackendPolicyRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupBackendPolicyResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupMembersRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupMemberRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupMemberResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupPortRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupPortResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupBackendPoliciesRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupBackendPoliciesResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupMembersRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupPortRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupPortResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupBackendPoliciesRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupBackendPoliciesResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupMembersRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupsRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupsResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMountedMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMountedMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupUnmountedMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupUnmountedMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupsRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupsResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.IpGroupMemberForm;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupBackendPolicyRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupBackendPolicyResponse;
@@ -30,6 +51,12 @@ import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGro
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupPortRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupPortResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateIpGroupMemberForm;
 import com.baidubce.services.bec.model.appblbv2.instance.CreateBecAppBlbRequest;
 import com.baidubce.services.bec.model.appblbv2.instance.CreateBecAppBlbResponse;
@@ -306,6 +333,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -2498,6 +2526,192 @@ public class BecClientTest {
             DeleteBecAppBlbIpGroupMembersResponse response = client.deleteBecAppBlbIpGroupMembersV2(request);
             toJsonPrettyString("delete app blb ip group members", response);
         }
+        @Test
+        public void testCreateBecAppBlbServerGroup() {
+            BackendServerReq backendServerReq = new BackendServerReq();
+            backendServerReq.setInstanceId("vm-hj4tcvq4-cn-baoding-ct-o4bpk");
+            backendServerReq.setWeight(20);
+
+            CreateBecAppBlbServerGroupRequest request = CreateBecAppBlbServerGroupRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .desc("test")
+                    .name("test")
+                    .backendServerReqList(Collections.singletonList(backendServerReq))
+                    .build();
+
+            CreateBecAppBlbServerGroupResponse response = client.createBecAppBlbServerGroupV2(request);
+            toJsonPrettyString("create bec app blb server group members", response);
+        }
+
+        @Test
+        public void testUpdateBecAppBlbServerGroup() {
+            UpdateBecAppBlbServerGroupRequest request = UpdateBecAppBlbServerGroupRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .desc("new desc")
+                    .name("new name")
+                    .sgId("svg-lkxlymix")
+                    .build();
+
+            UpdateBecAppBlbServerGroupResponse response = client.updateBecAppBlbServerGroupV2(request);
+        }
+
+        @Test
+        public void testGetBecAppBlbServerGroups() {
+            com.baidubce.services.bec.model.vo.v2.ListRequest listRequest = new com.baidubce.services.bec.model.vo.v2.ListRequest();
+            listRequest.setMarker("");
+            listRequest.setMaxKeys(10);
+
+            GetBecAppBlbServerGroupsRequest request = GetBecAppBlbServerGroupsRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .listRequest(listRequest)
+                    .exactlyMatch(true)
+                    .name("new name")
+                    .build();
+
+            GetBecAppBlbServerGroupsResponse response = client.getBecAppBlbServerGroupsV2(request);
+        }
+
+        @Test
+        public void testDeleteBecAppBlbServerGroup() {
+            DeleteBecAppBlbServerGroupRequest request = DeleteBecAppBlbServerGroupRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .sgId("svg-lkxlymix")
+                    .build();
+
+            DeleteBecAppBlbServerGroupResponse response = client.deleteBecAppBlbServerGroupV2(request);
+        }
+
+        @Test
+        public void testCreateBecAppBlbServerGroupPort() {
+            CreateBecAppBlbServerGroupPortRequest request = CreateBecAppBlbServerGroupPortRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .healthCheck("TCP")
+                    .healthCheckDownRetry(3)
+                    .healthCheckIntervalInSecond(2)
+                    .healthCheckPort(8030)
+                    .healthCheckTimeoutInSecond(20)
+                    .healthCheckUpRetry(2)
+                    .port(8014)
+                    .sgId("svg-lkxlymix")
+                    .type("TCP")
+                    .build();
+
+            CreateBecAppBlbServerGroupPortResponse response = client.createBecAppBlbServerGroupPortV2(request);
+        }
+
+        @Test
+        public void testUpdateBecAppBlbServerGroupPort() {
+            UpdateBecAppBlbServerGroupPortRequest request = UpdateBecAppBlbServerGroupPortRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .healthCheckDownRetry(3)
+                    .healthCheckIntervalInSecond(2)
+                    .healthCheckTimeoutInSecond(34)
+                    .healthCheckUpRetry(2)
+                    .portId("port-x9zxwcgn")
+                    .sgId("svg-lkxlymix")
+                    .build();
+
+            UpdateBecAppBlbServerGroupPortResponse response = client.updateBecAppBlbServerGroupPortV2(request);
+        }
+
+        @Test
+        public void testDeleteBecAppBlbServerGroupPort() {
+            DeleteBecAppBlbServerGroupPortRequest request = DeleteBecAppBlbServerGroupPortRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .portIdList(Arrays.asList("port-x9zxwcgn"))
+                    .sgId("svg-lkxlymix")
+                    .build();
+
+            DeleteBecAppBlbServerGroupPortResponse response = client.deleteBecAppBlbServerGroupPortV2(request);
+        }
+
+        @Test
+        public void testCreateBecAppBlbServerGroupMember() {
+            BackendServerReq backendServerReq = new BackendServerReq();
+            backendServerReq.setInstanceId("vm-hj4tcvq4-cn-baoding-ct-ingmp");
+            backendServerReq.setWeight(20);
+
+            CreateBecAppBlbServerGroupMemberRequest request = CreateBecAppBlbServerGroupMemberRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .backendServerList(Collections.singletonList(backendServerReq))
+                    .sgId("svg-lkxlymix")
+                    .build();
+
+            CreateBecAppBlbServerGroupMemberResponse response = client.createBecAppBlbServerGroupMemberV2(request);
+        }
+
+        @Test
+        public void testGetBecAppBlbServerGroupMembers() {
+            com.baidubce.services.bec.model.vo.v2.ListRequest listRequest = new com.baidubce.services.bec.model.vo.v2.ListRequest();
+            listRequest.setMarker("");
+            listRequest.setMaxKeys(10);
+
+            GetBecAppBlbServerGroupMembersRequest request = GetBecAppBlbServerGroupMembersRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .sgId("svg-lkxlymix")
+                    .listRequest(listRequest)
+                    .build();
+
+            GetBecAppBlbServerGroupMembersResponse response = client.getBecAppBlbServerGroupMembersV2(request);
+        }
+
+        @Test
+        public void testGetBecAppBlbServerGroupUnboundMembers() {
+            com.baidubce.services.bec.model.vo.v2.ListRequest listRequest = new com.baidubce.services.bec.model.vo.v2.ListRequest();
+            listRequest.setMarker("");
+            listRequest.setMaxKeys(10);
+
+            GetBecAppBlbServerGroupUnmountedMembersRequest request = GetBecAppBlbServerGroupUnmountedMembersRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .sgId("svg-lkxlymix")
+                    .listRequest(listRequest)
+                    .build();
+
+            GetBecAppBlbServerGroupUnmountedMembersResponse response = client.getBecAppBlbServerGroupUnboundMembersV2(request);
+        }
+
+        @Test
+        public void testGetBecAppBlbServerGroupMountedMembers() {
+            com.baidubce.services.bec.model.vo.v2.ListRequest listRequest = new com.baidubce.services.bec.model.vo.v2.ListRequest();
+            listRequest.setMarker("");
+            listRequest.setMaxKeys(10);
+
+            GetBecAppBlbServerGroupMountedMembersRequest request = GetBecAppBlbServerGroupMountedMembersRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .sgId("svg-lkxlymix")
+                    .listRequest(listRequest)
+                    .build();
+
+            GetBecAppBlbServerGroupMountedMembersResponse response = client.getBecAppBlbServerGroupMountedMembersV2(request);
+        }
+
+        @Test
+        public void testUpdateBecAppBlbServerGroupMembers() {
+            BackendServerReq backendServerReq = new BackendServerReq();
+            backendServerReq.setInstanceId("vm-hj4tcvq4-cn-baoding-ct-ingmp");
+            backendServerReq.setWeight(40);
+
+            UpdateBecAppBlbServerGroupMembersRequest request = UpdateBecAppBlbServerGroupMembersRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .backendServerList(Arrays.asList(backendServerReq))
+                    .sgId("svg-lkxlymix")
+                    .build();
+
+            UpdateBecAppBlbServerGroupMembersResponse response = client.updateBecAppBlbServerGroupMembersV2(request);
+        }
+
+        @Test
+        public void testDeleteBecAppBlbServerGroupMembers() {
+            DeleteBecAppBlbServerGroupMembersRequest request = DeleteBecAppBlbServerGroupMembersRequest.builder()
+                    .blbId("applb-cn-baoding-ct-9iixorq5")
+                    .sgId("svg-lkxlymix")
+                    .backendServerIdList(Arrays.asList("vm-hj4tcvq4-cn-baoding-ct-ingmp"))
+                    .build();
+
+            DeleteBecAppBlbServerGroupMembersResponse response = client.deleteBecAppBlbServerGroupMembersV2(request);
+        }
+
+
     }
     /**
      * Test case about app blb end.

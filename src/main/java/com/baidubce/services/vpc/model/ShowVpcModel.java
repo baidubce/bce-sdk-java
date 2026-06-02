@@ -1,8 +1,9 @@
 package com.baidubce.services.vpc.model;
 
-import com.baidubce.services.subnet.model.Subnet;
-
 import java.util.List;
+
+import com.baidubce.services.subnet.model.Subnet;
+import com.baidubce.services.tag.model.Tag;
 
 /**
  * vpc detail info model
@@ -52,6 +53,16 @@ public class ShowVpcModel {
      * The secondary cidrs of this vpc.
      */
     private List<String> secondaryCidr;
+
+    /**
+     * The tags of vpc.
+     */
+    private List<Tag> tags;
+
+    /**
+     * The creation time of the vpc.
+     */
+    private String createdTime;
 
     public String getVpcId() {
         return vpcId;
@@ -125,6 +136,22 @@ public class ShowVpcModel {
         this.ipv6Cidr = ipv6Cidr;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
     @Override
     public String toString() {
         return "ShowVpcModel{" +
@@ -137,6 +164,8 @@ public class ShowVpcModel {
                 ", relay=" + relay +
                 ", subnets=" + subnets +
                 ", secondaryCidr=" + secondaryCidr +
+                ", tags=" + tags +
+                ", createdTime='" + createdTime + '\'' +
                 '}';
     }
 }

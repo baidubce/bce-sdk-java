@@ -2,14 +2,18 @@ package com.baidubce.services.blb;
 
 import java.util.Arrays;
 
+import com.baidubce.BceClientException;
+import com.baidubce.services.blb.model.AdditionalAttributes;
+import com.baidubce.services.blb.model.BackendServer;
 import com.baidubce.services.blb.model.BlbDetailRequest;
 import com.baidubce.services.blb.model.BlbInstance;
+import com.baidubce.services.blb.model.DeleteListenerRequest;
 import com.baidubce.services.blb.model.EsgOperateRequest;
-import com.baidubce.services.blb.model.ListAllListenerRequest;
 import com.baidubce.services.blb.model.ListBlbEsgResponse;
 import com.baidubce.services.blb.model.ListBlbSgRequest;
 import com.baidubce.services.blb.model.ListBlbSgResponse;
-import com.baidubce.services.blb.model.ListListenerResponse;
+import com.baidubce.services.blb.model.ModifyBlbAttributesRequest;
+import com.baidubce.services.blb.model.PortType;
 import com.baidubce.services.blb.model.SgOperateRequest;
 import com.baidubce.services.blb.model.UpdateLoadBalancerAclRequest;
 import org.junit.Before;
@@ -31,8 +35,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class BlbClientTest {
 
     private static final Logger logger = LoggerFactory.getLogger(BlbClientTest.class);
-    private static final String ak = "3251d60a16f94c839f7aa4b87ed4913b";
-    private static final String sk = "21d8c3cdfe1242148e29465fca734e1f";
+    private static final String ak = "";
+    private static final String sk = "";
     private BlbClient blbClient;
 
     @Before
@@ -76,6 +80,38 @@ public class BlbClientTest {
     }
 
     @Test
+    public void modifyBlbAttributesWithAllowDeleteTest() {
+        ModifyBlbAttributesRequest request = new ModifyBlbAttributesRequest();
+        request.setBlbId("lb-27228610");
+        request.setName("blb-with-allow-delete");
+        request.setAllowDelete(true);
+        blbClient.modifyBlbAttributes(request);
+        toJsonPrettyString("modifyBlbAttributes with allowDelete=true", "Success");
+    }
+
+    @Test
+    public void modifyBlbAttributesWithAllocateIpv6Test() {
+        ModifyBlbAttributesRequest request = new ModifyBlbAttributesRequest();
+        request.setBlbId("lb-27228610");
+        request.setName("blb-with-ipv6");
+        request.setAllocateIpv6(true);
+        blbClient.modifyBlbAttributes(request);
+        toJsonPrettyString("modifyBlbAttributes with allocateIpv6=true", "Success");
+    }
+
+    @Test
+    public void modifyBlbAttributesWithBuilderTest() {
+        ModifyBlbAttributesRequest request = new ModifyBlbAttributesRequest()
+                .withBlbId("lb-27228610")
+                .withName("blb-full-update")
+                .withDesc("Updated with builder pattern")
+                .withAllowDelete(false)
+                .withAllocateIpv6(true);
+        blbClient.modifyBlbAttributes(request);
+        toJsonPrettyString("modifyBlbAttributes with all parameters", "Success");
+    }
+
+    @Test
     public void deleteBlbTest() {
         blbClient.deleteBlb("lb-8583ad27");
     }
@@ -95,6 +131,8 @@ public class BlbClientTest {
         request.setBackendPort(81);
         request.setScheduler("Hash");
         request.setType("TCP");
+        request.setTcpSessionTimeout(900); // tcp session timeout
+        request.setHealthCheckType("TCP"); // health check type
         blbClient.createListener(request);
     }
 
@@ -107,6 +145,9 @@ public class BlbClientTest {
         request.setBackendPort(82);
         request.setScheduler("Hash");
         request.setHealthCheckString("\\00");
+        request.setHealthCheckType("UDP"); // health check type
+        request.setHealthCheckPort(82); // health check port
+        request.setUdpSessionTimeout(90); // udp session timeout
         blbClient.createListener(request);
     }
 
@@ -118,6 +159,13 @@ public class BlbClientTest {
         request.setListenerPort(90);
         request.setBackendPort(90);
         request.setScheduler("RoundRobin");
+        request.setxForwardFor(true);
+        request.setxForwardedProto(true); // forward protocol to backend
+        request.setHealthCheckHost("localhost"); // health check host
+        // additional attributes
+        AdditionalAttributes additionalAttributes = new AdditionalAttributes();
+        additionalAttributes.setGzipJson("on");
+        request.setAdditionalAttributes(additionalAttributes);
         blbClient.createListener(request);
     }
 
@@ -129,7 +177,32 @@ public class BlbClientTest {
         request.setListenerPort(22);
         request.setBackendPort(22);
         request.setScheduler("RoundRobin");
-        request.setCertIds(Arrays.asList("xxx"));
+        request.setCertIds(Arrays.asList("cert-xxx"));
+        request.setxForwardFor(true);
+        request.setxForwardedProto(true); // forward protocol to backend
+        request.setHealthCheckHost("localhost"); // health check host
+        request.setEncryptionType("tls_cipher_policy_default"); // encryption type
+        request.setDualAuth(false); // dual auth
+        // additional attributes
+        AdditionalAttributes additionalAttributes = new AdditionalAttributes();
+        additionalAttributes.setGzipJson("on");
+        request.setAdditionalAttributes(additionalAttributes);
+        blbClient.createListener(request);
+    }
+
+    @Test
+    public void createSSLListenerTest() {
+        BlbListenerRequest request = new BlbListenerRequest();
+        request.setType("SSL");
+        request.setBlbId("lb-27228610");
+        request.setListenerPort(23);
+        request.setBackendPort(23);
+        request.setScheduler("RoundRobin");
+        request.setCertIds(Arrays.asList("cert-xxx"));
+        request.setHealthCheckType("TCP"); // health check type
+        request.setServerTimeout(900); // server timeout
+        request.setEncryptionType("tls_cipher_policy_default"); // encryption type
+        request.setDualAuth(false); // dual auth
         blbClient.createListener(request);
     }
 
@@ -170,6 +243,8 @@ public class BlbClientTest {
         request.setBlbId("lb-27228610");
         request.setListenerPort(80);
         request.setScheduler("RoundRobin");
+        request.setTcpSessionTimeout(900); // tcp session timeout
+        request.setHealthCheckType("TCP"); // health check type
         blbClient.modifyListenerAttributes(request);
     }
 
@@ -181,7 +256,10 @@ public class BlbClientTest {
         request.setListenerPort(8080);
         request.setBackendPort(8080);
         request.setScheduler("LeastConnection");
-        request.setHealthCheckString("haedlth check");
+        request.setHealthCheckString("health check");
+        request.setHealthCheckType("UDP"); // health check type
+        request.setHealthCheckPort(8080); // health check port
+        request.setUdpSessionTimeout(90); // udp session timeout
         blbClient.modifyListenerAttributes(request);
     }
 
@@ -192,6 +270,13 @@ public class BlbClientTest {
         request.setBlbId("lb-27228610");
         request.setListenerPort(90);
         request.setScheduler("LeastConnection");
+        request.setxForwardFor(true);
+        request.setxForwardedProto(true); // forward protocol to backend
+        request.setHealthCheckHost("localhost"); // health check host
+        // additional attributes
+        AdditionalAttributes additionalAttributes = new AdditionalAttributes();
+        additionalAttributes.setGzipJson("off");
+        request.setAdditionalAttributes(additionalAttributes);
         blbClient.modifyListenerAttributes(request);
     }
 
@@ -202,12 +287,45 @@ public class BlbClientTest {
         request.setBlbId("lb-27228610");
         request.setListenerPort(80);
         request.setScheduler("RoundRobin");
+        request.setxForwardFor(true);
+        request.setxForwardedProto(true); // forward protocol to backend
+        request.setHealthCheckHost("localhost"); // health check host
+        request.setEncryptionType("tls_cipher_policy_1_2"); // encryption type
+        // additional attributes
+        AdditionalAttributes additionalAttributes = new AdditionalAttributes();
+        additionalAttributes.setGzipJson("on");
+        request.setAdditionalAttributes(additionalAttributes);
+        blbClient.modifyListenerAttributes(request);
+    }
+
+    @Test
+    public void modifySSLListenerTest() {
+        BlbListenerRequest request = new BlbListenerRequest();
+        request.setType("SSL");
+        request.setBlbId("lb-27228610");
+        request.setListenerPort(23);
+        request.setScheduler("RoundRobin");
+        request.setHealthCheckType("TCP"); // health check type
+        request.setServerTimeout(900); // server timeout
+        request.setEncryptionType("tls_cipher_policy_1_2"); // encryption type
         blbClient.modifyListenerAttributes(request);
     }
 
     @Test
     public void deleteListenerTest() {
         blbClient.deleteListener("lb-27228610", Arrays.asList(81, 82));
+    }
+
+    @Test
+    public void deleteListenerWithPortTypeTest() {
+        // delete listener by port and type
+        DeleteListenerRequest request = new DeleteListenerRequest();
+        request.setBlbId("lb-27228610");
+        request.setPortTypeList(Arrays.asList(
+                new PortType(80, "TCP"),
+                new PortType(80, "UDP")
+        ));
+        blbClient.deleteListener(request);
     }
 
     @Test
@@ -269,6 +387,63 @@ public class BlbClientTest {
     public void listIpv6BlbsTest() {
         toJsonPrettyString("list ipv6 blbs result",
                 blbClient.listIpv6Blbs("", "", "", ""));
+    }
+
+    @Test
+    public void addBackendServersTest() {
+        String blbId = "lb-081b7605";
+        BackendServer backendServer = new BackendServer();
+        backendServer.setInstanceId("i-VfM3kz2");
+        backendServer.setWeight(50);
+        try {
+            blbClient.addBackendServers(blbId, Arrays.asList(backendServer));
+        }catch (BceClientException e) {
+
+        }
+
+    }
+
+    @Test
+    public void listBackendServerStatusTest() {
+        try {
+            toJsonPrettyString("list backend server status result:",
+                    blbClient.listBackendServerStatus("lb-0c6c8910", 90));
+        }catch (BceClientException e) {
+
+        }
+    }
+
+    @Test
+    public void listBackendServersTest() {
+        try {
+            toJsonPrettyString("list backend servers result:",
+                    blbClient.listBackendServers("lb-0c6c8910"));
+        }catch (BceClientException e) {
+
+        }
+    }
+
+    @Test
+    public void modifyBackendServerAttributesTest() {
+        String blbId = "lb-0c6c8910";
+        BackendServer backendServer = new BackendServer();
+        backendServer.setInstanceId("i-VfM3kz2D");
+        backendServer.setWeight(60);
+        try {
+            blbClient.modifyBackendServerAttributes(blbId, Arrays.asList(backendServer));
+        }catch (BceClientException e) {
+
+        }
+
+    }
+
+    @Test
+    public void deleteBackendServersTest() {
+        try {
+            blbClient.deleteBackendServers("lb-0c6c8910", Arrays.asList("i-VfM3kz2D"));
+        }catch (BceClientException e) {
+
+        }
     }
 
 

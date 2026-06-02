@@ -231,6 +231,9 @@ public class VpcClient extends AbstractBceClient {
         if (request.getIsDefault() != null) {
             internalRequest.addParameter("isDefault", request.getIsDefault().toString());
         }
+        if (StringUtils.isNotBlank(request.getVpcIds())) {
+            internalRequest.addParameter("vpcIds", request.getVpcIds());
+        }
         return invokeHttpClient(internalRequest, ListVpcResponse.class);
     }
 
@@ -331,12 +334,8 @@ public class VpcClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, VPC_PREFIX, request.getVpcId(), VPC_PRIVATE_IP_PREFIX);
         if (CollectionUtils.isNotEmpty(request.getPrivateIpAddresses())) {
-            StringBuilder privateIpAddresses = new StringBuilder();
-            for (String privateIpAddress: request.getPrivateIpAddresses()){
-                privateIpAddresses.append(privateIpAddress).append(",");
-            }
-            privateIpAddresses.deleteCharAt(privateIpAddresses.lastIndexOf(","));
-            internalRequest.addParameter("privateIpAddresses", privateIpAddresses.toString());
+            String privateIpAddresses = String.join(",", request.getPrivateIpAddresses());
+            internalRequest.addParameter("privateIpAddresses", privateIpAddresses);
         }
         if (StringUtils.isNotBlank(request.getPrivateIpRange())) {
             internalRequest.addParameter("privateIpRange", request.getPrivateIpRange());

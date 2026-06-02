@@ -21,25 +21,24 @@
  */
 -->
 <configuration>
-
     <property>
         <name>hbase.client.connection.impl</name>
         <value>com.baidubce.services.tablestoragehbaseclient.hbase.TablestorageConnection</value>
     </property>
     <property>
         <name>tablestorage.client.endpoint</name>
-        <value>bts.xx.baidubce.com</value>
+        <value>xxxxxxxxxxx</value>
     </property>
     <property>
         <name>tablestorage.client.instancename</name>
-        <value>ins_demo</value>
+        <value>hbase</value>
     </property>
     <property>
         <name>tablestorage.client.accesskeyid</name>
-        <value>xxxxxx</value>
+        <value>xxxxxxxx</value>
     </property>
     <property>
         <name>tablestorage.client.secretaccesskey</name>
-        <value>xxxxxx</value>
+        <value>xxxxxxxxx</value>
     </property>
 </configuration>

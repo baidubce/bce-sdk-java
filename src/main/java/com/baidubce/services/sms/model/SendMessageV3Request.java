@@ -41,6 +41,14 @@ public class SendMessageV3Request extends SmsRequest {
     private String signatureId;
 
     /**
+     * The full signature content
+     * e.g. ACG of【ACG】Your code is 123456.
+     * Deprecated this field, use signatureId instead
+     */
+    @Deprecated
+    private String sign;
+
+    /**
      * ContentVar is a hash map which indicates the correspondence of template parameter name to parameter value.
      */
     private Map<String, String> contentVar;
@@ -93,6 +101,14 @@ public class SendMessageV3Request extends SmsRequest {
 
     public void setSignatureId(String signatureId) {
         this.signatureId = signatureId;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 
     public Map<String, String> getContentVar() {

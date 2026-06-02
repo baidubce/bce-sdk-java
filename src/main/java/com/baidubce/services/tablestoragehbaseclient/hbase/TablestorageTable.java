@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
- 
+
 /**
  * @file TablestorageTable.java
  * @date 2019/02/26 15:15:01
@@ -47,6 +47,8 @@ import org.apache.hadoop.hbase.client.Row;
 import org.apache.hadoop.hbase.client.RowMutations;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.TableDescriptor;
+import org.apache.hadoop.hbase.client.RegionLocator;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.ipc.CoprocessorRpcChannel;
@@ -63,10 +65,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TablestorageTable derived from hbase.client.Table, Used to communicate with a single TableStorage table.
- * Obtain an instance from a Connection and call close() afterwards.
- *
- * @date 2019/02/26 16:18:07
- */
+* Obtain an instance from a Connection and call close() afterwards.
+*
+* @date 2019/02/26 16:18:07
+*/
 public class TablestorageTable implements Table {
     private final TableName tableName;
     private TablestorageConnection connection;
@@ -76,10 +78,10 @@ public class TablestorageTable implements Table {
 
     /**
      * Construct a TableStorage Table with target table name.
-     *
-     * @param connection the connection used to construct this TableStorageTable.
-     * @param tableName the name of target table in TableStorage.
-     */
+    *
+    * @param connection the connection used to construct this TableStorageTable.
+    * @param tableName the name of target table in TableStorage.
+    */
     public TablestorageTable(TablestorageConnection connection, TableName tableName) {
         this.connection = connection;
         this.tableName = tableName;
@@ -103,6 +105,16 @@ public class TablestorageTable implements Table {
     @Override
     public HTableDescriptor getTableDescriptor() throws IOException {
         return adaptor.getTable(tableName.getNameAsString());
+    }
+
+    @Override
+    public TableDescriptor getDescriptor() throws IOException {
+        throw new UnsupportedOperationException("getDescriptor()");
+    }
+
+    @Override
+    public RegionLocator getRegionLocator() throws IOException {
+        throw new UnsupportedOperationException("getRegionLocator()");
     }
 
     @Override
@@ -132,7 +144,6 @@ public class TablestorageTable implements Table {
     }
 
     @Deprecated
-    @Override
     public Object[] batch(final List<? extends Row> actions)  throws IOException, InterruptedException {
         Object[] objects = new Object[actions.size()];
         batch(actions, objects);
@@ -141,13 +152,12 @@ public class TablestorageTable implements Table {
 
     @Override
     public <R> void batchCallback(final List<? extends Row> actions, final Object[] results,
-                                  final Batch.Callback<R> callback) throws IOException, InterruptedException {
+                                final Batch.Callback<R> callback) throws IOException, InterruptedException {
         throw new UnsupportedOperationException("batchCallback(final List<? extends Row> actions, "
                 + "final Object[] results, final Batch.Callback<R> callback)");
     }
 
     @Deprecated
-    @Override
     public <R> Object[] batchCallback(List<? extends Row> actions, Batch.Callback<R> callback)
             throws IOException, InterruptedException {
         // do nothing
@@ -203,7 +213,7 @@ public class TablestorageTable implements Table {
         private TablestorageResultScanner scanner;
 
         public Scanner(TableStorageAdaptor adaptor, ExecutorService pool, Scan scan,
-                       String tableName) {
+                    String tableName) {
             scanner = new TablestorageResultScanner(adaptor, pool, scan, tableName);
         }
 
@@ -305,7 +315,7 @@ public class TablestorageTable implements Table {
     }
 
     @Override
-    public void mutateRow(final RowMutations rm) throws IOException {
+    public Result mutateRow(final RowMutations rm) throws IOException {
         throw new UnsupportedOperationException("mutateRow(final RowMutations rm)");
     }
 
@@ -354,29 +364,27 @@ public class TablestorageTable implements Table {
 
     @Override
     public <T extends Service, R> void coprocessorService(final Class<T> service, byte[] startKey, byte[] endKey,
-                                                          final Batch.Call<T, R> callable,
-                                                          final Batch.Callback<R> callback)
+                                                        final Batch.Call<T, R> callable,
+                                                        final Batch.Callback<R> callback)
             throws ServiceException, Throwable {
         throw new UnsupportedOperationException("coprocessorService(final Class<T> service, byte[] startKey, "
                 + "byte[] endKey, final Batch.Call<T, R> callable, final Batch.Callback<R> callback)");
     }
 
     @Deprecated
-    @Override
     public long getWriteBufferSize() {
         return this.writeBufferSize;
     }
 
     @Deprecated
-    @Override
     public void setWriteBufferSize(long writeBufferSize) throws IOException {
         this.writeBufferSize = writeBufferSize;
     }
 
     @Override
     public <R extends Message> Map<byte[], R> batchCoprocessorService(Descriptors.MethodDescriptor methodDescriptor,
-                                                                      Message request, byte[] startKey, byte[] endKey,
-                                                                      R responsePrototype)
+                                                                    Message request, byte[] startKey, byte[] endKey,
+                                                                    R responsePrototype)
             throws ServiceException, Throwable {
         throw new UnsupportedOperationException(
                 "batchCoprocessorService(Descriptors.MethodDescriptor methodDescriptor, "

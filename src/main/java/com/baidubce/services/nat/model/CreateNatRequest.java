@@ -63,9 +63,19 @@ public class CreateNatRequest extends AbstractBceRequest {
     private Integer cuNum;
 
     /**
-     * The eips of nat that will be created.
+     * The snat eips of nat that will be created.
      */
     private List<String> eips;
+
+    /**
+     * The dnat eips of nat that will be created.
+     */
+    private List<String> dnatEips;
+
+    /**
+     * The bind eips of enhance nat that will be created.
+     */
+    private List<String> bindEips;
 
     /**
      * The billing of nat that will be created.
@@ -76,6 +86,16 @@ public class CreateNatRequest extends AbstractBceRequest {
      * the list of tags which will be bound to nat instance
      */
     private List<TagModel> tags;
+
+    /**
+     * The resourceGroupId of nat that will be created.
+     */
+    private String resourceGroupId;
+
+    /**
+     * The delete protect switch of this nat that will be created.
+     */
+    private Boolean deleteProtect;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -117,13 +137,35 @@ public class CreateNatRequest extends AbstractBceRequest {
     }
 
     /**
-     * Configure eips for the request.
+     * Configure snat eips for the request.
      *
      * @param eips The spec of CreateNatRequest
-     * @return CreateNatRequest with specific eips
+     * @return CreateNatRequest with specific snat eips
      */
     public CreateNatRequest withEips(List<String> eips) {
         this.eips = eips;
+        return this;
+    }
+
+    /**
+     * Configure dnat eips for the request.
+     *
+     * @param dnatEips The spec of CreateNatRequest
+     * @return CreateNatRequest with specific dnat eips
+     */
+    public CreateNatRequest withDnatEips(List<String> dnatEips) {
+        this.dnatEips = dnatEips;
+        return this;
+    }
+
+    /**
+     * Configure bind eips for the request.
+     *
+     * @param bindEips The spec of CreateNatRequest
+     * @return CreateNatRequest with specific bind eips
+     */
+    public CreateNatRequest withBindEips(List<String> bindEips) {
+        this.bindEips = bindEips;
         return this;
     }
 
@@ -178,6 +220,22 @@ public class CreateNatRequest extends AbstractBceRequest {
         this.eips = eips;
     }
 
+    public List<String> getDnatEips() {
+        return dnatEips;
+    }
+
+    public void setDnatEips(List<String> dnatEips) {
+        this.dnatEips = dnatEips;
+    }
+
+    public List<String> getBindEips() {
+        return bindEips;
+    }
+
+    public void setBindEips(List<String> bindEips) {
+        this.bindEips = bindEips;
+    }
+
     public Billing getBilling() {
         return billing;
     }
@@ -200,5 +258,21 @@ public class CreateNatRequest extends AbstractBceRequest {
 
     public void setCuNum(Integer cuNum) {
         this.cuNum = cuNum;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+    }
+
+    public Boolean getDeleteProtect() {
+        return deleteProtect;
+    }
+
+    public void setDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
     }
 }

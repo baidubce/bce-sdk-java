@@ -11,6 +11,7 @@ import com.baidubce.services.nat.model.CreateNatRequest;
 import com.baidubce.services.nat.model.CreateNatResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExampleCreateNat {
@@ -33,16 +34,14 @@ public class ExampleCreateNat {
         billing.setReservation(reservation);
         request.setBilling(billing);
         request.setName("NatTest"); // nat名字
-        // NAT网关的大小，
-        //  有small(最多支持绑定5个公网IP)、
-        //  medium(最多支持绑定10个公网IP)、
-        //  large(最多支持绑定15个公网IP)三种；该参数和cuNum只能二选一
-//        request.setSpec("small");
         request.setCuNum(2); // NAT网关的CU数量，该参数和spec只能二选一
         request.setVpcId("vpc-a4sg6vsfzbra"); // 创建nat网关所在的vpcId
+        request.setBindEips(Arrays.asList("100.88.3.255"));
         List<TagModel> tags = new ArrayList<TagModel>(); // 标签信息
         tags.add(new TagModel().withTagKey("testKey").withTagValue("testValue"));
         request.setTags(tags);
+        request.setResourceGroupId("RESG-xyfmAVnHGzK");
+        request.setDeleteProtect(true);
 
         try {
             CreateNatResponse createNatResponse = natClient.createNat(request);

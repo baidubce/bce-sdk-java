@@ -256,6 +256,7 @@ public class EndpointClient extends AbstractBceClient {
         }
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, ENDPOINT_PREFIX, request.getEndpointId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -273,6 +274,7 @@ public class EndpointClient extends AbstractBceClient {
         }
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.DELETE, ENDPOINT_PREFIX, request.getEndpointId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -290,6 +292,7 @@ public class EndpointClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 updateSecurityGroups, HttpMethodName.PUT, ENDPOINT_PREFIX, updateSecurityGroups.getEndpointId());
         internalRequest.addParameter("bindSg", null);
+        internalRequest.addParameter("clientToken", updateSecurityGroups.getClientToken());
         fillPayload(internalRequest, updateSecurityGroups);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -308,6 +311,7 @@ public class EndpointClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(
                 updateSecurityGroups, HttpMethodName.PUT, ENDPOINT_PREFIX, updateSecurityGroups.getEndpointId());
         internalRequest.addParameter("bindEsg", null);
+        internalRequest.addParameter("clientToken", updateSecurityGroups.getClientToken());
         fillPayload(internalRequest, updateSecurityGroups);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }

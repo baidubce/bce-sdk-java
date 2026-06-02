@@ -43,6 +43,14 @@ import com.baidubce.services.bcc.model.asp.GetAspResponse;
 import com.baidubce.services.bcc.model.asp.ListAspsRequest;
 import com.baidubce.services.bcc.model.asp.ListAspsResponse;
 import com.baidubce.services.bcc.model.asp.UpdateAspRequest;
+import com.baidubce.services.bcc.model.checktool.CreateDiagnosticReq;
+import com.baidubce.services.bcc.model.checktool.CreateDiagnosticResp;
+import com.baidubce.services.bcc.model.checktool.DeleteDiagnosticReportReq;
+import com.baidubce.services.bcc.model.checktool.DeleteDiagnosticReportResp;
+import com.baidubce.services.bcc.model.checktool.GetDiagnosticSchemasReq;
+import com.baidubce.services.bcc.model.checktool.ListDiagnosticReportResp;
+import com.baidubce.services.bcc.model.checktool.ListDiagnosticReq;
+import com.baidubce.services.bcc.model.checktool.GetDiagnosticSchemasResp;
 import com.baidubce.services.bcc.model.deployset.CreateDeploySetRequest;
 import com.baidubce.services.bcc.model.deployset.CreateDeploySetResponse;
 import com.baidubce.services.bcc.model.deployset.DeleteDeploySetRequest;
@@ -72,6 +80,8 @@ import com.baidubce.services.bcc.model.image.ShareImageRequest;
 import com.baidubce.services.bcc.model.image.UnShareImageRequest;
 import com.baidubce.services.bcc.model.instance.BatchAddIpRequest;
 import com.baidubce.services.bcc.model.instance.BatchAddIpResponse;
+import com.baidubce.services.bcc.model.instance.BatchChangeToPostpaidRequest;
+import com.baidubce.services.bcc.model.instance.BatchChangeToPostpaidResponse;
 import com.baidubce.services.bcc.model.instance.BatchChangeToPrepaidRequest;
 import com.baidubce.services.bcc.model.instance.BatchChangeToPrepaidResponse;
 import com.baidubce.services.bcc.model.instance.BatchDeleteIpRequest;
@@ -130,6 +140,7 @@ import com.baidubce.services.bcc.model.instance.ModifyInstancePasswordRequest;
 import com.baidubce.services.bcc.model.instance.PurchaseReservedInstanceRequeset;
 import com.baidubce.services.bcc.model.instance.PurchaseReservedInstanceResponse;
 import com.baidubce.services.bcc.model.instance.RebootInstanceRequest;
+import com.baidubce.services.bcc.model.instance.RebootInstancesRequest;
 import com.baidubce.services.bcc.model.instance.RebuildBatchInstanceRequest;
 import com.baidubce.services.bcc.model.instance.RebuildInstanceRequest;
 import com.baidubce.services.bcc.model.instance.ReleaseInstanceByPostRequest;
@@ -142,6 +153,7 @@ import com.baidubce.services.bcc.model.instance.StartInstanceRequest;
 import com.baidubce.services.bcc.model.instance.StopInstanceRequest;
 import com.baidubce.services.bcc.model.instance.UnbindSecurityGroupRequest;
 import com.baidubce.services.bcc.model.instance.UnbindTagsRequest;
+import com.baidubce.services.bcc.model.instance.UseropAction;
 import com.baidubce.services.bcc.model.keypair.KeypairAction;
 import com.baidubce.services.bcc.model.keypair.KeypairAttachRequest;
 import com.baidubce.services.bcc.model.keypair.KeypairCreateRequest;
@@ -160,8 +172,8 @@ import com.baidubce.services.bcc.model.region.DescribeRegionsRequest;
 import com.baidubce.services.bcc.model.region.DescribeRegionsResponse;
 import com.baidubce.services.bcc.model.reversed.CreateReservedInstanceResponse;
 import com.baidubce.services.bcc.model.reversed.CreateReservedInstancesRequest;
-import com.baidubce.services.bcc.model.reversed.ModifyReservedInstancesResponse;
 import com.baidubce.services.bcc.model.reversed.ModifyReservedInstancesRequest;
+import com.baidubce.services.bcc.model.reversed.ModifyReservedInstancesResponse;
 import com.baidubce.services.bcc.model.reversed.ReservedTagsRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupRequest;
 import com.baidubce.services.bcc.model.securitygroup.CreateSecurityGroupResponse;
@@ -173,15 +185,39 @@ import com.baidubce.services.bcc.model.securitygroup.ListSecurityGroupsResponse;
 import com.baidubce.services.bcc.model.securitygroup.SecurityGroupAction;
 import com.baidubce.services.bcc.model.securitygroup.SecurityGroupRuleOperateRequest;
 import com.baidubce.services.bcc.model.securitygroup.UpdateSecurityGroupRuleRequest;
+import com.baidubce.services.bcc.model.snapshot.CancelSnapshotShareReq;
+import com.baidubce.services.bcc.model.snapshot.CancelSnapshotShareResp;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotResponse;
+import com.baidubce.services.bcc.model.snapshot.CreateSnapshotShareReq;
+import com.baidubce.services.bcc.model.snapshot.CreateSnapshotShareResp;
 import com.baidubce.services.bcc.model.snapshot.DeleteSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.GetSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.GetSnapshotResponse;
 import com.baidubce.services.bcc.model.snapshot.ListSnapchainRequest;
 import com.baidubce.services.bcc.model.snapshot.ListSnapchainResponse;
+import com.baidubce.services.bcc.model.snapshot.ListSnapshotShareByMarkerV2Req;
+import com.baidubce.services.bcc.model.snapshot.ListSnapshotShareByMarkerV2Resp;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotsRequest;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotsResponse;
+import com.baidubce.services.bcc.model.task.ListTaskByMarkerRequest;
+import com.baidubce.services.bcc.model.task.ListTaskByMarkerResponse;
+import com.baidubce.services.bcc.model.task.TaskDetailRequest;
+import com.baidubce.services.bcc.model.task.TaskDetailResponse;
+import com.baidubce.services.bcc.model.userop.AuthorizeServerEventReq;
+import com.baidubce.services.bcc.model.userop.AuthorizeServerEventResp;
+import com.baidubce.services.bcc.model.userop.BaseResp;
+import com.baidubce.services.bcc.model.userop.CheckUnplannedEventReq;
+import com.baidubce.services.bcc.model.userop.CreateInstUserOpAuthorizeRuleCmdReq;
+import com.baidubce.services.bcc.model.userop.CreateInstUserOpAuthorizeRuleResp;
+import com.baidubce.services.bcc.model.userop.DeleteInstUserOpAuthorizeRuleReq;
+import com.baidubce.services.bcc.model.userop.DescribeInstUserOpAuthorizeRuleReq;
+import com.baidubce.services.bcc.model.userop.DescribeInstUserOpAuthorizeRuleResp;
+import com.baidubce.services.bcc.model.userop.DescribePlannedEventsResp;
+import com.baidubce.services.bcc.model.userop.DescribeServerEventRecordReq;
+import com.baidubce.services.bcc.model.userop.DescribeServerEventReq;
+import com.baidubce.services.bcc.model.userop.DescribeUnplannedEventsResp;
+import com.baidubce.services.bcc.model.userop.ModifyInstUserOpAuthorizeRuleCmdReq;
 import com.baidubce.services.bcc.model.volume.AttachVolumeRequest;
 import com.baidubce.services.bcc.model.volume.AttachVolumeResponse;
 import com.baidubce.services.bcc.model.volume.AutoRenewVolumeClusterRequest;
@@ -193,6 +229,8 @@ import com.baidubce.services.bcc.model.volume.CreateVolumeClusterResponse;
 import com.baidubce.services.bcc.model.volume.CreateVolumeRequest;
 import com.baidubce.services.bcc.model.volume.CreateVolumeResponse;
 import com.baidubce.services.bcc.model.volume.DetachVolumeRequest;
+import com.baidubce.services.bcc.model.volume.GetDiskQuotaRequest;
+import com.baidubce.services.bcc.model.volume.GetDiskQuotaResponse;
 import com.baidubce.services.bcc.model.volume.GetVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.GetVolumeClusterResponse;
 import com.baidubce.services.bcc.model.volume.GetVolumeRequest;
@@ -204,6 +242,7 @@ import com.baidubce.services.bcc.model.volume.ListVolumesResponse;
 import com.baidubce.services.bcc.model.volume.ModifyCdsAttrRequest;
 import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeRequest;
 import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeTypeRequest;
+import com.baidubce.services.bcc.model.volume.ModifyVolumeDeleteProtectionRequest;
 import com.baidubce.services.bcc.model.volume.PurchaseReservedVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.PurchaseReservedVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ReleaseVolumeRequest;
@@ -238,6 +277,7 @@ import java.util.UUID;
 
 import static com.baidubce.util.StringFormatUtils.checkEmptyExceptionMessageFormat;
 import static com.baidubce.util.Validate.checkIsTrue;
+import static com.baidubce.util.Validate.checkListNotEmpty;
 import static com.baidubce.util.Validate.checkMultyParamsNotBothEmpty;
 import static com.baidubce.util.Validate.checkNotNull;
 import static com.baidubce.util.Validate.checkResourceType;
@@ -255,6 +295,7 @@ public class BccClient extends AbstractBceClient {
     private static final String VERSION = "v2";
     private static final String VERSION_V3 = "v3";
     private static final String INSTANCE_PREFIX = "instance";
+    private static final String BATCH_ACTION = "batchAction";
     private static final String VPC_PREFIX = "vpc";
     private static final String ENI_PREFIX = "eni";
     private static final String CHANGE_VPC = "changeVpc";
@@ -267,9 +308,13 @@ public class BccClient extends AbstractBceClient {
     private static final String FLAVOR_SPEC_PREFIX = "flavorSpec";
     private static final String VOLUME_PREFIX = "volume";
     private static final String IMAGE_PREFIX = "image";
+    private static final String TASK_PREFIX = "task";
     private static final String OS_PREFIX = "os";
     private static final String SECURITYGROUP_PREFIX = "securityGroup";
     private static final String SNAPSHOT_PREFIX = "snapshot";
+    private static final String SHARE_PREFIX = "share";
+    private static final String UNSHARE_PREFIX = "unShare";
+    private static final String SNAPSHOTSHARE_PREFIX = "snapshotShare";
     private static final String ZONE = "zone";
     private static final String TAG = "tag";
     private static final String ASP = "asp";
@@ -281,7 +326,29 @@ public class BccClient extends AbstractBceClient {
     private static final String MAX_KEYS = "maxKeys";
     private static final String ZONE_NAME = "zoneName";
 
+    private static final String PRODUCT_CATEGORY = "productCategory";
+
     private static final String EHC_CLUSTER_ID = "ehcClusterId";
+
+    private static final String FUZZY_INSTANCE_NAME = "fuzzyInstanceName";
+
+    private static final String INSTANCE_IDS = "instanceIds";
+
+    private static final String DEPLOYSET_IDS = "deploysetIds";
+
+    private static final String INSTANCE_NAMES = "instanceNames";
+
+    private static final String SECURITY_GROUP_IDS = "securityGroupIds";
+
+    private static final String PAYMENT_TIMING = "paymentTiming";
+
+    private static final String STATUS = "status";
+
+    private static final String TAGS = "tags";
+
+    private static final String PRIVATE_IPS = "privateIps";
+
+    private static final String VOLUME_IDS = "volumeIds";
     private static final String INTERNAL_IP = "internalIp";
     private static final String DEDICATED_HOST_ID = "dedicatedHostId";
     private static final String IMAGE_TYPE = "imageType";
@@ -304,6 +371,11 @@ public class BccClient extends AbstractBceClient {
     private static final String SECURITY_GROUP_RULE_UPDATE_PREFIX = "update";
     private static final String SYNC_CREATE = "syncCreate";
     private static final String BATCH_DELETE = "batchDelete";
+    private static final String DIAGNOSTIC_REPORT = "diagnosticReport";
+    private static final String CREATE = "create";
+    private static final String SCHEMAS = "schemas";
+    private static final String LIST = "list";
+
 
     private static final String DELETE = "delete";
     private static final String RECYCLE = "recycle";
@@ -328,6 +400,7 @@ public class BccClient extends AbstractBceClient {
     private static final String NAME_MESSAGE_KEY = "name";
     private static final String DESC_MESSAGE_KEY = "desc";
     private static final String SECURITYGROUPID_MESSAGE_KEY = "securityGroupId";
+    private static final String SECURITYGROUPIDS_MESSAGE_KEY = "securityGroupIds";
     private static final String VOLUMEID_MESSAGE_KEY = "volumeId";
     private static final String SNAPSHOTID_MESSAGE_KEY = "snapshotId";
     private static final String IMAGENAME_MESSAGE_KEY = "imageName";
@@ -357,6 +430,10 @@ public class BccClient extends AbstractBceClient {
 
     private static final String EHC_CLUSTER_DELETE = "ehc/cluster/delete";
 
+    private static final String TASK_LIST = "list";
+
+    private static final String TASK_DETAIL = "detail";
+
     private static final String RESIZE_LIST = "resizeList";
     private static final String BCC_RESERVED_PREFIX = "instance/reserved";
     private static final String BCC_RESERVED_TAG_PREFIX = "bcc/reserved/tag";
@@ -367,6 +444,8 @@ public class BccClient extends AbstractBceClient {
     private static final String ACTION = "action";
     private static final String ATTACH = "AttachTags";
     private static final String DETACH = "DetachTags";
+    private static final String DISK_QUOTA = "disk/quota";
+
     /**
      * Generate signature with specified headers.
      */
@@ -424,6 +503,20 @@ public class BccClient extends AbstractBceClient {
         InternalRequest request = new InternalRequest(httpMethod, uri);
         SignOptions signOptions = new SignOptions();
         signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
+        request.setSignOptions(signOptions);
+        request.setCredentials(bceRequest.getRequestCredentials());
+        return request;
+    }
+
+    private InternalRequest createActionNameRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
+                                                    String actionName) {
+
+
+        URI uri = HttpUtils.appendUri(this.getEndpoint());
+        InternalRequest request = new InternalRequest(httpMethod, uri);
+        SignOptions signOptions = new SignOptions();
+        signOptions.setHeadersToSign(new HashSet<String>(Arrays.asList(HEADERS_TO_SIGN)));
+        request.addParameter(InstanceAction.action.name(), actionName);
         request.setSignOptions(signOptions);
         request.setCredentials(bceRequest.getRequestCredentials());
         return request;
@@ -734,6 +827,37 @@ public class BccClient extends AbstractBceClient {
         if (!Strings.isNullOrEmpty(request.getEhcClusterId())) {
             internalRequest.addParameter(EHC_CLUSTER_ID, request.getEhcClusterId());
         }
+        if (!Strings.isNullOrEmpty(request.getFuzzyInstanceName())) {
+            internalRequest.addParameter(FUZZY_INSTANCE_NAME, request.getFuzzyInstanceName());
+        }
+        if (StringUtils.isNotBlank(request.getInstanceIds())) {
+            internalRequest.addParameter(INSTANCE_IDS, request.getInstanceIds());
+        }
+        if (StringUtils.isNotBlank(request.getVolumeIds())) {
+            internalRequest.addParameter(VOLUME_IDS, request.getVolumeIds());
+        }
+        if (StringUtils.isNotBlank(request.getInstanceNames())) {
+            internalRequest.addParameter(INSTANCE_NAMES, request.getInstanceNames());
+        }
+        if (StringUtils.isNotBlank(request.getDeploySetIds())) {
+            internalRequest.addParameter(DEPLOYSET_IDS, request.getDeploySetIds());
+        }
+        if (StringUtils.isNotBlank(request.getSecurityGroupIds())) {
+            internalRequest.addParameter(SECURITY_GROUP_IDS, request.getSecurityGroupIds());
+        }
+        if (StringUtils.isNotBlank(request.getTags())) {
+            internalRequest.addParameter(TAGS, request.getTags());
+        }
+        if (StringUtils.isNotBlank(request.getStatus())) {
+            internalRequest.addParameter(STATUS, request.getStatus());
+        }
+        if (StringUtils.isNotBlank(request.getPaymentTiming())) {
+            internalRequest.addParameter(PAYMENT_TIMING, request.getPrivateIps());
+        }
+        if (StringUtils.isNotBlank(request.getPrivateIps())) {
+            internalRequest.addParameter(PRIVATE_IPS, request.getPrivateIps());
+        }
+
         return invokeHttpClient(internalRequest, ListInstancesResponse.class);
     }
 
@@ -884,6 +1008,9 @@ public class BccClient extends AbstractBceClient {
         }
         if (!Strings.isNullOrEmpty(request.getZoneName())) {
             internalRequest.addParameter(ZONE_NAME, request.getZoneName());
+        }
+        if (StringUtils.isNotBlank(request.getInstanceIds())) {
+            internalRequest.addParameter(INSTANCE_IDS, request.getInstanceIds());
         }
         return invokeHttpClient(internalRequest, ListInstancesResponse.class);
     }
@@ -1105,6 +1232,26 @@ public class BccClient extends AbstractBceClient {
         checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.PUT, INSTANCE_PREFIX, request.getInstanceId());
+        internalRequest.addParameter(InstanceAction.reboot.name(), null);
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Rebooting the instances owned by the user.
+     * <p>
+     * You can reboot the instances only when the instances is Running,
+     * otherwise,it will get <code>409</code> errorCode.
+     * <p>
+     * This is an asynchronous interface,
+     * you can get the latest status by invoke {@link #getInstance(GetInstanceRequest)}
+     *
+     * @param request The request containing all options for rebooting the instances.
+     */
+    public void rebootInstances(RebootInstancesRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, INSTANCE_PREFIX, BATCH_ACTION);
         internalRequest.addParameter(InstanceAction.reboot.name(), null);
         fillPayload(internalRequest, request);
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -2077,6 +2224,9 @@ public class BccClient extends AbstractBceClient {
         if (!Strings.isNullOrEmpty(request.getZoneName())) {
             internalRequest.addParameter(ZONE_NAME, request.getZoneName());
         }
+        if (StringUtils.isNotBlank(request.getProductCategory())) {
+            internalRequest.addParameter(PRODUCT_CATEGORY, request.getProductCategory());
+        }
         return invokeHttpClient(internalRequest, ListVolumesResponse.class);
     }
 
@@ -2138,6 +2288,15 @@ public class BccClient extends AbstractBceClient {
         internalRequest.addParameter(VolumeAction.attach.name(), null);
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, AttachVolumeResponse.class);
+    }
+
+    public void modifyVolumeDeleteProtection(ModifyVolumeDeleteProtectionRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkListNotEmpty(request.getVolumeIds(), "volumeIds cannot be null or empty");
+        InternalRequest internalRequest =
+                this.createRequest(request, HttpMethodName.POST, VOLUME_PREFIX, "modifyDeleteProtection");
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
     /**
@@ -3155,6 +3314,12 @@ public class BccClient extends AbstractBceClient {
         if (!Strings.isNullOrEmpty(request.getVpcId())) {
             internalRequest.addParameter(VPC_ID, request.getVpcId());
         }
+        if (!Strings.isNullOrEmpty(request.getSecurityGroupId())) {
+            internalRequest.addParameter(SECURITYGROUPID_MESSAGE_KEY, request.getSecurityGroupId());
+        }
+        if (!Strings.isNullOrEmpty(request.getSecurityGroupIds())) {
+            internalRequest.addParameter(SECURITYGROUPIDS_MESSAGE_KEY, request.getSecurityGroupIds());
+        }
         return invokeHttpClient(internalRequest, ListSecurityGroupsResponse.class);
     }
 
@@ -3223,6 +3388,9 @@ public class BccClient extends AbstractBceClient {
                 request.getSecurityGroupId());
         internalRequest.addParameter(SecurityGroupAction.authorizeRule.name(), null);
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        if (request.getSgVersion() != null) {
+            internalRequest.addParameter("sgVersion", String.valueOf(request.getSgVersion()));
+        }
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -3246,6 +3414,9 @@ public class BccClient extends AbstractBceClient {
                 request.getSecurityGroupId());
         internalRequest.addParameter(SecurityGroupAction.revokeRule.name(), null);
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        if (request.getSgVersion() != null) {
+            internalRequest.addParameter("sgVersion", String.valueOf(request.getSgVersion()));
+        }
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -3268,8 +3439,12 @@ public class BccClient extends AbstractBceClient {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getSecurityGroupId(),
                 checkEmptyExceptionMessageFormat(SECURITYGROUPID_MESSAGE_KEY));
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
         InternalRequest internalRequest =
                 this.createRequest(request, HttpMethodName.DELETE, SECURITYGROUP_PREFIX, request.getSecurityGroupId());
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -3553,11 +3728,18 @@ public class BccClient extends AbstractBceClient {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getSecurityGroupRuleId(),
                 checkEmptyExceptionMessageFormat(SECURITY_GROUP_RULE_ID_MESSAGE_KEY));
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
         InternalRequest internalRequest = this.createRequest(request,
                 HttpMethodName.DELETE,
                 SECURITYGROUP_PREFIX,
                 SECURITY_GROUP_RULE_PREFIX,
                 request.getSecurityGroupRuleId());
+        if (request.getSgVersion() != null) {
+            internalRequest.addParameter("sgVersion", String.valueOf(request.getSgVersion()));
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
@@ -3570,8 +3752,15 @@ public class BccClient extends AbstractBceClient {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getSecurityGroupRuleId(),
                 checkEmptyExceptionMessageFormat(SECURITY_GROUP_RULE_ID_MESSAGE_KEY));
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, SECURITYGROUP_PREFIX,
                 SECURITY_GROUP_RULE_PREFIX, SECURITY_GROUP_RULE_UPDATE_PREFIX);
+        if (request.getSgVersion() != null) {
+            internalRequest.addParameter("sgVersion", String.valueOf(request.getSgVersion()));
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
@@ -3994,6 +4183,15 @@ public class BccClient extends AbstractBceClient {
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    public BatchChangeToPostpaidResponse batchChangeToPostpaid(BatchChangeToPostpaidRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, BATCH_CHARGING);
+        internalRequest.addParameter(InstanceAction.toPostpay.name(), null);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, BatchChangeToPostpaidResponse.class);
+    }
+
     public BatchChangeToPrepaidResponse batchChangeToPrepaid(BatchChangeToPrepaidRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
@@ -4068,6 +4266,140 @@ public class BccClient extends AbstractBceClient {
                 EHC_CLUSTER_DELETE);
         fillPayload(internalRequest, request);
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public AuthorizeServerEventResp authorizeServerEvent(AuthorizeServerEventReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST, UseropAction.AuthorizeServerEvent.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AuthorizeServerEventResp.class);
+    }
+
+    public CreateInstUserOpAuthorizeRuleResp createAuthorizeRule(CreateInstUserOpAuthorizeRuleCmdReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST, UseropAction.CreateAuthorizeRule.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateInstUserOpAuthorizeRuleResp.class);
+    }
+
+    public BaseResp modifyInstUserOpAuthorizeRuleAttribute(ModifyInstUserOpAuthorizeRuleCmdReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.ModifyInstUserOpAuthorizeRuleAttribute.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, BaseResp.class);
+    }
+
+    public BaseResp deleteInstUserOpAuthorizeRule(DeleteInstUserOpAuthorizeRuleReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.DeleteInstUserOpAuthorizeRule.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, BaseResp.class);
+    }
+
+    public DescribeInstUserOpAuthorizeRuleResp describeAuthorizeRules(DescribeInstUserOpAuthorizeRuleReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.DescribeAuthorizeRules.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribeInstUserOpAuthorizeRuleResp.class);
+    }
+
+    public DescribePlannedEventsResp describePlannedEvents(DescribeServerEventReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.DescribePlannedEvents.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribePlannedEventsResp.class);
+    }
+
+    public DescribePlannedEventsResp describePlannedEventRecords(DescribeServerEventRecordReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.DescribePlannedEventRecords.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribePlannedEventsResp.class);
+    }
+
+    public BaseResp checkUnplannedEvent(CheckUnplannedEventReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.CheckUnplannedEvent.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, BaseResp.class);
+    }
+
+    public DescribeUnplannedEventsResp describeUnplannedEvents(DescribeServerEventReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.DescribeUnplannedEvents.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribeUnplannedEventsResp.class);
+    }
+
+    public DescribeUnplannedEventsResp describeUnplannedEventRecords(DescribeServerEventRecordReq request) {
+        InternalRequest internalRequest = createActionNameRequest(request, HttpMethodName.POST,
+                UseropAction.DescribeUnplannedEventRecords.name());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DescribeUnplannedEventsResp.class);
+    }
+
+    public ListTaskByMarkerResponse listTask(ListTaskByMarkerRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, TASK_PREFIX,
+                TASK_LIST);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, ListTaskByMarkerResponse.class);
+    }
+
+    public TaskDetailResponse getTask(TaskDetailRequest request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, TASK_PREFIX,
+                TASK_DETAIL);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, TaskDetailResponse.class);
+    }
+
+    public CreateSnapshotShareResp createSnapshotShare(CreateSnapshotShareReq request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, SNAPSHOT_PREFIX,
+                SHARE_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateSnapshotShareResp.class);
+    }
+
+    public CancelSnapshotShareResp cancelSnapshotShare(CancelSnapshotShareReq request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, SNAPSHOT_PREFIX,
+                UNSHARE_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CancelSnapshotShareResp.class);
+    }
+
+    public ListSnapshotShareByMarkerV2Resp listSnapshotShare(ListSnapshotShareByMarkerV2Req request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
+                SNAPSHOT_PREFIX, SNAPSHOTSHARE_PREFIX, TASK_LIST);
+        return invokeHttpClient(internalRequest, ListSnapshotShareByMarkerV2Resp.class);
+    }
+
+    public GetDiagnosticSchemasResp getDiagnosticSchemas(GetDiagnosticSchemasReq request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
+                INSTANCE_PREFIX, DIAGNOSTIC_REPORT, SCHEMAS);
+        return invokeHttpClient(internalRequest, GetDiagnosticSchemasResp.class);
+    }
+
+    public ListDiagnosticReportResp listDiagnosticReport(ListDiagnosticReq request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, DIAGNOSTIC_REPORT, LIST);
+        return invokeHttpClient(internalRequest, ListDiagnosticReportResp.class);
+    }
+
+    public CreateDiagnosticResp createDiagnostic(CreateDiagnosticReq request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, DIAGNOSTIC_REPORT, CREATE);
+        return invokeHttpClient(internalRequest, CreateDiagnosticResp.class);
+    }
+
+    public DeleteDiagnosticReportResp deleteDiagnosticReport(DeleteDiagnosticReportReq request) {
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                INSTANCE_PREFIX, DIAGNOSTIC_REPORT, DELETE);
+        return invokeHttpClient(internalRequest, DeleteDiagnosticReportResp.class);
+    }
+
+    public GetDiskQuotaResponse getDiskQuota(GetDiskQuotaRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
+                VOLUME_PREFIX, DISK_QUOTA);
+        internalRequest.addParameter(ZONE_NAME, request.getZoneName());
+        return invokeHttpClient(internalRequest, GetDiskQuotaResponse.class);
     }
 
 }

@@ -2,6 +2,7 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.model.AbstractBceResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -18,7 +19,9 @@ public class RdsAccount extends AbstractBceResponse {
     private RdsAccountType accountType;
     private List<DatabasePrivilege> databasePrivileges;
     private String desc;
+    @JsonProperty("ETag")
     private String eTag;
+
 
     public String getAccountName() {
         return accountName;

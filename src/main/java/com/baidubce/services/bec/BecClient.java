@@ -31,24 +31,50 @@ import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGro
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbIpGroupResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupMemberRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupMemberResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupPortRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupPortResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.CreateBecAppBlbServerGroupResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupBackendPoliciesRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupBackendPoliciesResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupMembersRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbIpGroupResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupPortRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupPortResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.DeleteBecAppBlbServerGroupResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupBackendPoliciesRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupBackendPoliciesResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupMembersRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupsRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbIpGroupsResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMountedMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupMountedMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupUnmountedMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupUnmountedMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupsRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.GetBecAppBlbServerGroupsResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupBackendPolicyRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupBackendPolicyResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupMembersRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupMembersResponse;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupRequest;
 import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbIpGroupResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupMembersRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupMembersResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupPortRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupPortResponse;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupRequest;
+import com.baidubce.services.bec.model.appblbv2.backendbind.UpdateBecAppBlbServerGroupResponse;
 import com.baidubce.services.bec.model.appblbv2.instance.CreateBecAppBlbRequest;
 import com.baidubce.services.bec.model.appblbv2.instance.CreateBecAppBlbResponse;
 import com.baidubce.services.bec.model.appblbv2.instance.DeleteBecAppBlbRequest;
@@ -365,7 +391,14 @@ public class BecClient extends AbstractBceClient {
     private static final String DNAT_RULE = "dnatRule";
     private static final String BATCH_CREATE = "batchCreate";
     private static final String BATCH_DELETE = "batchdelete";
-
+    private static final String APP_SERVER_GROUP = "appservergroup";
+    private static final String APP_SERVER_GROUP_PORT = "appservergroupport";
+    private static final String BLBRS = "blbrs";
+    private static final String SG_ID = "sgId";
+    private static final String BLBRSUNMOUNT = "blbrsunmount";
+    private static final String BLBRSMOUNT = "blbrsmount";
+    private static final String EXACTLY_MATCH = "exactlyMatch";
+    private static final String NAME = "name";
     /**
      * List selection keywords.
      */
@@ -378,6 +411,7 @@ public class BecClient extends AbstractBceClient {
     private static final String REQUEST_NULL_ERROR_MESSAGE = "request should not be null.";
     private static final String OFFSET_IN_SECONDS_NULL_ERROR_MESSAGE = "offsetInSeconds should not be null.";
     private static final String BLB_ID_MESSAGE_KEY = "blbId";
+    private static final String SG_ID_MESSAGE_KEY = "sgId";
     private static final String BLB_TYPE_MESSAGE_KEY = "type";
     private static final String IP_TYPE_MESSAGE_KEY = "ipType";
     private static final String VM_SERVICE_ID_MESSAGE_KEY = "serviceId";
@@ -405,6 +439,7 @@ public class BecClient extends AbstractBceClient {
     private static final String NAT_ID_MESSAGE_KEY = "natId";
     private static final String RULE_ID_MESSAGE_KEY = "ruleId";
     private static final String IP_GROUP_ID_MESSAGE_KEY = "ipGroupId";
+    private static final String NAME_MESSAGE_KEY = "name";
     /**
      * Generate signature with specified headers.
      */
@@ -450,6 +485,7 @@ public class BecClient extends AbstractBceClient {
     private InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,
                                           String... pathVariables) {
         List<String> path = new ArrayList<String>();
+//        path.add("monitor");
         path.add(VERSION);
         if (pathVariables != null) {
             for (String pathVariable : pathVariables) {
@@ -2789,6 +2825,312 @@ public class BecClient extends AbstractBceClient {
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, DeleteBecAppBlbIpGroupMembersResponse.class);
+    }
+    /**
+     * Creates a new server group for BEC application load balancer (V2 API)
+     *
+     * @param request Contains parameters for creating the server group including:
+     *               - blbId: The ID of the load balancer
+     *               - name: Name of the server group
+     *               - clientToken: Optional idempotency token
+     * @return Response containing the created server group details
+     */
+    public CreateBecAppBlbServerGroupResponse createBecAppBlbServerGroupV2(CreateBecAppBlbServerGroupRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.POST, APP_BLB_PREFIX,
+                request.getBlbId(), APP_SERVER_GROUP);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateBecAppBlbServerGroupResponse.class);
+    }
+    /**
+     * Updates an existing BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters for updating the server group including:
+     *               - blbId: The ID of the load balancer
+     *               - clientToken: Optional idempotency token
+     * @return Response containing the updated server group details
+     */
+    public UpdateBecAppBlbServerGroupResponse updateBecAppBlbServerGroupV2(UpdateBecAppBlbServerGroupRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.PUT, APP_BLB_PREFIX,
+                request.getBlbId(), APP_SERVER_GROUP);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateBecAppBlbServerGroupResponse.class);
+    }
+    /**
+     * Retrieves list of server groups for a BEC application load balancer (V2 API)
+     *
+     * @param request Contains parameters for querying server groups including:
+     *               - blbId: The ID of the load balancer
+     *               - listRequest: Optional pagination parameters
+     *               - exactlyMatch: Optional exact name matching flag
+     *               - name: Optional server group name filter
+     * @return Response containing list of server groups
+     */
+    public GetBecAppBlbServerGroupsResponse getBecAppBlbServerGroupsV2(GetBecAppBlbServerGroupsRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.GET, APP_BLB_PREFIX,
+                request.getBlbId(), APP_SERVER_GROUP);
+        if (ObjectUtils.allNotNull(request.getListRequest())) {
+            if (StringUtils.isNotEmpty(request.getListRequest().getMarker())) {
+                internalRequest.addParameter(MARKER, request.getListRequest().getMarker());
+            }
+            if (ObjectUtils.allNotNull((request.getListRequest().getMaxKeys()))) {
+                internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getListRequest().getMaxKeys()));
+            }
+        }
+        if (request.getExactlyMatch() != null) {
+            internalRequest.addParameter(EXACTLY_MATCH, String.valueOf(request.getExactlyMatch()));
+        }
+        if (StringUtils.isNotEmpty(request.getName())) {
+            internalRequest.addParameter(NAME, request.getName());
+        }
+        return invokeHttpClient(internalRequest, GetBecAppBlbServerGroupsResponse.class);
+    }
+    /**
+     * Deletes a server group from BEC application load balancer (V2 API)
+     *
+     * @param request Contains parameters for deleting the server group including:
+     *               - blbId: The ID of the load balancer
+     *               - clientToken: Optional idempotency token
+     * @return Response containing deletion status
+     */
+    public DeleteBecAppBlbServerGroupResponse deleteBecAppBlbServerGroupV2(DeleteBecAppBlbServerGroupRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.PUT, APP_BLB_PREFIX,
+                request.getBlbId(), APP_SERVER_GROUP);
+        internalRequest.addParameter(DELETE, "");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DeleteBecAppBlbServerGroupResponse.class);
+    }
+    /**
+     * Creates a new port configuration for a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - clientToken: Optional idempotency token
+     *               - Other port configuration parameters
+     * @return Response containing the created port configuration
+     */
+    public CreateBecAppBlbServerGroupPortResponse createBecAppBlbServerGroupPortV2(CreateBecAppBlbServerGroupPortRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.POST, APP_BLB_PREFIX,
+                request.getBlbId(), APP_SERVER_GROUP_PORT);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateBecAppBlbServerGroupPortResponse.class);
+    }
+    /**
+     * Updates an existing port configuration for a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - clientToken: Optional idempotency token
+     *               - Other port configuration parameters to update
+     * @return Response containing the updated port configuration
+     */
+    public UpdateBecAppBlbServerGroupPortResponse updateBecAppBlbServerGroupPortV2(UpdateBecAppBlbServerGroupPortRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.PUT, APP_BLB_PREFIX,
+                request.getBlbId(), APP_SERVER_GROUP_PORT);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateBecAppBlbServerGroupPortResponse.class);
+    }
+    /**
+     * Deletes a port configuration from a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - clientToken: Optional idempotency token
+     *               - Port configuration identifiers to delete
+     * @return Response containing deletion status
+     */
+    public DeleteBecAppBlbServerGroupPortResponse deleteBecAppBlbServerGroupPortV2(DeleteBecAppBlbServerGroupPortRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.PUT, APP_BLB_PREFIX,
+                request.getBlbId(), APP_SERVER_GROUP_PORT);
+        internalRequest.addParameter(DELETE, "");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DeleteBecAppBlbServerGroupPortResponse.class);
+    }
+    /**
+     * Adds a new member to a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - clientToken: Optional idempotency token
+     *               - Member configuration parameters
+     * @return Response containing the created member details
+     */
+    public CreateBecAppBlbServerGroupMemberResponse createBecAppBlbServerGroupMemberV2(CreateBecAppBlbServerGroupMemberRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.POST, APP_BLB_PREFIX,
+                request.getBlbId(), BLBRS);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateBecAppBlbServerGroupMemberResponse.class);
+    }
+    /**
+     * Retrieves list of members for a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - sgId: The server group ID (required)
+     *               - listRequest: Optional pagination parameters
+     * @return Response containing list of server group members
+     */
+    public GetBecAppBlbServerGroupMembersResponse getBecAppBlbServerGroupMembersV2(GetBecAppBlbServerGroupMembersRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSgId(), checkEmptyExceptionMessageFormat(SG_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.GET, APP_BLB_PREFIX,
+                request.getBlbId(), BLBRS);
+        if (ObjectUtils.allNotNull(request.getListRequest())) {
+            if (StringUtils.isNotEmpty(request.getListRequest().getMarker())) {
+                internalRequest.addParameter(MARKER, request.getListRequest().getMarker());
+            }
+            if (ObjectUtils.allNotNull((request.getListRequest().getMaxKeys()))) {
+                internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getListRequest().getMaxKeys()));
+            }
+        }
+        if (StringUtils.isNotEmpty(request.getSgId())) {
+            internalRequest.addParameter(SG_ID, request.getSgId());
+        }
+        return invokeHttpClient(internalRequest, GetBecAppBlbServerGroupMembersResponse.class);
+    }
+    /**
+     * Retrieves list of unmounted members available for a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - sgId: The server group ID (required)
+     *               - listRequest: Optional pagination parameters
+     * @return Response containing list of available unmounted members
+     */
+    public GetBecAppBlbServerGroupUnmountedMembersResponse getBecAppBlbServerGroupUnboundMembersV2(GetBecAppBlbServerGroupUnmountedMembersRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSgId(), checkEmptyExceptionMessageFormat(SG_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.GET, APP_BLB_PREFIX,
+                request.getBlbId(), BLBRSUNMOUNT);
+        if (ObjectUtils.allNotNull(request.getListRequest())) {
+            if (StringUtils.isNotEmpty(request.getListRequest().getMarker())) {
+                internalRequest.addParameter(MARKER, request.getListRequest().getMarker());
+            }
+            if (ObjectUtils.allNotNull((request.getListRequest().getMaxKeys()))) {
+                internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getListRequest().getMaxKeys()));
+            }
+        }
+        if (StringUtils.isNotEmpty(request.getSgId())) {
+            internalRequest.addParameter(SG_ID, request.getSgId());
+        }
+        return invokeHttpClient(internalRequest, GetBecAppBlbServerGroupUnmountedMembersResponse.class);
+    }
+    /**
+     * Retrieves list of mounted members for a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - sgId: The server group ID (required)
+     *               - listRequest: Optional pagination parameters
+     * @return Response containing list of mounted members
+     */
+    public GetBecAppBlbServerGroupMountedMembersResponse getBecAppBlbServerGroupMountedMembersV2(GetBecAppBlbServerGroupMountedMembersRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getSgId(), checkEmptyExceptionMessageFormat(SG_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.GET, APP_BLB_PREFIX,
+                request.getBlbId(), BLBRSMOUNT);
+        if (ObjectUtils.allNotNull(request.getListRequest())) {
+            if (StringUtils.isNotEmpty(request.getListRequest().getMarker())) {
+                internalRequest.addParameter(MARKER, request.getListRequest().getMarker());
+            }
+            if (ObjectUtils.allNotNull((request.getListRequest().getMaxKeys()))) {
+                internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getListRequest().getMaxKeys()));
+            }
+        }
+        if (StringUtils.isNotEmpty(request.getSgId())) {
+            internalRequest.addParameter(SG_ID, request.getSgId());
+        }
+        return invokeHttpClient(internalRequest, GetBecAppBlbServerGroupMountedMembersResponse.class);
+    }
+    /**
+     * Updates members of a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - clientToken: Optional idempotency token
+     *               - Member update configurations
+     * @return Response containing update status
+     */
+    public UpdateBecAppBlbServerGroupMembersResponse updateBecAppBlbServerGroupMembersV2(UpdateBecAppBlbServerGroupMembersRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.PUT, APP_BLB_PREFIX,
+                request.getBlbId(), BLBRS);
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateBecAppBlbServerGroupMembersResponse.class);
+    }
+    /**
+     * Batch deletes members from a BEC application load balancer server group (V2 API)
+     *
+     * @param request Contains parameters including:
+     *               - blbId: The load balancer ID (required)
+     *               - clientToken: Optional idempotency token
+     *               - Member identifiers to delete
+     * @return Response containing batch deletion status
+     */
+    public DeleteBecAppBlbServerGroupMembersResponse deleteBecAppBlbServerGroupMembersV2(DeleteBecAppBlbServerGroupMembersRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getBlbId(), checkEmptyExceptionMessageFormat(BLB_ID_MESSAGE_KEY));
+        InternalRequest internalRequest = createRequestV2(request, HttpMethodName.PUT, APP_BLB_PREFIX,
+                request.getBlbId(), BLBRS);
+        internalRequest.addParameter(BATCH_DELETE, "");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateClientToken());
+        }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, DeleteBecAppBlbServerGroupMembersResponse.class);
     }
     /**
      * App blb backend api end.

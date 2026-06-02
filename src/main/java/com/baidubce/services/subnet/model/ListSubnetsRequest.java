@@ -29,6 +29,11 @@ public class ListSubnetsRequest extends ListRequest {
     private String subnetType;
 
     /**
+     * The option param to describe the id of subnet
+     */
+    private String subnetIds;
+
+    /**
      * Configure zoneName for the request.
      *
      * @param  zoneName the name of available zone
@@ -83,6 +88,22 @@ public class ListSubnetsRequest extends ListRequest {
 
     public void setSubnetType(String subnetType) {
         this.subnetType = subnetType;
+    }
+
+    /**
+     * Get the subnet ids.
+     * @return
+     */
+    public String getSubnetIds() {
+        return subnetIds;
+    }
+
+    /**
+     * Set the subnet ids.
+     * @param subnetIds
+     */
+    public void setSubnetIds(String subnetIds) {
+        this.subnetIds = subnetIds;
     }
 
     /**

@@ -125,14 +125,14 @@ public class ListBucketReplicationResponse extends BosResponse {
         @Override
         public String toString() {
             return "Rule{" +
-                    "status='" + status + '\'' +
-                    ", resource=" + Arrays.toString(resource) +
-                    ", destination=" + destination +
-                    ", replicateHistory=" + replicateHistory +
-                    ", replicateDeletes='" + replicateDeletes + '\'' +
-                    ", id='" + id + '\'' +
-                    ", createTime=" + createTime +
-                    ", destRegion='" + destRegion + '\'' +
+                    "status='" + getStatus() + '\'' +
+                    ", resource=" + Arrays.toString(getResource()) +
+                    ", destination=" + getDestination() +
+                    ", replicateHistory=" + getReplicateHistory() +
+                    ", replicateDeletes='" + getReplicateDeletes() + '\'' +
+                    ", id='" + getId() + '\'' +
+                    ", createTime=" + getCreateTime() +
+                    ", destRegion='" + getDestRegion() + '\'' +
                     '}';
         }
     }

@@ -1,13 +1,19 @@
 package com.baidubce.services.ipv6Gateway;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.baidubce.auth.DefaultBceCredentials;
+import com.baidubce.services.bcc.model.TagModel;
 import com.baidubce.services.ipv6Gateway.model.CreateEgressOnlyRuleRequest;
+import com.baidubce.services.ipv6Gateway.model.CreateIpv6GatewayRequest;
 import com.baidubce.services.ipv6Gateway.model.CreateRateLimitRuleRequest;
+import com.baidubce.services.ipv6Gateway.model.UpdateDeleteProtectRequest;
 import com.baidubce.services.ipv6Gateway.model.UpdateRateLimitRuleRequest;
 import com.baidubce.services.subnet.SubnetClientTest;
 import com.baidubce.services.vpc.VpcClientConfiguration;
@@ -104,5 +110,46 @@ public class Ipv6GatewayClientTest {
     @Test
     public void deleteIpv6RateLimitRule() {
         ipv6GatewayClient.deleteIpv6GatewayRateLimitRule("gw-ba92ac44", "ipv6_qos-1a5de4b5");
+    }
+
+    @Test
+    public void createIpv6GatewayWithFullParametersTest() {
+        CreateIpv6GatewayRequest request = new CreateIpv6GatewayRequest();
+        request.setVpcId("vpc-90akjp09ehwx");
+        request.setName("testIpv6WithTags");
+        request.setBandwidthInMbps(20);
+        
+        // Add tags
+        List<TagModel> tags = new ArrayList<TagModel>();
+        TagModel tag1 = new TagModel();
+        tag1.setTagKey("project");
+        tag1.setTagValue("test");
+        tags.add(tag1);
+        request.setTags(tags);
+        
+        // Set resourceGroupId
+        request.setResourceGroupId("RESG-evSwqZkkaeS");
+        
+        // Enable delete protection
+        request.setDeleteProtect(true);
+        
+        toJsonPrettyString("create gateway with full parameters", 
+                ipv6GatewayClient.createIpv6Gateway(request));
+    }
+
+    @Test
+    public void updateDeleteProtectTest() {
+        // Enable delete protection
+        ipv6GatewayClient.updateDeleteProtect("gw-WCfh3F6W", false);
+        logger.info("Delete protection enabled");
+    }
+
+    @Test
+    public void updateDeleteProtectWithRequestTest() {
+        UpdateDeleteProtectRequest request = new UpdateDeleteProtectRequest();
+        request.setGatewayId("gw-WCfh3F6W");
+        request.setDeleteProtect(false);
+        ipv6GatewayClient.updateDeleteProtect(request);
+        logger.info("Delete protection disabled");
     }
 }

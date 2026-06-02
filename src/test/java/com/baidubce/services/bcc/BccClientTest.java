@@ -57,6 +57,8 @@ import com.baidubce.services.bcc.model.image.ShareImageRequest;
 import com.baidubce.services.bcc.model.image.UnShareImageRequest;
 import com.baidubce.services.bcc.model.instance.BatchAddIpRequest;
 import com.baidubce.services.bcc.model.instance.BatchAddIpResponse;
+import com.baidubce.services.bcc.model.instance.BatchChangeToPostpaidRequest;
+import com.baidubce.services.bcc.model.instance.BatchChangeToPostpaidRequest.PostpayConfig;
 import com.baidubce.services.bcc.model.instance.BatchChangeToPrepaidRequest;
 import com.baidubce.services.bcc.model.instance.BatchDeleteIpRequest;
 import com.baidubce.services.bcc.model.instance.BatchRefundResourceRequest;
@@ -132,6 +134,24 @@ import com.baidubce.services.bcc.model.snapshot.ListSnapchainRequest;
 import com.baidubce.services.bcc.model.snapshot.ListSnapchainResponse;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotsRequest;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotsResponse;
+import com.baidubce.services.bcc.model.task.ListTaskByMarkerRequest;
+import com.baidubce.services.bcc.model.task.ListTaskByMarkerResponse;
+import com.baidubce.services.bcc.model.task.TaskDetailRequest;
+import com.baidubce.services.bcc.model.task.TaskDetailResponse;
+import com.baidubce.services.bcc.model.userop.AuthorizeServerEventReq;
+import com.baidubce.services.bcc.model.userop.AuthorizeServerEventResp;
+import com.baidubce.services.bcc.model.userop.BaseResp;
+import com.baidubce.services.bcc.model.userop.CheckUnplannedEventReq;
+import com.baidubce.services.bcc.model.userop.CreateInstUserOpAuthorizeRuleCmdReq;
+import com.baidubce.services.bcc.model.userop.CreateInstUserOpAuthorizeRuleResp;
+import com.baidubce.services.bcc.model.userop.DeleteInstUserOpAuthorizeRuleReq;
+import com.baidubce.services.bcc.model.userop.DescribeInstUserOpAuthorizeRuleReq;
+import com.baidubce.services.bcc.model.userop.DescribeInstUserOpAuthorizeRuleResp;
+import com.baidubce.services.bcc.model.userop.DescribePlannedEventsResp;
+import com.baidubce.services.bcc.model.userop.DescribeServerEventRecordReq;
+import com.baidubce.services.bcc.model.userop.DescribeServerEventReq;
+import com.baidubce.services.bcc.model.userop.DescribeUnplannedEventsResp;
+import com.baidubce.services.bcc.model.userop.ModifyInstUserOpAuthorizeRuleCmdReq;
 import com.baidubce.services.bcc.model.volume.AttachVolumeResponse;
 import com.baidubce.services.bcc.model.volume.CancelAutoRenewVolumeClusterRequest;
 import com.baidubce.services.bcc.model.volume.CancelAutoRenewVolumeRequest;
@@ -140,6 +160,7 @@ import com.baidubce.services.bcc.model.volume.CreateVolumeClusterResponse;
 import com.baidubce.services.bcc.model.volume.CreateVolumeRequest;
 import com.baidubce.services.bcc.model.volume.CreateVolumeResponse;
 import com.baidubce.services.bcc.model.volume.EphemeralDisk;
+import com.baidubce.services.bcc.model.volume.GetDiskQuotaRequest;
 import com.baidubce.services.bcc.model.volume.GetVolumeResponse;
 import com.baidubce.services.bcc.model.volume.ListVolumeClustersResponse;
 import com.baidubce.services.bcc.model.volume.ListVolumesRequest;
@@ -147,6 +168,7 @@ import com.baidubce.services.bcc.model.volume.ListVolumesResponse;
 import com.baidubce.services.bcc.model.volume.ModifyCdsAttrRequest;
 import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeRequest;
 import com.baidubce.services.bcc.model.volume.ModifyVolumeChargeTypeRequest;
+import com.baidubce.services.bcc.model.volume.ModifyVolumeDeleteProtectionRequest;
 import com.baidubce.services.bcc.model.volume.RenameVolumeRequest;
 import com.baidubce.services.bcc.model.volume.ResizeVolumeRequest;
 import com.baidubce.services.bcc.model.volume.VolumePriceRequest;
@@ -169,6 +191,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -242,6 +265,7 @@ public class BccClientTest {
 
     public static class RegionTest extends BccBase {
         protected BccClient client;
+
         @Before
         public void setUp() {
             super.setUp();
@@ -268,6 +292,7 @@ public class BccClientTest {
     public static class ReservedTest extends BccBase {
         protected BccClient client;
         List<String> reservedInstanceIds = Arrays.asList("r-Qyycx1SX");
+
         @Before
         public void setUp() {
             super.setUp();
@@ -378,6 +403,7 @@ public class BccClientTest {
             client.unbindTagsBatchByResourceType(tagsOperationRequest);
         }
     }
+
     /**
      * Test case about instance begin
      */
@@ -408,12 +434,15 @@ public class BccClientTest {
             ephemeralDisk.setSizeInGB(5);
             List<EphemeralDisk> ephemeralDiskList = new ArrayList<EphemeralDisk>();
             ephemeralDiskList.add(ephemeralDisk);
+            List<String> eniIds = new ArrayList<>();
+            eniIds.add("eniShortId");
             return new CreateInstanceRequest()
 //                    .withSpec("bcc.ic3.c1m1")
-                    .withSpec("bcc.g3.c4m12")
+                    .withSpec("bcc.g5.c2m8")
                     .withName("bcc-sdk" + System.currentTimeMillis())
-                    .withZoneName("cn-gz-b")
+                    .withZoneName("cn-bj-a")
 //                    .withEphemeralDisks(ephemeralDiskList)
+                    .withEniIds(eniIds)
                     .withImageId(systemImageId)
                     .withBidModel("market")
                     .withAspId(aspId)
@@ -610,10 +639,18 @@ public class BccClientTest {
         @Test
         public void listInstanceByIds() {
             ListInstanceByIdsRequest request = new ListInstanceByIdsRequest();
-            request.setInstanceIds(Arrays.asList("i-9Ow9E***","i-keLMS***"));
+            request.setInstanceIds(Arrays.asList("i-9Ow9E***", "i-keLMS***"));
             ListInstancesResponse response = client.listInstanceByIds(request);
             assertThat(response.getInstances(), notNullValue());
             toJsonPrettyString("listInstanceByIds", response);
+        }
+
+        @Test
+        public void listInstanceByFuzzyInstanceName() {
+            ListInstancesRequest request = new ListInstancesRequest().withFuzzyInstanceName("g80wwjst");
+            ListInstancesResponse response = client.listInstances(request);
+            assertThat(response.getInstances(), notNullValue());
+            toJsonPrettyString("listInstance", response);
         }
 
         @Test
@@ -656,7 +693,7 @@ public class BccClientTest {
         @Test
         public void batchStopInstance() {
             BatchStopInstanceRequest request = new BatchStopInstanceRequest();
-            request.setInstanceIds(Arrays.asList("i-KEmEvelA","i-0nPl9WFJ"));
+            request.setInstanceIds(Arrays.asList("i-KEmEvelA", "i-0nPl9WFJ"));
             request.setForceStop(true);
             request.setStopWithNoCharge(false);
             client.batchStopInstance(request);
@@ -726,14 +763,14 @@ public class BccClientTest {
         @Test
         public void resizeInstance() {
             client.resizeInstance(new ResizeInstanceRequest()
-                    .withInstanceId("i-M1qlCk90").withCpuCount(2).withMemoryCapacityInGB(2)
+                    .withInstanceId("i-Z3rZB8WG").withCpuCount(2).withMemoryCapacityInGB(2).withEnableJumboFrame(false)
             );
         }
 
         @Test
         public void resizeInstanceBySpec() {
             client.resizeInstanceBySpec(new ResizeInstanceRequest()
-                    .withInstanceId("i-jL2s2hBI").withSpec("bcc.lgn1.c12m40.1p4"));
+                    .withInstanceId("i-Z3rZB8WG").withSpec("bcc.g4.c2m8").withEnableJumboFrame(false));
         }
 
         //        @Test
@@ -814,7 +851,6 @@ public class BccClientTest {
                     client.releasePrepaidInstanceByPost(instanceId, true, true, true);
             System.out.println(releasePrepaidInstanceResponse);
         }
-
 
 
         @Test
@@ -905,6 +941,16 @@ public class BccClientTest {
             BatchChangeToPrepaidRequest request = new BatchChangeToPrepaidRequest()
                     .withConfig(Arrays.asList(changeToPrepaidRequest));
             client.batchChangeToPrepaid(request);
+        }
+
+        @Test
+        public void testBatchChangeToPostpaid() {
+            PostpayConfig postpayConfig = new PostpayConfig()
+                    .withEffectiveType("AtOnce")
+                    .withInstanceId("i-123456");
+            BatchChangeToPostpaidRequest request = new BatchChangeToPostpaidRequest()
+                    .withConfig(Arrays.asList(postpayConfig));
+            client.batchChangeToPostpaid(request);
         }
 
         @Test
@@ -1041,7 +1087,7 @@ public class BccClientTest {
         @Test
         public void listVolumeWithEbcDiskSize() {
             ListVolumesRequest request = new ListVolumesRequest();
-            request.setInstanceId("i-Jq59glX4");
+            request.setProductCategory("BCC");
             ListVolumesResponse response = client.listVolumes(request);
             assertThat(response.getVolumes(), notNullValue());
             toJsonPrettyString("listVolume", response);
@@ -1066,6 +1112,14 @@ public class BccClientTest {
             AttachVolumeResponse response = client.attachVolume(volumeId, instanceId);
             assertThat(response.getVolumeAttachment(), notNullValue());
             toJsonPrettyString("attachVolume", response);
+        }
+
+
+        public void modifyVolumeDeleteProtection() {
+            ModifyVolumeDeleteProtectionRequest request = new ModifyVolumeDeleteProtectionRequest();
+            request.setVolumeIds(Arrays.asList("v-iutc25rt"));
+            request.setEnableDeleteProtection(true);
+            client.modifyVolumeDeleteProtection(request);
         }
 
         //        @Test
@@ -1130,6 +1184,7 @@ public class BccClientTest {
             volumeId = "v-ZxRIF434";
             ModifyVolumeChargeRequest request = new ModifyVolumeChargeRequest();
             request.setVolumeId(volumeId);
+            request.setEffectiveType("AtOnce");
             request.setBillingMethod("postpay");
 //            request.setReservationLength(1);
             client.modifyVolumeChargeType(request);
@@ -1140,6 +1195,7 @@ public class BccClientTest {
             volumeId = "v-6WeHyS3w";
             ModifyVolumeChargeTypeRequest request = new ModifyVolumeChargeTypeRequest();
             request.setVolumeId(volumeId);
+            request.setEffectiveType("AtOnce");
 //            Billing billing = new Billing().withPaymentTiming("Postpaid").withReservation(new Reservation().withReservationLength(2));
 //            request.setBilling(billing);
             client.modifyVolumeChargeType(request);
@@ -1155,6 +1211,13 @@ public class BccClientTest {
             request.setPurchaseCount(1);
             request.setZoneName("cn-bj-b");
             client.getCdsPrice(request);
+        }
+
+        @Test
+        public void getDiskQuota() {
+            GetDiskQuotaRequest request = new GetDiskQuotaRequest();
+            request.setZoneName("cn-bj-a");
+            client.getDiskQuota(request);
         }
     }
 
@@ -1973,6 +2036,143 @@ public class BccClientTest {
             GetAvailableImagesBySpecResponse response = client.getAvailableImagesBySpec(request);
             toJsonPrettyString("getAvailableImagesBySpec", response);
 
+        }
+    }
+
+    public static class UseropTest extends BccBase {
+
+        protected BccClient client;
+
+        @Before
+        public void setUp() {
+            super.setUp();
+            client = new BccClient(config);
+        }
+
+        @After
+        public void tearDown() {
+            super.tearDown();
+        }
+
+        @Test
+        public void getAuthorizeServerEventTest() {
+
+            AuthorizeServerEventReq request = new AuthorizeServerEventReq();
+            request.setInstanceId("i-0nPl9WFJ");
+            request.setAuthorizeMaintenanceOperation("Repair");
+            request.setExecuteTime(new Date(Long.parseLong("1685629600000")));
+            AuthorizeServerEventResp response = client.authorizeServerEvent(request);
+            toJsonPrettyString("getAvailableImagesBySpec", response);
+
+        }
+
+        @Test
+        public void getCreateAuthorizeRuleTest() {
+            CreateInstUserOpAuthorizeRuleCmdReq request = new CreateInstUserOpAuthorizeRuleCmdReq();
+            request.setEnableRule(0);
+            request.setEffectiveScope("AllInstance");
+            request.setRuleName("java_sdk");
+            List<String> operationList = new ArrayList<>();
+            operationList.add("Reboot");
+            request.setAuthorizeMaintenanceOperations(operationList);
+            request.setServerEventCategory("PlannedMaintenanceEvent");
+            CreateInstUserOpAuthorizeRuleResp response = client.createAuthorizeRule(request);
+            toJsonPrettyString("getAvailableImagesBySpec", response);
+        }
+
+        @Test
+        public void getModifyInstUserOpAuthorizeRuleAttributeTest() {
+            ModifyInstUserOpAuthorizeRuleCmdReq request = new ModifyInstUserOpAuthorizeRuleCmdReq();
+            request.setRuleId("rule-pmEK8brB");
+            request.setEnableRule(1);
+            BaseResp baseResp = client.modifyInstUserOpAuthorizeRuleAttribute(request);
+            toJsonPrettyString("getAvailableImagesBySpec", baseResp);
+        }
+
+        @Test
+        public void getDeleteInstUserOpAuthorizeRuleTest() {
+            DeleteInstUserOpAuthorizeRuleReq request = new DeleteInstUserOpAuthorizeRuleReq();
+            request.setRuleId("rule-test1");
+            BaseResp baseResp = client.deleteInstUserOpAuthorizeRule(request);
+            toJsonPrettyString("getAvailableImagesBySpec", baseResp);
+        }
+
+        @Test
+        public void getDescribeAuthorizeRulesTest() throws JsonProcessingException {
+            DescribeInstUserOpAuthorizeRuleReq request = new DescribeInstUserOpAuthorizeRuleReq();
+            request.setMaxKeys(1);
+            request.setMarker("rule-rzAGQNS6");
+            DescribeInstUserOpAuthorizeRuleResp describeInstUserOpAuthorizeRuleResp = client.describeAuthorizeRules(request);
+            toJsonPrettyString("getAvailableImagesBySpec", describeInstUserOpAuthorizeRuleResp);
+        }
+
+        @Test
+        public void getDescribePlannedEventsTest() {
+            DescribeServerEventReq request = new DescribeServerEventReq();
+            request.setMaxKeys(2);
+            request.setMarker("event-6A1LCgZw");
+            request.setServerEventLogTimeFilter("EventCreate");
+            request.setPeriodEndTime(new Date(System.currentTimeMillis()));
+            DescribePlannedEventsResp describePlannedEventsResp = client.describePlannedEvents(request);
+            toJsonPrettyString("getAvailableImagesBySpec", describePlannedEventsResp);
+        }
+
+        @Test
+        public void getDescribePlannedEventRecordsTest() {
+            DescribeServerEventRecordReq request = new DescribeServerEventRecordReq();
+            request.setMaxKeys(100);
+            request.setMarker("event-iloMYszn");
+            request.setServerEventLogTimeFilter("EventCreate");
+            request.setPeriodEndTime(new Date(System.currentTimeMillis()));
+            DescribePlannedEventsResp describePlannedEventsResp = client.describePlannedEventRecords(request);
+            toJsonPrettyString("getAvailableImagesBySpec", describePlannedEventsResp);
+        }
+
+        @Test
+        public void getCheckUnplannedEventTest() {
+            CheckUnplannedEventReq request = new CheckUnplannedEventReq();
+            request.setServerEventId("event-0nPl9WFJ");
+            request.setCheckResult("Pass");
+            BaseResp baseResp = client.checkUnplannedEvent(request);
+            toJsonPrettyString("getAvailableImagesBySpec", baseResp);
+        }
+
+        @Test
+        public void getDescribeUnplannedEventsTest() {
+            DescribeServerEventReq request = new DescribeServerEventReq();
+            List<String> instanceIds = new ArrayList<>();
+            instanceIds.add("i-5eCmzVGV");
+            request.setInstanceIds(instanceIds);
+            DescribeUnplannedEventsResp describeUnplannedEventsResp = client.describeUnplannedEvents(request);
+            toJsonPrettyString("getAvailableImagesBySpec", describeUnplannedEventsResp);
+        }
+
+        @Test
+        public void getDescribeServerEventRecordReqTest() {
+            DescribeServerEventRecordReq request = new DescribeServerEventRecordReq();
+            request.setMarker("event-YynT6aul");
+            request.setServerEventLogTimeFilter("EventCreate");
+            request.setPeriodEndTime(new Date(System.currentTimeMillis()));
+            DescribeUnplannedEventsResp describeUnplannedEventsResp = client.describeUnplannedEventRecords(request);
+            toJsonPrettyString("getAvailableImagesBySpec", describeUnplannedEventsResp);
+        }
+
+        @Test
+        public void getTaskDetailTest() {
+            TaskDetailRequest request = new TaskDetailRequest();
+            request.setTaskIds(Arrays.asList("t-taskId"));
+
+            TaskDetailResponse response = client.getTask(request);
+            toJsonPrettyString("getTask", response);
+        }
+
+        @Test
+        public void listTaskTest() {
+            ListTaskByMarkerRequest request = new ListTaskByMarkerRequest();
+            request.setStartTime("2025-08-01T21:00:00Z");
+
+            ListTaskByMarkerResponse response = client.listTask(request);
+            toJsonPrettyString("listTask", response);
         }
     }
 

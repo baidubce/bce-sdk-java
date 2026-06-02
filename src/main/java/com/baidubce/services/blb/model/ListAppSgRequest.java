@@ -28,6 +28,10 @@ public class ListAppSgRequest extends ListRequest {
      * the name of the appServerGroup
      */
     private String name;
+    /**
+     * whether to exactly match the name
+     */
+    private Boolean exactlyMatch;
 
     public String getName() {
         return name;
@@ -56,6 +60,19 @@ public class ListAppSgRequest extends ListRequest {
 
     public ListAppSgRequest withName(String name) {
         this.setName(name);
+        return this;
+    }
+
+    public Boolean getExactlyMatch() {
+        return exactlyMatch;
+    }
+
+    public void setExactlyMatch(Boolean exactlyMatch) {
+        this.exactlyMatch = exactlyMatch;
+    }
+
+    public ListAppSgRequest withExactlyMatch(Boolean exactlyMatch) {
+        this.setExactlyMatch(exactlyMatch);
         return this;
     }
 

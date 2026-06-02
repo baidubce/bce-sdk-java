@@ -32,6 +32,19 @@ public class ListVolumesRequest extends ListRequest {
      */
     private String zoneName;
 
+    /**
+     * The product category of the volume
+      */
+    private String productCategory;
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
+
     public String getInstanceId() {
         return instanceId;
     }

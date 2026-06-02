@@ -13,6 +13,7 @@
 package com.baidubce.services.blb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Http listener info modal.
@@ -31,6 +32,7 @@ public class HttpListener extends ListenerBase {
     /**
      * the duration of the keep session.
      */
+    @JsonProperty("keepSessionTimeout")
     private Integer keepSessionDuration;
     /**
      * the cookie name of the keep session.
@@ -39,6 +41,7 @@ public class HttpListener extends ListenerBase {
     /**
      * if fetch the real ip or not.
      */
+    @JsonProperty("xForwardedFor")
     private Boolean xForwardFor;
     /**
      * the type of the health check.
@@ -64,6 +67,22 @@ public class HttpListener extends ListenerBase {
      * the port of redirect.
      */
     private int redirectPort;
+
+    /**
+     * forward the protocol to backend server via x-forwarded-proto HTTP Header
+     */
+    @JsonProperty("xForwardedProto")
+    private Boolean xForwardedProto;
+
+    /**
+     * additional attributes for HTTP listener
+     */
+    private AdditionalAttributes additionalAttributes;
+
+    /**
+     * health check host for 7-layer health check
+     */
+    private String healthCheckHost;
 
     public Boolean getKeepSession() {
         return keepSession;
@@ -153,6 +172,30 @@ public class HttpListener extends ListenerBase {
         this.redirectPort = redirectPort;
     }
 
+    public Boolean getxForwardedProto() {
+        return xForwardedProto;
+    }
+
+    public void setxForwardedProto(Boolean xForwardedProto) {
+        this.xForwardedProto = xForwardedProto;
+    }
+
+    public AdditionalAttributes getAdditionalAttributes() {
+        return additionalAttributes;
+    }
+
+    public void setAdditionalAttributes(AdditionalAttributes additionalAttributes) {
+        this.additionalAttributes = additionalAttributes;
+    }
+
+    public String getHealthCheckHost() {
+        return healthCheckHost;
+    }
+
+    public void setHealthCheckHost(String healthCheckHost) {
+        this.healthCheckHost = healthCheckHost;
+    }
+
     @Override
     public String toString() {
         return "HttpListener{" +
@@ -161,12 +204,15 @@ public class HttpListener extends ListenerBase {
                 ", keepSessionDuration=" + keepSessionDuration +
                 ", keepSessionCookieName='" + keepSessionCookieName + '\'' +
                 ", xForwardFor=" + xForwardFor +
+                ", xForwardedProto=" + xForwardedProto +
                 ", healthCheckType='" + healthCheckType + '\'' +
                 ", healthCheckPort=" + healthCheckPort +
                 ", healthCheckURI='" + healthCheckURI + '\'' +
                 ", healthCheckNormalStatus='" + healthCheckNormalStatus + '\'' +
+                ", healthCheckHost='" + healthCheckHost + '\'' +
                 ", serverTimeout=" + serverTimeout +
                 ", redirectPort=" + redirectPort +
-                '}';
+                ", additionalAttributes=" + additionalAttributes +
+                "} " + super.toString();
     }
 }

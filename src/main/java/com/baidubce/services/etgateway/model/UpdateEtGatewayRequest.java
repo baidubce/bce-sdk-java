@@ -25,7 +25,7 @@ public class UpdateEtGatewayRequest extends AbstractBceRequest {
     @JsonIgnore
     private String clientToken;
 
-
+    @JsonIgnore
     private String etGatewayId;
 
     /**

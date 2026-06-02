@@ -34,8 +34,9 @@ public class ExampleCreateEipGroup {
         request.setBilling(billing);
         request.setName("EipGroupTest"); // eipGroup的名称
         request.setEipCount(2); // eipGroup内ip数量
-        request.setBandwidthInMbps(10); // eipGroup的带宽
+        request.setBandwidthInMbps(20); // eipGroup的带宽
         request.setResourceGroupId("RESG-J7PdULjguvB"); // eipGroup要绑定的资源组
+        request.setRouteType("BGP");
 
         TagModel tagModel = new TagModel();
         tagModel.setTagKey("tagK");

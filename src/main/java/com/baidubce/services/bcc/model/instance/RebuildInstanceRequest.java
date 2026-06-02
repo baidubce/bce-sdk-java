@@ -49,6 +49,31 @@ public class RebuildInstanceRequest extends AbstractBceRequest {
      */
     private String adminPass;
 
+    /**
+     * Create a virtual machine using the password from the image.
+     */
+    private boolean keepImageLogin;
+
+    private String userData;
+
+    private Boolean cleanLastUserData;
+
+    public String getUserData() {
+        return userData;
+    }
+
+    public void setUserData(String userData) {
+        this.userData = userData;
+    }
+
+    public Boolean getCleanLastUserData() {
+        return cleanLastUserData;
+    }
+
+    public void setCleanLastUserData(Boolean cleanLastUserData) {
+        this.cleanLastUserData = cleanLastUserData;
+    }
+
     public String getInstanceId() {
         return instanceId;
     }
@@ -117,6 +142,15 @@ public class RebuildInstanceRequest extends AbstractBceRequest {
         this.keypairId = keypairId;
     }
 
+
+    public boolean isKeepImageLogin() {
+        return keepImageLogin;
+    }
+
+    public void setKeepImageLogin(boolean keepImageLogin) {
+        this.keepImageLogin = keepImageLogin;
+    }
+
     /**
      * Configure keypairId for the request.
      * @param keypairId The id of the keypair which will be used to rebuild the instance.
@@ -138,4 +172,10 @@ public class RebuildInstanceRequest extends AbstractBceRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
+
+    public RebuildInstanceRequest withKeepImageLogin(boolean keepImageLogin) {
+        this.keepImageLogin = keepImageLogin;
+        return this;
+    }
+
 }

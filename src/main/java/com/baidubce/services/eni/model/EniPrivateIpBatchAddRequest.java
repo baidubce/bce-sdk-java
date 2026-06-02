@@ -40,8 +40,8 @@ public class EniPrivateIpBatchAddRequest extends EniPrivateIpBatchOperateRequest
 
     @Builder(builderMethodName = "EniPrivateIpBatchAddRequestBuilder")
     public EniPrivateIpBatchAddRequest(String clientToken, String eniId,
-                                       List<String> privateIpAddresses, Integer privateIpAddressCount) {
-        super(clientToken, eniId, privateIpAddresses);
+                                       Boolean isIpv6, List<String> privateIpAddresses, Integer privateIpAddressCount) {
+        super(clientToken, eniId, isIpv6, privateIpAddresses);
         this.privateIpAddressCount = privateIpAddressCount;
     }
 }

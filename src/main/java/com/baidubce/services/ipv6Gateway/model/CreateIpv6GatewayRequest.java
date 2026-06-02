@@ -5,7 +5,10 @@ package com.baidubce.services.ipv6Gateway.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.baidubce.services.bcc.model.TagModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 /**
  * The request for creating a newly Ipv6Gateway.
@@ -40,6 +43,21 @@ public class CreateIpv6GatewayRequest extends AbstractBceRequest {
     private int bandwidthInMbps;
 
     private Billing billing;
+
+    /**
+     * The tags of Ipv6Gateway that will be created.
+     */
+    private List<TagModel> tags;
+
+    /**
+     * The resourceGroupId of Ipv6Gateway that will be created.
+     */
+    private String resourceGroupId;
+
+    /**
+     * Whether to enable delete protection. Default is false.
+     */
+    private Boolean deleteProtect;
 
     public String getClientToken() {
         return clientToken;
@@ -141,5 +159,64 @@ public class CreateIpv6GatewayRequest extends AbstractBceRequest {
         this.billing = billing;
     }
 
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * Configure tags for the request.
+     *
+     * @param tags The tags of Ipv6Gateway
+     *
+     * @return CreateIpv6GatewayRequest with tags
+     */
+    public CreateIpv6GatewayRequest withTags(List<TagModel> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+    }
+
+    /**
+     * Configure resourceGroupId for the request.
+     *
+     * @param resourceGroupId The resourceGroupId of Ipv6Gateway
+     *
+     * @return CreateIpv6GatewayRequest with resourceGroupId
+     */
+    public CreateIpv6GatewayRequest withResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+        return this;
+    }
+
+    public Boolean getDeleteProtect() {
+        return deleteProtect;
+    }
+
+    public void setDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
+    }
+
+    /**
+     * Configure deleteProtect for the request.
+     *
+     * @param deleteProtect Whether to enable delete protection
+     *
+     * @return CreateIpv6GatewayRequest with deleteProtect
+     */
+    public CreateIpv6GatewayRequest withDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
+        return this;
+    }
 
 }

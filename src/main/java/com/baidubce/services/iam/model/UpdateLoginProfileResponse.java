@@ -28,6 +28,11 @@ public class UpdateLoginProfileResponse extends BaseBceResponse {
     private Boolean needResetPassword;
 
     /**
+     * enabledLogin
+     */
+    private Boolean enabledLogin;
+
+    /**
      * enabledLoginMfa
      */
     private Boolean enabledLoginMfa;
@@ -61,6 +66,14 @@ public class UpdateLoginProfileResponse extends BaseBceResponse {
 
     public Boolean isNeedResetPassword() {
         return this.needResetPassword;
+    }
+
+    public void setEnabledLogin(Boolean enabledLogin) {
+        this.enabledLogin = enabledLogin;
+    }
+
+    public Boolean getEnabledLogin() {
+        return this.enabledLogin;
     }
 
     public void setEnabledLoginMfa(Boolean enabledLoginMfa) {
@@ -100,6 +113,7 @@ public class UpdateLoginProfileResponse extends BaseBceResponse {
         return "UpdateLoginProfileResponse{"
                 + "password=" + password + "\n"
                 + "needResetPassword=" + needResetPassword + "\n"
+                + "enabledLogin=" + enabledLogin + "\n"
                 + "enabledLoginMfa=" + enabledLoginMfa + "\n"
                 + "loginMfaType=" + loginMfaType + "\n"
                 + "thirdPartyType=" + thirdPartyType + "\n"

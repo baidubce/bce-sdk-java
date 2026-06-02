@@ -43,6 +43,21 @@ public class PurchaseReservedVolumeRequest extends AbstractBceRequest {
      */
     private Billing billing;
 
+    private String instanceId;
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
+
+    public PurchaseReservedVolumeRequest withInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+        return this;
+    }
+
 
     public String getClientToken() {
         return clientToken;

@@ -43,6 +43,21 @@ public class SslListener extends ListenerBase {
      */
     private List<String> clientCertIds;
 
+    /**
+     * applied ciphers for SSL listener
+     */
+    private String appliedCiphers;
+
+    /**
+     * health check type, default "TCP"
+     */
+    private String healthCheckType;
+
+    /**
+     * server timeout (seconds), default 900, range 10-4000
+     */
+    private Integer serverTimeout;
+
     public List<String> getCertIds() {
         return certIds;
     }
@@ -83,14 +98,41 @@ public class SslListener extends ListenerBase {
         this.clientCertIds = clientCertIds;
     }
 
+    public String getAppliedCiphers() {
+        return appliedCiphers;
+    }
+
+    public void setAppliedCiphers(String appliedCiphers) {
+        this.appliedCiphers = appliedCiphers;
+    }
+
+    public String getHealthCheckType() {
+        return healthCheckType;
+    }
+
+    public void setHealthCheckType(String healthCheckType) {
+        this.healthCheckType = healthCheckType;
+    }
+
+    public Integer getServerTimeout() {
+        return serverTimeout;
+    }
+
+    public void setServerTimeout(Integer serverTimeout) {
+        this.serverTimeout = serverTimeout;
+    }
+
     @Override
     public String toString() {
         return "SslListener{" +
                 "certIds=" + certIds +
                 ", encryptionType='" + encryptionType + '\'' +
                 ", encryptionProtocols=" + encryptionProtocols +
+                ", appliedCiphers='" + appliedCiphers + '\'' +
                 ", dualAuth=" + dualAuth +
                 ", clientCertIds=" + clientCertIds +
-                '}';
+                ", healthCheckType='" + healthCheckType + '\'' +
+                ", serverTimeout=" + serverTimeout +
+                "} " + super.toString();
     }
 }

@@ -258,7 +258,7 @@ public class ModifyAclRuleAttributesRequest extends AbstractBceRequest {
         return this;
     }
 
-    public ModifyAclRuleAttributesRequest withPosition(int position) {
+    public ModifyAclRuleAttributesRequest withPosition(Integer position) {
         this.setPosition(position);
         return this;
     }

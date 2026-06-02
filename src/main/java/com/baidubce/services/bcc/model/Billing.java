@@ -28,6 +28,16 @@ public class Billing {
      */
     private Reservation reservation;
 
+    private String effectiveType;
+
+    public String getEffectiveType() {
+        return effectiveType;
+    }
+
+    public void setEffectiveType(String effectiveType) {
+        this.effectiveType = effectiveType;
+    }
+
     public String getPaymentTiming() {
         return paymentTiming;
     }

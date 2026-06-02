@@ -62,6 +62,16 @@ public class ThumbnailTarget {
         return keyPrefix;
     }
 
+    private String webVttName;
+
+    public String getWebVttName() {
+        return webVttName;
+    }
+
+    public void setWebVttName(String webVttName) {
+        this.webVttName = webVttName;
+    }
+
     public void setKeyPrefix(String keyPrefix) {
         this.keyPrefix = keyPrefix;
     }

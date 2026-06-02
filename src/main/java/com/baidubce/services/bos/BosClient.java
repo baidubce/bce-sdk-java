@@ -50,6 +50,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +67,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -116,6 +119,33 @@ public class BosClient extends AbstractBceClient {
      * LowCost restore tier
      */
     public static final String RESTORE_TIER_LOWCOST = "LowCost";
+
+    public static String validateObjectKey(String objectKey) {
+        // 1. 拒绝路径穿越
+        if (objectKey.contains("..")) {
+            throw new IllegalArgumentException("Invalid object key: " + objectKey);
+        }
+
+        // 2. 路径规范化
+        String normalized = Paths.get("/" + objectKey).normalize().toString();
+
+        // 3. 去除首尾斜杠
+        String cleaned = normalized.replaceAll("^/+|/+$", "");
+
+        // 4. 最终校验
+        if (cleaned.isEmpty() || "v1".equals(cleaned)) {
+            throw new IllegalArgumentException("Invalid object key: " + objectKey);
+        }
+
+        return cleaned;
+    }
+
+    private static final Pattern BUCKET_PATTERN =
+            Pattern.compile("^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$");
+
+    static boolean isValidBucket(String bucket) {
+        return bucket != null && BUCKET_PATTERN.matcher(bucket).matches();
+    }
 
     /**
      * Generate signature with specified headers
@@ -214,6 +244,7 @@ public class BosClient extends AbstractBceClient {
         return this.createBucket(new CreateBucketRequest(bucketName));
     }
 
+
     /**
      * Creates a new Bos bucket with the specified name.
      *
@@ -228,6 +259,23 @@ public class BosClient extends AbstractBceClient {
         if (request.getBucketTags() != null) {
             internalRequest.addHeader(Headers.BCE_TAG_LIST, request.getBucketTags());
         }
+
+
+        if (request.getLccLocation() != null) {
+            byte[] json;
+            try {
+                json = JsonUtils.getObjectMapper().writeValueAsString(request).getBytes(DEFAULT_ENCODING);
+            } catch (JsonProcessingException e) {
+                throw new BceClientException("Fail to generate json", e);
+            } catch (UnsupportedEncodingException e) {
+                throw new BceClientException("Fail to get UTF-8 bytes", e);
+            }
+            internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+            internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+            System.out.println(new String(json));
+            internalRequest.setContent(RestartableInputStream.wrap(json));
+        }
+
         BosResponse response = this.invokeHttpClient(internalRequest, BosResponse.class);
         CreateBucketResponse result = new CreateBucketResponse();
         result.setName(request.getBucketName());
@@ -1114,6 +1162,11 @@ public class BosClient extends AbstractBceClient {
     public URL generatePresignedUrl(GeneratePresignedUrlRequest request) {
         checkNotNull(request, "The request parameter must be specified when generating a pre-signed URL");
 
+        if (request.getKey().replaceAll("^/+|/+$", "").equals("v1") ||
+                request.getKey().replaceAll("^/+|/+$", "").equals("")) {
+            throw new BceClientException("key should not be empty or v1");
+        }
+        String cleanedObjeckKey = validateObjectKey(request.getKey());
         HttpMethodName httpMethod = HttpMethodName.valueOf(request.getMethod().toString());
 
         // If the key starts with a slash character itself, the following method
@@ -1121,6 +1174,9 @@ public class BosClient extends AbstractBceClient {
         // the HttpClient mistakenly treating the slash as a path delimiter.
         // For presigned request, we need to remember to remove this extra slash
         // before generating the URL.
+        if (!isValidBucket(request.getBucketName())) {
+            throw new IllegalArgumentException("Invalid bucket name: " + request.getBucketName());
+        }
         String bucketName = ((BosClientConfiguration) this.config).isCnameEnabled() ? null : request.getBucketName();
         URI uri = this.getEndpoint();
         if (bucketName != null) {
@@ -1133,8 +1189,9 @@ public class BosClient extends AbstractBceClient {
                 bucketName = null;
             }
         }
+
         InternalRequest internalRequest = new InternalRequest(httpMethod, HttpUtils
-                .appendUri(uri, URL_PREFIX, bucketName, request.getKey()));
+                .appendUri(uri, URL_PREFIX, bucketName, cleanedObjeckKey));
 
         internalRequest.setCredentials(request.getRequestCredentials());
         SignOptions options = new SignOptions();
@@ -1318,6 +1375,21 @@ public class BosClient extends AbstractBceClient {
         if (request.getTrafficLimitBitPS() > 0) {
             internalRequest.addHeader(Headers.BOS_TRAFFIC_LIMIT, String.valueOf(request.getTrafficLimitBitPS()));
         }
+        if (request.getxBceProcess() != null) {
+            internalRequest.addParameter(Headers.BOS_PROCESS, request.getxBceProcess());
+        }
+        if (request.getIfMatch() != null) {
+            internalRequest.addHeader(Headers.IF_MATCH, request.getIfMatch());
+        }
+        if (request.getIfNoneMatch() != null) {
+            internalRequest.addHeader(Headers.IF_NONE_MATCH, request.getIfNoneMatch());
+        }
+        if (request.getIfModifiedSince() != null) {
+            internalRequest.addHeader(Headers.IF_MODIFIED_SINCE, request.getIfModifiedSince());
+        }
+        if (request.getIfUnmodifiedSince() != null) {
+            internalRequest.addHeader(Headers.IF_UNMODIFIED_SINCE, request.getIfUnmodifiedSince());
+        }
 
         GetObjectResponse response = this.invokeHttpClient(internalRequest, GetObjectResponse.class);
 
@@ -1444,7 +1516,22 @@ public class BosClient extends AbstractBceClient {
     public ObjectMetadata getObjectMetadata(GetObjectMetadataRequest request) {
         checkNotNull(request, "request should not be null.");
 
-        return this.invokeHttpClient(this.createRequest(request, HttpMethodName.HEAD), GetObjectResponse.class)
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.HEAD);
+
+        if (request.getIfMatch() != null) {
+            internalRequest.addHeader(Headers.IF_MATCH, request.getIfMatch());
+        }
+        if (request.getIfNoneMatch() != null) {
+            internalRequest.addHeader(Headers.IF_NONE_MATCH, request.getIfNoneMatch());
+        }
+        if (request.getIfModifiedSince() != null) {
+            internalRequest.addHeader(Headers.IF_MODIFIED_SINCE, request.getIfModifiedSince());
+        }
+        if (request.getIfUnmodifiedSince() != null) {
+            internalRequest.addHeader(Headers.IF_UNMODIFIED_SINCE, request.getIfUnmodifiedSince());
+        }
+
+        return this.invokeHttpClient(internalRequest, GetObjectResponse.class)
                 .getObject().getObjectMetadata();
     }
 
@@ -1658,11 +1745,16 @@ public class BosClient extends AbstractBceClient {
             internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
         }
         ObjectMetadata newObjectMetadata = request.getNewObjectMetadata();
-        if (newObjectMetadata != null) {
-            internalRequest.addHeader(Headers.BCE_COPY_METADATA_DIRECTIVE, "replace");
-            populateRequestMetadata(internalRequest, newObjectMetadata);
+
+        if (request.getxBceMetadataDirective() != null) {
+            internalRequest.addHeader(Headers.BCE_COPY_METADATA_DIRECTIVE, request.getxBceMetadataDirective());
         } else {
-            internalRequest.addHeader(Headers.BCE_COPY_METADATA_DIRECTIVE, "copy");
+            if (newObjectMetadata != null) {
+                internalRequest.addHeader(Headers.BCE_COPY_METADATA_DIRECTIVE, "replace");
+                populateRequestMetadata(internalRequest, newObjectMetadata);
+            } else {
+                internalRequest.addHeader(Headers.BCE_COPY_METADATA_DIRECTIVE, "copy");
+            }
         }
 
         this.setZeroContentLength(internalRequest);
@@ -1743,6 +1835,9 @@ public class BosClient extends AbstractBceClient {
         }
         if (request.getUserAgent() != null) {
             internalRequest.addHeader(Headers.BCE_FETCH_USER_AGENT, request.getUserAgent());
+        }
+        if (request.getRequestId() != null) {
+            internalRequest.getHeaders().replace(Headers.BCE_REQUEST_ID, request.getRequestId());
         }
         this.setZeroContentLength(internalRequest);
 
@@ -2374,6 +2469,15 @@ public class BosClient extends AbstractBceClient {
         if (request.getxBceCrc32cFlag()) {
             internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
         }
+        if (request.getIfMatch() != null) {
+            internalRequest.addHeader(Headers.IF_MATCH, request.getIfMatch());
+        }
+        if (request.getIfNoneMatch() != null) {
+            internalRequest.addHeader(Headers.IF_NONE_MATCH, request.getIfNoneMatch());
+        }
+        if (request.getxBceCrc32() != null) {
+            internalRequest.addHeader(Headers.BCE_CONTENT_CRC32, request.getxBceCrc32());
+        }
 
         byte[] json = null;
         List<PartETag> partETags = request.getPartETags();
@@ -2486,6 +2590,10 @@ public class BosClient extends AbstractBceClient {
         if (prefix != null) {
             internalRequest.addParameter("prefix", prefix);
         }
+        String uploadIdMarker = request.getUploadIdMarker();
+        if (uploadIdMarker != null) {
+            internalRequest.addParameter("uploadIdMarker", uploadIdMarker);
+        }
 
         ListMultipartUploadsResponse response =
                 this.invokeHttpClient(internalRequest, ListMultipartUploadsResponse.class);
@@ -2573,6 +2681,9 @@ public class BosClient extends AbstractBceClient {
         // when custom_endpoint, bucketName should be null when set up InternalRequest.
         if (bceRequest instanceof GenericBucketRequest && !((BosClientConfiguration) this.config).isCnameEnabled()) {
             bucketName = ((GenericBucketRequest) bceRequest).getBucketName();
+            if (!isValidBucket(bucketName)) {
+                throw new IllegalArgumentException("Invalid bucket name: " + bucketName);
+            }
             if (this.getBktVirEndpoint(bucketName) == null) {
                 this.computeBktVirEndpoint(bucketName);
             }
@@ -2591,7 +2702,7 @@ public class BosClient extends AbstractBceClient {
         request.setCredentials(bceRequest.getRequestCredentials());
         request.setMaxRedirects(((BosClientConfiguration) this.config).getMaxRedirects());
         request.setRedirectsEnabled(this.config.isRedirectsEnabled());
-        request.addHeader(Headers.BCE_REQUEST_ID, UUID.randomUUID().toString());
+//        request.addHeader(Headers.BCE_REQUEST_ID, UUID.randomUUID().toString());
         return request;
     }
 
@@ -3448,8 +3559,20 @@ public class BosClient extends AbstractBceClient {
             internalRequest.addHeader(Headers.BCE_ACL, request.getxBceAcl());
         }
 
+        if (metadata.getxBceTagging() != null) {
+            internalRequest.addHeader(Headers.BCE_OBJECT_TAG, metadata.getxBceTagging());
+        }
+
         if (request.getxBceCrc32cFlag()) {
             internalRequest.addHeader(Headers.BCE_CONTENT_CRC32C_FLAG, String.valueOf(request.getxBceCrc32cFlag()));
+        }
+
+        if (request.getIfMatch() != null) {
+            internalRequest.addHeader(Headers.IF_MATCH, request.getIfMatch());
+        }
+
+        if (request.getIfNoneMatch() != null) {
+            internalRequest.addHeader(Headers.IF_NONE_MATCH, request.getIfNoneMatch());
         }
 
         internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(metadata.getContentLength()));
@@ -3600,6 +3723,14 @@ public class BosClient extends AbstractBceClient {
             CompleteMultipartUploadRequest completeMultipartUploadRequest =
                     new CompleteMultipartUploadRequest(bucketName, objectKey, uploadId, partETags);
             completeMultipartUploadRequest.setxBceCrc32cFlag(putSuperObjectRequest.getxBceCrc32cFlag());
+            if (completeMultipartUploadRequest.getxBceCrc32() == null) {
+                try {
+                    long crc32 = FileCRC32Calculator.calculateCRC32(file);
+                    completeMultipartUploadRequest.setxBceCrc32(String.valueOf(crc32));
+                } catch (IOException e) {
+                    throw new BceClientException("calculate crc32 error", e);
+                }
+            }
             CompleteMultipartUploadResponse response = completeMultipartUpload(completeMultipartUploadRequest);
             logger.debug("Success to upload file: " + file.getAbsolutePath() + " to BOS with ETag: "
                     + response.getETag());
@@ -4151,5 +4282,264 @@ public class BosClient extends AbstractBceClient {
         return response;
     }
 
+    public void putObjectTagging(String bucketName, String key, String tagKey, String tagValue) {
+        this.putObjectTagging(new PutObjectTaggingRequest(bucketName, key, tagKey, tagValue));
+    }
 
+    public void putObjectTagging(String bucketName, String key, List<ObjectTag> objectTags) {
+        String cannedTag = objectTags.stream()
+                .flatMap(objectTag -> objectTag.getTagInfo().entrySet().stream())
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("&"));
+        this.putObjectTagging(new PutObjectTaggingRequest(bucketName, key, cannedTag));
+    }
+
+    public void putObjectTagging(PutObjectTaggingRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("tagging", null);
+        if (request.getCannedTag() != null && request.getCannedTag() != "") {
+            internalRequest.addHeader(Headers.BCE_OBJECT_TAG, request.getCannedTag());
+        } else {
+            internalRequest.addHeader(Headers.BCE_OBJECT_TAG, request.getTagKey() + "=" + request.getTagValue());
+        }
+
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(0));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    public GetObjectTaggingResponse getObjectTagging(String bucketName, String key) {
+        return this.getObjectTagging(new GetObjectTaggingRequest(bucketName, key));
+    }
+
+    public GetObjectTaggingResponse getObjectTagging(GetObjectTaggingRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("tagging", null);
+        return this.invokeHttpClient(internalRequest, GetObjectTaggingResponse.class);
+    }
+
+    public void deleteObjectTagging(String bucketName, String key) {
+        this.deleteObjectTagging(new DeleteObjectTaggingRequest(bucketName, key));
+    }
+
+    public void deleteObjectTagging(DeleteObjectTaggingRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter("tagging", null);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Set the Bos bucket notification.
+     *
+     * @param bucketName    The name of an existing bucket, to which you have permission
+     * @param notifications The notification list that your want to create
+     */
+    public void putNotification(String bucketName, List<Notification> notifications) {
+        this.putNotification(new PutNotificationRequest(bucketName, notifications));
+    }
+
+    public void putNotification(PutNotificationRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("notification", null);
+
+        byte[] json;
+        try {
+            json = JsonUtils.getObjectMapper().writeValueAsString(request).getBytes(DEFAULT_ENCODING);
+        } catch (JsonProcessingException e) {
+            throw new BceClientException("Fail to generate json", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get UTF-8 bytes", e);
+        }
+
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+        internalRequest.setContent(RestartableInputStream.wrap(json));
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Get the Bos bucket notification.
+     *
+     * @param bucketName The name of an existing bucket, to which you have permission
+     */
+    public GetNotificationResponse getNotification(String bucketName) {
+        return this.getNotification(new GetNotificationRequest(bucketName));
+    }
+
+    public GetNotificationResponse getNotification(GetNotificationRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("notification", null);
+
+        GetNotificationResponse response = this.invokeHttpClient(internalRequest, GetNotificationResponse.class);
+        return response;
+    }
+
+    /**
+     * Delete the Bos bucket notification.
+     *
+     * @param bucketName The name of an existing bucket, to which you have permission
+     */
+    public void deleteNotification(String bucketName) {
+        this.deleteNotification(new DeleteNotificationRequest(bucketName));
+    }
+
+    public void deleteNotification(DeleteNotificationRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter("notification", null);
+
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Set the Bos bucket inventory.
+     *
+     * @param bucketName The name of an existing bucket, to which you have permission
+     * @param inventory  The inventory list that your want to create
+     */
+    public void putBucketInventory(String bucketName, Inventory inventory) {
+        this.putBucketInventory(new PutBucketInventoryRequest(bucketName, inventory));
+    }
+
+    public void putBucketInventory(PutBucketInventoryRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkNotNull(request.getInventory(), "inventory should not be null");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("inventory", null);
+        internalRequest.addParameter("id", request.getInventory().getId());
+
+        byte[] json;
+        try {
+            json = JsonUtils.getObjectMapper().writeValueAsString(request.getInventory()).getBytes(DEFAULT_ENCODING);
+        } catch (JsonProcessingException e) {
+            throw new BceClientException("Fail to generate json", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get UTF-8 bytes", e);
+        }
+
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+        internalRequest.setContent(RestartableInputStream.wrap(json));
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Get the Bos bucket inventory.
+     *
+     * @param bucketName The name of an existing bucket, to which you have permission
+     * @param id         The id of an existing inventory
+     */
+    public GetBucketInventoryResponse getBucketInventory(String bucketName, String id) {
+        return this.getBucketInventory(new GetBucketInventoryRequest(bucketName, id));
+    }
+
+    public GetBucketInventoryResponse getBucketInventory(GetBucketInventoryRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("inventory", null);
+        internalRequest.addParameter("id", request.getId());
+
+        GetBucketInventoryResponse response = this.invokeHttpClient(internalRequest, GetBucketInventoryResponse.class);
+        return response;
+    }
+
+    /**
+     * List the Bos bucket inventory.
+     *
+     * @param bucketName The name of an existing bucket, to which you have permission
+     */
+    public ListBucketInventoryResponse listBucketInventory(String bucketName) {
+        return this.listBucketInventory(new ListBucketInventoryRequest(bucketName));
+    }
+
+    public ListBucketInventoryResponse listBucketInventory(ListBucketInventoryRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("inventory", null);
+
+        return this.invokeHttpClient(internalRequest, ListBucketInventoryResponse.class);
+    }
+
+
+    /**
+     * Delete the Bos bucket inventory.
+     *
+     * @param bucketName The name of an existing bucket, to which you have permission
+     * @param id         The id of an existing inventory
+     */
+    public void deleteBucketInventory(String bucketName, String id) {
+        this.deleteBucketInventory(new DeleteBucketInventoryRequest(bucketName, id));
+    }
+
+    public void deleteBucketInventory(DeleteBucketInventoryRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter("inventory", null);
+        internalRequest.addParameter("id", request.getId());
+
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    public void putBucketQuota(String bucketName, Integer maxObjectCount, Integer maxCapacityMegaBytes) {
+        this.putBucketQuota(new PutBucketQuotaRequest(bucketName,maxObjectCount,maxCapacityMegaBytes));
+    }
+
+    public void putBucketQuota(PutBucketQuotaRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("quota", null);
+
+        byte[] json;
+        try {
+            json = JsonUtils.getObjectMapper().writeValueAsString(request).getBytes(DEFAULT_ENCODING);
+        } catch (JsonProcessingException e) {
+            throw new BceClientException("Fail to generate json", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get UTF-8 bytes", e);
+        }
+
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+        internalRequest.setContent(RestartableInputStream.wrap(json));
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    public GetBucketQuotaResponse getBucketQuota(String bucketName) {
+        return this.getBucketQuota(new GetBucketQuotaRequest(bucketName));
+    }
+
+    public GetBucketQuotaResponse getBucketQuota(GetBucketQuotaRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("quota", null);
+
+        GetBucketQuotaResponse response = this.invokeHttpClient(internalRequest, GetBucketQuotaResponse.class);
+        return response;
+    }
+
+    public void deleteBucketQuota(String bucketName) {
+        this.deleteBucketQuota(new DeleteBucketQuotaRequest(bucketName));
+    }
+
+    public void deleteBucketQuota(DeleteBucketQuotaRequest request) {
+        checkNotNull(request, "request should not be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        internalRequest.addParameter("quota", null);
+
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
 }

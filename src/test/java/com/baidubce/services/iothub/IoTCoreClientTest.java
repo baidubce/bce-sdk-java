@@ -19,12 +19,18 @@ import com.baidubce.services.iothub.model.iotcore.AddPolicyResponse;
 import com.baidubce.services.iothub.model.iotcore.AuthType;
 import com.baidubce.services.iothub.model.iotcore.CreateDeviceRequest;
 import com.baidubce.services.iothub.model.iotcore.CreateDeviceResponse;
+import com.baidubce.services.iothub.model.iotcore.CreateRetainMessageRequest;
+import com.baidubce.services.iothub.model.iotcore.CreateRetainMessageResponse;
+import com.baidubce.services.iothub.model.iotcore.DeleteRetainMessageResponse;
+import com.baidubce.services.iothub.model.iotcore.GetClientStatusResponse;
 import com.baidubce.services.iothub.model.iotcore.GetDeviceResponse;
 import com.baidubce.services.iothub.model.iotcore.GetDeviceSignatureResponse;
+import com.baidubce.services.iothub.model.iotcore.GetRetainMessageResponse;
 import com.baidubce.services.iothub.model.iotcore.GetTemplateResponse;
 import com.baidubce.services.iothub.model.iotcore.PaginationResponse;
 import com.baidubce.services.iothub.model.iotcore.Permission;
 import com.baidubce.services.iothub.model.iotcore.ResetDeviceSecretResponse;
+import com.baidubce.services.iothub.model.iotcore.RetainMessagePageResponse;
 import com.baidubce.services.iothub.model.iotcore.ScrollPaginationResponse;
 import com.baidubce.services.iothub.model.iotcore.UpdateDeviceRequest;
 import com.baidubce.services.iothub.model.iotcore.UpdateDeviceResponse;
@@ -43,9 +49,10 @@ public class IoTCoreClientTest {
 
     private static final String AK = "";
     private static final String SK = "";
-    private static final String ENDPOINT = "http://10.135.112.3:8589";
+    private static final String ENDPOINT = "http://10.169.24.43:8589";
+    private static final String RETAIN_ENDPOINT = "http://10.169.24.43:8775";
 
-    private static final String TEST_IOT_CORE_ID = "ambzykv";
+    private static final String TEST_IOT_CORE_ID = "antjmpn";
 
     private IoTCoreClient ioTCoreClient;
 
@@ -154,5 +161,79 @@ public class IoTCoreClientTest {
 
         // delete template
         ioTCoreClient.deleteTemplate(TEST_IOT_CORE_ID, templateId);
+    }
+
+    @Test
+    public void clientStatusTest() {
+        // create template
+        String templateId = ioTCoreClient.createTemplate(
+                TEST_IOT_CORE_ID, RandomStringUtils.randomAlphabetic(8)).getId();
+
+        String deviceName = RandomStringUtils.randomAlphabetic(8);
+
+        // create device
+        CreateDeviceResponse createDeviceResponse = ioTCoreClient.createDevice(
+                TEST_IOT_CORE_ID,
+                CreateDeviceRequest.builder()
+                        .name(deviceName)
+                        .templateId(templateId)
+                        .build());
+        Assert.assertNotNull(createDeviceResponse.getSecretKey());
+
+        // get client status
+        String clientId = "test-client-" + RandomStringUtils.randomAlphabetic(6);
+        GetClientStatusResponse clientStatusResponse =
+                ioTCoreClient.getClientStatus(TEST_IOT_CORE_ID, deviceName, clientId);
+        Assert.assertNotNull(clientStatusResponse.getOnline());
+        Assert.assertFalse(clientStatusResponse.getOnline());
+
+        // cleanup
+        ioTCoreClient.deleteDevice(TEST_IOT_CORE_ID, deviceName);
+        ioTCoreClient.deleteTemplate(TEST_IOT_CORE_ID, templateId);
+    }
+
+    @Test
+    public void retainMessageTest() {
+        IoTCoreClient retainClient = new IoTCoreClient(new BceClientConfiguration()
+                .withCredentials(new DefaultBceCredentials(AK, SK))
+                .withEndpoint(RETAIN_ENDPOINT));
+
+        String topic = "test/retain/" + RandomStringUtils.randomAlphabetic(6);
+        String messageContent = "hello-retain-test";
+        String base64Message = java.util.Base64.getEncoder()
+                .encodeToString(messageContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        // create retain message
+        CreateRetainMessageResponse createResponse = retainClient.createOrUpdateRetainMessage(
+                TEST_IOT_CORE_ID,
+                CreateRetainMessageRequest.builder()
+                        .topic(topic)
+                        .message(base64Message)
+                        .qos(1)
+                        .build());
+        Assert.assertNotNull(createResponse.getSuccess());
+        Assert.assertTrue(createResponse.getSuccess());
+
+        // get retain message
+        GetRetainMessageResponse getResponse = retainClient.getRetainMessage(TEST_IOT_CORE_ID, topic);
+        Assert.assertNotNull(getResponse.getSuccess());
+        Assert.assertTrue(getResponse.getSuccess());
+        Assert.assertNotNull(getResponse.getResult());
+        Assert.assertEquals(topic, getResponse.getResult().getTopic());
+        Assert.assertEquals(base64Message, getResponse.getResult().getMessage());
+        Assert.assertEquals(Integer.valueOf(1), getResponse.getResult().getQos());
+
+        // list retain messages
+        RetainMessagePageResponse listResponse = retainClient.getRetainMessages(TEST_IOT_CORE_ID, 1, 20);
+        Assert.assertNotNull(listResponse.getSuccess());
+        Assert.assertTrue(listResponse.getSuccess());
+        Assert.assertTrue(listResponse.getTotalCount() > 0);
+        Assert.assertNotNull(listResponse.getResults());
+        Assert.assertFalse(listResponse.getResults().isEmpty());
+
+        // delete retain message
+        DeleteRetainMessageResponse deleteResponse = retainClient.deleteRetainMessage(TEST_IOT_CORE_ID, topic);
+        Assert.assertNotNull(deleteResponse.getSuccess());
+        Assert.assertTrue(deleteResponse.getSuccess());
     }
 }

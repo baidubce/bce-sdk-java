@@ -12,7 +12,7 @@ public class TestViewWriteList {
         RdsClient rdsClient = createRdsClient();
 
         RdsViewWriteListRequest request = new RdsViewWriteListRequest();
-        request.setInstanceId("rds-5WIldjI3");
+        request.setInstanceId("rds-V5NF0bDg");
         RdsViewWriteListResponse response = rdsClient.viewWriteList(request);
         print("viewWriteList", response);
     }

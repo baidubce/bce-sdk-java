@@ -77,6 +77,50 @@ public class Constants {
 
     public static final String FAIL_TO_SUPPORT = "Sorry, don't support";
 
+    public static final String FIELD_KEYVERSION = "keyVersion";
+
+    public static final String FIELD_ALGORITHM = "algorithm";
+
+    public static final String FIELD_MESSAGE = "message";
+
+    public static final String FIELD_MESSAGETYPE = "messageType";
+
+    public static final String FIELD_SIGNATURE = "signature";
+
+    public enum SignAlgorithm {
+        RSA_PKCS1_SHA_256("RSA_PKCS1_SHA_256"),
+
+        SM2DSA("SM2DSA");
+
+        private final String algorithm;
+
+        private SignAlgorithm(String algorithm) {
+            this.algorithm = algorithm;
+        }
+
+        @Override
+        public String toString() {
+            return this.algorithm;
+        }
+    }
+
+    public enum MessageType {
+        RAW("RAW"),
+
+        DIGEST("DIGEST");
+
+        private final String type;
+
+        private MessageType(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public String toString() {
+            return this.type;
+        }
+    }
+
 
     public enum KeySpec {
         BAIDU_ASE_256("BAIDU_ASE_256"),

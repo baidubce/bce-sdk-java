@@ -15,7 +15,6 @@ import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.rds.model.DatabaseEntryPort;
-import com.baidubce.services.rds.model.DatabasePrivilege;
 import com.baidubce.services.rds.model.DatabasePrivilegeList;
 import com.baidubce.services.rds.model.PassWord;
 import com.baidubce.services.rds.model.RdsAccount;
@@ -26,6 +25,7 @@ import com.baidubce.services.rds.model.RdsAddress;
 import com.baidubce.services.rds.model.RdsAutoRenewRequest;
 import com.baidubce.services.rds.model.RdsBackupInfoRequest;
 import com.baidubce.services.rds.model.RdsBackupInfoResponse;
+import com.baidubce.services.rds.model.RdsBackupTargetRegionResponse;
 import com.baidubce.services.rds.model.RdsBatchScalingRequest;
 import com.baidubce.services.rds.model.RdsBatchScalingResponse;
 import com.baidubce.services.rds.model.RdsBilling;
@@ -33,6 +33,8 @@ import com.baidubce.services.rds.model.RdsBindingTagsRequest;
 import com.baidubce.services.rds.model.RdsChangeDatabasePortRequest;
 import com.baidubce.services.rds.model.RdsClusterStatusCheckRequest;
 import com.baidubce.services.rds.model.RdsClusterStatusCheckResponse;
+import com.baidubce.services.rds.model.RdsConfigModifyHistoryRequest;
+import com.baidubce.services.rds.model.RdsConfigModifyHistoryResponse;
 import com.baidubce.services.rds.model.RdsConnInformationRequest;
 import com.baidubce.services.rds.model.RdsCreateAccountRequest;
 import com.baidubce.services.rds.model.RdsCreateDatabaseRequest;
@@ -45,6 +47,8 @@ import com.baidubce.services.rds.model.RdsDeleteDatabaseRequest;
 import com.baidubce.services.rds.model.RdsDeleteSpecifiedBackUpRequest;
 import com.baidubce.services.rds.model.RdsDialingTestRequest;
 import com.baidubce.services.rds.model.RdsDialingTestResponse;
+import com.baidubce.services.rds.model.RdsDtsSourceCheckRequest;
+import com.baidubce.services.rds.model.RdsDtsSourceCheckResponse;
 import com.baidubce.services.rds.model.RdsEngine;
 import com.baidubce.services.rds.model.RdsFullPhysicalBackupRequest;
 import com.baidubce.services.rds.model.RdsGetAutoConfigForSpecifiedRequest;
@@ -73,6 +77,10 @@ import com.baidubce.services.rds.model.RdsInstanceListRequest;
 import com.baidubce.services.rds.model.RdsInstanceListResponse;
 import com.baidubce.services.rds.model.RdsInstanceName;
 import com.baidubce.services.rds.model.RdsInstanceResizeRequest;
+import com.baidubce.services.rds.model.RdsMajorVersionListRequest;
+import com.baidubce.services.rds.model.RdsMajorVersionListResponse;
+import com.baidubce.services.rds.model.RdsMajorVersionPrecheckRequest;
+import com.baidubce.services.rds.model.RdsMajorVersionPrecheckResponse;
 import com.baidubce.services.rds.model.RdsModifyAccountPasswordRequest;
 import com.baidubce.services.rds.model.RdsModifyAccountPermissionRequest;
 import com.baidubce.services.rds.model.RdsModifyAccountRemarksRequest;
@@ -111,14 +119,18 @@ import com.baidubce.services.rds.model.RdsSupportEnableAutoExpansionRequest;
 import com.baidubce.services.rds.model.RdsSupportEnableAutoExpansionResponse;
 import com.baidubce.services.rds.model.RdsSupportHotSwappingRequest;
 import com.baidubce.services.rds.model.RdsSupportHotSwappingResponse;
+import com.baidubce.services.rds.model.RdsSwitchMasterBackupRequest;
 import com.baidubce.services.rds.model.RdsSyncMode;
 import com.baidubce.services.rds.model.RdsSyncModeRequest;
 import com.baidubce.services.rds.model.RdsTag;
+import com.baidubce.services.rds.model.RdsTargetRegionListRequest;
+import com.baidubce.services.rds.model.RdsUpdateEncryptPolicyReq;
 import com.baidubce.services.rds.model.RdsUpdateNameRequest;
 import com.baidubce.services.rds.model.RdsUpdateStorageAutoExpansionConfigRequest;
 import com.baidubce.services.rds.model.RdsUpdateStorageAutoExpansionConfigResPonse;
 import com.baidubce.services.rds.model.RdsUpdateTimeWindowRequest;
 import com.baidubce.services.rds.model.RdsUpdateWriteListResquest;
+import com.baidubce.services.rds.model.RdsUpgradeMajorVersionRequest;
 import com.baidubce.services.rds.model.RdsViewWriteListRequest;
 import com.baidubce.services.rds.model.RdsViewWriteListResponse;
 import com.baidubce.services.rds.model.RdsZoneMigrationRequest;
@@ -349,6 +361,7 @@ public class RdsClient extends AbstractBceClient {
         request.setPassword(signedPassword);
         InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, paths);
         internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        internalRequest.addHeader(X_BCE_ACCESSKEY, config.getCredentials().getAccessKeyId());
         fillPayload(internalRequest, request);
         print("", internalRequest);
         return invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -434,14 +447,13 @@ public class RdsClient extends AbstractBceClient {
         String accountName = request.getAccountName();
         String[] paths = {RdsPaths.INSTANCE, instanceId, RdsPaths.ACCOUNT, accountName, "privileges"};
         InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, paths);
-        internalRequest.addHeader(X_BCE_IF_MATCH, "v1");
+        String etag = request.getEtag();
+        RdsArgumentUtil.checkString(etag, "etag");
+        internalRequest.addHeader(X_BCE_IF_MATCH, etag);
         internalRequest.addHeader(X_BCE_ACCESSKEY, config.getCredentials().getAccessKeyId());
 
-        List<DatabasePrivilege> privileges = new ArrayList<>();
-        privileges.add(request.getDatabasePrivileges().get(0));
-
         DatabasePrivilegeList list = new DatabasePrivilegeList();
-        list.setDatabasePrivileges(privileges);
+        list.setDatabasePrivileges(request.getDatabasePrivileges());
         fillPayload(internalRequest, list);
         print("", internalRequest);
         return invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -699,9 +711,11 @@ public class RdsClient extends AbstractBceClient {
         RdsArgumentUtil.checkNull(request, REQUEST_KEY);
         RdsArgumentUtil.checkString(request.getInstanceId(), "instanceId");
         String instanceId = request.getInstanceId();
+        String etag = request.getEtag();
+        RdsArgumentUtil.checkString(etag, "etag");
         String[] paths = {RdsPaths.INSTANCE, instanceId, "securityIp"};
         InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, paths);
-        internalRequest.addHeader(X_BCE_IF_MATCH, "v1");
+        internalRequest.addHeader(X_BCE_IF_MATCH, etag);
         SecurityIps securityIps = new SecurityIps();
         securityIps.setSecurityIps(request.getSecurityIps());
         fillPayload(internalRequest, securityIps);
@@ -1568,5 +1582,135 @@ public class RdsClient extends AbstractBceClient {
         fillPayload(internalRequest, request);
         RdsSupportHotSwappingResponse response = invokeHttpClient(internalRequest, RdsSupportHotSwappingResponse.class);
         return response;
+    }
+
+    /**
+     * Switch master backup relationship
+     *
+     * @param request Request object for switching master backup, containing instance ID and other information
+     * @return Response result of switching master backup
+     */
+    public AbstractBceResponse switchMasterBackup(RdsSwitchMasterBackupRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkNull(request.getInstanceId(), "instanceId");
+        String[] paths = {RdsPaths.INSTANCE, instanceId, "switchMasterBackup"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, paths);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+
+    /**
+     * Get the major version list of the instance
+     *
+     * @param request the request of get the major version list
+     * @return the response
+     */
+    public RdsMajorVersionListResponse majorVersionList(RdsMajorVersionListRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkNull(request.getInstanceId(), "instanceId");
+        String[] paths = {"rds", RdsPaths.INSTANCE, instanceId, "majorVersionList"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        return invokeHttpClient(internalRequest, RdsMajorVersionListResponse.class);
+    }
+
+    /**
+     * DTS source instance check
+     *
+     * @param request the request of DTS source instance check
+     * @return the response
+     */
+    public RdsDtsSourceCheckResponse dtsSourceCheck(RdsDtsSourceCheckRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkNull(request.getInstanceId(), "instanceId");
+        String[] paths = {"rds", RdsPaths.INSTANCE, instanceId, "dtsSourceCheck"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        return invokeHttpClient(internalRequest, RdsDtsSourceCheckResponse.class);
+    }
+
+    /**
+     * Pre-check before major version upgrade
+     *
+     * @param request the request of major version pre-check
+     * @return the response
+     */
+    public RdsMajorVersionPrecheckResponse majorVersionPrecheck(RdsMajorVersionPrecheckRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkNull(request.getInstanceId(), "instanceId");
+        RdsArgumentUtil.checkNull(request.getCheckType(), "checkType");
+        String[] paths = {"rds", RdsPaths.INSTANCE, instanceId, "majorVersion", "preCheck"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        internalRequest.addParameter("checkType", request.getCheckType());
+        return invokeHttpClient(internalRequest, RdsMajorVersionPrecheckResponse.class);
+    }
+
+    /**
+     * Upgrade the instance to a new major version
+     *
+     * @param request the request of upgrade major version
+     * @return the response
+     */
+    public AbstractBceResponse upgradeMajorVersion(RdsUpgradeMajorVersionRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkNull(request.getInstanceId(), "instanceId");
+        RdsArgumentUtil.checkNull(request.getEffectiveTime(), "effectiveTime");
+        RdsArgumentUtil.checkNull(request.getTargetMajorVersion(), "targetMajorVersion");
+        String[] paths = {"rds", RdsPaths.INSTANCE, instanceId};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, paths);
+        internalRequest.addParameter("upgradeMajorVersion", null);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Get the modification history of instance parameters
+     *
+     * @param request the request of get parameter modification history
+     * @return the response
+     */
+    public RdsConfigModifyHistoryResponse getParameterHistoryList(RdsConfigModifyHistoryRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkString(instanceId, INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, instanceId, RdsPaths.PARAMETER, "history"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        return invokeHttpClient(internalRequest, RdsConfigModifyHistoryResponse.class);
+    }
+
+    /**
+     * Get the list of available target regions for backup
+     *
+     * @param request the request of get backup target region list
+     * @return the response of getTargetRegionList
+     */
+    public RdsBackupTargetRegionResponse getTargetRegionList(RdsTargetRegionListRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkString(instanceId, INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, instanceId, RdsPaths.BACKUP, "target", "region"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        return invokeHttpClient(internalRequest, RdsBackupTargetRegionResponse.class);
+    }
+
+    /**
+     * Update the encrypt policy of the instance
+     *
+     * @param request the request of update encrypt policy
+     * @return the response
+     */
+    public AbstractBceResponse updateEncryptPolicy(RdsUpdateEncryptPolicyReq request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkNull(request.getInstanceId(), "instanceId");
+        String[] paths = {RdsPaths.INSTANCE, instanceId};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT, paths);
+        internalRequest.addParameter("updateEncryptPolicy", null);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 }

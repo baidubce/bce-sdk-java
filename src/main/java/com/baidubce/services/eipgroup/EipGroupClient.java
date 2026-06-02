@@ -347,4 +347,21 @@ public class EipGroupClient extends AbstractBceClient {
         this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 
+    /**
+     * Refund prepaid eip group.
+     *
+     * @param request The request containing eip group id to refund.
+     */
+    public void refundEipGroup(EipGroupOperateRequest request) {
+        checkStringNotEmpty(request.getId(), "id should not be empty.");
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(this.generateClientToken());
+        }
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, PREFIX, "refund", request.getId());
+        internalRequest.addParameter("clientToken", request.getClientToken());
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
 }

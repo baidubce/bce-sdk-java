@@ -42,7 +42,12 @@ public class BceMetadataResponseHandler implements HttpResponseHandler {
         if (eTag != null) {
             metadata.setETag(CharMatcher.is('"').trimFrom(eTag));
         }
-        metadata.setExpires(httpResponse.getHeaderAsRfc822Date(Headers.EXPIRES));
+        String expireHeader = httpResponse.getHeader(Headers.EXPIRES);
+        if (expireHeader == null || "0".equals(expireHeader)) {
+            metadata.setExpires(null);
+        } else {
+            metadata.setExpires(httpResponse.getHeaderAsRfc822Date(Headers.EXPIRES));
+        }
         metadata.setLastModified(httpResponse.getHeaderAsRfc822Date(Headers.LAST_MODIFIED));
         metadata.setServer(httpResponse.getHeader(Headers.SERVER));
         return false;

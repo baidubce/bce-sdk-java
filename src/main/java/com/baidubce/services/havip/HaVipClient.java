@@ -175,14 +175,24 @@ public class HaVipClient extends AbstractBceClient {
      */
     public ListHaVipResponse listHaVip(ListHaVipRequest listHaVipRequest) {
         checkNotNull(listHaVipRequest, REQUEST_NULL_ERROR_MESSAGE);
-        checkStringNotEmpty(listHaVipRequest.getVpcId(), "VpcId not allow empty");
         InternalRequest internalRequest = this.createRequest(listHaVipRequest, HttpMethodName.GET, HAVIP_PREFIX);
+
+        // maxKeys参数处理
         if (listHaVipRequest.getMaxKeys() > 0) {
             internalRequest.addParameter(MAX_KEYS, String.valueOf(listHaVipRequest.getMaxKeys()));
-        } else if (listHaVipRequest.getMaxKeys() <= 0) {
+        } else {
             internalRequest.addParameter(MAX_KEYS, "1000");
         }
-        internalRequest.addParameter("vpcId", listHaVipRequest.getVpcId());
+
+        // vpcId是可选参数
+        if (!Strings.isNullOrEmpty(listHaVipRequest.getVpcId())) {
+            internalRequest.addParameter("vpcId", listHaVipRequest.getVpcId());
+        }
+
+        // 添加marker参数支持（用于分页）
+        if (!Strings.isNullOrEmpty(listHaVipRequest.getMarker())) {
+            internalRequest.addParameter(MARKER, listHaVipRequest.getMarker());
+        }
 
         return invokeHttpClient(internalRequest, ListHaVipResponse.class);
     }
@@ -194,6 +204,7 @@ public class HaVipClient extends AbstractBceClient {
      * @return HaVipResponse
      */
     public HaVipResponse getHaVip(String haVipId) {
+        checkStringNotEmpty(haVipId, checkEmptyExceptionMessageFormat(HA_VIP_ID_MESSAGE_KEY));
         ListHaVipRequest listHaVipRequest = new ListHaVipRequest();
         InternalRequest internalRequest =
                 this.createRequest(listHaVipRequest, HttpMethodName.GET, HAVIP_PREFIX, haVipId);

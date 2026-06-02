@@ -25,6 +25,8 @@ public class ExampleMarkerListRouteRule {
 
         ListRouteRuleReq listRouteRuleReq = new ListRouteRuleReq();
         listRouteRuleReq.setRouteTableId("rt-s3qmp80vq02q");
+        listRouteRuleReq.setMarker("");
+        listRouteRuleReq.setMaxKeys(100);
         try {
             ListRouteRuleResponse response = routeClient.listRouteRule(listRouteRuleReq);
             System.out.println(response);

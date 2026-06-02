@@ -52,6 +52,12 @@ public class EniPrivateIpOperateRequest extends AbstractBceRequest {
     private String eniId;
 
     /**
+     * Whether it is an IPv6 address.
+     * true means allocating an IPv6 address, default is false for IPv4.
+     */
+    private Boolean isIpv6;
+
+    /**
      * secondary ip address which will be added or deleted
      */
     private String privateIpAddress;

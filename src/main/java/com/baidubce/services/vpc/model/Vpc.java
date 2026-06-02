@@ -47,9 +47,20 @@ public class Vpc {
     private Boolean isDefault;
 
     /**
+     * Whether VPC relay is enabled.
+     * true: enabled, false: disabled
+     */
+    private Boolean relay;
+
+    /**
      * The tags of vpc.
      */
     private List<Tag> tags;
+
+    /**
+     * The creation time of the vpc
+     */
+    private String createdTime;
 
     public String getVpcId() {
         return vpcId;
@@ -99,6 +110,14 @@ public class Vpc {
         this.isDefault = isDefault;
     }
 
+    public Boolean getRelay() {
+        return relay;
+    }
+
+    public void setRelay(Boolean relay) {
+        this.relay = relay;
+    }
+
     public String getIpv6Cidr() {
         return ipv6Cidr;
     }
@@ -115,16 +134,27 @@ public class Vpc {
         this.tags = tags;
     }
 
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
     @Override
     public String toString() {
         return "Vpc{"
                 + "vpcId='" + vpcId + '\''
                 + ", name='" + name + '\''
                 + ", cidr='" + cidr + '\''
+                + ", ipv6Cidr='" + ipv6Cidr + '\''
                 + ", secondaryCidr='" + secondaryCidr + '\''
                 + ", description='" + description + '\''
-                + ", isDefault='" + isDefault + '\''
-                + ", tags=" + tags +
-                +'}';
+                + ", isDefault=" + isDefault
+                + ", relay=" + relay
+                + ", tags=" + tags
+                + ", createdTime='" + createdTime + '\''
+                + '}';
     }
 }

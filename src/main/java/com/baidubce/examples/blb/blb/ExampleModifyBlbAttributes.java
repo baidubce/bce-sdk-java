@@ -23,6 +23,8 @@ public class ExampleModifyBlbAttributes {
         ModifyBlbAttributesRequest modifyBlbAttributesRequest = new ModifyBlbAttributesRequest();
         modifyBlbAttributesRequest.setBlbId("lb-77d58dc4"); // 待更新的LoadBalancer的ID
         modifyBlbAttributesRequest.setName("blb_1129_1_1"); // LoadBalancer的名称
+        modifyBlbAttributesRequest.setAllowDelete(true); // 可选：是否允许删除
+        modifyBlbAttributesRequest.setAllocateIpv6(false); // 可选：是否分配IPv6地址
 
         try {
             blbClient.modifyBlbAttributes(modifyBlbAttributesRequest);

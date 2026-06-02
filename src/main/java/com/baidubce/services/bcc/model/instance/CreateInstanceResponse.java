@@ -29,6 +29,8 @@ public class CreateInstanceResponse extends AbstractBceResponse {
 
     private List<String> warningList;
 
+    private String orderId;
+
     public List<String> getInstanceIds() {
         return instanceIds;
     }

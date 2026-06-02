@@ -13,6 +13,7 @@
 package com.baidubce.services.bos.model;
 
 import com.baidubce.auth.BceCredentials;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 /**
  * Provides options for creating an Baidu Bos bucket.
@@ -20,6 +21,13 @@ import com.baidubce.auth.BceCredentials;
 public class CreateBucketRequest extends GenericBucketRequest {
 
     private String bucketTags = null;
+
+    @JsonAlias({"lccLocation"})
+    private String lccLocation = null;
+
+    @JsonAlias({"enableDedicated"})
+    private Boolean enableDedicated = false;
+
 
     /**
      * Constructs a new {@link CreateBucketRequest},ready to be executed to create the specified bucket.
@@ -46,6 +54,22 @@ public class CreateBucketRequest extends GenericBucketRequest {
 
     public void setBucketTags(String bucketTags) {
         this.bucketTags = bucketTags;
+    }
+
+    public String getLccLocation() {
+        return lccLocation;
+    }
+
+    public void setLccLocation(String lccLocation) {
+        this.lccLocation = lccLocation;
+    }
+
+    public Boolean getEnableDedicated() {
+        return enableDedicated;
+    }
+
+    public void setEnableDedicated(Boolean enableDedicated) {
+        this.enableDedicated = enableDedicated;
     }
 
     public CreateBucketRequest withBucketTags(String bucketTags) {

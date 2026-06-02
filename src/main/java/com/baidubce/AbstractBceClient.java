@@ -310,4 +310,14 @@ public abstract class AbstractBceClient {
             throw new IllegalArgumentException("Invalid endpoint." + endpoint, e);
         }
     }
+
+    /**
+     * Aborts the current HTTP request if one is in progress.
+     * This will interrupt any ongoing HTTP operation.
+     */
+    public void abortCurrentRequest(String requestId) {
+        if (this.client != null) {
+            this.client.abortRequest(requestId);
+        }
+    }
 }

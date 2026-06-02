@@ -16,6 +16,9 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import com.baidubce.services.bcc.model.Billing;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
+import java.util.List;
 
 /**
  * The request for renewing the instance.
@@ -47,6 +50,28 @@ public class PurchaseReservedInstanceRequeset extends AbstractBceRequest {
      * see all of supported flag type in {@link com.baidubce.services.bcc.model.instance.RelatedRenewFlagType}
      */
     private String relatedRenewFlag;
+
+    private List<CdsCustomPeriod> cdsCustomPeriod;
+
+    public List<CdsCustomPeriod> getCdsCustomPeriod() {
+        return cdsCustomPeriod;
+    }
+
+    public void setCdsCustomPeriod(List<CdsCustomPeriod> cdsCustomPeriod) {
+        this.cdsCustomPeriod = cdsCustomPeriod;
+    }
+
+    public PurchaseReservedInstanceRequeset withCdsCustomPeriod(List<CdsCustomPeriod> cdsCustomPeriod) {
+        this.cdsCustomPeriod = cdsCustomPeriod;
+        return this;
+    }
+
+    @Data
+    public static class CdsCustomPeriod {
+        private int period;
+
+        private String volumeId;
+    }
 
     public String getClientToken() {
         return clientToken;

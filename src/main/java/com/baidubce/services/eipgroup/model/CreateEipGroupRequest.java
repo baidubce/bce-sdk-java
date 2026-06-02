@@ -52,6 +52,11 @@ public class CreateEipGroupRequest extends AbstractBceRequest {
     private int eipCount;
 
     /**
+     * The eipv6Count of eip group.
+     */
+    private int eipv6Count;
+
+    /**
      * The bandwidthInMbps of eip group.
      */
     private int bandwidthInMbps;
@@ -70,6 +75,14 @@ public class CreateEipGroupRequest extends AbstractBceRequest {
      * The ID of resourceGroup which will be bound to eipGroup.
      */
     private String resourceGroupId;
+
+    /**
+     * eip route type
+     */
+    private String routeType;
+
+    /** eip idc */
+    private String idc;
 
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
@@ -100,12 +113,23 @@ public class CreateEipGroupRequest extends AbstractBceRequest {
     }
 
     /**
+     * Configure eipv6Count for the request.
+     *
+     * @param eipv6Count The eipv6Count of CreateEipGroupRequest
+     * @return CreateEipGroupRequest with specific eipv6Count
+     */
+    public CreateEipGroupRequest withEipv6Count(int eipv6Count) {
+        this.eipv6Count = eipv6Count;
+        return this;
+    }
+
+    /**
      * Configure bandwidthInMbps for the request.
      *
      * @param bandwidthInMbps The bandwidthInMbps of CreateEipGroupRequest
      * @return CreateEipGroupRequest with specific bandwidthInMbps
      */
-    public CreateEipGroupRequest withBandwidthInMbpst(int bandwidthInMbps) {
+    public CreateEipGroupRequest withBandwidthInMbps(int bandwidthInMbps) {
         this.bandwidthInMbps = bandwidthInMbps;
         return this;
     }
@@ -140,6 +164,16 @@ public class CreateEipGroupRequest extends AbstractBceRequest {
      */
     public CreateEipGroupRequest withResourceGroupId(String resourceGroupId) {
         this.resourceGroupId = resourceGroupId;
+        return this;
+    }
+
+    public CreateEipGroupRequest withRouteType(String routeType) {
+        this.routeType = routeType;
+        return this;
+    }
+
+    public CreateEipGroupRequest withIdc(String idc) {
+        this.idc = idc;
         return this;
     }
 }

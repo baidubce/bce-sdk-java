@@ -49,6 +49,16 @@ public class ModifyBlbAttributesRequest extends AbstractBceRequest {
      */
     private String desc;
 
+    /**
+     * whether to allow deletion.
+     */
+    private Boolean allowDelete;
+
+    /**
+     * whether to allocate IPv6 address.
+     */
+    private Boolean allocateIpv6;
+
     public ModifyBlbAttributesRequest() {
     }
 
@@ -69,6 +79,16 @@ public class ModifyBlbAttributesRequest extends AbstractBceRequest {
 
     public ModifyBlbAttributesRequest withDesc(String desc) {
         this.setDesc(desc);
+        return this;
+    }
+
+    public ModifyBlbAttributesRequest withAllowDelete(Boolean allowDelete) {
+        this.setAllowDelete(allowDelete);
+        return this;
+    }
+
+    public ModifyBlbAttributesRequest withAllocateIpv6(Boolean allocateIpv6) {
+        this.setAllocateIpv6(allocateIpv6);
         return this;
     }
 
@@ -108,6 +128,22 @@ public class ModifyBlbAttributesRequest extends AbstractBceRequest {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public Boolean getAllowDelete() {
+        return allowDelete;
+    }
+
+    public void setAllowDelete(Boolean allowDelete) {
+        this.allowDelete = allowDelete;
+    }
+
+    public Boolean getAllocateIpv6() {
+        return allocateIpv6;
+    }
+
+    public void setAllocateIpv6(Boolean allocateIpv6) {
+        this.allocateIpv6 = allocateIpv6;
     }
 
     @Override

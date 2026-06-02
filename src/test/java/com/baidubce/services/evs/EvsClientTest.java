@@ -167,7 +167,7 @@ public class EvsClientTest {
         DeviceGbConfig gbConfig = new DeviceGbConfig();
         gbConfig.setGbId("34020000001311000005");
         gbConfig.setUsername("34020000001311000005");
-        gbConfig.setPassword("IPC");
+        gbConfig.setPassword("");
         request.setGbConfig(gbConfig);
         DeviceCreateResponse response = evsClient.createDevice(request);
         log.info(JsonUtils.toJsonString(response));
@@ -326,7 +326,7 @@ public class EvsClientTest {
     @Test
     public void modifyDeviceGbPasswordTest() {
         GBDevicePasswordRequest request = new GBDevicePasswordRequest();
-        request.setPassword("test123");
+        request.setPassword("");
 
         evsClient.modifyDeviceGbPassword(1020651, request);
     }

@@ -28,6 +28,8 @@ public class ExampleUpdateAppServerGroupPort {
         request.setPortId("port-2b68dae3"); // 应用服务器组端口ID
         request.setHealthCheck("HTTP"); // 健康检查协议
         request.setHealthCheckTimeoutInSecond(50); // 健康检查超时时间
+        request.setEnableHealthCheck(true); // 是否开启健康检查
+        request.setHealthCheckHost("www.example.com"); // 7层健康检查请求的头部域host字段
         try {
             appBlbClient.modifyAppServerGroupPortAttributes(request);
         } catch (BceClientException e) {

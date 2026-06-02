@@ -42,6 +42,7 @@ public class SyncDnsRequest extends AbstractBceRequest {
     /**
      * The role, initiator or acceptor.
      */
+    @JsonIgnore
     private String role;
 
     /**

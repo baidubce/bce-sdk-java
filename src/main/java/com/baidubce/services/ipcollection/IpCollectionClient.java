@@ -320,6 +320,7 @@ public class IpCollectionClient extends AbstractBceClient {
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
 
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -339,6 +340,7 @@ public class IpCollectionClient extends AbstractBceClient {
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
         fillPayload(internalRequest, request);
 
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
@@ -377,6 +379,7 @@ public class IpCollectionClient extends AbstractBceClient {
         if (Strings.isNullOrEmpty(request.getClientToken())) {
             request.setClientToken(this.generateClientToken());
         }
+        internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
 
         invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }

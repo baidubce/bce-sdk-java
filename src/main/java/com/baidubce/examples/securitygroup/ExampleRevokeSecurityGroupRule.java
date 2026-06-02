@@ -21,16 +21,17 @@ public class ExampleRevokeSecurityGroupRule {
         config.setEndpoint(endpoint);
         BccClient bccClient = new BccClient(config); // 初始化SecurityGroupClient
         SecurityGroupRuleOperateRequest securityGroupRuleOperateRequest = new SecurityGroupRuleOperateRequest();
-        securityGroupRuleOperateRequest.setSecurityGroupId("g-unsf3zrpb80u");
-
-        SecurityGroupRuleModel securityGroupRuleModel = new SecurityGroupRuleModel(); // 要删除的规则对象
-        securityGroupRuleModel.setSourceIp("all"); // 规则源IP
+        securityGroupRuleOperateRequest.setSecurityGroupId("g-kc4yv3e3ekfz");
+        // securityGroupRuleOperateRequest.setSgVersion(1L); // 可选，安全组版本号，用于版本控制
+        SecurityGroupRuleModel securityGroupRuleModel = new SecurityGroupRuleModel(); // 要撤销的规则对象
+        securityGroupRuleModel.setSourceIp("1.2.3.6"); // 规则源IP
         securityGroupRuleModel.setDestIp("all"); // 规则目的IP
         securityGroupRuleModel.setDirection("ingress"); // 规则的方向
         securityGroupRuleModel.setProtocol("tcp"); // 规则协议
-        securityGroupRuleModel.setPortRange("1000-3000"); // 规则端口范围
+        securityGroupRuleModel.setPortRange("908"); // 规则端口范围
         securityGroupRuleModel.setEthertype("IPv4"); // 规则IPv4版本
         securityGroupRuleOperateRequest.setRule(securityGroupRuleModel);
+
         try {
             bccClient.revokeSecurityGroupRule(securityGroupRuleOperateRequest);
         } catch (BceClientException e) {

@@ -14,6 +14,7 @@ package com.baidubce.services.esg.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +41,13 @@ public class DeleteEsgRuleRequest extends AbstractBceRequest {
     private String enterpriseSecurityGroupRuleId;
 
     /**
+     * An ASCII string whose length is less than 64.
+     * The request will be idempotent if client token is provided.
+     */
+    @JsonIgnore
+    private String clientToken;
+
+    /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.
@@ -48,6 +56,16 @@ public class DeleteEsgRuleRequest extends AbstractBceRequest {
     @Override
     public AbstractBceRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
+        return this;
+    }
+
+    /**
+     * Builder method for clientToken
+     * @param clientToken The client token
+     * @return this object for method chaining
+     */
+    public DeleteEsgRuleRequest withClientToken(String clientToken) {
+        this.clientToken = clientToken;
         return this;
     }
 }

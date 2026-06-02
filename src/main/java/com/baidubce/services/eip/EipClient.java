@@ -15,6 +15,8 @@ package com.baidubce.services.eip;
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.BceClientException;
+import com.baidubce.common.BaseBceRequest;
+import com.baidubce.common.BaseBceResponse;
 import com.baidubce.http.Headers;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.http.handler.BceErrorResponseHandler;
@@ -28,20 +30,30 @@ import com.baidubce.model.AbstractBceResponse;
 import com.baidubce.services.eip.model.AutoRenewEipRequest;
 import com.baidubce.services.eip.model.Billing;
 import com.baidubce.services.eip.model.BindEipRequest;
+import com.baidubce.services.eip.model.ConvertToPrepayEipRequest;
+import com.baidubce.services.eip.model.CancelEipTransferRequest;
 import com.baidubce.services.eip.model.CreateEipRequest;
 import com.baidubce.services.eip.model.CreateEipResponse;
+import com.baidubce.services.eip.model.CreateEipTransferRequest;
+import com.baidubce.services.eip.model.CreateEipTransferResponse;
 import com.baidubce.services.eip.model.DirectEipRequest;
+import com.baidubce.services.eip.model.ListEipTransferRequest;
+import com.baidubce.services.eip.model.ListEipTransferResponse;
 import com.baidubce.services.eip.model.ListEipsRequest;
 import com.baidubce.services.eip.model.ListEipsResponse;
 import com.baidubce.services.eip.model.ListRecycleEipsRequest;
 import com.baidubce.services.eip.model.ListRecycleEipsResponse;
 import com.baidubce.services.eip.model.OptionalReleaseEipRequest;
 import com.baidubce.services.eip.model.PurchaseReservedEipRequest;
+import com.baidubce.services.eip.model.AcceptEipTransferRequest;
 import com.baidubce.services.eip.model.RecycleOperateEipRequest;
+import com.baidubce.services.eip.model.RefundEipRequest;
+import com.baidubce.services.eip.model.RejectEipTransferRequest;
 import com.baidubce.services.eip.model.ReleaseEipRequest;
 import com.baidubce.services.eip.model.ResizeEipRequest;
 import com.baidubce.services.eip.model.StopAutoRenewEipRequest;
 import com.baidubce.services.eip.model.UnbindEipRequest;
+import com.baidubce.services.eip.model.UpdateDeleteProtectEipRequest;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.google.common.base.Strings;
@@ -67,6 +79,8 @@ public class EipClient extends AbstractBceClient {
     private static final String PREFIX = "eip";
 
     private static final String CLIENT_TOKEN_IDENTIFY = "clientToken";
+
+    private static final String CONSTANT_TRANSFER = "transfer";
 
     /**
      * Responsible for handling httpResponses from all service calls.
@@ -412,6 +426,18 @@ public class EipClient extends AbstractBceClient {
         if (!Strings.isNullOrEmpty(request.getInstanceType())) {
             internalRequest.addParameter("instanceType", request.getInstanceType());
         }
+        if (!Strings.isNullOrEmpty(request.getIpVersion())) {
+            internalRequest.addParameter("ipVersion", request.getIpVersion());
+        }
+        if (!Strings.isNullOrEmpty(request.getName())) {
+            internalRequest.addParameter("name", request.getName());
+        }
+        if (!Strings.isNullOrEmpty(request.getStatus())) {
+            internalRequest.addParameter("status", request.getStatus());
+        }
+        if (!Strings.isNullOrEmpty(request.getEipIds())) {
+            internalRequest.addParameter("eipIds", request.getEipIds());
+        }
         return invokeHttpClient(internalRequest, ListEipsResponse.class);
     }
 
@@ -506,6 +532,29 @@ public class EipClient extends AbstractBceClient {
      * @return A new request object populated with endpoint, resource path and specific
      *         parameters to send.
      */
+    private InternalRequest createBaseRequest(
+            AbstractBceRequest bceRequest, HttpMethodName httpMethod, String... pathVariables) {
+        List<String> path = new ArrayList<String>();
+        if (pathVariables != null) {
+            for (String pathVariable : pathVariables) {
+                path.add(pathVariable);
+            }
+        }
+        URI uri = HttpUtils.appendUri(this.getEndpoint(), path.toArray(new String[path.size()]));
+        InternalRequest request = new InternalRequest(httpMethod, uri);
+        request.setCredentials(bceRequest.getRequestCredentials());
+        return request;
+    }
+
+    /**
+     * Creates and initializes a new request object for the specified resource.
+     *
+     * @param bceRequest The original BCE request created by the user.
+     * @param httpMethod The HTTP method to use when sending the request.
+     * @param pathVariables The optional variables used in the URI path.
+     * @return A new request object populated with endpoint, resource path and specific
+     *         parameters to send.
+     */
     private InternalRequest createRequest(
             AbstractBceRequest bceRequest, HttpMethodName httpMethod, String... pathVariables) {
         List<String> path = new ArrayList<String>();
@@ -583,5 +632,189 @@ public class EipClient extends AbstractBceClient {
         billing.setReservation(reservation);
         reservation.setReservationLength(1);
         return billing;
+    }
+
+    /**
+     * Convert postpaid EIP to prepaid EIP.
+     *
+     * @param request The request containing all options for converting EIP billing type
+     */
+    public void convertToPrepayEip(ConvertToPrepayEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        checkNotNull(request.getPurchaseLength(), "purchaseLength should not be null");
+        checkNotNull(request.getBandWidth(), "bandWidth should not be null");
+
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, request.getEip());
+        internalRequest.addParameter("action", "TO_PREPAY");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Update EIP delete protection switch.
+     *
+     * @param request The request containing all options for updating delete protection
+     */
+    public void updateDeleteProtect(UpdateDeleteProtectEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+        checkNotNull(request.getDeleteProtect(), "deleteProtect should not be null");
+
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                request.getEip(), "deleteProtect");
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Refund prepaid EIP with early cancellation.
+     * Only prepaid EIP can be refunded.
+     *
+     * @param request The request containing all options for refunding EIP
+     */
+    public void refundEip(RefundEipRequest request) {
+        checkStringNotEmpty(request.getEip(), "eip should not be empty");
+
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                "refund", request.getEip());
+        internalRequest.addParameter(CLIENT_TOKEN_IDENTIFY, request.getClientToken());
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * createEipTransfer
+     *
+     * @param request 入参结构体
+     * @return CreateEipTransferResponse
+     */
+    public CreateEipTransferResponse createEipTransfer(CreateEipTransferRequest request) {
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        // verify the required parameter 'transferType' is set
+        checkNotNull(request.getTransferType(), "Missing the required parameter 'transferType' when calling createEipTransfer");
+        // verify the required parameter 'transferResourceList' is set
+        checkNotNull(request.getTransferResourceList(), "Missing the required parameter 'transferResourceList' when calling createEipTransfer");
+        // verify the required parameter 'toUserId' is set
+        checkNotNull(request.getToUserId(), "Missing the required parameter 'toUserId' when calling createEipTransfer");
+        InternalRequest internalRequest = this.createBaseRequest(request, HttpMethodName.POST, VERSION, CONSTANT_TRANSFER);
+        if (request.getClientToken() != null) {
+            internalRequest.addParameter("clientToken", request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateEipTransferResponse.class);
+    }
+
+    /**
+     * listEipTransfer
+     *
+     * @param request 入参结构体
+     * @return ListEipTransferResponse
+     */
+    public ListEipTransferResponse listEipTransfer(ListEipTransferRequest request) {
+        InternalRequest internalRequest = this.createBaseRequest(new BaseBceRequest(), HttpMethodName.GET, VERSION, CONSTANT_TRANSFER);
+        if (request.getMaxKeys() != null) {
+            internalRequest.addParameter("maxKeys", String.valueOf(request.getMaxKeys()));
+        }
+        if (request.getMarker() != null) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getDirection() != null) {
+            internalRequest.addParameter("direction", request.getDirection());
+        }
+        if (request.getTransferId() != null) {
+            internalRequest.addParameter("transferId", request.getTransferId());
+        }
+        if (request.getStatus() != null) {
+            internalRequest.addParameter("status", request.getStatus());
+        }
+        if (request.getFuzzyTransferId() != null) {
+            internalRequest.addParameter("fuzzyTransferId", request.getFuzzyTransferId());
+        }
+        if (request.getFuzzyInstanceId() != null) {
+            internalRequest.addParameter("fuzzyInstanceId", request.getFuzzyInstanceId());
+        }
+        if (request.getFuzzyInstanceName() != null) {
+            internalRequest.addParameter("fuzzyInstanceName", request.getFuzzyInstanceName());
+        }
+        if (request.getFuzzyInstanceIp() != null) {
+            internalRequest.addParameter("fuzzyInstanceIp", request.getFuzzyInstanceIp());
+        }
+        return invokeHttpClient(internalRequest, ListEipTransferResponse.class);
+    }
+
+    /**
+     * receiveEipTransfer
+     *
+     * @param request 入参结构体
+     */
+    public void acceptEipTransfer(AcceptEipTransferRequest request) {
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        // verify the required parameter 'transferIdList' is set
+        checkNotNull(request.getTransferIdList(), "Missing the required parameter 'transferIdList' when calling receiveEipTransfer");
+        InternalRequest internalRequest = this.createBaseRequest(request, HttpMethodName.PUT, VERSION, CONSTANT_TRANSFER);
+        internalRequest.addParameter("accept", null);
+        if (request.getClientToken() != null) {
+            internalRequest.addParameter("clientToken", request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, BaseBceResponse.class);
+    }
+
+    /**
+     * rejectEipTransfer
+     *
+     * @param request 入参结构体
+     */
+    public void rejectEipTransfer(RejectEipTransferRequest request) {
+        // verify the required parameter 'action' is set
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        // verify the required parameter 'transferIdList' is set
+        checkNotNull(request.getTransferIdList(), "Missing the required parameter 'transferIdList' when calling rejectEipTransfer");
+        InternalRequest internalRequest = this.createBaseRequest(request, HttpMethodName.PUT, VERSION, CONSTANT_TRANSFER);
+        internalRequest.addParameter("reject", null);
+        if (request.getClientToken() != null) {
+            internalRequest.addParameter("clientToken", request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, BaseBceResponse.class);
+    }
+
+    /**
+     * cancelEipTransfer
+     *
+     * @param request 入参结构体
+     */
+    public void cancelEipTransfer(CancelEipTransferRequest request) {
+        if (Strings.isNullOrEmpty(request.getClientToken())) {
+            request.setClientToken(generateDefaultClientToken());
+        }
+        // verify the required parameter 'transferIdList' is set
+        checkNotNull(request.getTransferIdList(), "Missing the required parameter 'transferIdList' when calling cancelEipTransfer");
+        InternalRequest internalRequest = this.createBaseRequest(request, HttpMethodName.PUT, VERSION, CONSTANT_TRANSFER);
+        internalRequest.addParameter("cancel", null);
+        if (request.getClientToken() != null) {
+            internalRequest.addParameter("clientToken", request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, BaseBceResponse.class);
     }
 }

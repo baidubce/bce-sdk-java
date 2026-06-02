@@ -77,6 +77,7 @@ public class EtGatewayClientTest {
         tag.setTagValue("value1sfsafa");
         tags.add(tag);
         createEtGatewayRequest.setTags(tags);
+        createEtGatewayRequest.setResourceGroupId("RESG-test"); // 资源组ID
 
         CreateEtGatewayResponse etGateway = etGatewayClient.createEtGateway(createEtGatewayRequest);
         toJsonPrettyString("createEtGateway:", etGateway);

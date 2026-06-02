@@ -36,6 +36,7 @@ import com.baidubce.services.nat.model.CreateNatRequest;
 import com.baidubce.services.nat.model.CreateNatResponse;
 import com.baidubce.services.nat.model.CreateSnatRuleRequest;
 import com.baidubce.services.nat.model.DeleteNatRuleRequest;
+import com.baidubce.services.nat.model.EnhanceNatBindEipRequest;
 import com.baidubce.services.nat.model.GetNatResponse;
 import com.baidubce.services.nat.model.ListNatRequest;
 import com.baidubce.services.nat.model.ListNatResponse;
@@ -43,9 +44,12 @@ import com.baidubce.services.nat.model.ListNatRuleRequest;
 import com.baidubce.services.nat.model.ModifyNatRequest;
 import com.baidubce.services.nat.model.PurchaseReservedNatRequest;
 import com.baidubce.services.nat.model.ReleaseNatRequest;
+import com.baidubce.services.nat.model.ResizeNatRequest;
+import com.baidubce.services.nat.model.UpdateDeleteProtectRequest;
 import com.baidubce.services.nat.model.UpdateDnatRuleRequest;
 import com.baidubce.services.nat.model.UpdateSnatRuleRequest;
 import com.baidubce.util.JsonUtils;
+import com.google.common.collect.Lists;
 
 /**
  * NatClient test
@@ -83,10 +87,12 @@ public class NatClientTest {
         billing.setPaymentTiming("Postpaid");
         billing.setReservation(reservation);
         request.setBilling(billing);
-        // request.setEips();
-        request.setName("NatTest");
-        request.setSpec("small");
+        request.setBindEips(Arrays.asList(eip));
+        request.setName("NatJavaSdkTest");
         request.setVpcId(vpcId);
+        request.setCuNum(5);
+        request.setResourceGroupId("RESG-xyfmAVnHGzK");
+        request.setDeleteProtect(true);
         List<TagModel> tags = new ArrayList<TagModel>();
         tags.add(new TagModel().withTagKey("testKey").withTagValue("testValue"));
         request.setTags(tags);
@@ -187,6 +193,22 @@ public class NatClientTest {
         dnatEips.add("180.76.173.115");
         request.setDnatEips(dnatEips);
         natClient.unbindDnatEip(request);
+    }
+
+    @Test
+    public void testEnhanceNatBindEip() {
+        EnhanceNatBindEipRequest request = new EnhanceNatBindEipRequest();
+        request.setNatId(natId);
+        request.setBindEips(Lists.newArrayList(eip));
+        natClient.enhanceNatBindEip(request);
+    }
+
+    @Test
+    public void testEnhanceNatUnbindEip() {
+        EnhanceNatBindEipRequest request = new EnhanceNatBindEipRequest();
+        request.setNatId(natId);
+        request.setBindEips(Lists.newArrayList(eip));
+        natClient.enhanceNatUnbindEip(request);
     }
 
     @Test
@@ -300,5 +322,21 @@ public class NatClientTest {
         createDnatRule.setPublicPort(8991);
         batchAddDnatRulesRequest.setRules(Arrays.asList(createDnatRule));
         natClient.batchAddDnatRules(batchAddDnatRulesRequest);
+    }
+
+    @Test
+    public void testResizeNat() {
+        ResizeNatRequest request = new ResizeNatRequest();
+        request.setNatId(natId);
+        request.setCuNum(10);
+        natClient.resizeNat(request);
+    }
+
+    @Test
+    public void testUpdateDeleteProtect() {
+        UpdateDeleteProtectRequest request = new UpdateDeleteProtectRequest();
+        request.setNatId(natId);
+        request.setDeleteProtect(true);
+        natClient.updateDeleteProtect(request);
     }
 }

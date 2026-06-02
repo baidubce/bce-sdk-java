@@ -36,6 +36,8 @@ import com.baidubce.services.blb.model.ListBlbEsgResponse;
 import com.baidubce.services.blb.model.ListBlbSgRequest;
 import com.baidubce.services.blb.model.ListBlbSgResponse;
 import com.baidubce.services.blb.model.SgOperateRequest;
+import com.baidubce.services.blb.model.UpdateAppPolicyItem;
+import com.baidubce.services.blb.model.UpdateAppPolicyRequest;
 import com.baidubce.services.tag.model.Tag;
 import com.baidubce.util.JsonUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,8 +48,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class AppBlbClientTest {
 
     private static final Logger logger = LoggerFactory.getLogger(AppBlbClientTest.class);
-    private static final String ak = "3251d60a16f94c839f7aa4b87ed4913b";
-    private static final String sk = "21d8c3cdfe1242148e29465fca734e1f";
+    private static final String ak = "";
+    private static final String sk = "";
     private AppBlbClient blbClient;
 
     @Before
@@ -242,6 +244,7 @@ public class AppBlbClientTest {
         request.setBlbId("lb-99fa2577");
         request.setListenerPort(22);
         request.setScheduler("LeastConnection");
+        request.setCertIds(Arrays.asList("cert-zfj2ey2z4kmm"));
         blbClient.modifyListenerAttributes(request);
     }
 
@@ -252,6 +255,7 @@ public class AppBlbClientTest {
         request.setBlbId("lb-99fa2577");
         request.setListenerPort(23);
         request.setScheduler("LeastConnection");
+        request.setCertIds(Arrays.asList("cert-zfj2ey2z4kmm"));
         blbClient.modifyListenerAttributes(request);
     }
 
@@ -307,6 +311,13 @@ public class AppBlbClientTest {
     public void listAppServerGroupTest() {
         toJsonPrettyString("list AppServerGroup results:",
                 blbClient.listAppServerGroup("lb-b69cd42f", ""));
+    }
+
+    @Test
+    public void listAppServerGroupWithExactlyMatchTest() {
+        toJsonPrettyString("list AppServerGroup with exactlyMatch results:",
+                blbClient.listAppServerGroup(new com.baidubce.services.blb.model.ListAppSgRequest("lb-b69cd42f")
+                        .withName("testName").withExactlyMatch(true)));
     }
 
     @Test
@@ -377,6 +388,8 @@ public class AppBlbClientTest {
         request.setPort(90);
         request.setType("HTTP");
         request.setHealthCheck("HTTP");
+        request.setEnableHealthCheck(true); // 是否开启健康检查
+        request.setHealthCheckHost("www.example.com"); // 7层健康检查请求的头部域host字段
         toJsonPrettyString("create appServerGroupPort Results"
                 , blbClient.createAppServerGroupPort(request));
     }
@@ -389,6 +402,8 @@ public class AppBlbClientTest {
         request.setPortId("port-2b68dae3");
         request.setHealthCheck("HTTP");
         request.setHealthCheckTimeoutInSecond(50);
+        request.setEnableHealthCheck(true); // 是否开启健康检查
+        request.setHealthCheckHost("www.example.com"); // 7层健康检查请求的头部域host字段
         blbClient.modifyAppServerGroupPortAttributes(request);
     }
 
@@ -484,6 +499,24 @@ public class AppBlbClientTest {
     @Test
     public void deletePolicysTest() {
         blbClient.deletePolicys("lb-99fa2577", 90, Arrays.asList("policy-01940c30"));
+    }
+
+    @Test
+    public void updatePolicysTest() {
+        UpdateAppPolicyItem item = new UpdateAppPolicyItem();
+        item.setPolicyId("policy-01940c30"); // 策略ID
+        item.setPriority(10);                // 新的优先级
+        item.setDescription("updated");      // 新的描述
+
+        List<UpdateAppPolicyItem> policyList = new ArrayList<UpdateAppPolicyItem>();
+        policyList.add(item);
+
+        UpdateAppPolicyRequest request = new UpdateAppPolicyRequest()
+                .withBlbId(BLB_ID)
+                .withPort(LISTENER_PORT)
+                .withType("TCP")
+                .withPolicyList(policyList);
+        blbClient.updatePolicys(request);
     }
 
     @Test

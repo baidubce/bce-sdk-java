@@ -75,6 +75,12 @@ public class CreateEniRequest extends AbstractBceRequest {
     private List<PrivateIp> privateIpSet;
 
     /**
+     * IPv6 intranet IP information
+     * All specified IPv6 IPs must be secondary IPs.
+     */
+    private List<PrivateIp> ipv6PrivateIpSet;
+
+    /**
      * Description of ENI.
      */
     private String description;

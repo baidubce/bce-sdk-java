@@ -32,7 +32,7 @@ public class UpdateProbeRequest extends AbstractBceRequest {
     /**
      * Detection of destination ports is required for TCP, UDP, and DNS types
      */
-    private String destPort;
+    private Integer destPort;
 
     @JsonIgnore
     private String clientToken;

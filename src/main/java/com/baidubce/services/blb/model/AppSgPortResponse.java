@@ -71,6 +71,14 @@ public class AppSgPortResponse extends AbstractBceResponse {
      * the string of udp health check.
      */
     private String udpHealthCheckString;
+    /**
+     * whether to enable health check.
+     */
+    private Boolean enableHealthCheck;
+    /**
+     * the host of health check, used when healthCheck is HTTP.
+     */
+    private String healthCheckHost;
 
     public Integer getPort() {
         return port;
@@ -158,6 +166,22 @@ public class AppSgPortResponse extends AbstractBceResponse {
 
     public void setUdpHealthCheckString(String udpHealthCheckString) {
         this.udpHealthCheckString = udpHealthCheckString;
+    }
+
+    public Boolean getEnableHealthCheck() {
+        return enableHealthCheck;
+    }
+
+    public void setEnableHealthCheck(Boolean enableHealthCheck) {
+        this.enableHealthCheck = enableHealthCheck;
+    }
+
+    public String getHealthCheckHost() {
+        return healthCheckHost;
+    }
+
+    public void setHealthCheckHost(String healthCheckHost) {
+        this.healthCheckHost = healthCheckHost;
     }
 
     public String getId() {

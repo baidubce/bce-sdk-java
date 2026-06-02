@@ -28,7 +28,7 @@ public class ExampleCreateEsg {
         createEsgRequest.setName("esgName"); // esg名称
         createEsgRequest.setDesc("desc"); // esg描述
         EnterpriseSecurityGroupRule enterpriseSecurityGroupRule = new EnterpriseSecurityGroupRule(); // esg规则
-        enterpriseSecurityGroupRule.setSourceIp("all"); // 规则源IP
+        // enterpriseSecurityGroupRule.setSourceIp("all"); // 规则源IP
         enterpriseSecurityGroupRule.setDestIp("all"); // 规则目的IP
         enterpriseSecurityGroupRule.setAction("allow"); // 规则允许
         enterpriseSecurityGroupRule.setDirection("ingress"); // 规则的方向
@@ -36,6 +36,10 @@ public class ExampleCreateEsg {
         enterpriseSecurityGroupRule.setProtocol("tcp"); // 规则协议
         enterpriseSecurityGroupRule.setPortRange("1000-3000"); // 规则端口范围
         enterpriseSecurityGroupRule.setEthertype("IPv4"); // 规则IPv4版本
+        enterpriseSecurityGroupRule.setRemark("example ingress rule"); // 规则备注
+        // 新增字段：远程IP集合，用于指定允许访问的IP段，可以是单个IP或CIDR格式
+        enterpriseSecurityGroupRule.setRemoteIpSet("ips-wzz7s2sjvsaq");
+        // 注意：remoteIpSet和remoteIpGroup二选一使用，如果需要使用远程IP组，可以调用setRemoteIpGroup()
 
         createEsgRequest.setRules(Arrays.asList(enterpriseSecurityGroupRule));
         try {

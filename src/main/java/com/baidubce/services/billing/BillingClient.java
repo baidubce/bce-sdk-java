@@ -12,16 +12,14 @@
  */
 package com.baidubce.services.billing;
 
-import static com.baidubce.util.Validate.checkIsTrue;
-import static com.baidubce.util.Validate.checkNotNull;
-import static com.baidubce.util.Validate.checkStringNotEmpty;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.baidubce.services.billing.model.finance.SupervisorCreditQuotaQueryRequest;
+import com.baidubce.services.billing.model.finance.SupervisorCreditQuotaResponse;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +55,10 @@ import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequ
 import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
 import com.baidubce.services.billing.model.finance.TransferResultResponse;
+import com.baidubce.services.billing.model.finance.UnionExpireDayQueryRequest;
+import com.baidubce.services.billing.model.finance.UnionExpireDayQueryResponse;
+import com.baidubce.services.billing.model.finance.UnionExpireDayUpdateRequest;
+import com.baidubce.services.billing.model.finance.UnionExpireDayUpdateResponse;
 import com.baidubce.services.billing.model.finance.UserBalanceQueryRequest;
 import com.baidubce.services.billing.model.finance.UserBalanceQueryResponse;
 import com.baidubce.services.billing.model.order.OrderCancelRequest;
@@ -74,8 +76,16 @@ import com.baidubce.services.billing.model.renew.RenewResourceDetailResponse;
 import com.baidubce.services.billing.model.renew.RenewResourceListRequest;
 import com.baidubce.services.billing.model.renew.RenewResourceResponse;
 import com.baidubce.services.billing.model.renew.ResourceAutoRenewRequest;
+import com.baidubce.services.billing.model.stock.StockSubServiceTypeQueryRequest;
+import com.baidubce.services.billing.model.stock.StockSubServiceTypeQueryResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
+
+import static com.baidubce.util.Validate.checkIsTrue;
+import static com.baidubce.util.Validate.checkListSizeInRange;
+import static com.baidubce.util.Validate.checkNotNull;
+import static com.baidubce.util.Validate.checkStringNotEmpty;
+
 
 /**
  * Provides the client for accessing the Baidu Billing Service(billing).
@@ -93,6 +103,7 @@ public class BillingClient extends AbstractBceClient {
     private static final String MONTH_SUMMARY = "month/summary";
     private static final String COST_SPLIT_BILL = "/cost/split/bill/list";
     private static final String QUERY_RENEW = "query/renew";
+    private static final String STOCK_SUB_SERVICE_TYPE = "/stock/subServiceType";
     private static final String PRICE = "price";
     private static final String CPC = "cpc";
     private static final String CPT = "cpt";
@@ -109,6 +120,11 @@ public class BillingClient extends AbstractBceClient {
     private static final String GATHER = "gather";
     private static final String CASH = "cash";
     private static final String TRANSACTION = "transaction";
+    private static final String CREDIT = "credit";
+    private static final String QUOTA = "quota";
+    private static final String UNION_EXPIRE_DAY = "unionexpireday";
+    private static final String GET = "get";
+    private static final String UPDATE = "update";
 
     /**
      * Responsible for handling httpResponses from all billing service calls.
@@ -321,6 +337,9 @@ public class BillingClient extends AbstractBceClient {
         if (request.getServiceType() != null) {
             internalRequest.addParameter("serviceType", request.getServiceType());
         }
+        if (request.getProductType() != null) {
+            internalRequest.addParameter("productType", request.getProductType());
+        }
         if (request.getQueryAccountId() != null) {
             internalRequest.addParameter("queryAccountId", request.getQueryAccountId());
         }
@@ -332,6 +351,13 @@ public class BillingClient extends AbstractBceClient {
         }
         if (request.getPageSize() != null) {
             internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        }
+        if (request.getShowTags() != null) {
+            internalRequest.addParameter("showTags", String.valueOf(request.getShowTags()));
+        }
+        if (request.getNeedSplitConfiguration() != null) {
+            internalRequest.addParameter("needSplitConfiguration",
+                    String.valueOf(request.getNeedSplitConfiguration()));
         }
         return invokeHttpClient(internalRequest, CostSplitBillResponse.class);
     }
@@ -593,6 +619,46 @@ public class BillingClient extends AbstractBceClient {
         InternalRequest internalRequest = createRequest(new UserBalanceQueryRequest(), HttpMethodName.POST, VERSION_V1,
                 FINANCE, CASH, BALANCE);
         return invokeHttpClient(internalRequest, UserBalanceQueryResponse.class);
+    }
+
+    public StockSubServiceTypeQueryResponse queryStockSubServiceTypes(StockSubServiceTypeQueryRequest request) {
+        checkIsTrue(!StringUtils.isEmpty(request.getServiceType()), "The parameter serviceType cannot be empty!");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1,
+                STOCK_SUB_SERVICE_TYPE);
+        return invokeHttpClient(internalRequest, StockSubServiceTypeQueryResponse.class);
+    }
+
+    /**
+     * get credit quota info
+     *
+     * @param request request contain accountIds param
+     * @return credit quota result
+     */
+    public SupervisorCreditQuotaResponse creditQuotaQuery(SupervisorCreditQuotaQueryRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+
+        checkNotNull(request.getAccountIds(), "The parameter accountIds should NOT be null");
+        checkListSizeInRange(request.getAccountIds(), 1000, "The parameter accountIds size should be less than 1000");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1, FINANCE, SUPERVISOR,
+                CREDIT, QUOTA);
+        return invokeHttpClient(internalRequest, SupervisorCreditQuotaResponse.class);
+    }
+
+    public UnionExpireDayUpdateResponse updateUnionExpireDay(UnionExpireDayUpdateRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        checkIsTrue(request.getUnionExpireDay() >= 1 && request.getUnionExpireDay() <= 28,
+                "The parameter unionExpireDay must be between 1 and 28");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, VERSION_V1,
+                FINANCE, UNION_EXPIRE_DAY, UPDATE);
+        return invokeHttpClient(internalRequest, UnionExpireDayUpdateResponse.class);
+    }
+
+    public UnionExpireDayQueryResponse queryUnionExpireDay(UnionExpireDayQueryRequest request) {
+        checkNotNull(request, "The parameter request should NOT be null.");
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, VERSION_V1,
+                FINANCE, UNION_EXPIRE_DAY, GET);
+        return invokeHttpClient(internalRequest, UnionExpireDayQueryResponse.class);
     }
 
     /**

@@ -26,6 +26,7 @@ public class BindEtChannelRequest extends AbstractBceRequest {
     @JsonIgnore
     private String clientToken;
 
+    @JsonIgnore
     private String etGatewayId;
     /**
      * The ID of the bound physical dedicated line. Both etId and channelId must exist simultaneously.

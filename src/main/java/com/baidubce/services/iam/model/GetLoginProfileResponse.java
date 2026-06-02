@@ -12,6 +12,8 @@
  */
 package com.baidubce.services.iam.model;
 
+import java.util.Date;
+
 import com.baidubce.common.BaseBceResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -26,6 +28,11 @@ public class GetLoginProfileResponse extends BaseBceResponse {
      * needResetPassword
      */
     private Boolean needResetPassword;
+
+    /**
+     * enabledLogin
+     */
+    private Boolean enabledLogin;
 
     /**
      * enabledLoginMfa
@@ -47,6 +54,11 @@ public class GetLoginProfileResponse extends BaseBceResponse {
      */
     private String thirdPartyAccount;
 
+    /**
+     * passwordExpireDate
+     */
+    private Date passwordExpireDate;
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -61,6 +73,14 @@ public class GetLoginProfileResponse extends BaseBceResponse {
 
     public Boolean isNeedResetPassword() {
         return this.needResetPassword;
+    }
+
+    public void setEnabledLogin(Boolean enabledLogin) {
+        this.enabledLogin = enabledLogin;
+    }
+
+    public Boolean getEnabledLogin() {
+        return this.enabledLogin;
     }
 
     public void setEnabledLoginMfa(Boolean enabledLoginMfa) {
@@ -95,15 +115,25 @@ public class GetLoginProfileResponse extends BaseBceResponse {
         return this.thirdPartyAccount;
     }
 
+    public void setPasswordExpireDate(Date passwordExpireDate) {
+        this.passwordExpireDate = passwordExpireDate;
+    }
+
+    public Date getPasswordExpireDate() {
+        return this.passwordExpireDate;
+    }
+
     @Override
     public String toString() {
         return "GetLoginProfileResponse{"
                 + "password=" + password + "\n"
                 + "needResetPassword=" + needResetPassword + "\n"
+                + "enabledLogin=" + enabledLogin + "\n"
                 + "enabledLoginMfa=" + enabledLoginMfa + "\n"
                 + "loginMfaType=" + loginMfaType + "\n"
                 + "thirdPartyType=" + thirdPartyType + "\n"
                 + "thirdPartyAccount=" + thirdPartyAccount + "\n"
+                + "passwordExpireDate=" + passwordExpireDate + "\n"
                 + "}";
     }
 

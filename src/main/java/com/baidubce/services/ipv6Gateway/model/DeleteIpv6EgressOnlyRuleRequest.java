@@ -48,7 +48,7 @@ public class DeleteIpv6EgressOnlyRuleRequest extends AbstractBceRequest {
         return this;
     }
 
-    public DeleteIpv6EgressOnlyRuleRequest wirhRequestEgressOnlyRuleId(String egressOnlyRuleId) {
+    public DeleteIpv6EgressOnlyRuleRequest withRequestEgressOnlyRuleId(String egressOnlyRuleId) {
         this.egressOnlyRuleId = egressOnlyRuleId;
         return this;
     }

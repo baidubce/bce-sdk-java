@@ -79,6 +79,12 @@ public class AclRule {
     private String direction;
 
     /**
+     * the ip version of the aclRule<br>
+     * value contains 4 and 6
+     */
+    private Integer ipVersion;
+
+    /**
      * the strategy of the aclRule<br>
      * value contains "allow" and "deny"
      */
@@ -180,6 +186,14 @@ public class AclRule {
         this.action = action;
     }
 
+    public Integer getIpVersion() {
+        return ipVersion;
+    }
+
+    public void setIpVersion(Integer ipVersion) {
+        this.ipVersion = ipVersion;
+    }
+
     @Override
     public String toString() {
         return "AclRule{" +
@@ -194,6 +208,7 @@ public class AclRule {
                 ", destinationPort='" + destinationPort + '\'' +
                 ", position=" + position +
                 ", direction='" + direction + '\'' +
+                ", ipVersion=" + ipVersion +
                 ", action='" + action + '\'' +
                 '}';
     }

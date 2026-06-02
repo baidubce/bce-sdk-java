@@ -56,6 +56,11 @@ public class EnterpriseSecurityGroup {
     private  String createdTime;
 
     /**
+     * The updated time of the enterprise security group.
+     */
+    private String updatedTime;
+
+    /**
      * The list of rules which describe how the enterprise security group works.
      */
     private List<EnterpriseSecurityGroupRule> rules;

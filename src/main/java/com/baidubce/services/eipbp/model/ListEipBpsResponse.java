@@ -57,6 +57,14 @@ public class ListEipBpsResponse extends ListResponse {
          * The eipBp autoReleaseTime. UTC format. If not set, it is the same as the expiration time of the bound resource.
          */
         private String autoReleaseTime;
+        /**
+         * The type of eipBp. BandwidthPackage or AccelerationPackage.
+         */
+        private String type;
+        /**
+         * The region of eipBp.
+         */
+        private String region;
 
         public String getName() {
             return name;
@@ -120,6 +128,22 @@ public class ListEipBpsResponse extends ListResponse {
 
         public void setAutoReleaseTime(String autoReleaseTime) {
             this.autoReleaseTime = autoReleaseTime;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getRegion() {
+            return region;
+        }
+
+        public void setRegion(String region) {
+            this.region = region;
         }
     }
 

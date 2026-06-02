@@ -49,6 +49,154 @@ public class ListInstancesRequest extends ListRequest {
      */
     private String ehcClusterId;
 
+    /**
+     * The fuzzy-matched instance name.
+     */
+    private String fuzzyInstanceName;
+
+    /**
+     * The id of instance.
+     */
+    private String instanceIds;
+
+    /**
+     * The id of volume.
+     */
+    private String volumeIds;
+
+    /**
+     * The name of instance.
+     */
+    private String instanceNames;
+
+    /**
+     * The id of deploySet.
+     */
+    private String deploySetIds;
+
+    /**
+     * The id of security group.
+     */
+    private String securityGroupIds;
+
+    /**
+     * The paymentTiming.
+     */
+    private String paymentTiming;
+
+    /**
+     * The status of instance.
+     */
+    private String status;
+
+    /**
+     * The tags of instance.
+     */
+    private String tags;
+
+    /**
+     * The id of vpc.
+     */
+    private String vpcId;
+
+    /**
+     * The private ip of instance.
+     */
+    private String privateIps;
+
+    /**
+     * The showRdmaTopo of instance.
+     */
+    private Boolean showRdmaTopo;
+
+    public void setShowRdmaTopo(Boolean showRdmaTopo) {
+        this.showRdmaTopo = showRdmaTopo;
+    }
+
+    public Boolean getShowRdmaTopo() {
+        return showRdmaTopo;
+    }
+
+    public String getInstanceIds() {
+        return instanceIds;
+    }
+
+    public void setInstanceIds(String instanceIds) {
+        this.instanceIds = instanceIds;
+    }
+
+    public String getVolumeIds() {
+        return volumeIds;
+    }
+
+    public void setVolumeIds(String volumeIds) {
+        this.volumeIds = volumeIds;
+    }
+
+    public String getInstanceNames() {
+        return instanceNames;
+    }
+
+    public void setInstanceNames(String instanceNames) {
+        this.instanceNames = instanceNames;
+    }
+
+    public String getDeploySetIds() {
+        return deploySetIds;
+    }
+
+    public void setDeploySetIds(String deploySetIds) {
+        this.deploySetIds = deploySetIds;
+    }
+
+    public String getSecurityGroupIds() {
+        return securityGroupIds;
+    }
+
+    public void setSecurityGroupIds(String securityGroupIds) {
+        this.securityGroupIds = securityGroupIds;
+    }
+
+    public String getPaymentTiming() {
+        return paymentTiming;
+    }
+
+    public void setPaymentTiming(String paymentTiming) {
+        this.paymentTiming = paymentTiming;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getVpcId() {
+        return vpcId;
+    }
+
+    public void setVpcId(String vpcId) {
+        this.vpcId = vpcId;
+    }
+
+    public String getPrivateIps() {
+        return privateIps;
+    }
+
+    public void setPrivateIps(String privateIps) {
+        this.privateIps = privateIps;
+    }
+
     public String getInternalIp() {
         return internalIp;
     }
@@ -167,6 +315,19 @@ public class ListInstancesRequest extends ListRequest {
 
     public ListInstancesRequest withEhcClusterId(String ehcClusterId) {
         this.ehcClusterId = ehcClusterId;
+        return this;
+    }
+
+    public String getFuzzyInstanceName() {
+        return fuzzyInstanceName;
+    }
+
+    public void setFuzzyInstanceName(String fuzzyInstanceName) {
+        this.fuzzyInstanceName = fuzzyInstanceName;
+    }
+
+    public ListInstancesRequest withFuzzyInstanceName(String fuzzyInstanceName) {
+        this.fuzzyInstanceName = fuzzyInstanceName;
         return this;
     }
 

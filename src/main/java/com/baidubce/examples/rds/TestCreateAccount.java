@@ -17,12 +17,12 @@ public class TestCreateAccount {
         RdsClient rdsClient = createRdsClient();
 
         RdsCreateAccountRequest createAccountRequest = new RdsCreateAccountRequest();
-        createAccountRequest.setInstanceId("rds-nr2GCznE");
+        createAccountRequest.setInstanceId("rds-V5NF0bDg");
         createAccountRequest.setAccountName("test_acc");
-        createAccountRequest.setPassword("rds_passwordKJH");
+        createAccountRequest.setPassword("");
         createAccountRequest.setAccountType(RdsAccountType.Common);
         DatabasePrivilege privilege = new DatabasePrivilege();
-        privilege.setDbName("test");
+        privilege.setDbName("justTestDbName");
         privilege.setAuthType("ReadOnly");
         List<DatabasePrivilege> privileges = new ArrayList<>();
         privileges.add(privilege);

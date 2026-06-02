@@ -48,6 +48,7 @@ public class RdsCreateInstanceRequest extends AbstractBceRequest {
     private RdsInitialDataReference initialDataReference;
     private List<RdsRecoveryToSourceInstanceModel> data;
     private String leaderInstanceId;
+    private String resourceType;
 
 
     public String getClientToken() {
@@ -296,6 +297,14 @@ public class RdsCreateInstanceRequest extends AbstractBceRequest {
 
     public void setLeaderInstanceId(String leaderInstanceId) {
         this.leaderInstanceId = leaderInstanceId;
+    }
+
+    public String getResourceType() {
+        return resourceType;
+    }
+
+    public void setResourceType(String resourceType) {
+        this.resourceType = resourceType;
     }
 
     @Override

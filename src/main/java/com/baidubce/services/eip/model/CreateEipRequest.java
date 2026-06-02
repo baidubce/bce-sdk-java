@@ -49,6 +49,51 @@ public class CreateEipRequest extends AbstractBceRequest {
      */
     private String resourceGroupId;
 
+    /**
+     * eip route type
+     */
+    private String routeType;
+
+    /**
+     * EIP IP类型, ipv4或ipv6, 默认ipv4
+     */
+    private String ipVersion;
+
+    /**
+     * 自动续费时间单位, month或year, 默认month
+     */
+    private String autoRenewTimeUnit;
+
+    /**
+     * 自动续费时长
+     */
+    private Integer autoRenewTime;
+
+    /**
+     * 是否开启释放保护, 默认false
+     */
+    private Boolean deleteProtect;
+
+    public CreateEipRequest withIpVersion(String ipVersion) {
+        this.ipVersion = ipVersion;
+        return this;
+    }
+
+    public CreateEipRequest withAutoRenewTimeUnit(String autoRenewTimeUnit) {
+        this.autoRenewTimeUnit = autoRenewTimeUnit;
+        return this;
+    }
+
+    public CreateEipRequest withAutoRenewTime(Integer autoRenewTime) {
+        this.autoRenewTime = autoRenewTime;
+        return this;
+    }
+
+    public CreateEipRequest withDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
+        return this;
+    }
+
     public CreateEipRequest withClientToken(String clientToken) {
         this.clientToken = clientToken;
         return this;
@@ -83,4 +128,10 @@ public class CreateEipRequest extends AbstractBceRequest {
         this.setRequestCredentials(credentials);
         return this;
     }
+
+    public CreateEipRequest withRouteType(String routeType) {
+        this.routeType = routeType;
+        return this;
+    }
+
 }

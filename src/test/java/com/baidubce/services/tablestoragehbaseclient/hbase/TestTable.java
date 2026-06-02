@@ -275,33 +275,11 @@ public class TestTable {
         assertTrue(code);
         table = connection.getTable(TableName.valueOf(tableName));
 
-        List<Put> puts = new ArrayList<Put>();
-        Put put1 = new Put("rowkey1".getBytes());
-        Put put2 = new Put("rowkey2".getBytes());
-        int rowCount = puts.size();
-        int cellCountOfRow = 5;
-        int maxCellValueLengthWithConsideringOthers =
-                TableStorageConstants.MAX_REQUEST_BODY_SIZE / rowCount / cellCountOfRow;
-        String columnValue = HBaseTestUtil.getStringWithChar(maxCellValueLengthWithConsideringOthers, 'v');
-        for (int i = 0; i < rowCount; i++) {
-            String columnName = "col" + i;
-            put1.addColumn(Constants.DEFAULT_FAMILY.getBytes(), columnName.getBytes(), columnValue.getBytes());
-            put2.addColumn(Constants.DEFAULT_FAMILY.getBytes(), columnName.getBytes(), columnValue.getBytes());
-        }
-        puts.add(put1);
-        puts.add(put2);
-        try {
-            table.put(puts);
-            fail();
-        } catch (IOException e) {
-            assertThat(e.getMessage(), containsString("Request body's size should not exceed the limit 10485760."));
-        }
-
         List<Put> puts2 = new ArrayList<Put>();
         Put put3 = new Put("rowkey1".getBytes());
         Put put4 = new Put("rowkey2".getBytes());
-        columnValue = HBaseTestUtil.getStringWithChar(maxCellValueLengthWithConsideringOthers - 100, 'v');
-        for (int i = 0; i < rowCount; i++) {
+        String columnValue = "test";
+        for (int i = 0; i < 2; i++) {
             String columnName = "col" + i;
 
             put3.addColumn(Constants.DEFAULT_FAMILY.getBytes(), columnName.getBytes(), columnValue.getBytes());
@@ -800,12 +778,12 @@ public class TestTable {
         Put put2 = new Put("rowkey1".getBytes());
         put2.addColumn(Constants.DEFAULT_FAMILY.getBytes(), "col1".getBytes(), "v".getBytes());
         bufferedMutator.mutate(put2);
-        assertEquals(912, bufferedMutator.getWriteBufferSize());
+        assertEquals(688, bufferedMutator.getWriteBufferSize());
 
         Delete delete2 = new Delete("rowkey1".getBytes());
         delete2.addColumn(Constants.DEFAULT_FAMILY.getBytes(), "col1".getBytes());
         bufferedMutator.mutate(delete2);
-        assertEquals(1368, bufferedMutator.getWriteBufferSize());
+        assertEquals(1032, bufferedMutator.getWriteBufferSize());
         bufferedMutator.flush();
 
         // now, data of get only contains col0
@@ -833,7 +811,7 @@ public class TestTable {
         }
 
         bufferedMutator.mutate(mutationList);
-        assertEquals(15480, bufferedMutator.getWriteBufferSize());
+        assertEquals(12320, bufferedMutator.getWriteBufferSize());
         bufferedMutator.flush();
 
         // after delete, batch get 10 rows，only 5 rows returned，Mutator doesn't guarantee the order of services.

@@ -13,6 +13,7 @@
 package com.baidubce.services.billing.model.bill;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import lombok.Data;
 
@@ -55,6 +56,26 @@ public class ShareBill {
     private String serviceTypeName;
 
     /**
+     *
+     */
+    private String sourceServiceType;
+
+    /**
+     *
+     */
+    private String sourceServiceTypeName;
+
+    /**
+     *
+     */
+    private String sourceInstanceId;
+
+    /**
+     *
+     */
+    private String sourceShortId;
+
+    /**
      * 实例信息
      */
     private String instanceId;
@@ -70,6 +91,8 @@ public class ShareBill {
      * /n分隔符拼接成字符串
      */
     private String configurationCH;
+
+    private String sourceConfigurationCH;
 
     /**
      * 计费项英文名，仅后付费才有
@@ -277,4 +300,29 @@ public class ShareBill {
      * 本月（天）分摊时长(天) （只用于CPT2、Project计费项）
      */
     private Integer shareDays;
+
+    /**
+     * 产品英文配置， json格式
+     */
+    private String jsonFlavor;
+
+    /**
+     * 云商品编号
+     */
+    private String skuId;
+
+    /**
+     * 集团商品库商品编号
+     */
+    private String psiCode;
+
+    /**
+     * 资源属性，默认为serviceType
+     */
+    private String productCategory;
+
+    /**
+     * 配置拆分字段
+     */
+    private Map<String, String> splitConfiguration;
 }

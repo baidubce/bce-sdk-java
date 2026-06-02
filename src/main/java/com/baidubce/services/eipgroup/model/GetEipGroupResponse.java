@@ -44,6 +44,11 @@ public class GetEipGroupResponse extends AbstractBceResponse {
     private List<Eip> eips;
 
     /**
+     * The eipv6s of EipGroup.
+     */
+    private List<Eip> eipv6s;
+
+    /**
      * The status of EipGroup.
      */
     private String status;
@@ -54,9 +59,39 @@ public class GetEipGroupResponse extends AbstractBceResponse {
     private int bandwidthInMbps;
 
     /**
+     * The defaultDomesticBandwidth of EipGroup.
+     */
+    private int defaultDomesticBandwidth;
+
+    /**
+     * The bwShortId of EipGroup (bandwidth package id).
+     */
+    private String bwShortId;
+
+    /**
+     * The bwBandwidthInMbps of EipGroup (bandwidth package bandwidth).
+     */
+    private int bwBandwidthInMbps;
+
+    /**
+     * The domesticBwShortId of EipGroup (cross-border acceleration package id).
+     */
+    private String domesticBwShortId;
+
+    /**
+     * The domesticBwBandwidthInMbps of EipGroup (cross-border acceleration package bandwidth).
+     */
+    private int domesticBwBandwidthInMbps;
+
+    /**
      * The paymentTiming of EipGroup.
      */
     private String paymentTiming;
+
+    /**
+     * The billingMethod of EipGroup.
+     */
+    private String billingMethod;
 
     /**
      * The createTime of EipGroup.
@@ -67,6 +102,16 @@ public class GetEipGroupResponse extends AbstractBceResponse {
      * The expireTime of EipGroup.
      */
     private String expireTime;
+
+    /**
+     * The region of EipGroup.
+     */
+    private String region;
+
+    /**
+     * The routeType of EipGroup.
+     */
+    private String routeType;
 
     /**
      * The tags bound to eipGroup.

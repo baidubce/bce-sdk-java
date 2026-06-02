@@ -35,9 +35,15 @@ import com.baidubce.services.billing.model.bill.ShareBillResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceQueryRequest;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceResponse;
 import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequest;
+import com.baidubce.services.billing.model.finance.SupervisorCreditQuotaQueryRequest;
+import com.baidubce.services.billing.model.finance.SupervisorCreditQuotaResponse;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
 import com.baidubce.services.billing.model.finance.TransferResultResponse;
+import com.baidubce.services.billing.model.finance.UnionExpireDayQueryRequest;
+import com.baidubce.services.billing.model.finance.UnionExpireDayQueryResponse;
+import com.baidubce.services.billing.model.finance.UnionExpireDayUpdateRequest;
+import com.baidubce.services.billing.model.finance.UnionExpireDayUpdateResponse;
 import com.baidubce.services.billing.model.finance.UserBalanceQueryResponse;
 import com.baidubce.services.billing.model.order.OrderCancelRequest;
 import com.baidubce.services.billing.model.order.OrderCancelResponse;
@@ -54,6 +60,8 @@ import com.baidubce.services.billing.model.price.PricingQueryResponse;
 import com.baidubce.services.billing.model.renew.RenewResourceListRequest;
 import com.baidubce.services.billing.model.renew.RenewResourceResponse;
 import com.baidubce.services.billing.model.renew.ResourceAutoRenewRequest;
+import com.baidubce.services.billing.model.stock.StockSubServiceTypeQueryRequest;
+import com.baidubce.services.billing.model.stock.StockSubServiceTypeQueryResponse;
 import com.baidubce.util.JsonUtils;
 import com.google.common.collect.Lists;
 
@@ -84,6 +92,46 @@ public class BillingExample {
         sampleForgetSpecificCpcPrice();
         sampleForCashBalanceQuery();
         sampleForUserBalanceQuery();
+        sampleForStockSubServiceTypeQuery();
+        sampleForCreditQuotaQuery();
+        sampleForUnionExpireDayQuery();
+        sampleForUnionExpireDayUpdate();
+    }
+
+    private static void sampleForUnionExpireDayUpdate() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        UnionExpireDayUpdateRequest request = new UnionExpireDayUpdateRequest();
+        request.setUnionExpireDay(20);
+        UnionExpireDayUpdateResponse response = client.updateUnionExpireDay(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForUnionExpireDayUpdate UnionExpireDayUpdateResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    loginName:  " + response.getLoginName());
+        System.out.println("    success:  " + response.getSuccess());
+        System.out.println("==================================");
+    }
+
+    private static void sampleForUnionExpireDayQuery() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        UnionExpireDayQueryRequest request = new UnionExpireDayQueryRequest();
+        request.setQueryAccountId(TEST_ACCOUNT_ID);
+        UnionExpireDayQueryResponse response = client.queryUnionExpireDay(request);
+
+        System.out.println("==================================");
+        System.out.println("sampleForUnionExpireDayQuery UnionExpireDayQueryResponse result:");
+        System.out.println("    accountId:  " + response.getAccountId());
+        System.out.println("    loginName:  " + response.getLoginName());
+        System.out.println("    unionExpireDay:  " + response.getUnionExpireDay());
+        System.out.println("==================================");
     }
 
     private static void sampleForQueryRenewResourceList() {
@@ -479,5 +527,38 @@ public class BillingExample {
         System.out.println("UserBalance response result:");
         System.out.println("    result:  " + JsonUtils.toJsonString(response.getCashBalance()));
         System.out.println("============================");
+    }
+
+    private static void sampleForStockSubServiceTypeQuery() {
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+        StockSubServiceTypeQueryRequest request = new StockSubServiceTypeQueryRequest();
+        request.setServiceType("BCC");
+        StockSubServiceTypeQueryResponse response = client.queryStockSubServiceTypes(request);
+
+        System.out.println("============================");
+        System.out.println("Stock subServiceType response result:");
+        System.out.println("    result:  " + JsonUtils.toJsonString(response));
+        System.out.println("============================");
+    }
+
+    private static void sampleForCreditQuotaQuery() {
+
+        BceCredentials credentials = new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
+        BillingClient client = new BillingClient(
+                new BillingClientConfiguration().withEndpoint(ENDPOINT).withCredentials(credentials)
+        );
+
+        SupervisorCreditQuotaQueryRequest request = new SupervisorCreditQuotaQueryRequest();
+        request.setAccountIds(Lists.newArrayList(TEST_ACCOUNT_ID));
+
+        SupervisorCreditQuotaResponse response = client.creditQuotaQuery(request);
+
+        System.out.println("==================================");
+        System.out.println("SupervisorCreditQuota response result:");
+        System.out.println("    result:  " + JsonUtils.toJsonString(response.getResult()));
+        System.out.println("==================================");
     }
 }

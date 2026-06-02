@@ -31,6 +31,10 @@ public class ExampleCreateSslListener {
         blbListenerRequest.setBackendPort(32); // 后端服务器的监听端口
         blbListenerRequest.setScheduler("RoundRobin"); // 负载均衡算法
         blbListenerRequest.setCertIds(Arrays.asList("cert-btq9faddgkpb")); // 监听器要加载的证书链
+        blbListenerRequest.setHealthCheckType("TCP"); // 健康检查协议类型，默认"TCP"
+        blbListenerRequest.setServerTimeout(900); // tcp设置连接超时时间（秒），默认900，范围10-4000
+        blbListenerRequest.setEncryptionType("tls_cipher_policy_default"); // 加密选项
+        blbListenerRequest.setDualAuth(false); // 是否开启双向认证
         
         try {
             blbClient.createListener(blbListenerRequest);

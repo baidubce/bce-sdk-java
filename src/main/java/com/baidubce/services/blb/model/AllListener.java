@@ -15,6 +15,7 @@ package com.baidubce.services.blb.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * All listener info modal.
@@ -53,6 +54,7 @@ public class AllListener extends ListenerBase {
     /**
      * the duration of the keep session.
      */
+    @JsonProperty("keepSessionTimeout")
     private Integer keepSessionDuration;
     /**
      * the cookie name of the keep session.
@@ -61,7 +63,17 @@ public class AllListener extends ListenerBase {
     /**
      * if fetch the real ip or not.
      */
+    @JsonProperty("xForwardedFor")
     private Boolean xForwardFor;
+    /**
+     * forward the protocol to backend server via x-forwarded-proto HTTP Header
+     */
+    @JsonProperty("xForwardedProto")
+    private Boolean xForwardedProto;
+    /**
+     * additional attributes for HTTP/HTTPS listener
+     */
+    private AdditionalAttributes additionalAttributes;
     /**
      * the type of the health check.
      */
@@ -267,6 +279,22 @@ public class AllListener extends ListenerBase {
         this.xForwardFor = xForwardFor;
     }
 
+    public Boolean getxForwardedProto() {
+        return xForwardedProto;
+    }
+
+    public void setxForwardedProto(Boolean xForwardedProto) {
+        this.xForwardedProto = xForwardedProto;
+    }
+
+    public AdditionalAttributes getAdditionalAttributes() {
+        return additionalAttributes;
+    }
+
+    public void setAdditionalAttributes(AdditionalAttributes additionalAttributes) {
+        this.additionalAttributes = additionalAttributes;
+    }
+
     public String getHealthCheckType() {
         return healthCheckType;
     }
@@ -328,6 +356,8 @@ public class AllListener extends ListenerBase {
                 ", keepSessionDuration=" + keepSessionDuration +
                 ", keepSessionCookieName='" + keepSessionCookieName + '\'' +
                 ", xForwardFor=" + xForwardFor +
+                ", xForwardedProto=" + xForwardedProto +
+                ", additionalAttributes=" + additionalAttributes +
                 ", healthCheckType='" + healthCheckType + '\'' +
                 ", healthCheckPort=" + healthCheckPort +
                 ", healthCheckURI='" + healthCheckURI + '\'' +

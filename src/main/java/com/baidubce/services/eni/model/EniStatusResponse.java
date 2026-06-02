@@ -11,12 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EniStatusResponse extends AbstractBceResponse {
-    private String eniStatus;
+    private String status;
 
     @Override
     public String toString() {
         return "EniStatusResponse{" +
-                "eniStatus='" + eniStatus + '\'' +
+                "status='" + status + '\'' +
                 '}';
     }
 }

@@ -19,6 +19,25 @@ public class ListEipsRequest extends ListRequest {
      * bound instance id condition
      */
     private String instanceId;
+    /**
+     *  eip ip type
+     */
+    private String ipVersion;
+
+    /**
+     * eip名称查询条件
+     */
+    private String name;
+
+    /**
+     * eip状态查询条件
+     */
+    private String status;
+
+    /**
+     * eip短ID列表查询条件
+     */
+    private String eipIds;
 
     public String getEip() {
         return eip;
@@ -44,6 +63,39 @@ public class ListEipsRequest extends ListRequest {
         this.instanceId = instanceId;
     }
 
+    public String getIpVersion() {
+        return ipVersion;
+    }
+
+    public void setIpVersion(String ipVersion) {
+        this.ipVersion = ipVersion;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getEipIds() {
+        return eipIds;
+    }
+
+    public void setEipIds(String eipIds) {
+        this.eipIds = eipIds;
+    }
+
+
     public ListEipsRequest withEip(String eip) {
         this.eip = eip;
         return this;
@@ -56,6 +108,25 @@ public class ListEipsRequest extends ListRequest {
 
     public ListEipsRequest withInstanceId(String instanceId) {
         this.instanceId = instanceId;
+        return this;
+    }
+
+    public ListEipsRequest withIpVersion(String ipVersion) {
+        this.ipVersion = ipVersion;
+        return this;
+    }
+    public ListEipsRequest withName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public ListEipsRequest withStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public ListEipsRequest withEipIds(String eipIds) {
+        this.eipIds = eipIds;
         return this;
     }
 }

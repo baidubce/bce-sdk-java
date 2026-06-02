@@ -38,7 +38,7 @@ public class ExampleCreateEip {
         tagModel.setTagKey("tagK");
         tagModel.setTagValue("tagV");
         request.setTags(Lists.newArrayList(tagModel));  // eip要绑定的标签
-
+        request.setRouteType("BGP");
         try {
             CreateEipResponse response = eipClient.createEip(request);
             System.out.println(response);

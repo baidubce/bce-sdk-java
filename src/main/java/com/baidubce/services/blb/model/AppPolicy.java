@@ -64,6 +64,10 @@ public class AppPolicy {
      */
     private Integer priority;
     /**
+     * the listener type of the policy (e.g. TCP/UDP/HTTP/HTTPS/SSL).
+     */
+    private String type;
+    /**
      * the ruleList of the policy.
      */
     private List<AppRule> ruleList;
@@ -132,6 +136,14 @@ public class AppPolicy {
         this.priority = priority;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public List<AppRule> getRuleList() {
         return ruleList;
     }
@@ -178,6 +190,7 @@ public class AppPolicy {
                 ", backendPort=" + backendPort +
                 ", portType='" + portType + '\'' +
                 ", priority=" + priority +
+                ", type='" + type + '\'' +
                 ", ruleList=" + ruleList +
                 '}';
     }

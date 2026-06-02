@@ -32,13 +32,19 @@ import com.baidubce.services.iothub.model.iotcore.AddPolicyResponse;
 import com.baidubce.services.iothub.model.iotcore.AlgorithmType;
 import com.baidubce.services.iothub.model.iotcore.CreateDeviceRequest;
 import com.baidubce.services.iothub.model.iotcore.CreateDeviceResponse;
+import com.baidubce.services.iothub.model.iotcore.CreateRetainMessageRequest;
+import com.baidubce.services.iothub.model.iotcore.CreateRetainMessageResponse;
 import com.baidubce.services.iothub.model.iotcore.CreateTemplateRequest;
 import com.baidubce.services.iothub.model.iotcore.CreateTemplateResponse;
+import com.baidubce.services.iothub.model.iotcore.DeleteRetainMessageResponse;
+import com.baidubce.services.iothub.model.iotcore.GetClientStatusResponse;
 import com.baidubce.services.iothub.model.iotcore.GetDeviceResponse;
 import com.baidubce.services.iothub.model.iotcore.GetDeviceSignatureResponse;
+import com.baidubce.services.iothub.model.iotcore.GetRetainMessageResponse;
 import com.baidubce.services.iothub.model.iotcore.GetTemplateResponse;
 import com.baidubce.services.iothub.model.iotcore.PaginationResponse;
 import com.baidubce.services.iothub.model.iotcore.ResetDeviceSecretResponse;
+import com.baidubce.services.iothub.model.iotcore.RetainMessagePageResponse;
 import com.baidubce.services.iothub.model.iotcore.ScrollPaginationResponse;
 import com.baidubce.services.iothub.model.iotcore.SecretKeyRequest;
 import com.baidubce.services.iothub.model.iotcore.UpdateDeviceRequest;
@@ -81,6 +87,9 @@ public class IoTCoreClient extends AbstractBceClient {
     private static final String SECRET = "secret";
     private static final String TEMPLATE = "template";
     private static final String POLICY = "policy";
+    private static final String CLIENT = "client";
+    private static final String RETAIN = "retain";
+    private static final String PAGE_LIST = "pageList";
 
     /**
      * Responsible for handling HttpResponse from all Iothub service calls.
@@ -278,6 +287,68 @@ public class IoTCoreClient extends AbstractBceClient {
                 createRequest(new BaseRequest(), HttpMethodName.DELETE,
                         iotCoreId, TEMPLATE, templateId, POLICY, policyId),
                 BaseResponse.class);
+    }
+
+    // client status
+    public GetClientStatusResponse getClientStatus(String iotCoreId, String deviceName, String clientId) {
+        checkNotNull(iotCoreId, "iotCoreId should not be null.");
+        checkNotNull(deviceName, "deviceName should not be null.");
+        checkNotNull(clientId, "clientId should not be null.");
+
+        return this.invokeHttpClient(
+                createRequest(new BaseRequest(), HttpMethodName.GET,
+                        iotCoreId, DEVICE, deviceName, CLIENT, clientId),
+                GetClientStatusResponse.class);
+    }
+
+    // retain message
+    public RetainMessagePageResponse getRetainMessages(String iotCoreId) {
+        return getRetainMessages(iotCoreId, 1, 20);
+    }
+
+    public RetainMessagePageResponse getRetainMessages(String iotCoreId, int pageNo, int pageSize) {
+        checkNotNull(iotCoreId, "iotCoreId should not be null.");
+        checkArgument(pageNo >= 1, "pageNo must be >= 1");
+        checkArgument(pageSize >= 1 && pageSize <= 100, "pageSize must be between 1 and 100");
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("pageNo", String.valueOf(pageNo));
+        parameters.put("pageSize", String.valueOf(pageSize));
+        return this.invokeHttpClient(
+                createRequest(new BaseRequest(), HttpMethodName.GET, parameters, iotCoreId, RETAIN, PAGE_LIST),
+                RetainMessagePageResponse.class);
+    }
+
+    public GetRetainMessageResponse getRetainMessage(String iotCoreId, String topic) {
+        checkNotNull(iotCoreId, "iotCoreId should not be null.");
+        checkNotNull(topic, "topic should not be null.");
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("topic", topic);
+        return this.invokeHttpClient(
+                createRequest(new BaseRequest(), HttpMethodName.GET, parameters, iotCoreId, RETAIN),
+                GetRetainMessageResponse.class);
+    }
+
+    public DeleteRetainMessageResponse deleteRetainMessage(String iotCoreId, String topic) {
+        checkNotNull(iotCoreId, "iotCoreId should not be null.");
+        checkNotNull(topic, "topic should not be null.");
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("topic", topic);
+        return this.invokeHttpClient(
+                createRequest(new BaseRequest(), HttpMethodName.DELETE, parameters, iotCoreId, RETAIN),
+                DeleteRetainMessageResponse.class);
+    }
+
+    public CreateRetainMessageResponse createOrUpdateRetainMessage(String iotCoreId,
+                                                                    CreateRetainMessageRequest request) {
+        checkNotNull(iotCoreId, "iotCoreId should not be null.");
+        checkNotNull(request, "request should not be null.");
+
+        return this.invokeHttpClient(
+                createRequest(request, HttpMethodName.PUT, iotCoreId, RETAIN),
+                CreateRetainMessageResponse.class);
     }
 
     private InternalRequest createRequest(AbstractBceRequest bceRequest, HttpMethodName httpMethod,

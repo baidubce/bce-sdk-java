@@ -16,6 +16,7 @@ import com.baidubce.BceClientException;
 import com.baidubce.BceServiceException;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.kms.model.*;
+import org.apache.commons.math3.analysis.solvers.BrentSolver;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +24,14 @@ import java.util.List;
 import com.baidubce.services.kms.KmsClient;
 import com.baidubce.services.kms.KmsClientConfiguration;
 import com.baidubce.Protocol;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for KMS client 
  */
 public class KmsClientTest {
 
-    // ACCESS_KEY_ID, SECRET_ACCESS_KEY is needed
+//     ACCESS_KEY_ID, SECRET_ACCESS_KEY is needed
     private static final String ACCESS_KEY_ID = "XXX";
     private static final String SECRET_ACCESS_KEY = "XXX";
     private static final String ENDPOINT = "bkm.gz.baidubce.com";
@@ -372,5 +374,211 @@ public class KmsClientTest {
             System.out.println(e.getMessage());
         }
     }
+
+    private static final String VALID_KEY_ID = "XXX";
+    private static final String VALID_ALGORITHM = "XXX";
+    private static final String VALID_MESSAGE = "XXX";
+    private static final String VALID_KEY_VERSION = "XXX";
+    private static final String VALID_DIGEST = "XXX";// 32 zero bytes
+    private static final String VALID_SIGNATURE = "XXX";
+    @Test
+    public void testSignWithRawMessage() throws Exception {
+        SignRequest request = new SignRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setMessage(VALID_MESSAGE);
+        request.setMessageType(Constants.MessageType.RAW.toString());
+
+        try {
+            SignResponse response = client.sign(request);
+            assertNotNull(response);
+            assertNotNull(response.getKeyId());
+            assertNotNull(response.getSignature());
+            System.out.println(response.getSignature());
+        } catch (BceClientException e) {
+            fail("Should not throw exception for valid raw message");
+        }
+
+    }
+
+    @Test
+    public void testSignWithDigestMessage() throws Exception {
+        SignRequest request = new SignRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setMessage(VALID_DIGEST);
+        request.setMessageType(Constants.MessageType.DIGEST.toString());
+
+        try {
+            SignResponse response = client.sign(request);
+            assertNotNull(response);
+            assertNotNull(response.getKeyId());
+            assertNotNull(response.getSignature());
+            System.out.println(response.getSignature());
+        } catch (BceClientException e) {
+            fail("Should not throw exception for valid digest message");
+        }
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testSignWithNullRequest() throws Exception {
+        client.sign(null);
+    }
+
+    @Test(expected = BceClientException.class)
+    public void testSignWithNullMessage() throws Exception {
+//        KmsClient client = new KmsClient();
+        SignRequest request = new SignRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        client.sign(request);
+    }
+
+    @Test(expected = BceClientException.class)
+    public void testSignWithTooLongRawMessage() throws Exception {
+//        KmsClient client = new KmsClient();
+        SignRequest request = new SignRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setMessageType(Constants.MessageType.RAW.toString());
+
+        // Create a message that exceeds 4096 bytes when UTF-8 encoded
+        StringBuilder longMessage = new StringBuilder();
+        while (longMessage.length() < 5000) {
+            longMessage.append("This is a very long message that exceeds the limit. ");
+        }
+        request.setMessage(longMessage.toString());
+
+        client.sign(request);
+    }
+
+    @Test(expected = BceClientException.class)
+    public void testSignWithInvalidDigestLength() throws Exception {
+//        KmsClient client = new KmsClient();
+        SignRequest request = new SignRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setMessageType(Constants.MessageType.DIGEST.toString());
+        request.setMessage("invalid-digest"); // Not 32 bytes when decoded
+
+        client.sign(request);
+    }
+
+    @Test
+    public void testSignWithKeyVersion() throws Exception {
+//        KmsClient client = new KmsClient();
+        SignRequest request = new SignRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setKeyVersion(VALID_KEY_VERSION);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setMessage(VALID_MESSAGE);
+        request.setMessageType(Constants.MessageType.RAW.toString());
+
+        try {
+            SignResponse response = client.sign(request);
+            assertNotNull(response);
+            assertNotNull(response.getKeyId());
+            assertNotNull(response.getSignature());
+            System.out.println(response.getSignature());
+        } catch (BceClientException e) {
+            fail("Should not throw exception when key version is provided");
+        }
+    }
+
+    @Test
+    public void testVerifyWithValidRawMessage() throws Exception {
+        VerifyRequest request = new VerifyRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setSignature(VALID_SIGNATURE);
+        request.setMessage(VALID_MESSAGE);
+        request.setMessageType(Constants.MessageType.RAW.toString());
+
+        try {
+            VerifyResponse response = client.verify(request);
+            assertNotNull(response);
+            assertNotNull(response.getKeyId());
+        } catch (BceServiceException e) {
+            fail("Should not throw exception for valid raw message");
+        }
+    }
+
+    @Test
+    public void testVerifyWithValidDigestMessage() throws Exception {
+        VerifyRequest request = new VerifyRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setSignature(VALID_SIGNATURE);
+        request.setMessage(VALID_DIGEST);
+        request.setMessageType(Constants.MessageType.DIGEST.toString());
+
+        try {
+            VerifyResponse response = client.verify(request);
+            assertNotNull(response);
+            assertNotNull(response.getKeyId());
+        } catch (BceServiceException e) {
+            fail("Should not throw exception for valid digest message");
+        }
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testVerifyWithNullRequest() throws Exception {
+        client.verify(null);
+    }
+
+    @Test(expected = BceClientException.class)
+    public void testVerifyWithNullMessage() throws Exception {
+        VerifyRequest request = new VerifyRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setSignature(VALID_SIGNATURE);
+        client.verify(request);
+    }
+
+    @Test(expected = BceClientException.class)
+    public void testVerifyWithInvalidDigestLength() throws Exception {
+        VerifyRequest request = new VerifyRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setSignature(VALID_SIGNATURE);
+        request.setMessage("invalid_digest");
+        request.setMessageType(Constants.MessageType.DIGEST.toString());
+        client.verify(request);
+    }
+
+    @Test(expected = BceClientException.class)
+    public void testVerifyWithTooLongRawMessage() throws Exception {
+        StringBuilder longMessage = new StringBuilder();
+        while (longMessage.length() < 4097) {
+            longMessage.append("a");
+        }
+
+        VerifyRequest request = new VerifyRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setSignature(VALID_SIGNATURE);
+        request.setMessage(longMessage.toString());
+        request.setMessageType(Constants.MessageType.RAW.toString());
+        client.verify(request);
+    }
+
+    @Test
+    public void testVerifyWithKeyVersion() throws Exception {
+        VerifyRequest request = new VerifyRequest();
+        request.setKeyId(VALID_KEY_ID);
+        request.setKeyVersion(VALID_KEY_VERSION);
+        request.setAlgorithm(VALID_ALGORITHM);
+        request.setSignature(VALID_SIGNATURE);
+        request.setMessage(VALID_MESSAGE);
+
+        try {
+            VerifyResponse response = client.verify(request);
+            assertNotNull(response);
+            assertNotNull(response.getKeyId());
+        } catch (BceServiceException e) {
+            fail("Should not throw exception when key version is provided");
+        }
+    }
+
 }
 // vim: et tw=100 ts=4 sw=4 cc=120

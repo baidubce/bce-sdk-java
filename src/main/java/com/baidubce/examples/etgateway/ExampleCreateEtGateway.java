@@ -35,6 +35,9 @@ public class ExampleCreateEtGateway {
         // 专线网关的云端网络，用户可以选本vpc网段或自定义一个或多个网段，仅当参数etId和channelId存在时可以设置
         createEtGatewayRequest.setLocalCidrs(Lists.newArrayList("192.168.0.0/20"));
 
+        // 资源组ID（可选）
+        createEtGatewayRequest.setResourceGroupId("RESG-UoMgbkuLNjj");
+
         createEtGatewayRequest.setClientToken(UUID.randomUUID().toString());    // 幂等性Token
 
         try {

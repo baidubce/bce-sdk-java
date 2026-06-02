@@ -23,9 +23,6 @@ public class PutBucketMirroringRequest extends GenericBucketRequest {
     /**
      * Constructs a void Constructor for PutBucketMirroringRequest
      */
-    public PutBucketMirroringRequest() {
-
-    }
 
     public PutBucketMirroringRequest(String bucketName,
                                      List<BucketMirroringConfiguration> bucketMirroringConfiguration) {

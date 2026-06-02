@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.baidubce.services.billing.model.finance.SupervisorCreditQuotaQueryRequest;
+import com.baidubce.services.billing.model.finance.SupervisorCreditQuotaResponse;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,10 @@ import com.baidubce.services.billing.model.finance.SupervisorBalanceTransferRequ
 import com.baidubce.services.billing.model.finance.SupervisorTransactionPageRequest;
 import com.baidubce.services.billing.model.finance.SupervisorTransactionResponse;
 import com.baidubce.services.billing.model.finance.TransferResultResponse;
+import com.baidubce.services.billing.model.finance.UnionExpireDayQueryRequest;
+import com.baidubce.services.billing.model.finance.UnionExpireDayQueryResponse;
+import com.baidubce.services.billing.model.finance.UnionExpireDayUpdateRequest;
+import com.baidubce.services.billing.model.finance.UnionExpireDayUpdateResponse;
 import com.baidubce.services.billing.model.finance.UserBalanceQueryResponse;
 import com.baidubce.services.billing.model.order.OrderCancelRequest;
 import com.baidubce.services.billing.model.order.OrderCancelResponse;
@@ -350,6 +356,59 @@ public class BillingClientTest {
         try {
             BillingClient billingClient = getBillingClient();
             UserBalanceQueryResponse response = billingClient.userBalanceQuery();
+            logger.info(JsonUtils.toJsonPrettyString(response));
+        } catch (BceServiceException e) {
+            logger.info("BceServiceException : {}", e.getMessage());
+        } catch (BceClientException e) {
+            logger.info("BceClientException : {}", e.getMessage());
+        } catch (JsonProcessingException e) {
+            logger.info("JsonProcessingException : {}", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testCreditQuotaQuery() {
+        SupervisorCreditQuotaQueryRequest request = new SupervisorCreditQuotaQueryRequest();
+        request.setAccountIds(Lists.newArrayList("test id"));
+
+        try {
+            BillingClient billingClient = getBillingClient();
+            SupervisorCreditQuotaResponse response = billingClient.creditQuotaQuery(request);
+            logger.info(JsonUtils.toJsonPrettyString(response));
+
+        } catch (BceServiceException e) {
+            logger.info("BceServiceException : {}", e.getMessage());
+        } catch (BceClientException e) {
+            logger.info("BceClientException : {}", e.getMessage());
+        } catch (JsonProcessingException e) {
+            logger.info("JsonProcessingException : {}", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateUnionExpireDay() {
+        UnionExpireDayUpdateRequest request = new UnionExpireDayUpdateRequest();
+        request.setUnionExpireDay(12);
+        try {
+            BillingClient billingClient = getBillingClient();
+            UnionExpireDayUpdateResponse response = billingClient.updateUnionExpireDay(request);
+            logger.info(JsonUtils.toJsonPrettyString(response));
+        } catch (BceServiceException e) {
+            logger.info("BceServiceException : {}", e.getMessage());
+        } catch (BceClientException e) {
+            logger.info("BceClientException : {}", e.getMessage());
+        } catch (JsonProcessingException e) {
+            logger.info("JsonProcessingException : {}", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testQueryUnionExpireDay() {
+        UnionExpireDayQueryRequest request = new UnionExpireDayQueryRequest();
+        request.setQueryAccountId("testAccountId");
+        try {
+            BillingClient billingClient = getBillingClient();
+            UnionExpireDayQueryResponse response = billingClient.queryUnionExpireDay(request);
             logger.info(JsonUtils.toJsonPrettyString(response));
         } catch (BceServiceException e) {
             logger.info("BceServiceException : {}", e.getMessage());

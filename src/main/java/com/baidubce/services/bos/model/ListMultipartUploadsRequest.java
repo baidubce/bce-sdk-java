@@ -49,6 +49,8 @@ public class ListMultipartUploadsRequest extends GenericBucketRequest {
      */
     private String keyMarker;
 
+    private String uploadIdMarker;
+
     /**
      * Optional parameter that causes multipart uploads for keys that contain
      * the same string between the prefix and the first occurrence of the
@@ -77,7 +79,7 @@ public class ListMultipartUploadsRequest extends GenericBucketRequest {
      * Constructs a new ListMultipartUploadsRequest to list the multipart uploads from the specified bucket.
      *
      * @param bucketName The name of the bucket containing the uploads to list.
-     * @param prefix The prefix of the object.
+     * @param prefix     The prefix of the object.
      */
     public ListMultipartUploadsRequest(String bucketName, String prefix) {
         super(bucketName);
@@ -218,8 +220,8 @@ public class ListMultipartUploadsRequest extends GenericBucketRequest {
      * occurrence of the delimiter to be combined into a single result element.
      *
      * @param delimiter The optional delimiter parameter that causes multipart uploads
-     *     for keys that contain the same string between the prefix and
-     *     the first occurrence of the delimiter to be combined into a single result element.
+     *                  for keys that contain the same string between the prefix and
+     *                  the first occurrence of the delimiter to be combined into a single result element.
      */
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
@@ -233,10 +235,10 @@ public class ListMultipartUploadsRequest extends GenericBucketRequest {
      * calls to be chained together.
      *
      * @param delimiter The optional delimiter parameter that causes multipart uploads
-     *     for keys that contain the same string between the prefix and
-     *     the first occurrence of the delimiter to be rolled up into a single result element.
+     *                  for keys that contain the same string between the prefix and
+     *                  the first occurrence of the delimiter to be rolled up into a single result element.
      * @return This {@link ListMultipartUploadsRequest}, enabling additional
-     *     method calls to be chained together.
+     * method calls to be chained together.
      */
     public ListMultipartUploadsRequest withDelimiter(String delimiter) {
         this.setDelimiter(delimiter);
@@ -250,7 +252,7 @@ public class ListMultipartUploadsRequest extends GenericBucketRequest {
      * a file system organizes files into directories.
      *
      * @return The optional prefix parameter restricting the response to
-     *     multipart uploads for keys that begin with the specified prefix.
+     * multipart uploads for keys that begin with the specified prefix.
      */
     public String getPrefix() {
         return this.prefix;
@@ -261,7 +263,7 @@ public class ListMultipartUploadsRequest extends GenericBucketRequest {
      * uploads for keys that begin with the specified prefix.
      *
      * @param prefix The optional prefix parameter, restricting the response to
-     *     multipart uploads for keys that begin with the specified prefix.
+     *               multipart uploads for keys that begin with the specified prefix.
      */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
@@ -274,13 +276,20 @@ public class ListMultipartUploadsRequest extends GenericBucketRequest {
      * be chained together.
      *
      * @param prefix The optional prefix parameter restricting the response to
-     *     multipart uploads for keys that begin with the specified prefix.
+     *               multipart uploads for keys that begin with the specified prefix.
      * @return This {@link ListMultipartUploadsRequest}, enabling additional
-     *     method calls to be chained together.
+     * method calls to be chained together.
      */
     public ListMultipartUploadsRequest withPrefix(String prefix) {
         this.setPrefix(prefix);
         return this;
     }
 
+    public String getUploadIdMarker() {
+        return uploadIdMarker;
+    }
+
+    public void setUploadIdMarker(String uploadIdMarker) {
+        this.uploadIdMarker = uploadIdMarker;
+    }
 }

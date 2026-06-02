@@ -21,6 +21,8 @@ public class VpnConn {
     private String secretKey;
     /** Local network cidr List */
     private List<String> localSubnets;
+    /** User gateway ID*/
+    private String cgwId;
     /** Peer VPN Gateway public network IP*/
     private String remoteIp;
     /** Peer network cidr List */

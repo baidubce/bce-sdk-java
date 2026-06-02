@@ -2,7 +2,7 @@ package com.baidubce.services.rds.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import org.apache.htrace.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import java.util.List;
 public class RdsUpdateWriteListResquest extends AbstractBceRequest {
     private String instanceId;
     private List<String> securityIps;
+    private String etag;
 
     public String getInstanceId() {
         return instanceId;
@@ -25,6 +26,14 @@ public class RdsUpdateWriteListResquest extends AbstractBceRequest {
 
     public void setSecurityIps(List<String> securityIps) {
         this.securityIps = securityIps;
+    }
+
+    public String getEtag() {
+        return etag;
+    }
+
+    public void setEtag(String etag) {
+        this.etag = etag;
     }
 
     @Override

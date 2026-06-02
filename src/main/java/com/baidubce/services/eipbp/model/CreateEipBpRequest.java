@@ -48,6 +48,11 @@ public class CreateEipBpRequest extends AbstractBceRequest {
     private String autoReleaseTime;
 
     /**
+     * The type of eipBp. BandwidthPackage or AccelerationPackage. Default is BandwidthPackage.
+     */
+    private String type;
+
+    /**
      * The tags which will be bound to eipBp.
      */
     private List<TagModel> tags;
@@ -85,6 +90,11 @@ public class CreateEipBpRequest extends AbstractBceRequest {
 
     public CreateEipBpRequest withAutoReleaseTime(String autoReleaseTime) {
         this.autoReleaseTime = autoReleaseTime;
+        return this;
+    }
+
+    public CreateEipBpRequest withType(String type) {
+        this.type = type;
         return this;
     }
 
