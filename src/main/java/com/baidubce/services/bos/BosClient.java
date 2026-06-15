@@ -48,9 +48,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,7 +127,13 @@ public class BosClient extends AbstractBceClient {
         }
 
         // 2. 路径规范化
-        String normalized = Paths.get("/" + objectKey).normalize().toString();
+        String normalized;
+        try {
+            String stripped = objectKey.replaceAll("^/+", "");
+            normalized = new URI(null, null, "/" + stripped, null).normalize().getPath();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid object key: " + objectKey, e);
+        }
 
         // 3. 去除首尾斜杠
         String cleaned = normalized.replaceAll("^/+|/+$", "");

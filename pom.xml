@@ -7,7 +7,7 @@
     <groupId>com.baidubce</groupId>
     <artifactId>bce-java-sdk</artifactId>
 
-    <version>0.10.427</version>
+    <version>0.10.429</version>
     <name>bce-sdk-java</name>
     <description>The BCE SDK for Java provides Java APIs for all of BCE services.</description>
     <url>http://bce.baidu.com/sdk/index.html</url>
@@ -88,6 +88,12 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-mapreduce-client-core</artifactId>
             <version>2.5.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jdk.tools</groupId>
+                    <artifactId>jdk.tools</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
