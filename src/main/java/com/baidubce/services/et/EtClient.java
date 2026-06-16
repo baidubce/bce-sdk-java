@@ -23,6 +23,12 @@ import java.util.UUID;
 
 import com.baidubce.services.et.model.AssociateEtChannelRequest;
 import com.baidubce.services.et.model.DisassociateEtChannelRequest;
+import com.baidubce.services.et.model.AddEtChannelUsersRequest;
+import com.baidubce.services.et.model.RemoveEtChannelUsersRequest;
+import com.baidubce.services.et.model.AddEtChannelRoutesRequest;
+import com.baidubce.services.et.model.RemoveEtChannelRoutesRequest;
+import com.baidubce.services.et.model.CreateEtChannelBfdRequest;
+import com.baidubce.services.et.model.UpdateEtChannelBfdRequest;
 import com.google.common.base.Strings;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -77,6 +83,7 @@ public class EtClient extends AbstractBceClient {
     private static final String ET_CHANNEL_ASSOCIATE_PREFIX = "associate";
     private static final String ET_CHANNEL_DISASSOCIATE_PREFIX = "disassociate";
     private static final String CLIENT_TOKEN = "clientToken";
+    private static final String ET_CHANNEL_BFD_PREFIX = "bfd";
 
     /**
      * Responsible for handling httpResponses from all ET network service calls.
@@ -544,5 +551,106 @@ public class EtClient extends AbstractBceClient {
      */
     private String generateClientToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public void addEtChannelUsers(AddEtChannelUsersRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getEtId(), "etId should not be empty");
+        checkStringNotEmpty(request.getEtChannelId(), "etChannelId should not be empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, ET_PREFIX,
+                request.getEtId(), ET_CHANNEL_PREFIX, request.getEtChannelId());
+        internalRequest.addParameter("addUsers", null);
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void removeEtChannelUsers(RemoveEtChannelUsersRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getEtId(), "etId should not be empty");
+        checkStringNotEmpty(request.getEtChannelId(), "etChannelId should not be empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, ET_PREFIX,
+                request.getEtId(), ET_CHANNEL_PREFIX, request.getEtChannelId());
+        internalRequest.addParameter("removeUsers", null);
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void addEtChannelRoutes(AddEtChannelRoutesRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getEtId(), "etId should not be empty");
+        checkStringNotEmpty(request.getEtChannelId(), "etChannelId should not be empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, ET_PREFIX,
+                request.getEtId(), ET_CHANNEL_PREFIX, request.getEtChannelId());
+        internalRequest.addParameter("addRoutes", null);
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void removeEtChannelRoutes(RemoveEtChannelRoutesRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getEtId(), "etId should not be empty");
+        checkStringNotEmpty(request.getEtChannelId(), "etChannelId should not be empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, ET_PREFIX,
+                request.getEtId(), ET_CHANNEL_PREFIX, request.getEtChannelId());
+        internalRequest.addParameter("removeRoutes", null);
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void createEtChannelBfd(CreateEtChannelBfdRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getEtId(), "etId should not be empty");
+        checkStringNotEmpty(request.getEtChannelId(), "etChannelId should not be empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, ET_PREFIX,
+                request.getEtId(), ET_CHANNEL_PREFIX, request.getEtChannelId(), ET_CHANNEL_BFD_PREFIX);
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void updateEtChannelBfd(UpdateEtChannelBfdRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getEtId(), "etId should not be empty");
+        checkStringNotEmpty(request.getEtChannelId(), "etChannelId should not be empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT, ET_PREFIX,
+                request.getEtId(), ET_CHANNEL_PREFIX, request.getEtChannelId(), ET_CHANNEL_BFD_PREFIX);
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
+        fillPayload(internalRequest, request);
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    public void deleteEtChannelBfd(EtChannelIdRequest request) {
+        checkNotNull(request, "request should not be null.");
+        checkStringNotEmpty(request.getEtId(), "etId should not be empty");
+        checkStringNotEmpty(request.getEtChannelId(), "etChannelId should not be empty");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE, ET_PREFIX,
+                request.getEtId(), ET_CHANNEL_PREFIX, request.getEtChannelId(), ET_CHANNEL_BFD_PREFIX);
+        if (StringUtils.isNotBlank(request.getClientToken())) {
+            internalRequest.addParameter(CLIENT_TOKEN, request.getClientToken());
+        }
+        this.invokeHttpClient(internalRequest, AbstractBceResponse.class);
     }
 }

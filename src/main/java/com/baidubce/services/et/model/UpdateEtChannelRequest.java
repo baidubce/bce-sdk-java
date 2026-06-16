@@ -17,6 +17,8 @@ public class UpdateEtChannelRequest extends EtChannelIdRequest {
      */
     private String description;
 
+    private Integer bgpRouteLimit;
+
     public String getName() {
         return name;
     }
@@ -31,5 +33,13 @@ public class UpdateEtChannelRequest extends EtChannelIdRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getBgpRouteLimit() {
+        return bgpRouteLimit;
+    }
+
+    public void setBgpRouteLimit(Integer bgpRouteLimit) {
+        this.bgpRouteLimit = bgpRouteLimit;
     }
 }

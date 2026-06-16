@@ -7,7 +7,7 @@
     <groupId>com.baidubce</groupId>
     <artifactId>bce-java-sdk</artifactId>
 
-    <version>0.10.429</version>
+    <version>0.10.430</version>
     <name>bce-sdk-java</name>
     <description>The BCE SDK for Java provides Java APIs for all of BCE services.</description>
     <url>http://bce.baidu.com/sdk/index.html</url>
@@ -55,7 +55,7 @@
         <bouncycastle.version>1.59</bouncycastle.version>
         <minio.version>8.4.5</minio.version>
         <spring-core.version>5.3.32</spring-core.version>
-        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
     </properties>
 
     <dependencies>

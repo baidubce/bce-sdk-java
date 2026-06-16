@@ -4,6 +4,12 @@ import java.util.UUID;
 
 import com.baidubce.services.et.model.AssociateEtChannelRequest;
 import com.baidubce.services.et.model.DisassociateEtChannelRequest;
+import com.baidubce.services.et.model.AddEtChannelUsersRequest;
+import com.baidubce.services.et.model.RemoveEtChannelUsersRequest;
+import com.baidubce.services.et.model.AddEtChannelRoutesRequest;
+import com.baidubce.services.et.model.RemoveEtChannelRoutesRequest;
+import com.baidubce.services.et.model.CreateEtChannelBfdRequest;
+import com.baidubce.services.et.model.UpdateEtChannelBfdRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -251,5 +257,87 @@ public class EtClientTest {
         request.setExtraChannelId("dedicatedconn-i05sdfw25kqz");
 
         client.disassociateEtChannel(request);
+    }
+
+    @Test
+    public void addEtChannelUsersTest() {
+        AddEtChannelUsersRequest request = new AddEtChannelUsersRequest();
+        request.setClientToken(UUID.randomUUID().toString());
+        request.setEtId("dcphy-axibreesn6af");
+        request.setEtChannelId("dedicatedconn-kd1ff138ypnm");
+        request.setAuthorizedUsers(Lists.newArrayList("8770d0e94e2728ca81b0ec99db9f4df8"));
+
+        client.addEtChannelUsers(request);
+    }
+
+    @Test
+    public void removeEtChannelUsersTest() {
+        RemoveEtChannelUsersRequest request = new RemoveEtChannelUsersRequest();
+        request.setClientToken(UUID.randomUUID().toString());
+        request.setEtId("dcphy-axibreesn6af");
+        request.setEtChannelId("dedicatedconn-kd1ff138ypnm");
+        request.setAuthorizedUsers(Lists.newArrayList("8770d0e94e2728ca81b0ec99db9f4df8"));
+
+        client.removeEtChannelUsers(request);
+    }
+
+    @Test
+    public void addEtChannelRoutesTest() {
+        AddEtChannelRoutesRequest request = new AddEtChannelRoutesRequest();
+        request.setClientToken(UUID.randomUUID().toString());
+        request.setEtId("dcphy-axibreesn6af");
+        request.setEtChannelId("dedicatedconn-kd1ff138ypnm");
+        request.setRouteType("static-route");
+        request.setNetworks(Lists.newArrayList("192.168.100.0/24"));
+
+        client.addEtChannelRoutes(request);
+    }
+
+    @Test
+    public void removeEtChannelRoutesTest() {
+        RemoveEtChannelRoutesRequest request = new RemoveEtChannelRoutesRequest();
+        request.setClientToken(UUID.randomUUID().toString());
+        request.setEtId("dcphy-axibreesn6af");
+        request.setEtChannelId("dedicatedconn-kd1ff138ypnm");
+        request.setRouteType("static-route");
+        request.setNetworks(Lists.newArrayList("192.168.100.0/24"));
+
+        client.removeEtChannelRoutes(request);
+    }
+
+    @Test
+    public void createEtChannelBfdTest() {
+        CreateEtChannelBfdRequest request = new CreateEtChannelBfdRequest();
+        request.setClientToken(UUID.randomUUID().toString());
+        request.setEtId("dcphy-axibreesn6af");
+        request.setEtChannelId("dedicatedconn-kd1ff138ypnm");
+        request.setSendInterval(300);
+        request.setReceivInterval(300);
+        request.setDetectMultiplier(4);
+
+        client.createEtChannelBfd(request);
+    }
+
+    @Test
+    public void updateEtChannelBfdTest() {
+        UpdateEtChannelBfdRequest request = new UpdateEtChannelBfdRequest();
+        request.setClientToken(UUID.randomUUID().toString());
+        request.setEtId("dcphy-axibreesn6af");
+        request.setEtChannelId("dedicatedconn-kd1ff138ypnm");
+        request.setSendInterval(400);
+        request.setReceivInterval(400);
+        request.setDetectMultiplier(5);
+
+        client.updateEtChannelBfd(request);
+    }
+
+    @Test
+    public void deleteEtChannelBfdTest() {
+        EtChannelIdRequest request = new EtChannelIdRequest();
+        request.setClientToken(UUID.randomUUID().toString());
+        request.setEtId("dcphy-axibreesn6af");
+        request.setEtChannelId("dedicatedconn-kd1ff138ypnm");
+
+        client.deleteEtChannelBfd(request);
     }
 }

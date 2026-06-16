@@ -1,5 +1,7 @@
 package com.baidubce.services.et.model;
 
+import java.util.List;
+
 import com.baidubce.model.AbstractBceResponse;
 
 import lombok.ToString;
@@ -61,6 +63,16 @@ public class Et extends AbstractBceResponse {
      * Peer address
      */
     private String userIdc;
+
+    private String userName;
+
+    private String userPhone;
+
+    private String userEmail;
+
+    private Integer linkDelay;
+
+    private List<TagModel> tags;
 
     public String getId() {
         return id;
@@ -140,5 +152,45 @@ public class Et extends AbstractBceResponse {
 
     public void setUserIdc(String userIdc) {
         this.userIdc = userIdc;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public Integer getLinkDelay() {
+        return linkDelay;
+    }
+
+    public void setLinkDelay(Integer linkDelay) {
+        this.linkDelay = linkDelay;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

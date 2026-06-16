@@ -97,10 +97,12 @@ public class CreateEtChannelRequest extends AbstractBceRequest {
     private String customerIpv6Address;
 
     /**
-     * IPv6 routing parameter. Only when “routeType” is "static-route" and enableIpv6=1, the IPv6 routing parameter
+     * IPv6 routing parameter. Only when “routeType” is “static-route” and enableIpv6=1, the IPv6 routing parameter
      * is required
      */
     private List<String> ipv6Networks;
+
+    private List<TagModel> tags;
 
     public String getClientToken() {
         return clientToken;
@@ -228,6 +230,14 @@ public class CreateEtChannelRequest extends AbstractBceRequest {
 
     public void setIpv6Networks(List<String> ipv6Networks) {
         this.ipv6Networks = ipv6Networks;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 
     @Override

@@ -102,6 +102,10 @@ public class EtChannel {
      */
     private List<String> ipv6Networks;
 
+    private Integer bgpRouteLimit;
+
+    private List<TagModel> tags;
+
     public String getId() {
         return id;
     }
@@ -244,5 +248,21 @@ public class EtChannel {
 
     public void setIpv6BgpStatus(String ipv6BgpStatus) {
         this.ipv6BgpStatus = ipv6BgpStatus;
+    }
+
+    public Integer getBgpRouteLimit() {
+        return bgpRouteLimit;
+    }
+
+    public void setBgpRouteLimit(Integer bgpRouteLimit) {
+        this.bgpRouteLimit = bgpRouteLimit;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

@@ -38,6 +38,14 @@ public class UpdateEtRequest extends AbstractBceRequest {
      */
     private String description;
 
+    private String userName;
+
+    private String userPhone;
+
+    private String userEmail;
+
+    private Integer linkDelay;
+
     public String getClientToken() {
         return clientToken;
     }
@@ -68,6 +76,38 @@ public class UpdateEtRequest extends AbstractBceRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public Integer getLinkDelay() {
+        return linkDelay;
+    }
+
+    public void setLinkDelay(Integer linkDelay) {
+        this.linkDelay = linkDelay;
     }
 
     @Override
