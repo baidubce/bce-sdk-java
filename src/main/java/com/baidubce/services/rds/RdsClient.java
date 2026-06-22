@@ -29,6 +29,7 @@ import com.baidubce.services.rds.model.RdsBackupTargetRegionResponse;
 import com.baidubce.services.rds.model.RdsBatchScalingRequest;
 import com.baidubce.services.rds.model.RdsBatchScalingResponse;
 import com.baidubce.services.rds.model.RdsBilling;
+import com.baidubce.services.rds.model.RdsBindEnterpriseSecurityRequest;
 import com.baidubce.services.rds.model.RdsBindingTagsRequest;
 import com.baidubce.services.rds.model.RdsChangeDatabasePortRequest;
 import com.baidubce.services.rds.model.RdsClusterStatusCheckRequest;
@@ -50,6 +51,7 @@ import com.baidubce.services.rds.model.RdsDialingTestResponse;
 import com.baidubce.services.rds.model.RdsDtsSourceCheckRequest;
 import com.baidubce.services.rds.model.RdsDtsSourceCheckResponse;
 import com.baidubce.services.rds.model.RdsEngine;
+import com.baidubce.services.rds.model.RdsEnterpriseSecurityGroupResponse;
 import com.baidubce.services.rds.model.RdsFullPhysicalBackupRequest;
 import com.baidubce.services.rds.model.RdsGetAutoConfigForSpecifiedRequest;
 import com.baidubce.services.rds.model.RdsGetAutoConfigForSpecifiedResponse;
@@ -61,6 +63,7 @@ import com.baidubce.services.rds.model.RdsGetBinLogListRequest;
 import com.baidubce.services.rds.model.RdsGetBinLogListResponse;
 import com.baidubce.services.rds.model.RdsGetDatabaseListRequest;
 import com.baidubce.services.rds.model.RdsGetDatabaseListResponse;
+import com.baidubce.services.rds.model.RdsGetEnterpriseSecurityRequest;
 import com.baidubce.services.rds.model.RdsGetNewPurchasePriceRequest;
 import com.baidubce.services.rds.model.RdsGetNewPurchasePriceResponse;
 import com.baidubce.services.rds.model.RdsGetOrderStatusRequest;
@@ -73,10 +76,13 @@ import com.baidubce.services.rds.model.RdsGetPriceDifferenceRequest;
 import com.baidubce.services.rds.model.RdsGetPriceDifferenceResponse;
 import com.baidubce.services.rds.model.RdsInstanceDetailRequest;
 import com.baidubce.services.rds.model.RdsInstanceDetailResponse;
+import com.baidubce.services.rds.model.RdsInstanceEnterpriseSecurityDetail;
 import com.baidubce.services.rds.model.RdsInstanceListRequest;
 import com.baidubce.services.rds.model.RdsInstanceListResponse;
 import com.baidubce.services.rds.model.RdsInstanceName;
 import com.baidubce.services.rds.model.RdsInstanceResizeRequest;
+import com.baidubce.services.rds.model.RdsListEnterpriseSecurityGroupRequest;
+import com.baidubce.services.rds.model.RdsListSecurityGroupRequest;
 import com.baidubce.services.rds.model.RdsMajorVersionListRequest;
 import com.baidubce.services.rds.model.RdsMajorVersionListResponse;
 import com.baidubce.services.rds.model.RdsMajorVersionPrecheckRequest;
@@ -85,9 +91,13 @@ import com.baidubce.services.rds.model.RdsModifyAccountPasswordRequest;
 import com.baidubce.services.rds.model.RdsModifyAccountPermissionRequest;
 import com.baidubce.services.rds.model.RdsModifyAccountRemarksRequest;
 import com.baidubce.services.rds.model.RdsModifyBackupRequest;
+import com.baidubce.services.rds.model.RdsModifyDatabaseCdcRequest;
+import com.baidubce.services.rds.model.RdsModifyDatabaseCdcResponse;
 import com.baidubce.services.rds.model.RdsModifyDatabaseDescriptionRequest;
 import com.baidubce.services.rds.model.RdsModifyParameterRequest;
 import com.baidubce.services.rds.model.RdsNetworkStatusRequest;
+import com.baidubce.services.rds.model.RdsOpenApiSecurityGroupResponse;
+import com.baidubce.services.rds.model.RdsPageSecurityResponse;
 import com.baidubce.services.rds.model.RdsParameterListRequest;
 import com.baidubce.services.rds.model.RdsParameterListResponse;
 import com.baidubce.services.rds.model.RdsPaymentTiming;
@@ -101,6 +111,8 @@ import com.baidubce.services.rds.model.RdsRenewalRequest;
 import com.baidubce.services.rds.model.RdsRenewalResponse;
 import com.baidubce.services.rds.model.RdsReservation;
 import com.baidubce.services.rds.model.RdsRestartRequest;
+import com.baidubce.services.rds.model.RdsSecurityGroupPageRequest;
+import com.baidubce.services.rds.model.RdsSecurityGroupUpdateRequest;
 import com.baidubce.services.rds.model.RdsSlowLogDownloadDetailRequest;
 import com.baidubce.services.rds.model.RdsSlowLogDownloadDetailResponse;
 import com.baidubce.services.rds.model.RdsSlowLogDownloadTasksRequest;
@@ -124,6 +136,7 @@ import com.baidubce.services.rds.model.RdsSyncMode;
 import com.baidubce.services.rds.model.RdsSyncModeRequest;
 import com.baidubce.services.rds.model.RdsTag;
 import com.baidubce.services.rds.model.RdsTargetRegionListRequest;
+import com.baidubce.services.rds.model.RdsUnbindEnterpriseSecurityRequest;
 import com.baidubce.services.rds.model.RdsUpdateEncryptPolicyReq;
 import com.baidubce.services.rds.model.RdsUpdateNameRequest;
 import com.baidubce.services.rds.model.RdsUpdateStorageAutoExpansionConfigRequest;
@@ -1712,5 +1725,151 @@ public class RdsClient extends AbstractBceClient {
         internalRequest.addParameter("updateEncryptPolicy", null);
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * List the security groups bound to a rds instance.
+     *
+     * @param request the request with instanceId
+     * @return the response containing security groups and active rules
+     */
+    public RdsOpenApiSecurityGroupResponse listSecurityGroup(RdsListSecurityGroupRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        RdsArgumentUtil.checkString(request.getInstanceId(), INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, request.getInstanceId(), "securityList"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        return invokeHttpClient(internalRequest, RdsOpenApiSecurityGroupResponse.class);
+    }
+
+    /**
+     * Page list security groups by vpc.
+     *
+     * @param request the page request
+     * @return the paged security group response
+     */
+    public RdsPageSecurityResponse listSecurityGroupByVpc(RdsSecurityGroupPageRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String[] paths = {RdsPaths.INSTANCE, RdsPaths.SECURITY, "listByVpc"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, paths);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, RdsPageSecurityResponse.class);
+    }
+
+    /**
+     * Unbind security groups from a rds instance.
+     *
+     * @param request the unbind request
+     * @return the response
+     */
+    public AbstractBceResponse unbindSecurityGroup(RdsSecurityGroupUpdateRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        RdsArgumentUtil.checkString(request.getInstanceId(), INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, RdsPaths.SECURITY, "unbind"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, paths);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Batch bind security groups for a rds instance, replacing the existing bindings.
+     *
+     * @param request the update request
+     * @return the response
+     */
+    public AbstractBceResponse updateSecurityGroup(RdsSecurityGroupUpdateRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        RdsArgumentUtil.checkString(request.getInstanceId(), INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, RdsPaths.SECURITY, "batchBind"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, paths);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * List enterprise security groups.
+     *
+     * @param request the list request with paging parameters
+     * @return the enterprise security group response
+     */
+    public RdsEnterpriseSecurityGroupResponse listEnterpriseSecurityGroup(
+        RdsListEnterpriseSecurityGroupRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String[] paths = {RdsPaths.INSTANCE, RdsPaths.ENTERPRISE, RdsPaths.SECURITY, "list"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        if (request.getPageNo() != null) {
+            internalRequest.addParameter("pageNo", String.valueOf(request.getPageNo()));
+        }
+        if (request.getPageSize() != null) {
+            internalRequest.addParameter("pageSize", String.valueOf(request.getPageSize()));
+        }
+        if (StringUtils.isNotEmpty(request.getOrder())) {
+            internalRequest.addParameter("order", request.getOrder());
+        }
+        if (StringUtils.isNotEmpty(request.getOrderBy())) {
+            internalRequest.addParameter("orderBy", request.getOrderBy());
+        }
+        return invokeHttpClient(internalRequest, RdsEnterpriseSecurityGroupResponse.class);
+    }
+
+    /**
+     * Get the enterprise security groups bound to a rds instance.
+     *
+     * @param request the request with instanceId
+     * @return the instance enterprise security detail
+     */
+    public RdsInstanceEnterpriseSecurityDetail getEnterpriseSecurity(RdsGetEnterpriseSecurityRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        RdsArgumentUtil.checkString(request.getInstanceId(), INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, RdsPaths.ENTERPRISE, RdsPaths.SECURITY, request.getInstanceId()};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.GET, paths);
+        return invokeHttpClient(internalRequest, RdsInstanceEnterpriseSecurityDetail.class);
+    }
+
+    /**
+     * Bind enterprise security groups to a rds instance.
+     *
+     * @param request the bind request
+     * @return the response
+     */
+    public AbstractBceResponse bindEnterpriseSecurityGroup(RdsBindEnterpriseSecurityRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        RdsArgumentUtil.checkString(request.getInstanceId(), INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, RdsPaths.ENTERPRISE, RdsPaths.SECURITY, "bind"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, paths);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Unbind enterprise security groups from a rds instance.
+     *
+     * @param request the unbind request
+     * @return the response
+     */
+    public AbstractBceResponse unbindEnterpriseSecurityGroup(RdsUnbindEnterpriseSecurityRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        RdsArgumentUtil.checkString(request.getInstanceId(), INSTANCE_ID_KEY);
+        String[] paths = {RdsPaths.INSTANCE, RdsPaths.ENTERPRISE, RdsPaths.SECURITY, "unbind"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, paths);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Modify the CDC status of specified databases on a SQL Server RDS instance.
+     *
+     * @param request the request of modify database cdc
+     * @return the response of modify database cdc, including taskId of the async task
+     */
+    public RdsModifyDatabaseCdcResponse modifyDatabaseCdc(RdsModifyDatabaseCdcRequest request) {
+        RdsArgumentUtil.checkNull(request, REQUEST_KEY);
+        String instanceId = request.getInstanceId();
+        RdsArgumentUtil.checkString(instanceId, INSTANCE_ID_KEY);
+        RdsArgumentUtil.checkNull(request.getDbNames(), "dbNames");
+        RdsArgumentUtil.checkString(request.getModifyType(), "modifyType");
+        String[] paths = {RdsPaths.INSTANCE, instanceId, RdsPaths.DATABASES, "cdc"};
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, paths);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, RdsModifyDatabaseCdcResponse.class);
     }
 }

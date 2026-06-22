@@ -59,4 +59,14 @@ public class RdsPaths {
      * Rds path parameter
      */
     static final String PARAMETER = "parameter";
+
+    /**
+     * Rds path security
+     */
+    static final String SECURITY = "security";
+
+    /**
+     * Rds path enterprise
+     */
+    static final String ENTERPRISE = "enterprise";
 }

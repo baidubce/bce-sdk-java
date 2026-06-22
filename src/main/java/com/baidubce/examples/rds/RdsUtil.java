@@ -38,6 +38,7 @@ public class RdsUtil {
     public static void print(String method, Object obj) {
         try {
             String json = JsonUtils.toJsonPrettyString(obj);
+            System.out.println("===== " + method + " =====");
             System.out.println(json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
