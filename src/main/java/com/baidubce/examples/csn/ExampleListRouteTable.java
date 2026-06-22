@@ -27,6 +27,7 @@ public class ExampleListRouteTable {
         try {
             ListRouteTableResponse response = csnClient.listRouteTable(csnId, marker, maxKeys);
             System.out.println(response);
+            System.out.println("maxKeys = " + response.getMaxKeys());
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

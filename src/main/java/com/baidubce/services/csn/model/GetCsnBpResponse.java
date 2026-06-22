@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.baidubce.common.BaseBceResponse;
 import com.baidubce.services.tag.model.Tag;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -73,12 +74,14 @@ public class GetCsnBpResponse extends BaseBceResponse {
     /**
      * 带宽包预付费的到期时间
      */
-    private String expiredTime;
+    @JsonAlias("expiredTime")
+    private String expireTime;
 
     /**
      * 带宽包的创建时间
      */
-    private String createTime;
+    @JsonAlias("createTime")
+    private String createdTime;
 
     /**
      * 带宽包的标签列表

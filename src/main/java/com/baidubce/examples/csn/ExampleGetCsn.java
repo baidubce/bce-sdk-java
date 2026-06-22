@@ -25,6 +25,7 @@ public class ExampleGetCsn {
         try {
             GetCsnResponse getCsnResponse = csnClient.getCsn(csnId);
             System.out.println("getCsnResponse = " + getCsnResponse);
+            System.out.println("createdTime = " + getCsnResponse.getCreatedTime());
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

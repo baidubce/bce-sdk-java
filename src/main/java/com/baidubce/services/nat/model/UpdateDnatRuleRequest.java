@@ -68,6 +68,16 @@ public class UpdateDnatRuleRequest extends AbstractBceRequest {
     private String privateIpAddress;
 
     /**
+     * The public port range (e.g. "80-90")
+     */
+    private String publicPortRange;
+
+    /**
+     * The private port range (e.g. "80-90")
+     */
+    private String privatePortRange;
+
+    /**
      * Configure request credential for the request.
      *
      * @param credentials a valid instance of BceCredentials.

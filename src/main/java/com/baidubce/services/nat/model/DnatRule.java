@@ -40,12 +40,22 @@ public class DnatRule {
     /**
      * The public port
      */
-    private String publicPort;
+    private Integer publicPort;
 
     /**
      * The private port
      */
-    private String privatePort;
+    private Integer privatePort;
+
+    /**
+     * The range of public port
+     */
+    private String publicPortRange;
+
+    /**
+     * The range of private port
+     */
+    private String privatePortRange;
 
     /**
      * The status of the dnat rule

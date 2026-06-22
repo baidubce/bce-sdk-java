@@ -27,6 +27,7 @@ public class ExampleListTgw {
         try {
             ListTgwResponse response = csnClient.listTgw(csnId, marker, maxKeys);
             System.out.println(response);
+            System.out.println("maxKeys = " + response.getMaxKeys());
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

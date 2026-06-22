@@ -12,7 +12,6 @@
  */
 package com.baidubce.services.csn.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.baidubce.common.BaseBceResponse;
@@ -44,7 +43,7 @@ public class ListCsnResponse extends BaseBceResponse {
     /**
      * 每页包含的最大数量
      */
-    private BigDecimal maxKeys;
+    private Integer maxKeys;
 
     public void setCsns(List<Csn> csns) {
         this.csns = csns;
@@ -78,11 +77,11 @@ public class ListCsnResponse extends BaseBceResponse {
         return this.nextMarker;
     }
 
-    public void setMaxKeys(BigDecimal maxKeys) {
+    public void setMaxKeys(Integer maxKeys) {
         this.maxKeys = maxKeys;
     }
 
-    public BigDecimal getMaxKeys() {
+    public Integer getMaxKeys() {
         return this.maxKeys;
     }
 
@@ -106,9 +105,11 @@ public class ListCsnResponse extends BaseBceResponse {
     
         private String status;
     
-        private BigDecimal instanceNum;
+        private Integer instanceNum;
     
-        private BigDecimal csnBpNum;
+        private Integer csnBpNum;
+
+        private String createTime;
 
         private List<Tag> tags;
     
@@ -144,20 +145,28 @@ public class ListCsnResponse extends BaseBceResponse {
             return this.status;
         }
     
-        public void setInstanceNum(BigDecimal instanceNum) {
+        public void setInstanceNum(Integer instanceNum) {
             this.instanceNum = instanceNum;
         }
     
-        public BigDecimal getInstanceNum() {
+        public Integer getInstanceNum() {
             return this.instanceNum;
         }
     
-        public void setCsnBpNum(BigDecimal csnBpNum) {
+        public void setCsnBpNum(Integer csnBpNum) {
             this.csnBpNum = csnBpNum;
         }
     
-        public BigDecimal getCsnBpNum() {
+        public Integer getCsnBpNum() {
             return this.csnBpNum;
+        }
+
+        public String getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
         }
 
         public List<Tag> getTags() {
@@ -177,6 +186,7 @@ public class ListCsnResponse extends BaseBceResponse {
                     ", status='" + status + '\'' +
                     ", instanceNum=" + instanceNum +
                     ", csnBpNum=" + csnBpNum +
+                    ", createTime='" + createTime + '\'' +
                     ", tags=" + tags +
                     '}';
         }

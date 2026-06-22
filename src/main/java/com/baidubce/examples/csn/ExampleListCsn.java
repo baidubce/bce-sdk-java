@@ -23,6 +23,14 @@ public class ExampleListCsn {
         try {
             ListCsnResponse response = csnClient.listCsn(marker, maxKeys);
             System.out.println(response);
+            if (response.getCsns() != null) {
+                for (ListCsnResponse.Csn csn : response.getCsns()) {
+                    System.out.println("csn createTime = " + csn.getCreateTime());
+                    System.out.println("csn instanceNum = " + csn.getInstanceNum());
+                    System.out.println("csn csnBpNum = " + csn.getCsnBpNum());
+                }
+            }
+            System.out.println("maxKeys = " + response.getMaxKeys());
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

@@ -39,4 +39,14 @@ public class CreateDnatRule {
      * The private port
      */
     private int privatePort;
+
+    /**
+     * The public port range (e.g. "80-90")
+     */
+    private String publicPortRange;
+
+    /**
+     * The private port range (e.g. "80-90")
+     */
+    private String privatePortRange;
 }

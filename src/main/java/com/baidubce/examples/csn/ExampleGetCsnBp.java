@@ -25,6 +25,8 @@ public class ExampleGetCsnBp {
         try {
             GetCsnBpResponse csnBpDetail = csnClient.getCsnBp(csnBpId);
             System.out.println("csnBpDetail = " + csnBpDetail);
+            System.out.println("expireTime = " + csnBpDetail.getExpireTime());
+            System.out.println("createdTime = " + csnBpDetail.getCreatedTime());
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

@@ -12,6 +12,7 @@
  */
 package com.baidubce.services.nat.model;
 
+import com.baidubce.services.bcc.model.TagModel;
 import lombok.ToString;
 
 import java.util.List;
@@ -87,6 +88,16 @@ public class Nat {
      * @return
      */
     private String ipVersion;
+
+    /**
+     * The delete protect switch of this nat.
+     */
+    private Boolean deleteProtect;
+
+    /**
+     * the list of tags which are bound to nat instance
+     */
+    private List<TagModel> tags;
 
     public String getId() {
         return id;
@@ -190,5 +201,21 @@ public class Nat {
 
     public void setIpVersion(String ipVersion) {
         this.ipVersion = ipVersion;
+    }
+
+    public Boolean getDeleteProtect() {
+        return deleteProtect;
+    }
+
+    public void setDeleteProtect(Boolean deleteProtect) {
+        this.deleteProtect = deleteProtect;
+    }
+
+    public List<TagModel> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagModel> tags) {
+        this.tags = tags;
     }
 }

@@ -12,7 +12,6 @@
  */
 package com.baidubce.services.csn.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.baidubce.common.BaseBceResponse;
@@ -43,7 +42,7 @@ public class ListRouteTableResponse extends BaseBceResponse {
     /**
      * 每页包含的最大数量
      */
-    private BigDecimal maxKeys;
+    private Integer maxKeys;
 
     public void setCsnRts(List<CsnRouteTable> csnRts) {
         this.csnRts = csnRts;
@@ -77,11 +76,11 @@ public class ListRouteTableResponse extends BaseBceResponse {
         return this.nextMarker;
     }
 
-    public void setMaxKeys(BigDecimal maxKeys) {
+    public void setMaxKeys(Integer maxKeys) {
         this.maxKeys = maxKeys;
     }
 
-    public BigDecimal getMaxKeys() {
+    public Integer getMaxKeys() {
         return this.maxKeys;
     }
 

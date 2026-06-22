@@ -27,6 +27,7 @@ public class ExampleListRouteRule {
         try {
             ListRouteRuleResponse response = csnClient.listRouteRule(csnRtId, marker, maxKeys);
             System.out.println(response);
+            System.out.println("maxKeys = " + response.getMaxKeys());
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

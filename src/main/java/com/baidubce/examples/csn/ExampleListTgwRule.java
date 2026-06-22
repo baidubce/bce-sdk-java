@@ -28,6 +28,7 @@ public class ExampleListTgwRule {
         try {
             ListTgwRuleResponse response = csnClient.listTgwRule(csnId, tgwId, marker, maxKeys);
             System.out.println(response);
+            System.out.println("maxKeys = " + response.getMaxKeys());
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }

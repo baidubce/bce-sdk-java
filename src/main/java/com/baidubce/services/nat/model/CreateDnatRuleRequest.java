@@ -54,12 +54,22 @@ public class CreateDnatRuleRequest extends AbstractBceRequest {
     /**
      * The public port
      */
-    private String publicPort;
+    private Integer publicPort;
 
     /**
      * The private port
      */
-    private String privatePort;
+    private Integer privatePort;
+
+    /**
+     * The public port range (e.g. "80-90")
+     */
+    private String publicPortRange;
+
+    /**
+     * The private port range (e.g. "80-90")
+     */
+    private String privatePortRange;
 
     /**
      * Configure request credential for the request.

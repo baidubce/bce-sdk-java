@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.baidubce.common.BaseBceResponse;
 import com.baidubce.services.tag.model.Tag;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -72,9 +73,11 @@ public class ListCsnBpResponse extends BaseBceResponse {
     
         private String paymentTiming;
     
-        private String expiredTime;
+        @JsonAlias("expiredTime")
+        private String expireTime;
     
-        private String createTime;
+        @JsonAlias("createTime")
+        private String createdTime;
 
         private List<Tag> tags;
     }

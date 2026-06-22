@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.baidubce.common.BaseBceResponse;
 import com.baidubce.services.tag.model.Tag;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,6 +56,12 @@ public class GetCsnResponse extends BaseBceResponse {
      * 云智能网绑定的带宽包数量
      */
     private Integer csnBpNum;
+
+    /**
+     * 云智能网的创建时间
+     */
+    @JsonAlias("createTime")
+    private String createdTime;
 
     /**
      * 云智能网的标签列表

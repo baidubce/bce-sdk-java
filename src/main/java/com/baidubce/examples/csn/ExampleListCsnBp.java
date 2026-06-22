@@ -26,6 +26,12 @@ public class ExampleListCsnBp {
         try {
             ListCsnBpResponse listCsnBpResponse = csnClient.listCsnBp(marker, maxKeys);
             System.out.println("listCsnBpResponse = " + listCsnBpResponse);
+            if (listCsnBpResponse.getCsnBps() != null) {
+                for (ListCsnBpResponse.CsnBp csnBp : listCsnBpResponse.getCsnBps()) {
+                    System.out.println("csnBp expireTime = " + csnBp.getExpireTime());
+                    System.out.println("csnBp createdTime = " + csnBp.getCreatedTime());
+                }
+            }
         } catch (BceClientException e) {
             System.out.println(e.getMessage());
         }
