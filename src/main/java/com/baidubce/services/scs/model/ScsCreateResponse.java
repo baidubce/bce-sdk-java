@@ -11,6 +11,7 @@ import java.util.List;
 public class ScsCreateResponse extends AbstractBceResponse {
 
     private List<String> instanceIds = new ArrayList<String>();
+    private String orderId;
 
     public List<String> getInstanceIds() {
         return instanceIds;
@@ -18,5 +19,13 @@ public class ScsCreateResponse extends AbstractBceResponse {
 
     public void setInstanceIds(List<String> instanceIds) {
         this.instanceIds = instanceIds;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

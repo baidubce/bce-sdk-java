@@ -1,6 +1,12 @@
 package com.baidubce.services.scs.model;
 
 import com.baidubce.model.AbstractBceResponse;
+import com.baidubce.services.scs.model.instance.ScsEntranceItem;
+import com.baidubce.services.scs.model.instance.ScsFeatureSwitches;
+import com.baidubce.services.scs.model.instance.ScsInstanceFullVersionInfo;
+import com.baidubce.services.scs.model.instance.ScsMaintainTime;
+import com.baidubce.services.scs.model.instance.ScsRedisNode;
+import com.baidubce.services.scs.model.instance.ScsReplication;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -37,9 +43,30 @@ public class ScsInstanceDetailResponse extends AbstractBceResponse {
     private Integer replicationNum;
     private Boolean enableSlowLog;
     private String unitPrice;
+    private List<ScsTag> tags = new ArrayList<ScsTag>();
+    private Integer diskFlavor;
+    private String diskType;
+    private String eip;
+    private String publicDomain;
+    private Integer enableReadOnly;
+    private List<ScsReplication> replicationInfo = new ArrayList<ScsReplication>();
+    private String bnsGroup;
+    private String resourceGroupId;
+    private String resourceGroupName;
+    private List<String> deployIdList = new ArrayList<String>();
+    private String orderStatus;
+    private String entrance;
+    private List<ScsRedisNode> redisList = new ArrayList<ScsRedisNode>();
     private List<ScsProxyNode> proxyList = new ArrayList<ScsProxyNode>();
     @JsonProperty("cacheClusterInstances")
     private List<ScsShardInfo> shardInfos = new ArrayList<ScsShardInfo>();
+    private ScsInstanceFullVersionInfo fullVersionInfo;
+    private ScsMaintainTime maintainTime;
+    private Boolean enableHotkey;
+    private ScsFeatureSwitches featureSwitches;
+    private String crossAzNearest;
+    private List<ScsEntranceItem> entranceList = new ArrayList<ScsEntranceItem>();
+    private Boolean supportSentinelCommands;
 
     public String getInstanceId() {
         return instanceId;
@@ -233,6 +260,118 @@ public class ScsInstanceDetailResponse extends AbstractBceResponse {
         this.unitPrice = unitPrice;
     }
 
+    public List<ScsTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<ScsTag> tags) {
+        this.tags = tags;
+    }
+
+    public Integer getDiskFlavor() {
+        return diskFlavor;
+    }
+
+    public void setDiskFlavor(Integer diskFlavor) {
+        this.diskFlavor = diskFlavor;
+    }
+
+    public String getDiskType() {
+        return diskType;
+    }
+
+    public void setDiskType(String diskType) {
+        this.diskType = diskType;
+    }
+
+    public String getEip() {
+        return eip;
+    }
+
+    public void setEip(String eip) {
+        this.eip = eip;
+    }
+
+    public String getPublicDomain() {
+        return publicDomain;
+    }
+
+    public void setPublicDomain(String publicDomain) {
+        this.publicDomain = publicDomain;
+    }
+
+    public Integer getEnableReadOnly() {
+        return enableReadOnly;
+    }
+
+    public void setEnableReadOnly(Integer enableReadOnly) {
+        this.enableReadOnly = enableReadOnly;
+    }
+
+    public List<ScsReplication> getReplicationInfo() {
+        return replicationInfo;
+    }
+
+    public void setReplicationInfo(List<ScsReplication> replicationInfo) {
+        this.replicationInfo = replicationInfo;
+    }
+
+    public String getBnsGroup() {
+        return bnsGroup;
+    }
+
+    public void setBnsGroup(String bnsGroup) {
+        this.bnsGroup = bnsGroup;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+    }
+
+    public String getResourceGroupName() {
+        return resourceGroupName;
+    }
+
+    public void setResourceGroupName(String resourceGroupName) {
+        this.resourceGroupName = resourceGroupName;
+    }
+
+    public List<String> getDeployIdList() {
+        return deployIdList;
+    }
+
+    public void setDeployIdList(List<String> deployIdList) {
+        this.deployIdList = deployIdList;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getEntrance() {
+        return entrance;
+    }
+
+    public void setEntrance(String entrance) {
+        this.entrance = entrance;
+    }
+
+    public List<ScsRedisNode> getRedisList() {
+        return redisList;
+    }
+
+    public void setRedisList(List<ScsRedisNode> redisList) {
+        this.redisList = redisList;
+    }
+
     public List<ScsProxyNode> getProxyList() {
         return proxyList;
     }
@@ -247,5 +386,61 @@ public class ScsInstanceDetailResponse extends AbstractBceResponse {
 
     public void setShardInfos(List<ScsShardInfo> shardInfos) {
         this.shardInfos = shardInfos;
+    }
+
+    public ScsInstanceFullVersionInfo getFullVersionInfo() {
+        return fullVersionInfo;
+    }
+
+    public void setFullVersionInfo(ScsInstanceFullVersionInfo fullVersionInfo) {
+        this.fullVersionInfo = fullVersionInfo;
+    }
+
+    public ScsMaintainTime getMaintainTime() {
+        return maintainTime;
+    }
+
+    public void setMaintainTime(ScsMaintainTime maintainTime) {
+        this.maintainTime = maintainTime;
+    }
+
+    public Boolean getEnableHotkey() {
+        return enableHotkey;
+    }
+
+    public void setEnableHotkey(Boolean enableHotkey) {
+        this.enableHotkey = enableHotkey;
+    }
+
+    public ScsFeatureSwitches getFeatureSwitches() {
+        return featureSwitches;
+    }
+
+    public void setFeatureSwitches(ScsFeatureSwitches featureSwitches) {
+        this.featureSwitches = featureSwitches;
+    }
+
+    public String getCrossAzNearest() {
+        return crossAzNearest;
+    }
+
+    public void setCrossAzNearest(String crossAzNearest) {
+        this.crossAzNearest = crossAzNearest;
+    }
+
+    public List<ScsEntranceItem> getEntranceList() {
+        return entranceList;
+    }
+
+    public void setEntranceList(List<ScsEntranceItem> entranceList) {
+        this.entranceList = entranceList;
+    }
+
+    public Boolean getSupportSentinelCommands() {
+        return supportSentinelCommands;
+    }
+
+    public void setSupportSentinelCommands(Boolean supportSentinelCommands) {
+        this.supportSentinelCommands = supportSentinelCommands;
     }
 }

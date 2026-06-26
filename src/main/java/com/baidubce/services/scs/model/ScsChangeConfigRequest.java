@@ -2,7 +2,7 @@ package com.baidubce.services.scs.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.baidubce.services.scs.model.instance.ScsReplication;
 
 /**
  * The request of change config
@@ -14,6 +14,11 @@ public class ScsChangeConfigRequest extends AbstractBceRequest {
     private String engineVersion;
     private String nodeType;
     private Integer shardNum;
+    private Boolean isDefer;
+    private Integer diskFlavor;
+    private String diskType;
+    private String modifyMethod;
+    private java.util.List<ScsReplication> replicationInfo;
     private ScsBilling billing;
 
     public String getEngineVersion() {
@@ -38,6 +43,46 @@ public class ScsChangeConfigRequest extends AbstractBceRequest {
 
     public void setShardNum(Integer shardNum) {
         this.shardNum = shardNum;
+    }
+
+    public Boolean getIsDefer() {
+        return isDefer;
+    }
+
+    public void setIsDefer(Boolean defer) {
+        isDefer = defer;
+    }
+
+    public Integer getDiskFlavor() {
+        return diskFlavor;
+    }
+
+    public void setDiskFlavor(Integer diskFlavor) {
+        this.diskFlavor = diskFlavor;
+    }
+
+    public String getDiskType() {
+        return diskType;
+    }
+
+    public void setDiskType(String diskType) {
+        this.diskType = diskType;
+    }
+
+    public String getModifyMethod() {
+        return modifyMethod;
+    }
+
+    public void setModifyMethod(String modifyMethod) {
+        this.modifyMethod = modifyMethod;
+    }
+
+    public java.util.List<ScsReplication> getReplicationInfo() {
+        return replicationInfo;
+    }
+
+    public void setReplicationInfo(java.util.List<ScsReplication> replicationInfo) {
+        this.replicationInfo = replicationInfo;
     }
 
     public ScsBilling getBilling() {

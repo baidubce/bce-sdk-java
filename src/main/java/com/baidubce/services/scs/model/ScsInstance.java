@@ -17,6 +17,27 @@ public class ScsInstance {
     private String instanceStatus;
     private String instanceCreateTime;
     private String instanceExpireTime;
+    private Integer shardNum;
+    private Integer replicationNum;
+    private String clusterType;
+    private String vnetIp;
+    private String domain;
+    private Integer port;
+    private Double capacity;
+    private Double usedCapacity;
+    private String paymentTiming;
+    private java.util.List<String> zoneNames;
+    private java.util.List<ScsTag> tags;
+    private String resourceGroupId;
+    private String resourceGroupName;
+    private java.util.List<String> deployIdList;
+    private String orderStatus;
+    private String nodeType;
+    private Integer diskFlavor;
+    private String diskType;
+    private Integer storeType;
+    private String eip;
+    private String entrance;
 
     public String getInstanceId() {
         return instanceId;
@@ -104,6 +125,174 @@ public class ScsInstance {
 
     public void setInstanceExpireTime(String instanceExpireTime) {
         this.instanceExpireTime = instanceExpireTime;
+    }
+
+    public Integer getShardNum() {
+        return shardNum;
+    }
+
+    public void setShardNum(Integer shardNum) {
+        this.shardNum = shardNum;
+    }
+
+    public Integer getReplicationNum() {
+        return replicationNum;
+    }
+
+    public void setReplicationNum(Integer replicationNum) {
+        this.replicationNum = replicationNum;
+    }
+
+    public String getClusterType() {
+        return clusterType;
+    }
+
+    public void setClusterType(String clusterType) {
+        this.clusterType = clusterType;
+    }
+
+    public String getVnetIp() {
+        return vnetIp;
+    }
+
+    public void setVnetIp(String vnetIp) {
+        this.vnetIp = vnetIp;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public Double getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Double capacity) {
+        this.capacity = capacity;
+    }
+
+    public Double getUsedCapacity() {
+        return usedCapacity;
+    }
+
+    public void setUsedCapacity(Double usedCapacity) {
+        this.usedCapacity = usedCapacity;
+    }
+
+    public String getPaymentTiming() {
+        return paymentTiming;
+    }
+
+    public void setPaymentTiming(String paymentTiming) {
+        this.paymentTiming = paymentTiming;
+    }
+
+    public java.util.List<String> getZoneNames() {
+        return zoneNames;
+    }
+
+    public void setZoneNames(java.util.List<String> zoneNames) {
+        this.zoneNames = zoneNames;
+    }
+
+    public java.util.List<ScsTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(java.util.List<ScsTag> tags) {
+        this.tags = tags;
+    }
+
+    public String getResourceGroupId() {
+        return resourceGroupId;
+    }
+
+    public void setResourceGroupId(String resourceGroupId) {
+        this.resourceGroupId = resourceGroupId;
+    }
+
+    public String getResourceGroupName() {
+        return resourceGroupName;
+    }
+
+    public void setResourceGroupName(String resourceGroupName) {
+        this.resourceGroupName = resourceGroupName;
+    }
+
+    public java.util.List<String> getDeployIdList() {
+        return deployIdList;
+    }
+
+    public void setDeployIdList(java.util.List<String> deployIdList) {
+        this.deployIdList = deployIdList;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
+    }
+
+    public Integer getDiskFlavor() {
+        return diskFlavor;
+    }
+
+    public void setDiskFlavor(Integer diskFlavor) {
+        this.diskFlavor = diskFlavor;
+    }
+
+    public String getDiskType() {
+        return diskType;
+    }
+
+    public void setDiskType(String diskType) {
+        this.diskType = diskType;
+    }
+
+    public Integer getStoreType() {
+        return storeType;
+    }
+
+    public void setStoreType(Integer storeType) {
+        this.storeType = storeType;
+    }
+
+    public String getEip() {
+        return eip;
+    }
+
+    public void setEip(String eip) {
+        this.eip = eip;
+    }
+
+    public String getEntrance() {
+        return entrance;
+    }
+
+    public void setEntrance(String entrance) {
+        this.entrance = entrance;
     }
 
     @Override

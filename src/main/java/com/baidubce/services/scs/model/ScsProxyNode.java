@@ -6,6 +6,8 @@ package com.baidubce.services.scs.model;
 public class ScsProxyNode {
 
     private String uuid;
+    private String nodeShowId;
+    private String availabilityZone;
     private String nodeId;
 
     public String getUuid() {
@@ -14,6 +16,22 @@ public class ScsProxyNode {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getNodeShowId() {
+        return nodeShowId;
+    }
+
+    public void setNodeShowId(String nodeShowId) {
+        this.nodeShowId = nodeShowId;
+    }
+
+    public String getAvailabilityZone() {
+        return availabilityZone;
+    }
+
+    public void setAvailabilityZone(String availabilityZone) {
+        this.availabilityZone = availabilityZone;
     }
 
     public String getNodeId() {

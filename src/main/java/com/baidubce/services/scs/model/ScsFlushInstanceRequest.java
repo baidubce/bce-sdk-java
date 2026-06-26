@@ -2,7 +2,6 @@ package com.baidubce.services.scs.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Request to flush scs instance
@@ -12,6 +11,8 @@ public class ScsFlushInstanceRequest extends AbstractBceRequest {
     private String instanceId;
     private String password;
     private Integer dbIndex;
+    private Boolean isFlushExpired;
+    private Boolean isDefer;
 
     public String getInstanceId() {
         return instanceId;
@@ -35,6 +36,22 @@ public class ScsFlushInstanceRequest extends AbstractBceRequest {
 
     public void setDbIndex(Integer dbIndex) {
         this.dbIndex = dbIndex;
+    }
+
+    public Boolean getIsFlushExpired() {
+        return isFlushExpired;
+    }
+
+    public void setIsFlushExpired(Boolean flushExpired) {
+        isFlushExpired = flushExpired;
+    }
+
+    public Boolean getIsDefer() {
+        return isDefer;
+    }
+
+    public void setIsDefer(Boolean defer) {
+        isDefer = defer;
     }
 
     @Override

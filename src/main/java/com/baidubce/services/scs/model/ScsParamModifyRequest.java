@@ -2,7 +2,6 @@ package com.baidubce.services.scs.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Modify scs param request

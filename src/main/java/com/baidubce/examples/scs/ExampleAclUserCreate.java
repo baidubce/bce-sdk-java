@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 2026 Baidu, Inc. All Rights Reserved.
+ */
+package com.baidubce.examples.scs;
+
+import com.baidubce.services.scs.ScsClient;
+import com.baidubce.services.scs.model.account.ScsAclUserRequest;
+
+import static com.baidubce.examples.scs.ScsExampleUtil.createClient;
+import static com.baidubce.examples.scs.ScsExampleUtil.exampleAclUserRequest;
+public class ExampleAclUserCreate {
+    public static void main(String[] args) {
+        ScsClient client = createClient();
+        ScsAclUserRequest request = exampleAclUserRequest();
+        request.setClientAuth("Example123");
+        client.createAclUser(request);
+    }
+}
