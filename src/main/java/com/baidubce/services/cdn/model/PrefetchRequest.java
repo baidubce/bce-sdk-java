@@ -20,25 +20,25 @@ import java.util.List;
 
 /**
  * @author yixing
- *
  */
 public class PrefetchRequest extends CdnRequest {
     private List<PrefetchTask> tasks;
-    
+    private List<String> prefetchHeaders;
+
     /**
      * @return tasks
      */
     public List<PrefetchTask> getTasks() {
         return tasks;
     }
-    
+
     /**
      * @param tasks
      */
     public void setTasks(List<PrefetchTask> tasks) {
         this.tasks = tasks;
     }
-    
+
     /**
      * @param tasks
      * @return returns this object
@@ -47,7 +47,7 @@ public class PrefetchRequest extends CdnRequest {
         setTasks(tasks);
         return this;
     }
-    
+
     /**
      * @param task
      * @return returns this object
@@ -57,6 +57,29 @@ public class PrefetchRequest extends CdnRequest {
             tasks = new ArrayList<PrefetchTask>();
         }
         tasks.add(task);
+        return this;
+    }
+
+    /**
+     * @return prefetchHeaders
+     */
+    public List<String> getPrefetchHeaders() {
+        return prefetchHeaders;
+    }
+
+    /**
+     * @param prefetchHeaders
+     */
+    public void setPrefetchHeaders(List<String> prefetchHeaders) {
+        this.prefetchHeaders = prefetchHeaders;
+    }
+
+    /**
+     * @param prefetchHeaders
+     * @return returns this object
+     */
+    public PrefetchRequest withPrefetchHeaders(List<String> prefetchHeaders) {
+        setPrefetchHeaders(prefetchHeaders);
         return this;
     }
 }
