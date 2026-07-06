@@ -18,7 +18,7 @@ public class ExampleSyncGroupPreCheck {
     public static void main(String[] args) {
         ScsClient client = createClient();
         ScsSyncGroupPreCheckRequest request = new ScsSyncGroupPreCheckRequest();
-//        request.setSyncGroupShowId("sync-group-example");
+//        request.setSyncGroupShowId("");
 
         List<ScsSyncGroupMemberInfo> members = new ArrayList<>();
         ScsSyncGroupMemberInfo member1 = new ScsSyncGroupMemberInfo();

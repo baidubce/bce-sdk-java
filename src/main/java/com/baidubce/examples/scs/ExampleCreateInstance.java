@@ -68,7 +68,7 @@ public class ExampleCreateInstance {
 //        request.setReplicationNum(1);
 //        request.setSubnets(Collections.singletonList(exampleSubnet()));
         request.setBilling(examplePostpaidBilling());
-        request.setClientAuth("example1234");
+        request.setClientAuth("");
         request.setAutoBackupConfig("Tue,Wed,Thu,Fri,Sta,Sun,Mon;16:20:01;5");
         request.setTags(Collections.singletonList(exampleTag()));
 //        request.setDeployIdList(Collections.singletonList("deploy-id"));
@@ -115,7 +115,7 @@ public class ExampleCreateInstance {
 //        request.setReplicationNum(1);
 //        request.setSubnets(Collections.singletonList(exampleSubnet()));
         request.setBilling(examplePostpaidBilling());
-        request.setClientAuth("example1234");
+        request.setClientAuth("");
         request.setAutoBackupConfig("Tue,Wed,Thu,Fri,Sta,Sun,Mon;16:20:01;5");
         request.setTags(Collections.singletonList(exampleTag()));
 //        request.setDeployIdList(Collections.singletonList("deploy-id"));
@@ -162,7 +162,7 @@ public class ExampleCreateInstance {
 //        request.setReplicationNum(1);
 //        request.setSubnets(Collections.singletonList(exampleSubnet()));
         request.setBilling(examplePostpaidBilling());
-        request.setClientAuth("example1234");
+        request.setClientAuth("");
         request.setAutoBackupConfig("Tue,Wed,Thu,Fri,Sta,Sun,Mon;16:20:01;5");
         request.setTags(Collections.singletonList(exampleTag()));
 //        request.setDeployIdList(Collections.singletonList("deploy-id"));

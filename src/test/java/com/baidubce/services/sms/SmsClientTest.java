@@ -42,8 +42,8 @@ public class SmsClientTest {
     @Ignore
     public static class Base {
         protected static final String ENDPOINT = "http://nmg02-bce-test8.nmg02.baidu.com:8887";
-        protected static final String ACCESSKEY_ID = "11f9634810b743ad9255266b064ddba1";
-        protected static final String SERCERT_KEY = "d5b8dd75acca40f8bb6cd75269305a1c";
+        protected static final String ACCESSKEY_ID = "";
+        protected static final String SERCERT_KEY = "";
 
         @Rule
         public ExpectedException thrown = ExpectedException.none();

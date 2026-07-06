@@ -38,6 +38,7 @@ class ScsExampleUtil {
     static final String BACKUP_RECORD_ID = "";
     static final String LOG_ID = "";
     static final String CLIENT_TOKEN = "";
+    static final String CLIENT_AUTH = "";
 
     static ScsClient createClient() {
         BceClientConfiguration config = new BceClientConfiguration();

@@ -1,10 +1,10 @@
-package com.baidubce.services.geo.model.logmodel;
+package com.baidubce.services.eo.model.logmodel;
 
-import com.baidubce.services.geo.model.GeoResponse;
+import com.baidubce.services.eo.model.EoResponse;
 
 import java.util.List;
 
-public class GetDomainListLogResponse extends GeoResponse {
+public class GetDomainListLogResponse extends EoResponse {
     private int totalCount;
     private List<LogEntry> logEntryList;
 

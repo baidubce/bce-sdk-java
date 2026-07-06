@@ -16,7 +16,7 @@ public class ExampleModifyPassword {
         ScsClient client = createClient();
         ScsInstanceModifyPasswordRequest request = new ScsInstanceModifyPasswordRequest();
         request.setInstanceId(INSTANCE_ID);
-        request.setPassword("Example123");
+        request.setPassword(null);
         try {
             client.modifyPassword(request);
         } catch (GeneralSecurityException e) {

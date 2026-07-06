@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.baidubce.services.geo.model.handler;
+package com.baidubce.services.eo.model.handler;
 
 import com.baidubce.http.BceHttpResponse;
 import com.baidubce.http.handler.HttpResponseHandler;
@@ -20,7 +20,7 @@ import com.baidubce.util.JsonUtils;
 
 import java.io.InputStream;
 
-public class GeoJsonResponseHandler implements HttpResponseHandler {
+public class EoJsonResponseHandler implements HttpResponseHandler {
     @Override
     public boolean handle(BceHttpResponse httpResponse, AbstractBceResponse response) throws Exception {
         InputStream content = httpResponse.getContent();

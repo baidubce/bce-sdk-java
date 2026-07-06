@@ -16,7 +16,7 @@ public class ExampleFlushInstance {
         ScsFlushInstanceRequest request = new ScsFlushInstanceRequest();
         request.setInstanceId(INSTANCE_ID);
         request.setDbIndex(0);
-        request.setPassword("example1234");
+        request.setPassword(null);
         try {
             client.flushInstance(request);
         } catch (GeneralSecurityException e) {

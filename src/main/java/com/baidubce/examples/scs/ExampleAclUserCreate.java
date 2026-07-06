@@ -12,7 +12,7 @@ public class ExampleAclUserCreate {
     public static void main(String[] args) {
         ScsClient client = createClient();
         ScsAclUserRequest request = exampleAclUserRequest();
-        request.setClientAuth("Example123");
+        request.setClientAuth("");
         client.createAclUser(request);
     }
 }

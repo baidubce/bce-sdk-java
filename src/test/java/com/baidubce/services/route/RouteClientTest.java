@@ -17,8 +17,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public class RouteClientTest {
     private static final Logger logger = LoggerFactory.getLogger(RouteClientTest.class);
-    //    private static final String ak = "37a24f544b094d7185313d60a899b23e";
-    //    private static final String sk = "8c7780a605634bec9337fdd3ba8e934e";
+    //    private static final String ak = "";
+    //    private static final String sk = "";
     private static final String ak = "Your Ak";
     private static final String sk = "Your Sk";
     protected RouteClient routeClient;

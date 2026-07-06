@@ -17,7 +17,7 @@ public class ExampleTemplateApply {
 //        request.setParameters(Collections.emptyList());
 
         ScsApplyParamsTemplateRequest.CacheClusterItem cacheClusterItem = new ScsApplyParamsTemplateRequest.CacheClusterItem();
-        cacheClusterItem.setCacheClusterShowId("scs-bj-jzzfnudjcfda");
+        cacheClusterItem.setCacheClusterShowId("");
         cacheClusterItem.setRegion("bj");
         request.setCacheClusterList(Collections.singletonList(cacheClusterItem));
         request.setExtra(0);

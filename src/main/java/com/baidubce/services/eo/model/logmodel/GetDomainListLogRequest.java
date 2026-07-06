@@ -1,10 +1,10 @@
-package com.baidubce.services.geo.model.logmodel;
+package com.baidubce.services.eo.model.logmodel;
 
-import com.baidubce.services.geo.model.GeoRequest;
+import com.baidubce.services.eo.model.EoRequest;
 
 import java.util.List;
 
-public class GetDomainListLogRequest extends GeoRequest {
+public class GetDomainListLogRequest extends EoRequest {
     private String site;
     private String startTime;
     private String endTime;

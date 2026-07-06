@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.baidubce.services.geo;
+package com.baidubce.services.eo;
 
 import com.baidubce.AbstractBceClient;
 import com.baidubce.BceClientConfiguration;
@@ -24,22 +24,30 @@ import com.baidubce.http.handler.HttpResponseHandler;
 import com.baidubce.internal.InternalRequest;
 import com.baidubce.internal.RestartableInputStream;
 import com.baidubce.model.AbstractBceRequest;
-import com.baidubce.services.geo.model.handler.GeoJsonResponseHandler;
-import com.baidubce.services.geo.model.logmodel.GetDomainListLogRequest;
-import com.baidubce.services.geo.model.logmodel.GetDomainListLogResponse;
+import com.baidubce.services.eo.model.handler.EoJsonResponseHandler;
+import com.baidubce.services.eo.model.logmodel.GetDomainListLogRequest;
+import com.baidubce.services.eo.model.logmodel.GetDomainListLogResponse;
+import com.baidubce.services.eo.model.site.GetSiteConfigRequest;
+import com.baidubce.services.eo.model.site.GetSiteConfigResponse;
+import com.baidubce.services.eo.model.site.SetSiteConfigRequest;
+import com.baidubce.services.eo.model.site.SetSiteConfigResponse;
 import com.baidubce.util.HttpUtils;
 import com.baidubce.util.JsonUtils;
 import com.baidubce.util.Validate;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
-public class GeoClient extends AbstractBceClient {
+public class EoClient extends AbstractBceClient {
     /**
      * The version information for Document service APIs as URI prefix.
      */
@@ -51,6 +59,16 @@ public class GeoClient extends AbstractBceClient {
     private static final String GEO = "geo";
 
     /**
+     * The URI prefix for site operation.
+     */
+    private static final String SITE = "site";
+
+    /**
+     * The URI prefix for site configuration operation.
+     */
+    private static final String CONFIG = "config";
+
+    /**
      * Generate signature with specified headers.
      */
     private static final String[] HEADERS_TO_SIGN = {"host", "x-bce-date"};
@@ -58,10 +76,10 @@ public class GeoClient extends AbstractBceClient {
     private static final HttpResponseHandler[] GEO_HANDLERS = new HttpResponseHandler[]{
             new BceMetadataResponseHandler(),
             new BceErrorResponseHandler(),
-            new GeoJsonResponseHandler()
+            new EoJsonResponseHandler()
     };
 
-    public GeoClient() {
+    public EoClient() {
         this(new BceClientConfiguration());
     }
 
@@ -71,7 +89,7 @@ public class GeoClient extends AbstractBceClient {
      * @param clientConfiguration The client configuration options controlling how this client
      *                            connects to Document services (e.g. proxy settings, retry counts, etc).
      */
-    public GeoClient(BceClientConfiguration clientConfiguration) {
+    public EoClient(BceClientConfiguration clientConfiguration) {
         super(clientConfiguration, GEO_HANDLERS);
     }
 
@@ -89,6 +107,64 @@ public class GeoClient extends AbstractBceClient {
                 GEO, "log");
         this.attachRequestToBody(request, internalRequest);
         return this.invokeHttpClient(internalRequest, GetDomainListLogResponse.class);
+    }
+
+    /**
+     * Set the configuration of a site.
+     *
+     * Corresponds to {PUT /v2/geo/site/{site}/config}. The request carries the
+     * configuration items (e.g. cacheTtl) in its body.
+     *
+     * @param request The request containing the site and the configuration items to set.
+     * @return The status of setting the configuration.
+     */
+    public SetSiteConfigResponse setSiteConfig(SetSiteConfigRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                GEO, SITE, request.getSite(), CONFIG);
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, SetSiteConfigResponse.class);
+    }
+
+    /**
+     * Query the configuration of a site. Supports querying all / a single / multiple config items.
+     *
+     * Corresponds to the full-amount { GET /v2/geo/site/{site}/config}. The result is a map
+     * keyed by the config item name (JSON field name), so it carries the config key together with
+     * its value, e.g. {@code {"cacheTtl": [ ... ]}}.
+     *
+     *
+     * @param request The request containing the site to query.
+     * @param keys    The config item keys to keep. If empty, all items are returned.
+     * @return A map of {configKey : value}.
+     */
+    public Map<String, Object> getSiteConfig(GetSiteConfigRequest request, String... keys) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
+                GEO, SITE, request.getSite(), CONFIG);
+        GetSiteConfigResponse response = this.invokeHttpClient(internalRequest, GetSiteConfigResponse.class);
+
+        Map<String, Object> allConfig = JsonUtils.getObjectMapper()
+                .convertValue(response, new TypeReference<LinkedHashMap<String, Object>>() {
+                });
+
+        if (keys == null || keys.length == 0) {
+            return allConfig;
+        }
+
+        Map<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("metadata", allConfig.get("metadata"));
+
+        for (String key : keys) {
+            if (allConfig.containsKey(key)) {
+                result.put(key, allConfig.get(key));
+            }
+        }
+        return result;
     }
 
     /**

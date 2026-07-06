@@ -32,7 +32,7 @@ public class ExampleAclUserModifyPassword {
         ScsAclUserModifyPasswordRequest request = new ScsAclUserModifyPasswordRequest();
         request.setInstanceId(INSTANCE_ID);
         request.setUserName(user.getUserName());
-        request.setClientAuth("Example12345");
+        request.setClientAuth("");
         client.modifyAclUserPassword(request);
     }
 }

@@ -91,7 +91,7 @@ public class ScsPaths {
 
     public static final String WHITE_LIST = "whitelist";
 
-    public static final String MODIFY_PASSWORD = "modifyPassword";
+    public static final String MODIFY_CLIENT_AUTH = "modifyPassword";
 
     public static final String BACKUP = "backup";
 

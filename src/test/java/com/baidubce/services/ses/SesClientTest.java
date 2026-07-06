@@ -50,8 +50,8 @@ public class SesClientTest {
 	@Ignore
 	public static class Base {
 		protected static final String ENDPOINT = "http://nmg02-bce-test9.nmg02.baidu.com:8886";
-		protected static final String ACCESSKEY_ID = "46bd9968a6194b4bbdf0341f2286ccce";
-		protected static final String SECRET_KEY = "ec7f4e0174254f6f9020f9680fb1da9f";	
+		protected static final String ACCESSKEY_ID = "";
+		protected static final String SECRET_KEY = "";	
 
 		@Rule
 		public ExpectedException thrown = ExpectedException.none();

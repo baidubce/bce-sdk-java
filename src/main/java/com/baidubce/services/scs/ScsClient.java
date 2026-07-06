@@ -746,7 +746,7 @@ public class ScsClient extends AbstractBceClient {
         if (StringUtils.isNotEmpty(request.getPassword())) {
             request.setPassword(aes128WithFirst16Char(request.getPassword(), config.getCredentials().getSecretKey()));
         }
-        String[] paths = {ScsPaths.INSTANCE, request.getInstanceId(), ScsPaths.MODIFY_PASSWORD};
+        String[] paths = {ScsPaths.INSTANCE, request.getInstanceId(), ScsPaths.MODIFY_CLIENT_AUTH};
         InternalRequest internalRequest = createRequest(ScsPaths.VERSION_1, request, HttpMethodName.PUT, paths);
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, AbstractBceResponse.class);

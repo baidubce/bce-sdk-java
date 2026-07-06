@@ -111,8 +111,8 @@ public class CertClientTest {
             + "IXnjEeWrFvAZQhk=\n"
             + "-----END CERTIFICATE-----\n";
 
-    private static final String accessKey = "6a739f8c6b5f454e87bc97db8f5edf74";
-    private static final String secretKey = "5c559d28c66848999e0ea094367400ac";
+    private static final String accessKey = "";
+    private static final String secretKey = "";
     private static final String endpoint = "https://certificate.baidubce.com";
 
     private CertClient certClient;

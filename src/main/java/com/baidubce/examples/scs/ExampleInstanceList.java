@@ -15,8 +15,8 @@ public class ExampleInstanceList {
         InstanceListRequest request = new InstanceListRequest();
         request.setMarker("-1");
         request.setMaxKeys(10);
-//        request.setInstanceIds("scs-bj-iopfewfokogn");
-//        request.setVnetIp("192.168.96.183");
+//        request.setInstanceIds("");
+//        request.setVnetIp("");
         System.out.println(JsonUtils.toJsonString(request));
         InstanceListResponse response = client.getInstanceList(request);
         System.out.println(JsonUtils.toJsonString(response));

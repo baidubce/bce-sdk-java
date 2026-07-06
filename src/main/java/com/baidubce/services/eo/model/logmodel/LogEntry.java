@@ -1,6 +1,6 @@
-package com.baidubce.services.geo.model.logmodel;
+package com.baidubce.services.eo.model.logmodel;
 
-import com.baidubce.services.geo.model.JsonObject;
+import com.baidubce.services.eo.model.JsonObject;
 
 public class LogEntry extends JsonObject {
     private String domain;

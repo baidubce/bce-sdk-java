@@ -1,4 +1,4 @@
-package com.baidubce.services.geo.model;
+package com.baidubce.services.eo.model;
 
 import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
@@ -6,14 +6,14 @@ import com.baidubce.util.JsonUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class GeoRequest extends AbstractBceRequest {
+public class EoRequest extends AbstractBceRequest {
     /**
      * (non-Javadoc)
      *
      * @see com.baidubce.model.AbstractBceRequest#withRequestCredentials(com.baidubce.auth.BceCredentials)
      */
     @Override
-    public GeoRequest withRequestCredentials(BceCredentials credentials) {
+    public EoRequest withRequestCredentials(BceCredentials credentials) {
         this.setRequestCredentials(credentials);
         return this;
     }
