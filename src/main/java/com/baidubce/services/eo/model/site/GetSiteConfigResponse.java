@@ -1,6 +1,7 @@
 package com.baidubce.services.eo.model.site;
 
 import com.baidubce.services.eo.model.EoResponse;
+import com.baidubce.services.eo.model.rule.PageRule;
 
 import java.util.List;
 
@@ -90,6 +91,11 @@ public class GetSiteConfigResponse extends EoResponse {
      * The HTTP2 origin config.
      */
     private String http2Origin;
+
+    /**
+     * The rule engine (page rules) configuration of the site.
+     */
+    private List<PageRule> pageRules;
 
     /**
      * @return cacheTtl
@@ -313,5 +319,19 @@ public class GetSiteConfigResponse extends EoResponse {
      */
     public void setHttp2Origin(String http2Origin) {
         this.http2Origin = http2Origin;
+    }
+
+    /**
+     * @return pageRules
+     */
+    public List<PageRule> getPageRules() {
+        return pageRules;
+    }
+
+    /**
+     * @param pageRules
+     */
+    public void setPageRules(List<PageRule> pageRules) {
+        this.pageRules = pageRules;
     }
 }

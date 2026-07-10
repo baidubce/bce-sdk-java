@@ -1,6 +1,7 @@
 package com.baidubce.services.eo.model.site;
 
 import com.baidubce.services.eo.model.EoRequest;
+import com.baidubce.services.eo.model.rule.PageRule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -96,6 +97,12 @@ public class SetSiteConfigRequest extends EoRequest {
      * The HTTP2 origin config.
      */
     private String http2Origin;
+
+    /**
+     * The rule engine (page rules) configuration of the site. Must be set in full amount,
+     * otherwise the previous rules will be overwritten.
+     */
+    private List<PageRule> pageRules;
 
     /**
      * @param site
@@ -486,5 +493,28 @@ public class SetSiteConfigRequest extends EoRequest {
      */
     public void setHttp2Origin(String http2Origin) {
         this.http2Origin = http2Origin;
+    }
+
+    /**
+     * @param pageRules
+     * @return this object
+     */
+    public SetSiteConfigRequest withPageRules(List<PageRule> pageRules) {
+        this.pageRules = pageRules;
+        return this;
+    }
+
+    /**
+     * @return pageRules
+     */
+    public List<PageRule> getPageRules() {
+        return pageRules;
+    }
+
+    /**
+     * @param pageRules
+     */
+    public void setPageRules(List<PageRule> pageRules) {
+        this.pageRules = pageRules;
     }
 }
