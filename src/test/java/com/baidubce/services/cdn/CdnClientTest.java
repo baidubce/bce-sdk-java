@@ -1235,12 +1235,67 @@ public class CdnClientTest {
         cdnClient.setDomainDsa(new SetDomainDsaRequest().withDomain(DOMAIN).withDsa(dsa));
     }
 
+    /**
+     * setDomainOriginConfig
+     */
+    @Test
+    public void testSetDomainOriginConfig() {
+        OriginItem primary = new OriginItem()
+                .withAddr("test1.com")
+                .withType("DOMAIN")
+                .withWeight(10)
+                .withUpstreamProtocol("*")
+                .withHost("test1.baidu.com")
+                .withBackup(false);
+        OriginItem backup = new OriginItem()
+                .withAddr("220.181.38.148")
+                .withType("IP")
+                .withWeight(10)
+                .withUpstreamProtocol("http")
+                .withHost("test2.baidu.com")
+                .withBackup(true);
+        SetDomainOriginConfigRequest request = new SetDomainOriginConfigRequest()
+                .withDomain(DOMAIN)
+                .addOriginItem(primary)
+                .addOriginItem(backup);
+        CommonResponse response = cdnClient.setDomainOriginConfig(request);
+        System.out.println(response);
+    }
 
+    /**
+     * setDomainOriginConfig with third-party bucket auth
+     */
+    @Test
+    public void testSetDomainOriginConfigThirdBucket() {
+        ThirdBucketAuth thirdBucketAuth = new ThirdBucketAuth()
+                .withAuthType("aws_v4")
+                .withEnabled(true)
+                .withAk("xxx")
+                .withSk("xxx")
+                .withBucket("mybucket")
+                .withRegion("us-east-1")
+                .withService("s3");
+        OriginItem origin = new OriginItem()
+                .withType("DOMAIN")
+                .withAddr("test1.com")
+                .withBackup(false)
+                .withHost("test1.baidu.com")
+                .withUpstreamProtocol("http")
+                .withThirdBucketAuth(thirdBucketAuth);
+        SetDomainOriginConfigRequest request = new SetDomainOriginConfigRequest()
+                .withDomain(DOMAIN)
+                .addOriginItem(origin);
+        CommonResponse response = cdnClient.setDomainOriginConfig(request);
+        System.out.println(response);
+    }
 
-
-
-
-
-
-
+    /**
+     * getDomainOriginConfig
+     */
+    @Test
+    public void testGetDomainOriginConfig() {
+        GetDomainOriginConfigResponse response = cdnClient.getDomainOriginConfig(DOMAIN);
+        System.out.println(response);
+        Assert.assertNotNull(response);
+    }
 }

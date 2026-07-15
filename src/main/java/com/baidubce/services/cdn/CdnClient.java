@@ -118,7 +118,9 @@ import com.baidubce.services.cdn.model.domain.GetDomainUrlRulesResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainLimitBandwidthResponse;
 import com.baidubce.services.cdn.model.domain.SetDomainUrlRulesRequest;
 import com.baidubce.services.cdn.model.domain.SetDomainLimitBandwidthRequest;
+import com.baidubce.services.cdn.model.domain.GetDomainOriginConfigResponse;
 import com.baidubce.services.cdn.model.domain.GetDomainOriginResponse;
+import com.baidubce.services.cdn.model.domain.SetDomainOriginConfigRequest;
 import com.baidubce.services.cdn.model.handler.CdnJsonResponseHandler;
 import com.baidubce.services.cdn.model.stat.GetMonth95Response;
 import com.baidubce.services.cdn.model.stat.GetStatMetricResponse;
@@ -469,6 +471,32 @@ public class CdnClient extends AbstractBceClient {
                 DOMAIN, domain, "config");
         internalRequest.addParameter("origin", "");
         return invokeHttpClient(internalRequest, GetDomainOriginResponse.class);
+    }
+
+    /**
+     * Set the originConfig of a domain.
+     */
+    public CommonResponse setDomainOriginConfig(SetDomainOriginConfigRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkNotNull(request.getDomain(), "Domain should NOT be null.");
+        Validate.checkNotNull(request.getOriginConfig(), "OriginConfig should NOT be null.");
+
+        InternalRequest internalRequest = createRequest(request, HttpMethodName.PUT,
+                DOMAIN, request.getDomain(), "config");
+        internalRequest.addParameter("originConfig", "");
+        this.attachRequestToBody(request, internalRequest);
+        return invokeHttpClient(internalRequest, CommonResponse.class);
+    }
+
+    /**
+     * Get the originConfig of a domain.
+     */
+    public GetDomainOriginConfigResponse getDomainOriginConfig(String domain) {
+        Validate.checkNotNull(domain, "Domain should NOT be null.");
+        InternalRequest internalRequest = createRequest(new CdnRequest(), HttpMethodName.GET,
+                DOMAIN, domain, "config");
+        internalRequest.addParameter("originConfig", "");
+        return invokeHttpClient(internalRequest, GetDomainOriginConfigResponse.class);
     }
 
     /**
