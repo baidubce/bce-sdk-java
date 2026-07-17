@@ -21,6 +21,9 @@ public class ExampleCreateEtGatewayHealthCheck {
 
         CreateEtGatewayHealthCheckRequest createEtGatewayHealthCheckRequest = new CreateEtGatewayHealthCheckRequest();
         createEtGatewayHealthCheckRequest.setEtGatewayId("dcgw-9pwwq206xj58");   // 专线网关的id
+        createEtGatewayHealthCheckRequest.setDcphyId("dcphy-axwuruqsn6af");   // 物理专线ID
+        createEtGatewayHealthCheckRequest.setChannelId("dedicatedconn-jbxquurmvghc");   // 专线通道ID
+        createEtGatewayHealthCheckRequest.setSubnetId("sbn-pmibbccz3g7t");   // 子网ID
         createEtGatewayHealthCheckRequest.setHealthCheckSourceIp("");   // 若不传该参数，系统会自动分配一个IP
         createEtGatewayHealthCheckRequest.setHealthCheckType("ICMP");   // 参数可取值为"ICMP",默认为"ICMP"
         createEtGatewayHealthCheckRequest.setHealthCheckPort(8000);     // 健康检查的端口

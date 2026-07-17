@@ -127,6 +127,9 @@ public class EtGatewayClientTest {
     public void createEtGatewayHealthCheck() {
         CreateEtGatewayHealthCheckRequest request = new CreateEtGatewayHealthCheckRequest();
         request.setEtGatewayId("");
+        request.setDcphyId("dcphy-axwuruqsn6af");
+        request.setChannelId("dedicatedconn-jbxquurmvghc");
+        request.setSubnetId("sbn-pmibbccz3g7t");
         request.setHealthCheckInterval(40);
         request.setHealthThreshold(2);
         request.setUnhealthThreshold(4);

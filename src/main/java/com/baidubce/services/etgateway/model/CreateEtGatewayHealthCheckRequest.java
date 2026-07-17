@@ -28,6 +28,21 @@ public class CreateEtGatewayHealthCheckRequest extends AbstractBceRequest {
     private String etGatewayId;
 
     /**
+     * The physical dedicated line id.
+     */
+    private String dcphyId;
+
+    /**
+     * The dedicated channel id.
+     */
+    private String channelId;
+
+    /**
+     * The subnet id.
+     */
+    private String subnetId;
+
+    /**
      * The source IP for health check.
      */
     private String healthCheckSourceIp;
