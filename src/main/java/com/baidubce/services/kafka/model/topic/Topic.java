@@ -7,4 +7,10 @@ public class Topic {
     private String topicName;
 
     private String createTime;
+
+    private Boolean readOnly;
+
+    private Integer partitionNum;
+
+    private Integer replicaNum;
 }

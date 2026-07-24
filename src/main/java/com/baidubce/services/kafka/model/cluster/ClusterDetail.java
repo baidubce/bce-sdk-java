@@ -25,6 +25,8 @@ public class ClusterDetail {
 
     private String mode;
 
+    private String vpcMode;
+
     private String state;
 
     private Provisioned provisioned;
@@ -32,4 +34,6 @@ public class ClusterDetail {
     private List<Tag> tags;
 
     private String createTime;
+
+    private String deleteTime;
 }

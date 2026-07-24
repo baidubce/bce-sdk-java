@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class StartJobResponse extends AbstractBceResponse {
 
-    private String jobId;
+    private String actionId;
 }

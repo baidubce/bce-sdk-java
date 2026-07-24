@@ -9,5 +9,5 @@ public class RestartClusterResponse extends AbstractBceResponse {
 
     private String clusterId;
 
-    private String jobId;
+    private String actionId;
 }

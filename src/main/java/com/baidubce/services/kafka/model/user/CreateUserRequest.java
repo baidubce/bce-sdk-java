@@ -4,6 +4,8 @@ import com.baidubce.auth.BceCredentials;
 import com.baidubce.model.AbstractBceRequest;
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * The request for creating a newly user.
  */
@@ -24,6 +26,12 @@ public class CreateUserRequest extends AbstractBceRequest {
      * The parameter to specified the password.
      */
     private String password;
+
+    /**
+     * Optional. SASL mechanisms to enable for this user
+     * (e.g. {@code SCRAM-SHA-256}, {@code SCRAM-SHA-512}, {@code PLAIN}).
+     */
+    private Set<String> saslMechanisms;
 
     /**
      * Configure request credential for the request.

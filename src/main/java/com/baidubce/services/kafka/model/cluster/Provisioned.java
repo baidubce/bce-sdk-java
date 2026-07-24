@@ -23,6 +23,9 @@ public class Provisioned {
 
     private List<String> logicalZones;
 
+    private List<SecurityGroup> securityGroups;
+
+    @Deprecated
     private List<SecurityGroup> securityGroup;
 
     private String vpcId;
@@ -56,4 +59,16 @@ public class Provisioned {
     private ConfigMeta configMeta;
 
     private boolean deploySetEnabled;
+
+    private Boolean remoteStorageEnabled;
+
+    private List<MaintainPeriod> maintenancePeriods;
+
+    private String maintenanceStartTime;
+
+    private Integer maintenanceDurationHours;
+
+    private Boolean advertisedIpEnabled;
+
+    private Boolean domainEnabled;
 }

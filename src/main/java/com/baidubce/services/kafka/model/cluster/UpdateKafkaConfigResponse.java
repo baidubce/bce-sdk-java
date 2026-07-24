@@ -8,5 +8,5 @@ public class UpdateKafkaConfigResponse extends AbstractBceResponse {
 
     private String clusterId;
 
-    private String jobId;
+    private String actionId;
 }

@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class Job {
     private String name ;
-    private String jobId;
+    private String actionId;
     private String status;
     private List<Operation> operations;
 }

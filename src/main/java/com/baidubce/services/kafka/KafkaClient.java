@@ -33,18 +33,23 @@ import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsRequest
 import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterCurrentControllerRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterCurrentControllerResponse;
+import com.baidubce.services.kafka.model.cluster.GetClusterDeletionRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterHistoryControllerRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterHistoryControllerResponse;
 import com.baidubce.services.kafka.model.cluster.GetClusterNodesRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterNodesResponse;
+import com.baidubce.services.kafka.model.cluster.GetZkPasswordRequest;
+import com.baidubce.services.kafka.model.cluster.GetZkPasswordResponse;
 import com.baidubce.services.kafka.model.cluster.IncreaseBrokerCountRequest;
 import com.baidubce.services.kafka.model.cluster.IncreaseBrokerCountResponse;
 import com.baidubce.services.kafka.model.cluster.ListClustersRequest;
 import com.baidubce.services.kafka.model.cluster.ListClustersResponse;
 import com.baidubce.services.kafka.model.cluster.ResizeClusterEipBandwidthRequest;
 import com.baidubce.services.kafka.model.cluster.ResizeClusterEipBandwidthResponse;
+import com.baidubce.services.kafka.model.cluster.MigrateClusterAzRequest;
+import com.baidubce.services.kafka.model.cluster.MigrateClusterAzResponse;
 import com.baidubce.services.kafka.model.cluster.RestartBrokerRequest;
 import com.baidubce.services.kafka.model.cluster.RestartBrokerResponse;
 import com.baidubce.services.kafka.model.cluster.RestartClusterRequest;
@@ -53,6 +58,10 @@ import com.baidubce.services.kafka.model.cluster.StartClusterRequest;
 import com.baidubce.services.kafka.model.cluster.StartClusterResponse;
 import com.baidubce.services.kafka.model.cluster.StopClusterRequest;
 import com.baidubce.services.kafka.model.cluster.StopClusterResponse;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterAdvertisedIpRequest;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterAdvertisedIpResponse;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterDomainRequest;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterDomainResponse;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterEipRequest;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterEipResponse;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterIntranetIpRequest;
@@ -63,10 +72,14 @@ import com.baidubce.services.kafka.model.cluster.UpdateBrokerNodeTypeRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateBrokerNodeTypeResponse;
 import com.baidubce.services.kafka.model.cluster.UpdateKafkaConfigRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateKafkaConfigResponse;
+import com.baidubce.services.kafka.model.cluster.UpdateMaintenanceDurationRequest;
+import com.baidubce.services.kafka.model.cluster.UpdateMaintenanceDurationResponse;
 import com.baidubce.services.kafka.model.cluster.UpdateSecurityGroupRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateSecurityGroupResponse;
 import com.baidubce.services.kafka.model.cluster.UpdateStoragePolicyRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateStoragePolicyResponse;
+import com.baidubce.services.kafka.model.cluster.UnifyClusterEndpointRequest;
+import com.baidubce.services.kafka.model.cluster.UnifyClusterEndpointResponse;
 import com.baidubce.services.kafka.model.config.CreateClusterConfigRequest;
 import com.baidubce.services.kafka.model.config.CreateClusterConfigResponse;
 import com.baidubce.services.kafka.model.config.CreateClusterConfigRevisionRequest;
@@ -224,7 +237,7 @@ public class KafkaClient extends AbstractBceClient {
     private static final String TOPIC_NAME_MESSAGE_KEY = "topicName";
     private static final String GROUP_NAME_MESSAGE_KEY = "groupName";
     private static final String CONFIG_NAME_MESSAGE_KEY = "configName";
-    private static final String JOBID_MESSAGE_KEY = "jobId";
+    private static final String ACTIONID_MESSAGE_KEY = "actionId";
     private static final String OPERATIONID_MESSAGE_KEY = "operationId";
     private static final String CONFIGID_MESSAGE_KEY = "configId";
     private static final String REVISIONID_MESSAGE_KEY = "revisionId";
@@ -451,6 +464,19 @@ public class KafkaClient extends AbstractBceClient {
     }
 
     /**
+     * 查询集群删除详情
+     * @param request
+     * @return
+     */
+    public GetClusterDetailResponse getClusterDeletion(GetClusterDeletionRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), "deletion");
+        return invokeHttpClient(internalRequest, GetClusterDetailResponse.class);
+    }
+
+    /**
      * 查询集群接入点
      * @param request
      * @return
@@ -524,6 +550,34 @@ public class KafkaClient extends AbstractBceClient {
                 request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "decrease-broker-count");
         fillPayload(internalRequest, request);
         return invokeHttpClient(internalRequest, DecreaseBrokerCountResponse.class);
+    }
+
+    /**
+     * 迁移集群可用区
+     * @param request
+     * @return
+     */
+    public MigrateClusterAzResponse migrateClusterAz(MigrateClusterAzRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "brokers", "migration");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, MigrateClusterAzResponse.class);
+    }
+
+    /**
+     * 统一集群访问地址
+     * @param request
+     * @return
+     */
+    public UnifyClusterEndpointResponse unifyClusterEndpoint(UnifyClusterEndpointRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), ACCESS_ENDPOINTS_PREFIX);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UnifyClusterEndpointResponse.class);
     }
 
     /**
@@ -667,6 +721,21 @@ public class KafkaClient extends AbstractBceClient {
     }
 
     /**
+     * 变更可维护时间
+     * @param request
+     * @return
+     */
+    public UpdateMaintenanceDurationResponse updateMaintenanceDuration(UpdateMaintenanceDurationRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(),
+                "update-maintenance-duration");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, UpdateMaintenanceDurationResponse.class);
+    }
+
+    /**
      * 集群产品间转储开关
      * @param request
      * @return
@@ -732,6 +801,47 @@ public class KafkaClient extends AbstractBceClient {
                 request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), NODES_PREFIX,
                 request.getNodeId(), "restart-broker");
         return invokeHttpClient(internalRequest, RestartBrokerResponse.class);
+    }
+
+    /**
+     * 开启/关闭跨 VPC 访问
+     * @param request
+     * @return
+     */
+    public SwitchClusterAdvertisedIpResponse switchClusterAdvertisedIp(SwitchClusterAdvertisedIpRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "advertised-ips/switch");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, SwitchClusterAdvertisedIpResponse.class);
+    }
+
+    /**
+     * 开启/关闭集群域名
+     * @param request
+     * @return
+     */
+    public SwitchClusterDomainResponse switchClusterDomain(SwitchClusterDomainRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), "domains/switch");
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, SwitchClusterDomainResponse.class);
+    }
+
+    /**
+     * 获取 ZooKeeper 用户名密码
+     * @param request
+     * @return
+     */
+    public GetZkPasswordResponse getZkPassword(GetZkPasswordRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), "zookeeper-password");
+        return invokeHttpClient(internalRequest, GetZkPasswordResponse.class);
     }
 
     /** ========================================= config API ======================================================== */
@@ -1118,6 +1228,9 @@ public class KafkaClient extends AbstractBceClient {
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), CONSUMER_GROUPS_PREFIX);
+        if (!Strings.isNullOrEmpty(request.getGroupName())) {
+            internalRequest.addParameter(GROUP_NAME_MESSAGE_KEY, request.getGroupName());
+        }
         return invokeHttpClient(internalRequest, ListConsumerGroupResponse.class);
     }
 
@@ -1368,6 +1481,12 @@ public class KafkaClient extends AbstractBceClient {
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
                 request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX);
+        if (!Strings.isNullOrEmpty(request.getMarker())) {
+            internalRequest.addParameter(MARKER, request.getMarker());
+        }
+        if (request.getMaxKeys() <= 1000 && request.getMaxKeys() > 0) {
+            internalRequest.addParameter(MAX_KEYS, String.valueOf(request.getMaxKeys()));
+        }
         if (!Strings.isNullOrEmpty(request.getName())) {
             internalRequest.addParameter(NAME, request.getName());
         }
@@ -1382,9 +1501,9 @@ public class KafkaClient extends AbstractBceClient {
     public GetJobDetailResponse getJob(GetJobDetailRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getActionId(), checkEmptyExceptionMessageFormat(ACTIONID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getJobId());
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getActionId());
         return invokeHttpClient(internalRequest, GetJobDetailResponse.class);
     }
 
@@ -1396,10 +1515,10 @@ public class KafkaClient extends AbstractBceClient {
     public GetOperationDetailResponse getOperation(GetOperationDetailRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getActionId(), checkEmptyExceptionMessageFormat(ACTIONID_MESSAGE_KEY));
         checkStringNotEmpty(request.getOperationId(), checkEmptyExceptionMessageFormat(OPERATIONID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getJobId(),
+                request, HttpMethodName.GET, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getActionId(),
                 OPERATIONS_PREFIX, request.getOperationId());
         return invokeHttpClient(internalRequest, GetOperationDetailResponse.class);
     }
@@ -1412,9 +1531,9 @@ public class KafkaClient extends AbstractBceClient {
     public StartJobResponse startJob(StartJobRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getActionId(), checkEmptyExceptionMessageFormat(ACTIONID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getJobId(), "start");
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getActionId(), "start");
         return invokeHttpClient(internalRequest, StartJobResponse.class);
     }
 
@@ -1426,9 +1545,9 @@ public class KafkaClient extends AbstractBceClient {
     public CancelJobResponse cancelJob(CancelJobRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getActionId(), checkEmptyExceptionMessageFormat(ACTIONID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getJobId(), "cancel");
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getActionId(), "cancel");
         return invokeHttpClient(internalRequest, CancelJobResponse.class);
     }
 
@@ -1440,9 +1559,9 @@ public class KafkaClient extends AbstractBceClient {
     public SuspendJobResponse suspendJob(SuspendJobRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getActionId(), checkEmptyExceptionMessageFormat(ACTIONID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getJobId(), "suspend");
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getActionId(), "suspend");
         return invokeHttpClient(internalRequest, SuspendJobResponse.class);
     }
 
@@ -1454,9 +1573,9 @@ public class KafkaClient extends AbstractBceClient {
     public ResumeJobResponse resumeJob(ResumeJobRequest request) {
         checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
         checkStringNotEmpty(request.getClusterId(), checkEmptyExceptionMessageFormat(CLUSTERID_MESSAGE_KEY));
-        checkStringNotEmpty(request.getJobId(), checkEmptyExceptionMessageFormat(JOBID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getActionId(), checkEmptyExceptionMessageFormat(ACTIONID_MESSAGE_KEY));
         InternalRequest internalRequest = this.createRequest(
-                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getJobId(), "resume");
+                request, HttpMethodName.PUT, CLUSTERS_PREFIX, request.getClusterId(), JOBS_PREFIX, request.getActionId(), "resume");
         return invokeHttpClient(internalRequest, ResumeJobResponse.class);
     }
 

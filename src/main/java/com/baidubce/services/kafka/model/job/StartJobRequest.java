@@ -12,7 +12,7 @@ public class StartJobRequest extends AbstractBceRequest {
      */
     private String clusterId;
 
-    private String jobId;
+    private String actionId;
 
     /**
      * Configure request credential for the request.

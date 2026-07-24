@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class OperationDetail {
 
-    private String jobId;
+    private String actionId;
 
     private String operationId;
 
@@ -16,6 +16,10 @@ public class OperationDetail {
     private String state;
 
     private int process;
+
+    private String schedule;
+
+    private Boolean started;
 
     private List<JobGroup> groups;
 

@@ -12,7 +12,7 @@ public class GetOperationDetailRequest extends AbstractBceRequest {
      */
     private String clusterId;
 
-    private String jobId;
+    private String actionId;
 
     private String operationId;
 

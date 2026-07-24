@@ -23,6 +23,17 @@ public class CreateClusterRequest extends AbstractBceRequest {
 
     private Type type;
 
+    /**
+     * Optional. Engine type. Values: {@code Kafka}. Server default: {@code Kafka}.
+     */
+    private String engineType;
+
+    /**
+     * Optional. Cluster metadata storage mode. Values: {@code Zookeeper}, {@code KRaft}.
+     * Server default: {@code Zookeeper}.
+     */
+    private String metadataMode;
+
     private Provisioned provisioned;
 
     private List<Tag> tags;

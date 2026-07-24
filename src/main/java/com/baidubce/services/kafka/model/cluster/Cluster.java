@@ -37,11 +37,15 @@ public class Cluster {
 
     private Boolean intranetIpEnabled;
 
+    private Boolean advertisedIpEnabled;
+
     private List<String> authenticationModes;
 
     private List<Tag> tags;
 
     private String createTime;
 
-    private String expirationTime;
+    private String expireTime;
+
+    private String deleteTime;
 }

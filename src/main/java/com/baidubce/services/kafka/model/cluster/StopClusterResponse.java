@@ -8,5 +8,5 @@ public class StopClusterResponse extends AbstractBceResponse {
 
     private String clusterId;
 
-    private String jobId;
+    private String actionId;
 }

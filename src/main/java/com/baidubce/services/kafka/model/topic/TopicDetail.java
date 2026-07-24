@@ -24,4 +24,6 @@ public class TopicDetail {
     private double underReplicated;
 
     private List<TopicConfig> otherConfigs;
+
+    private Boolean readOnly;
 }

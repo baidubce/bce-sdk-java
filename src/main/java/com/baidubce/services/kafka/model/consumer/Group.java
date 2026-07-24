@@ -8,4 +8,8 @@ public class Group {
     private String groupName;
 
     private String updateTime;
+
+    private String state;
+
+    private Integer groupCoordinatorId;
 }

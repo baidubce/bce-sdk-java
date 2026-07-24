@@ -4,9 +4,7 @@ import com.baidubce.model.AbstractBceResponse;
 import lombok.Data;
 
 @Data
-public class UpdateSecurityGroupResponse extends AbstractBceResponse {
+public class UpdateMaintenanceDurationResponse extends AbstractBceResponse {
 
     private String clusterId;
-
-    private String actionId;
 }

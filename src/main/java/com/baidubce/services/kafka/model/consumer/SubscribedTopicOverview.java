@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class SubscribedTopicOverview {
 
-    private int subscribedTopicNum;
+    private Integer subscribedTopicNum;
 
     private String lastConsumeTime;
 }

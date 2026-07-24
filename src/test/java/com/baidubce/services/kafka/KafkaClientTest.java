@@ -17,11 +17,15 @@ import com.baidubce.services.kafka.model.cluster.ExpandBrokerDiskCapacityRequest
 import com.baidubce.services.kafka.model.cluster.GetClusterAccessEndpointsRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterConfigurationsRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterCurrentControllerRequest;
+import com.baidubce.services.kafka.model.cluster.GetClusterDeletionRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterDetailRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterHistoryControllerRequest;
 import com.baidubce.services.kafka.model.cluster.GetClusterNodesRequest;
+import com.baidubce.services.kafka.model.cluster.GetZkPasswordRequest;
 import com.baidubce.services.kafka.model.cluster.IncreaseBrokerCountRequest;
 import com.baidubce.services.kafka.model.cluster.ListClustersRequest;
+import com.baidubce.services.kafka.model.cluster.MaintainPeriod;
+import com.baidubce.services.kafka.model.cluster.MigrateClusterAzRequest;
 import com.baidubce.services.kafka.model.cluster.Mode;
 import com.baidubce.services.kafka.model.cluster.Provisioned;
 import com.baidubce.services.kafka.model.cluster.ResizeClusterEipBandwidthRequest;
@@ -34,6 +38,8 @@ import com.baidubce.services.kafka.model.cluster.StorageMeta;
 import com.baidubce.services.kafka.model.cluster.StoragePolicy;
 import com.baidubce.services.kafka.model.cluster.StoragePolicyType;
 import com.baidubce.services.kafka.model.cluster.StorageType;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterAdvertisedIpRequest;
+import com.baidubce.services.kafka.model.cluster.SwitchClusterDomainRequest;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterEipRequest;
 import com.baidubce.services.kafka.model.cluster.SwitchClusterIntranetIpRequest;
 import com.baidubce.services.kafka.model.cluster.Tag;
@@ -41,8 +47,10 @@ import com.baidubce.services.kafka.model.cluster.Type;
 import com.baidubce.services.kafka.model.cluster.UpdateAccessConfigRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateBrokerNodeTypeRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateKafkaConfigRequest;
+import com.baidubce.services.kafka.model.cluster.UpdateMaintenanceDurationRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateSecurityGroupRequest;
 import com.baidubce.services.kafka.model.cluster.UpdateStoragePolicyRequest;
+import com.baidubce.services.kafka.model.cluster.UnifyClusterEndpointRequest;
 import com.baidubce.services.kafka.model.config.CreateClusterConfigRequest;
 import com.baidubce.services.kafka.model.config.CreateClusterConfigRevisionRequest;
 import com.baidubce.services.kafka.model.config.DeleteClusterConfigRequest;
@@ -66,7 +74,6 @@ import com.baidubce.services.kafka.model.job.SuspendJobRequest;
 import com.baidubce.services.kafka.model.quota.CreateQuotaRequest;
 import com.baidubce.services.kafka.model.quota.DeleteQuotaRequest;
 import com.baidubce.services.kafka.model.quota.ListQuotasRequest;
-import com.baidubce.services.kafka.model.quota.Quota;
 import com.baidubce.services.kafka.model.quota.UpdateQuotaRequest;
 import com.baidubce.services.kafka.model.topic.CreateTopicRequest;
 import com.baidubce.services.kafka.model.topic.DeleteTopicRequest;
@@ -142,7 +149,7 @@ public class KafkaClientTest {
         String userName = "testUser";
         String passwd = "<PASSWORD>";
 
-        String jobId = "jobId";
+        String actionId = "actionId";
         String operationId = "operationId";
 
         /**
@@ -286,6 +293,13 @@ public class KafkaClientTest {
         }
 
         @Test
+        public void getClusterDeletionTest() {
+            GetClusterDeletionRequest request = new GetClusterDeletionRequest();
+            request.setClusterId(clusterId);
+            this.client.getClusterDeletion(request);
+        }
+
+        @Test
         public void getClusterAccessEndpointsTest() {
             GetClusterAccessEndpointsRequest request = new GetClusterAccessEndpointsRequest();
             request.setClusterId(clusterId);
@@ -325,6 +339,26 @@ public class KafkaClientTest {
             // 期望变更后集群节点数为3
             request.setNumberOfBrokerNodes(3);
             this.client.decreaseBrokerCount(request);
+        }
+
+        @Test
+        public void migrateClusterAzTest() {
+            MigrateClusterAzRequest request = new MigrateClusterAzRequest();
+            request.setClusterId(clusterId);
+            request.setLogicalZones(Arrays.asList("cn-bj-a", "cn-bj-b", "cn-bj-c"));
+            request.setSubnets(Arrays.asList("subnet-a", "subnet-b", "subnet-c"));
+            request.setNumberOfBrokerNodes(3);
+            request.setBatchSize(10);
+            request.setInterBrokerThrottle(100L);
+            this.client.migrateClusterAz(request);
+        }
+
+        @Test
+        public void unifyClusterEndpointTest() {
+            UnifyClusterEndpointRequest request = new UnifyClusterEndpointRequest();
+            request.setClusterId(clusterId);
+            request.setActionId(actionId);
+            this.client.unifyClusterEndpoint(request);
         }
 
         @Test
@@ -396,6 +430,29 @@ public class KafkaClientTest {
         }
 
         @Test
+        public void switchClusterAdvertisedIpTest() {
+            SwitchClusterAdvertisedIpRequest request = new SwitchClusterAdvertisedIpRequest();
+            request.setClusterId(clusterId);
+            request.setAdvertisedIpEnabled(true);
+            this.client.switchClusterAdvertisedIp(request);
+        }
+
+        @Test
+        public void switchClusterDomainTest() {
+            SwitchClusterDomainRequest request = new SwitchClusterDomainRequest();
+            request.setClusterId(clusterId);
+            request.setDomainEnabled(true);
+            this.client.switchClusterDomain(request);
+        }
+
+        @Test
+        public void getZkPasswordTest() {
+            GetZkPasswordRequest request = new GetZkPasswordRequest();
+            request.setClusterId(clusterId);
+            this.client.getZkPassword(request);
+        }
+
+        @Test
         public void updateStoragePolicyTest() {
             UpdateStoragePolicyRequest request = new UpdateStoragePolicyRequest();
             request.setClusterId(clusterId);
@@ -426,6 +483,16 @@ public class KafkaClientTest {
             request.setClusterId(clusterId);
             request.setSecurityGroupIds(Arrays.asList("g-1234567890"));
             this.client.updateSecurityGroup(request);
+        }
+
+        @Test
+        public void updateMaintenanceDurationTest() {
+            UpdateMaintenanceDurationRequest request = new UpdateMaintenanceDurationRequest();
+            request.setClusterId(clusterId);
+            request.setMaintenancePeriods(Arrays.asList(MaintainPeriod.SATURDAY, MaintainPeriod.SUNDAY));
+            request.setMaintenanceStartTime("22:00");
+            request.setMaintenanceDurationHours(4);
+            this.client.updateMaintenanceDuration(request);
         }
 
         @Test
@@ -921,7 +988,7 @@ public class KafkaClientTest {
         public void getJobTest() {
             GetJobDetailRequest request = new GetJobDetailRequest();
             request.setClusterId(clusterId);
-            request.setJobId(jobId);
+            request.setActionId(actionId);
             this.client.getJob(request);
         }
 
@@ -929,7 +996,7 @@ public class KafkaClientTest {
         public void getOperationTest() {
             GetOperationDetailRequest request = new GetOperationDetailRequest();
             request.setClusterId(clusterId);
-            request.setJobId(jobId);
+            request.setActionId(actionId);
             request.setOperationId(operationId);
             this.client.getOperation(request);
         }
@@ -938,7 +1005,7 @@ public class KafkaClientTest {
         public void startJobTest() {
             StartJobRequest request = new StartJobRequest();
             request.setClusterId(clusterId);
-            request.setJobId(jobId);
+            request.setActionId(actionId);
             this.client.startJob(request);
         }
 
@@ -946,7 +1013,7 @@ public class KafkaClientTest {
         public void cancelJobTest() {
             CancelJobRequest request = new CancelJobRequest();
             request.setClusterId(clusterId);
-            request.setJobId(jobId);
+            request.setActionId(actionId);
             this.client.cancelJob(request);
         }
 
@@ -954,7 +1021,7 @@ public class KafkaClientTest {
         public void suspendJobTest() {
             SuspendJobRequest request = new SuspendJobRequest();
             request.setClusterId(clusterId);
-            request.setJobId(jobId);
+            request.setActionId(actionId);
             this.client.suspendJob(request);
         }
 
@@ -962,7 +1029,7 @@ public class KafkaClientTest {
         public void resumeJobTest() {
             ResumeJobRequest request = new ResumeJobRequest();
             request.setClusterId(clusterId);
-            request.setJobId(jobId);
+            request.setActionId(actionId);
             this.client.resumeJob(request);
         }
     }

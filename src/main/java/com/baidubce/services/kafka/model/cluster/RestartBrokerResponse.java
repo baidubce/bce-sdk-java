@@ -11,5 +11,5 @@ public class RestartBrokerResponse extends AbstractBceResponse {
 
     private String nodeId;
 
-    private String jobId;
+    private String actionId;
 }

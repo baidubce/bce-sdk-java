@@ -8,5 +8,5 @@ public class IncreaseBrokerCountResponse extends AbstractBceResponse {
 
     private String clusterId;
 
-    private String jobId;
+    private String actionId;
 }

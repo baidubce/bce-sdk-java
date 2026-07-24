@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Operation {
-    private String jobId;
+    private String actionId;
     private String name;
     private String status;
     private String operationId;
@@ -15,4 +15,5 @@ public class Operation {
     private String createTime;
     private String startTime;
     private String endTime;
+    private Boolean started;
 }
