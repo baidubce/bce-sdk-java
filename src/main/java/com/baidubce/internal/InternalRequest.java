@@ -56,6 +56,13 @@ public class InternalRequest {
      */
     private RestartableInputStream content;
 
+    /**
+     * Optional raw byte payload. When set, takes precedence over {@link #content} and is sent via a
+     * repeatable ByteArrayEntity, so failed requests can be retried (unlike InputStreamEntity whose
+     * isRepeatable() is hardcoded false).
+     */
+    private byte[] byteContent;
+
     private BceCredentials credentials;
 
     private SignOptions signOptions;
@@ -111,6 +118,14 @@ public class InternalRequest {
 
     public void setContent(RestartableInputStream content) {
         this.content = content;
+    }
+
+    public byte[] getByteContent() {
+        return this.byteContent;
+    }
+
+    public void setByteContent(byte[] byteContent) {
+        this.byteContent = byteContent;
     }
 
     public void setHeaders(Map<String, String> headers) {

@@ -53,6 +53,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
@@ -506,14 +507,16 @@ public class BceHttpClient {
         } else if (request.getHttpMethod() == HttpMethodName.PUT) {
             HttpPut putMethod = new HttpPut(uri);
             httpRequest = putMethod;
-            if (request.getContent() != null) {
-                putMethod.setEntity(new InputStreamEntity(request.getContent(), contentLength));
+            HttpEntity entity = buildEntity(request, contentLength);
+            if (entity != null) {
+                putMethod.setEntity(entity);
             }
         } else if (request.getHttpMethod() == HttpMethodName.POST) {
             HttpPost postMethod = new HttpPost(uri);
             httpRequest = postMethod;
-            if (request.getContent() != null) {
-                postMethod.setEntity(new InputStreamEntity(request.getContent(), contentLength));
+            HttpEntity entity = buildEntity(request, contentLength);
+            if (entity != null) {
+                postMethod.setEntity(entity);
             }
         } else if (request.getHttpMethod() == HttpMethodName.DELETE) {
             httpRequest = new HttpDelete(uri);
@@ -522,8 +525,9 @@ public class BceHttpClient {
         } else if (request.getHttpMethod() == HttpMethodName.PATCH) {
             HttpPatch patchMethod = new HttpPatch(uri);
             httpRequest = patchMethod;
-            if (request.getContent() != null) {
-                patchMethod.setEntity(new InputStreamEntity(request.getContent(), contentLength));
+            HttpEntity entity = buildEntity(request, contentLength);
+            if (entity != null) {
+                patchMethod.setEntity(entity);
             }
         } else {
             throw new BceClientException("Unknown HTTP method name: " + request.getHttpMethod());
@@ -546,6 +550,20 @@ public class BceHttpClient {
 
         checkNotNull(httpRequest.getFirstHeader(Headers.CONTENT_TYPE), Headers.CONTENT_TYPE + " not set");
         return httpRequest;
+    }
+
+    /**
+     * Builds an HttpEntity for the request body. Prefers repeatable ByteArrayEntity when
+     * byteContent is set, falls back to InputStreamEntity otherwise. Returns null when the
+     * request has no body.
+     */
+    private HttpEntity buildEntity(InternalRequest request, long contentLength) {
+        if (request.getByteContent() != null) {
+            return new ByteArrayEntity(request.getByteContent());
+        } else if (request.getContent() != null) {
+            return new InputStreamEntity(request.getContent(), contentLength);
+        }
+        return null;
     }
 
     /**

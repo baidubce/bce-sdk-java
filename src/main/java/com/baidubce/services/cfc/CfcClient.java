@@ -154,16 +154,6 @@ public class CfcClient extends AbstractBceClient {
     private static final String[] HEADERS_TO_SIGN = {"host"};
 
     /**
-     * The default invoke max timeout for creating new connections.
-     */
-    private static final int INVOKE_CONNECTION_TIMEOUT_IN_MILLIS = 310 * 1000;
-
-    /**
-     * The default invoke max timeout for reading from a connected socket.
-     */
-    private static final int INVOKE_SOCKET_TIMEOUT_IN_MILLIS = 310 * 1000;
-
-    /**
      * Responsible for handling httpResponses from all CFC service calls.
      */
     private static HttpResponseHandler[] cfcHandlers = new HttpResponseHandler[]{
@@ -177,7 +167,7 @@ public class CfcClient extends AbstractBceClient {
      * Constructs a new client to invoke service methods on CFC
      */
     public CfcClient() {
-        this(new BceClientConfiguration());
+        this(new CfcClientConfiguration());
     }
 
     /**
@@ -738,8 +728,6 @@ public class CfcClient extends AbstractBceClient {
      * @return
      */
     public InvokeResponse invoke(InvokeRequest request) {
-        this.config.setConnectionTimeoutInMillis(INVOKE_CONNECTION_TIMEOUT_IN_MILLIS);
-        this.config.setSocketTimeoutInMillis(INVOKE_SOCKET_TIMEOUT_IN_MILLIS);
         checkNotNull(request, ERRORMSG);
         InternalRequest internalRequest = createRequest(request, HttpMethodName.POST, FUNCTIONS,
                 request.getFunctionName(), INVOCATIONS);
@@ -842,7 +830,7 @@ public class CfcClient extends AbstractBceClient {
     private void attachInvokeRequestToBody(InternalRequest httpRequest, byte[] payload) {
         httpRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(payload.length));
         httpRequest.addHeader(Headers.CONTENT_TYPE, CONTENTTYPE);
-        httpRequest.setContent(RestartableInputStream.wrap(payload));
+        httpRequest.setByteContent(payload);
     }
 
 }
