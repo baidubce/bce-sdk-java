@@ -47,6 +47,7 @@ import com.baidubce.services.iam.model.UpdateRoleRequest;
 import com.baidubce.services.iam.model.UpdateRoleResponse;
 import com.baidubce.services.iam.model.UpdateUserRequest;
 import com.baidubce.services.iam.model.UpdateUserResponse;
+import com.baidubce.util.JsonUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -223,6 +224,26 @@ public class IamTest {
         Assert.assertEquals(createRoleResponse.getName(), roleName);
         Assert.assertEquals(createRoleResponse.getDescription(), testRoleDescription);
         client.deleteRole(roleName);
+    }
+
+    @Test
+    public void createRoleRequestShouldSerializeGrantType() {
+        CreateRoleRequest request = new CreateRoleRequest();
+        request.setName("testRole");
+        request.setGrantType("IDP");
+
+        String json = JsonUtils.toJsonString(request);
+
+        Assert.assertEquals("IDP", JsonUtils.jsonNodeOf(json).get("grantType").asText());
+    }
+
+    @Test
+    public void createRoleResponseShouldDeserializeGrantType() {
+        CreateRoleResponse response = JsonUtils.fromJsonString(
+                "{\"id\":\"role-id\",\"name\":\"testRole\",\"grantType\":\"IDP\"}",
+                CreateRoleResponse.class);
+
+        Assert.assertEquals("IDP", response.getGrantType());
     }
 
     @Test

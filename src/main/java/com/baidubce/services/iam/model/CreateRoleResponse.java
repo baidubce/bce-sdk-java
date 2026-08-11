@@ -40,6 +40,11 @@ public class CreateRoleResponse extends BaseBceResponse {
     private String description;
 
     /**
+     * grantType
+     */
+    private String grantType;
+
+    /**
      * assumeRolePolicyDocument
      */
     private String assumeRolePolicyDocument;
@@ -76,6 +81,14 @@ public class CreateRoleResponse extends BaseBceResponse {
         return this.description;
     }
 
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
+    }
+
+    public String getGrantType() {
+        return this.grantType;
+    }
+
     public void setAssumeRolePolicyDocument(String assumeRolePolicyDocument) {
         this.assumeRolePolicyDocument = assumeRolePolicyDocument;
     }
@@ -91,6 +104,7 @@ public class CreateRoleResponse extends BaseBceResponse {
                 + "name=" + name + "\n"
                 + "createTime=" + createTime + "\n"
                 + "description=" + description + "\n"
+                + "grantType=" + grantType + "\n"
                 + "assumeRolePolicyDocument=" + assumeRolePolicyDocument + "\n"
                 + "}";
     }

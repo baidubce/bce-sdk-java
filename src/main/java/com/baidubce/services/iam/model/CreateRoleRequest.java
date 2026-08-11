@@ -28,6 +28,11 @@ public class CreateRoleRequest extends BaseBceRequest {
     private String description;
 
     /**
+     * grantType
+     */
+    private String grantType;
+
+    /**
      * assumeRolePolicyDocument
      */
     private String assumeRolePolicyDocument;
@@ -48,6 +53,14 @@ public class CreateRoleRequest extends BaseBceRequest {
         return this.description;
     }
 
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
+    }
+
+    public String getGrantType() {
+        return this.grantType;
+    }
+
     public void setAssumeRolePolicyDocument(String assumeRolePolicyDocument) {
         this.assumeRolePolicyDocument = assumeRolePolicyDocument;
     }
@@ -61,6 +74,7 @@ public class CreateRoleRequest extends BaseBceRequest {
         return "CreateRoleRequest{"
                 + "name=" + name + "\n"
                 + "description=" + description + "\n"
+                + "grantType=" + grantType + "\n"
                 + "assumeRolePolicyDocument=" + assumeRolePolicyDocument + "\n"
                 + "}";
     }
