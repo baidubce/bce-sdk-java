@@ -1225,6 +1225,10 @@ public class BosClient extends AbstractBceClient {
             }
         }
 
+        if (this.config.isRequestPayer()) {
+            internalRequest.addParameter(Headers.BOS_REQUEST_PAYER, Constants.REQUEST_PAYER_REQUESTER);
+        }
+
         if (request.getContentType() != null) {
             internalRequest.addHeader(Headers.CONTENT_TYPE, request.getContentType());
         }
@@ -2708,6 +2712,9 @@ public class BosClient extends AbstractBceClient {
         request.setCredentials(bceRequest.getRequestCredentials());
         request.setMaxRedirects(((BosClientConfiguration) this.config).getMaxRedirects());
         request.setRedirectsEnabled(this.config.isRedirectsEnabled());
+        if (this.config.isRequestPayer()) {
+            request.addHeader(Headers.BOS_REQUEST_PAYER, Constants.REQUEST_PAYER_REQUESTER);
+        }
 //        request.addHeader(Headers.BCE_REQUEST_ID, UUID.randomUUID().toString());
         return request;
     }

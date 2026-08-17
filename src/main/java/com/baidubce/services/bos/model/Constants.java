@@ -48,4 +48,6 @@ public class Constants {
     public static final String QUOTE_FIELDS = "quoteFields";
 
     public static final String MESSAGE_TYPE = "message-type";
+
+    public static final String REQUEST_PAYER_REQUESTER = "requester";
 }

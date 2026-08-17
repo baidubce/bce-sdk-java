@@ -41,6 +41,7 @@ public class BosObjectResponseHandler implements HttpResponseHandler {
         }
         BosObject object = new BosObject();
         ObjectMetadata objectMetadata = object.getObjectMetadata();
+        objectMetadata.setBceRequestId(httpResponse.getHeader(Headers.BCE_REQUEST_ID));
         objectMetadata.setContentLength(httpResponse.getHeaderAsLong(Headers.CONTENT_LENGTH));
         objectMetadata.setContentType(httpResponse.getHeader(Headers.CONTENT_TYPE));
         objectMetadata.setContentEncoding(httpResponse.getHeader(Headers.CONTENT_ENCODING));

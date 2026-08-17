@@ -163,6 +163,11 @@ public class BceClientConfiguration {
     private boolean redirectsEnabled = true;
 
     /**
+     * whether BOS requests should use requester-pays mode
+     */
+    private boolean requestPayer = false;
+
+    /**
      * defalut io thread count
      *
      */
@@ -218,6 +223,7 @@ public class BceClientConfiguration {
         this.region = other.region;
         this.credentials = other.credentials;
         this.redirectsEnabled = other.redirectsEnabled;
+        this.requestPayer = other.requestPayer;
     }
 
     /**
@@ -249,6 +255,7 @@ public class BceClientConfiguration {
         this.region = other.region;
         this.credentials = other.credentials;
         this.redirectsEnabled = other.redirectsEnabled;
+        this.requestPayer = other.requestPayer;
     }
 
     /**
@@ -444,6 +451,35 @@ public class BceClientConfiguration {
      */
     public BceClientConfiguration withRedirectsEnabled(boolean redirectsEnabled) {
         this.setRedirectsEnabled(redirectsEnabled);
+        return this;
+    }
+
+    /**
+     * Returns whether BOS requests should use requester-pays mode.
+     *
+     * @return whether BOS requests should use requester-pays mode.
+     */
+    public boolean isRequestPayer() {
+        return this.requestPayer;
+    }
+
+    /**
+     * Sets whether BOS requests should use requester-pays mode.
+     *
+     * @param requestPayer whether BOS requests should use requester-pays mode.
+     */
+    public void setRequestPayer(boolean requestPayer) {
+        this.requestPayer = requestPayer;
+    }
+
+    /**
+     * Sets whether BOS requests should use requester-pays mode, and returns the updated configuration instance.
+     *
+     * @param requestPayer whether BOS requests should use requester-pays mode.
+     * @return the updated configuration instance.
+     */
+    public BceClientConfiguration withRequestPayer(boolean requestPayer) {
+        this.setRequestPayer(requestPayer);
         return this;
     }
 

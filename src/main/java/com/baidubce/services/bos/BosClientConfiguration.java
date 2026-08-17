@@ -155,6 +155,12 @@ public class BosClientConfiguration extends BceClientConfiguration {
     }
 
     @Override
+    public BosClientConfiguration withRequestPayer(boolean requestPayer) {
+        this.setRequestPayer(requestPayer);
+        return this;
+    }
+
+    @Override
     public BosClientConfiguration withProtocol(Protocol protocol) {
         this.setProtocol(protocol);
         return this;

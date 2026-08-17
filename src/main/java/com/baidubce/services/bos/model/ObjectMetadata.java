@@ -35,6 +35,11 @@ public class ObjectMetadata {
     private String bceContentSha256;
 
     /**
+     * The BCE request id returned by BOS.
+     */
+    private String bceRequestId;
+
+    /**
      * It provide a default file name when customers download file from bos.
      */
     private String contentDisposition;
@@ -138,6 +143,7 @@ public class ObjectMetadata {
             this.userMetadata = Maps.newHashMap(other.userMetadata);
         }
         this.setBceContentSha256(other.getBceContentSha256());
+        this.setBceRequestId(other.getBceRequestId());
         this.setContentDisposition(other.getContentDisposition());
         this.setContentEncoding(other.getContentEncoding());
         this.setContentLength(other.getContentLength());
@@ -234,6 +240,24 @@ public class ObjectMetadata {
      */
     public void setBceContentSha256(String bceContentSha256) {
         this.bceContentSha256 = bceContentSha256;
+    }
+
+    /**
+     * Gets the BCE request id returned by BOS.
+     *
+     * @return The BCE request id returned by BOS.
+     */
+    public String getBceRequestId() {
+        return this.bceRequestId;
+    }
+
+    /**
+     * Sets the BCE request id returned by BOS.
+     *
+     * @param bceRequestId The BCE request id returned by BOS.
+     */
+    public void setBceRequestId(String bceRequestId) {
+        this.bceRequestId = bceRequestId;
     }
 
     /**
@@ -440,6 +464,9 @@ public class ObjectMetadata {
         builder.append("userMetadata=").append(this.userMetadata);
         if (this.bceContentSha256 != null) {
             builder.append(", bceContentSha256=").append(this.bceContentSha256);
+        }
+        if (this.bceRequestId != null) {
+            builder.append(", bceRequestId=").append(this.bceRequestId);
         }
         if (this.contentDisposition != null) {
             builder.append(", contentDisposition=").append(this.contentDisposition);

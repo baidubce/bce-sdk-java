@@ -126,6 +126,8 @@ public interface Headers {
 
     public static final String BOS_PROCESS = "x-bce-process";
 
+    public static final String BOS_REQUEST_PAYER = "x-bce-request-payer";
+
     public static final String BCE_TAG_LIST = "x-bce-tag-list";
 
     public static final String BCE_OBJECT_TAG = "x-bce-tagging";
