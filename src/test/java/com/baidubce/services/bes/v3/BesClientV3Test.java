@@ -15,7 +15,7 @@ import com.baidubce.services.bes.v3.model.billing.*;
 import com.baidubce.services.bes.v3.model.cluster.*;
 import com.baidubce.services.bes.v3.model.diagnosis.*;
 import com.baidubce.services.bes.v3.model.index.*;
-import com.baidubce.services.bes.v3.model.log.*;
+import com.baidubce.services.bes.v3.model.logmanage.*;
 import com.baidubce.services.bes.v3.model.plugin.*;
 import com.baidubce.services.bes.v3.model.schedule.*;
 import com.baidubce.services.bes.v3.model.snapshot.*;

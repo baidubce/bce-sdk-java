@@ -187,19 +187,25 @@ import com.baidubce.services.bcc.model.securitygroup.SecurityGroupRuleOperateReq
 import com.baidubce.services.bcc.model.securitygroup.UpdateSecurityGroupRuleRequest;
 import com.baidubce.services.bcc.model.snapshot.CancelSnapshotShareReq;
 import com.baidubce.services.bcc.model.snapshot.CancelSnapshotShareResp;
+import com.baidubce.services.bcc.model.snapshot.CreateInstanceSnapshotRequest;
+import com.baidubce.services.bcc.model.snapshot.CreateInstanceSnapshotResponse;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotResponse;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotShareReq;
 import com.baidubce.services.bcc.model.snapshot.CreateSnapshotShareResp;
+import com.baidubce.services.bcc.model.snapshot.DeleteInstanceSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.DeleteSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.GetSnapshotRequest;
 import com.baidubce.services.bcc.model.snapshot.GetSnapshotResponse;
+import com.baidubce.services.bcc.model.snapshot.ListInstanceSnapshotRequest;
+import com.baidubce.services.bcc.model.snapshot.ListInstanceSnapshotResponse;
 import com.baidubce.services.bcc.model.snapshot.ListSnapchainRequest;
 import com.baidubce.services.bcc.model.snapshot.ListSnapchainResponse;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotShareByMarkerV2Req;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotShareByMarkerV2Resp;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotsRequest;
 import com.baidubce.services.bcc.model.snapshot.ListSnapshotsResponse;
+import com.baidubce.services.bcc.model.snapshot.RenameInstanceSnapshotRequest;
 import com.baidubce.services.bcc.model.task.ListTaskByMarkerRequest;
 import com.baidubce.services.bcc.model.task.ListTaskByMarkerResponse;
 import com.baidubce.services.bcc.model.task.TaskDetailRequest;
@@ -312,6 +318,8 @@ public class BccClient extends AbstractBceClient {
     private static final String OS_PREFIX = "os";
     private static final String SECURITYGROUP_PREFIX = "securityGroup";
     private static final String SNAPSHOT_PREFIX = "snapshot";
+    private static final String INSNAP_PREFIX = "insnap";
+    private static final String RENAME = "rename";
     private static final String SHARE_PREFIX = "share";
     private static final String UNSHARE_PREFIX = "unShare";
     private static final String SNAPSHOTSHARE_PREFIX = "snapshotShare";
@@ -405,6 +413,8 @@ public class BccClient extends AbstractBceClient {
     private static final String SNAPSHOTID_MESSAGE_KEY = "snapshotId";
     private static final String IMAGENAME_MESSAGE_KEY = "imageName";
     private static final String SNAPSHOTNAME_MESSAGE_KEY = "snapshotName";
+    private static final String DELETE_INSNAP_IDS_MESSAGE_KEY = "deleteInsnapIds";
+    private static final String INSNAP_IDS_MESSAGE_KEY = "insnapIds";
     private static final String ASPNAME_MESSAGE_KEY = "aspName";
     private static final String ASPID_MESSAGE_KEY = "aspId";
     private static final String KEYPAIR_ID_MESSAGE_KEY = "keypair";
@@ -3147,6 +3157,77 @@ public class BccClient extends AbstractBceClient {
             internalRequest.addParameter(VOLUMEID_MESSAGE_KEY, request.getVolumeId());
         }
         return invokeHttpClient(internalRequest, ListSnapchainResponse.class);
+    }
+
+    /**
+     * Creating an instance snapshot(consistent snapshot group) from the specified instance.
+     * <p>
+     * All the volumes specified by the request will be snapshotted at the same point of time,
+     * so the snapshots inside a group are consistent with each other.
+     * If the volumes is not specified, all the volumes attached to the instance will be snapshotted.
+     * <p>
+     * This is an asynchronous interface,
+     * you can get the latest status by invoke {@link #listInstanceSnapshot(ListInstanceSnapshotRequest)}
+     *
+     * @param request The request containing all options for creating a new instance snapshot.
+     * @return The response with the id of the instance snapshot created and the ids of the sub snapshots.
+     */
+    public CreateInstanceSnapshotResponse createInstanceSnapshot(CreateInstanceSnapshotRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkStringNotEmpty(request.getInstanceId(), checkEmptyExceptionMessageFormat(INSTANCEID_MESSAGE_KEY));
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                SNAPSHOT_PREFIX, INSNAP_PREFIX, CREATE);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, CreateInstanceSnapshotResponse.class);
+    }
+
+    /**
+     * Deleting the specified instance snapshots(consistent snapshot groups).
+     * <p>
+     * All the sub snapshots inside the specified groups will be deleted together.
+     *
+     * @param request The request containing all options for deleting the specified instance snapshots.
+     */
+    public void deleteInstanceSnapshot(DeleteInstanceSnapshotRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkListNotEmpty(request.getDeleteInsnapIds(),
+                checkEmptyExceptionMessageFormat(DELETE_INSNAP_IDS_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                SNAPSHOT_PREFIX, INSNAP_PREFIX, DELETE);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Renaming the specified instance snapshots(consistent snapshot groups).
+     *
+     * @param request The request containing all options for renaming the specified instance snapshots.
+     */
+    public void renameInstanceSnapshot(RenameInstanceSnapshotRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        checkListNotEmpty(request.getInsnapIds(), checkEmptyExceptionMessageFormat(INSNAP_IDS_MESSAGE_KEY));
+        checkStringNotEmpty(request.getName(), checkEmptyExceptionMessageFormat(NAME_MESSAGE_KEY));
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                SNAPSHOT_PREFIX, INSNAP_PREFIX, RENAME);
+        fillPayload(internalRequest, request);
+        invokeHttpClient(internalRequest, AbstractBceResponse.class);
+    }
+
+    /**
+     * Listing the instance snapshots(consistent snapshot groups) owned by the authenticated user.
+     * <p>
+     * All the query conditions are carried by the json payload instead of the query string.
+     *
+     * @param request The request containing all options for listing the instance snapshots.
+     * @return The response contains a list of instance snapshots owned by the user.
+     */
+    public ListInstanceSnapshotResponse listInstanceSnapshot(ListInstanceSnapshotRequest request) {
+        checkNotNull(request, REQUEST_NULL_ERROR_MESSAGE);
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                SNAPSHOT_PREFIX, INSNAP_PREFIX, LIST);
+        fillPayload(internalRequest, request);
+        return invokeHttpClient(internalRequest, ListInstanceSnapshotResponse.class);
     }
 
     /**

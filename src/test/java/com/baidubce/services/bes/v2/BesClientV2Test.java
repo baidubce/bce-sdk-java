@@ -9,7 +9,7 @@ import com.baidubce.services.bes.v2.model.cluster.*;
 import com.baidubce.services.bes.v2.model.config.*;
 import com.baidubce.services.bes.v2.model.inspect.*;
 import com.baidubce.services.bes.v2.model.instance.*;
-import com.baidubce.services.bes.v2.model.log.*;
+import com.baidubce.services.bes.v2.model.logmanage.*;
 import com.baidubce.services.bes.v2.model.plugin.*;
 import com.baidubce.services.bes.v2.model.renew.*;
 import com.baidubce.services.bes.v2.model.schedule.*;
