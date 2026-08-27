@@ -156,6 +156,15 @@ public abstract class AbstractBceClient {
         return this.serviceId;
     }
 
+    /**
+     * Returns the client configuration for this client.
+     *
+     * @return the client configuration for this client.
+     */
+    public BceClientConfiguration getClientConfiguration() {
+        return this.config;
+    }
+
     public BceHttpClient getClient() {
         return client;
     }

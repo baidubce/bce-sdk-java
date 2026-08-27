@@ -23,7 +23,13 @@ import java.util.List;
  */
 public enum Region {
 
-    CN_N1("bj");
+    CN_N1("bj"),
+    CN_S1("gz"),
+    CN_E1("sh"),
+    CN_E2("su"),
+    CN_N2("bd"),
+    AP_S1("hk"),
+    AP_S2("sin");
 
     /**
      * The list of ID's representing each region.
