@@ -1,10 +1,13 @@
 package com.baidubce.services.eo.model.rule;
 
 import com.baidubce.services.eo.model.JsonObject;
+import com.baidubce.services.eo.model.site.CacheCodeTtl;
 import com.baidubce.services.eo.model.site.CacheTtl;
+import com.baidubce.services.eo.model.site.ClientCacheTtl;
+import com.baidubce.services.eo.model.site.ClientResponse;
 import com.baidubce.services.eo.model.site.Hsts;
 import com.baidubce.services.eo.model.site.Http3;
-import com.baidubce.services.eo.model.site.HttpHeader;
+import com.baidubce.services.eo.model.site.OriginRequest;
 
 import java.util.List;
 
@@ -79,11 +82,6 @@ public class Config extends JsonObject {
     private List<String> compressMethodArray;
 
     /**
-     * The custom HTTP header rules.
-     */
-    private List<HttpHeader> httpHeader;
-
-    /**
      * The refresh revalidate (ignore client refresh) configuration.
      */
     private RefreshRevalidate refreshRevalidate;
@@ -92,6 +90,26 @@ public class Config extends JsonObject {
      * The webSocket configuration.
      */
     private WebSocket webSocket;
+
+    /**
+     * The SSL/TLS protocol versions.
+     */
+    private List<String> sslProtocols;
+
+    /**
+     * The cipher suite mode.
+     */
+    private String sslMode;
+
+    /**
+     * The cipher suite list.
+     */
+    private String sslCipherList;
+
+    /**
+     * The OCSP configuration.
+     */
+    private String ocsp;
 
     /**
      * The origin timeout configuration.
@@ -137,6 +155,36 @@ public class Config extends JsonObject {
      * The access URL redirect rules configuration.
      */
     private List<UrlRules> urlRules;
+
+    /**
+     * The status code cache rules.
+     */
+    private List<CacheCodeTtl> cacheCodeTtl;
+
+    /**
+     * The browser cache TTL configuration.
+     */
+    private ClientCacheTtl clientCacheTtl;
+
+    /**
+     * The origin request header configuration.
+     */
+    private OriginRequest originRequest;
+
+    /**
+     * The node response header configuration.
+     */
+    private ClientResponse clientResponse;
+
+    /**
+     * The origin server list. Can NOT be set together with originPool.
+     */
+    private List<OriginConfig> originConfig;
+
+    /**
+     * The origin pool configuration. Can NOT be set together with originConfig.
+     */
+    private OriginPool originPool;
 
     /**
      * @param cacheTtl
@@ -438,29 +486,6 @@ public class Config extends JsonObject {
     }
 
     /**
-     * @param httpHeader
-     * @return this object
-     */
-    public Config withHttpHeader(List<HttpHeader> httpHeader) {
-        this.httpHeader = httpHeader;
-        return this;
-    }
-
-    /**
-     * @return httpHeader
-     */
-    public List<HttpHeader> getHttpHeader() {
-        return httpHeader;
-    }
-
-    /**
-     * @param httpHeader
-     */
-    public void setHttpHeader(List<HttpHeader> httpHeader) {
-        this.httpHeader = httpHeader;
-    }
-
-    /**
      * @param refreshRevalidate
      * @return this object
      */
@@ -711,5 +736,235 @@ public class Config extends JsonObject {
      */
     public void setUrlRules(List<UrlRules> urlRules) {
         this.urlRules = urlRules;
+    }
+
+    /**
+     * @param sslProtocols
+     * @return this object
+     */
+    public Config withSslProtocols(List<String> sslProtocols) {
+        this.sslProtocols = sslProtocols;
+        return this;
+    }
+
+    /**
+     * @return sslProtocols
+     */
+    public List<String> getSslProtocols() {
+        return sslProtocols;
+    }
+
+    /**
+     * @param sslProtocols
+     */
+    public void setSslProtocols(List<String> sslProtocols) {
+        this.sslProtocols = sslProtocols;
+    }
+
+    /**
+     * @param sslMode
+     * @return this object
+     */
+    public Config withSslMode(String sslMode) {
+        this.sslMode = sslMode;
+        return this;
+    }
+
+    /**
+     * @return sslMode
+     */
+    public String getSslMode() {
+        return sslMode;
+    }
+
+    /**
+     * @param sslMode
+     */
+    public void setSslMode(String sslMode) {
+        this.sslMode = sslMode;
+    }
+
+    /**
+     * @param sslCipherList
+     * @return this object
+     */
+    public Config withSslCipherList(String sslCipherList) {
+        this.sslCipherList = sslCipherList;
+        return this;
+    }
+
+    /**
+     * @return sslCipherList
+     */
+    public String getSslCipherList() {
+        return sslCipherList;
+    }
+
+    /**
+     * @param sslCipherList
+     */
+    public void setSslCipherList(String sslCipherList) {
+        this.sslCipherList = sslCipherList;
+    }
+
+    /**
+     * @param ocsp
+     * @return this object
+     */
+    public Config withOcsp(String ocsp) {
+        this.ocsp = ocsp;
+        return this;
+    }
+
+    /**
+     * @return ocsp
+     */
+    public String getOcsp() {
+        return ocsp;
+    }
+
+    /**
+     * @param ocsp
+     */
+    public void setOcsp(String ocsp) {
+        this.ocsp = ocsp;
+    }
+
+    /**
+     * @param cacheCodeTtl
+     * @return this object
+     */
+    public Config withCacheCodeTtl(List<CacheCodeTtl> cacheCodeTtl) {
+        this.cacheCodeTtl = cacheCodeTtl;
+        return this;
+    }
+
+    /**
+     * @return cacheCodeTtl
+     */
+    public List<CacheCodeTtl> getCacheCodeTtl() {
+        return cacheCodeTtl;
+    }
+
+    /**
+     * @param cacheCodeTtl
+     */
+    public void setCacheCodeTtl(List<CacheCodeTtl> cacheCodeTtl) {
+        this.cacheCodeTtl = cacheCodeTtl;
+    }
+
+    /**
+     * @param clientCacheTtl
+     * @return this object
+     */
+    public Config withClientCacheTtl(ClientCacheTtl clientCacheTtl) {
+        this.clientCacheTtl = clientCacheTtl;
+        return this;
+    }
+
+    /**
+     * @return clientCacheTtl
+     */
+    public ClientCacheTtl getClientCacheTtl() {
+        return clientCacheTtl;
+    }
+
+    /**
+     * @param clientCacheTtl
+     */
+    public void setClientCacheTtl(ClientCacheTtl clientCacheTtl) {
+        this.clientCacheTtl = clientCacheTtl;
+    }
+
+    /**
+     * @param originRequest
+     * @return this object
+     */
+    public Config withOriginRequest(OriginRequest originRequest) {
+        this.originRequest = originRequest;
+        return this;
+    }
+
+    /**
+     * @return originRequest
+     */
+    public OriginRequest getOriginRequest() {
+        return originRequest;
+    }
+
+    /**
+     * @param originRequest
+     */
+    public void setOriginRequest(OriginRequest originRequest) {
+        this.originRequest = originRequest;
+    }
+
+    /**
+     * @param clientResponse
+     * @return this object
+     */
+    public Config withClientResponse(ClientResponse clientResponse) {
+        this.clientResponse = clientResponse;
+        return this;
+    }
+
+    /**
+     * @return clientResponse
+     */
+    public ClientResponse getClientResponse() {
+        return clientResponse;
+    }
+
+    /**
+     * @param clientResponse
+     */
+    public void setClientResponse(ClientResponse clientResponse) {
+        this.clientResponse = clientResponse;
+    }
+
+    /**
+     * @param originConfig
+     * @return this object
+     */
+    public Config withOriginConfig(List<OriginConfig> originConfig) {
+        this.originConfig = originConfig;
+        return this;
+    }
+
+    /**
+     * @return originConfig
+     */
+    public List<OriginConfig> getOriginConfig() {
+        return originConfig;
+    }
+
+    /**
+     * @param originConfig
+     */
+    public void setOriginConfig(List<OriginConfig> originConfig) {
+        this.originConfig = originConfig;
+    }
+
+    /**
+     * @param originPool
+     * @return this object
+     */
+    public Config withOriginPool(OriginPool originPool) {
+        this.originPool = originPool;
+        return this;
+    }
+
+    /**
+     * @return originPool
+     */
+    public OriginPool getOriginPool() {
+        return originPool;
+    }
+
+    /**
+     * @param originPool
+     */
+    public void setOriginPool(OriginPool originPool) {
+        this.originPool = originPool;
     }
 }

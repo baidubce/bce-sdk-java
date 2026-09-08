@@ -2,6 +2,8 @@ package com.baidubce.services.eo.model.site;
 
 import com.baidubce.services.eo.model.EoResponse;
 import com.baidubce.services.eo.model.rule.PageRule;
+import com.baidubce.services.eo.model.rule.RealIp;
+import com.baidubce.services.eo.model.rule.WebSocket;
 
 import java.util.List;
 
@@ -73,11 +75,6 @@ public class GetSiteConfigResponse extends EoResponse {
     private String isa;
 
     /**
-     * The custom HTTP header rules of the site.
-     */
-    private List<HttpHeader> httpHeader;
-
-    /**
      * The status code cache rules of the site.
      */
     private List<CacheCodeTtl> cacheCodeTtl;
@@ -96,6 +93,51 @@ public class GetSiteConfigResponse extends EoResponse {
      * The rule engine (page rules) configuration of the site.
      */
     private List<PageRule> pageRules;
+
+    /**
+     * The origin request header configuration of the site.
+     */
+    private OriginRequest originRequest;
+
+    /**
+     * The node response header configuration of the site.
+     */
+    private ClientResponse clientResponse;
+
+    /**
+     * The browser cache TTL configuration of the site.
+     */
+    private ClientCacheTtl clientCacheTtl;
+
+    /**
+     * The webSocket configuration of the site.
+     */
+    private WebSocket webSocket;
+
+    /**
+     * The SSL/TLS protocol versions of the site.
+     */
+    private List<String> sslProtocols;
+
+    /**
+     * The cipher suite mode. .
+     */
+    private String sslMode;
+
+    /**
+     * The cipher suite list.
+     */
+    private String sslCipherList;
+
+    /**
+     * The OCSP configuration of the site.
+     */
+    private String ocsp;
+
+    /**
+     * The real ip (client ip retrieval) configuration of the site.
+     */
+    private RealIp realIp;
 
     /**
      * @return cacheTtl
@@ -266,20 +308,6 @@ public class GetSiteConfigResponse extends EoResponse {
     }
 
     /**
-     * @return httpHeader
-     */
-    public List<HttpHeader> getHttpHeader() {
-        return httpHeader;
-    }
-
-    /**
-     * @param httpHeader
-     */
-    public void setHttpHeader(List<HttpHeader> httpHeader) {
-        this.httpHeader = httpHeader;
-    }
-
-    /**
      * @return cacheCodeTtl
      */
     public List<CacheCodeTtl> getCacheCodeTtl() {
@@ -333,5 +361,131 @@ public class GetSiteConfigResponse extends EoResponse {
      */
     public void setPageRules(List<PageRule> pageRules) {
         this.pageRules = pageRules;
+    }
+
+    /**
+     * @return originRequest
+     */
+    public OriginRequest getOriginRequest() {
+        return originRequest;
+    }
+
+    /**
+     * @param originRequest
+     */
+    public void setOriginRequest(OriginRequest originRequest) {
+        this.originRequest = originRequest;
+    }
+
+    /**
+     * @return clientResponse
+     */
+    public ClientResponse getClientResponse() {
+        return clientResponse;
+    }
+
+    /**
+     * @param clientResponse
+     */
+    public void setClientResponse(ClientResponse clientResponse) {
+        this.clientResponse = clientResponse;
+    }
+
+    /**
+     * @return clientCacheTtl
+     */
+    public ClientCacheTtl getClientCacheTtl() {
+        return clientCacheTtl;
+    }
+
+    /**
+     * @param clientCacheTtl
+     */
+    public void setClientCacheTtl(ClientCacheTtl clientCacheTtl) {
+        this.clientCacheTtl = clientCacheTtl;
+    }
+
+    /**
+     * @return webSocket
+     */
+    public WebSocket getWebSocket() {
+        return webSocket;
+    }
+
+    /**
+     * @param webSocket
+     */
+    public void setWebSocket(WebSocket webSocket) {
+        this.webSocket = webSocket;
+    }
+
+    /**
+     * @return sslProtocols
+     */
+    public List<String> getSslProtocols() {
+        return sslProtocols;
+    }
+
+    /**
+     * @param sslProtocols
+     */
+    public void setSslProtocols(List<String> sslProtocols) {
+        this.sslProtocols = sslProtocols;
+    }
+
+    /**
+     * @return sslMode
+     */
+    public String getSslMode() {
+        return sslMode;
+    }
+
+    /**
+     * @param sslMode
+     */
+    public void setSslMode(String sslMode) {
+        this.sslMode = sslMode;
+    }
+
+    /**
+     * @return sslCipherList
+     */
+    public String getSslCipherList() {
+        return sslCipherList;
+    }
+
+    /**
+     * @param sslCipherList
+     */
+    public void setSslCipherList(String sslCipherList) {
+        this.sslCipherList = sslCipherList;
+    }
+
+    /**
+     * @return ocsp
+     */
+    public String getOcsp() {
+        return ocsp;
+    }
+
+    /**
+     * @param ocsp
+     */
+    public void setOcsp(String ocsp) {
+        this.ocsp = ocsp;
+    }
+
+    /**
+     * @return realIp
+     */
+    public RealIp getRealIp() {
+        return realIp;
+    }
+
+    /**
+     * @param realIp
+     */
+    public void setRealIp(RealIp realIp) {
+        this.realIp = realIp;
     }
 }

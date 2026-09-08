@@ -19,6 +19,12 @@ public class CacheKey extends JsonObject {
     private Boolean query;
 
     /**
+     * Whether to ignore case.
+     */
+    @JsonProperty("ignore_case")
+    private Boolean ignoreCase;
+
+    /**
      * The args to be excluded from the cache key. Only effective when query is false.
      */
     @JsonProperty("exclude_args")
@@ -51,6 +57,29 @@ public class CacheKey extends JsonObject {
      */
     public void setQuery(Boolean query) {
         this.query = query;
+    }
+
+    /**
+     * @param ignoreCase
+     * @return this object
+     */
+    public CacheKey withIgnoreCase(Boolean ignoreCase) {
+        this.ignoreCase = ignoreCase;
+        return this;
+    }
+
+    /**
+     * @return ignoreCase
+     */
+    public Boolean getIgnoreCase() {
+        return ignoreCase;
+    }
+
+    /**
+     * @param ignoreCase
+     */
+    public void setIgnoreCase(Boolean ignoreCase) {
+        this.ignoreCase = ignoreCase;
     }
 
     /**

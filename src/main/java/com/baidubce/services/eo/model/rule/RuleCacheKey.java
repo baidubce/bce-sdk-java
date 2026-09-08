@@ -35,6 +35,16 @@ public class RuleCacheKey extends JsonObject {
     private List<String> includeArgs;
 
     /**
+     * The HTTP request header names to be used in the cache key.
+     */
+    private List<String> headers;
+
+    /**
+     * The cookie args to be used in the cache key.
+     */
+    private List<String> cookie;
+
+    /**
      * @param query
      * @return this object
      */
@@ -124,5 +134,51 @@ public class RuleCacheKey extends JsonObject {
      */
     public void setIncludeArgs(List<String> includeArgs) {
         this.includeArgs = includeArgs;
+    }
+
+    /**
+     * @param headers
+     * @return this object
+     */
+    public RuleCacheKey withHeaders(List<String> headers) {
+        this.headers = headers;
+        return this;
+    }
+
+    /**
+     * @return headers
+     */
+    public List<String> getHeaders() {
+        return headers;
+    }
+
+    /**
+     * @param headers
+     */
+    public void setHeaders(List<String> headers) {
+        this.headers = headers;
+    }
+
+    /**
+     * @param cookie
+     * @return this object
+     */
+    public RuleCacheKey withCookie(List<String> cookie) {
+        this.cookie = cookie;
+        return this;
+    }
+
+    /**
+     * @return cookie
+     */
+    public List<String> getCookie() {
+        return cookie;
+    }
+
+    /**
+     * @param cookie
+     */
+    public void setCookie(List<String> cookie) {
+        this.cookie = cookie;
     }
 }
