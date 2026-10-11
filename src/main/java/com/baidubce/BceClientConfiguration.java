@@ -16,6 +16,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.baidubce.auth.BceCredentials;
+import com.baidubce.auth.BceCredentialsProvider;
+import com.baidubce.auth.DefaultBceCredentialsProviderChain;
 import com.baidubce.http.RetryPolicy;
 import com.google.common.base.Joiner;
 
@@ -156,6 +158,11 @@ public class BceClientConfiguration {
     private BceCredentials credentials = null;
 
     /**
+     * The provider for BCE credentials.
+     */
+    private BceCredentialsProvider credentialsProvider = new DefaultBceCredentialsProviderChain();
+
+    /**
      * determines whether redirects should be handled automatically
      *
      * @return
@@ -222,6 +229,7 @@ public class BceClientConfiguration {
         this.endpoint = other.endpoint;
         this.region = other.region;
         this.credentials = other.credentials;
+        this.credentialsProvider = other.credentialsProvider;
         this.redirectsEnabled = other.redirectsEnabled;
         this.requestPayer = other.requestPayer;
     }
@@ -254,6 +262,7 @@ public class BceClientConfiguration {
         this.socketBufferSizeInBytes = other.socketBufferSizeInBytes;
         this.region = other.region;
         this.credentials = other.credentials;
+        this.credentialsProvider = other.credentialsProvider;
         this.redirectsEnabled = other.redirectsEnabled;
         this.requestPayer = other.requestPayer;
     }
@@ -919,7 +928,13 @@ public class BceClientConfiguration {
      * @return the BCE credentials used by the client to sign HTTP requests.
      */
     public BceCredentials getCredentials() {
-        return this.credentials;
+        if (this.credentials != null) {
+            return this.credentials;
+        }
+        if (this.credentialsProvider != null) {
+            return this.credentialsProvider.getCredentials();
+        }
+        return null;
     }
 
     /**
@@ -943,6 +958,36 @@ public class BceClientConfiguration {
      */
     public BceClientConfiguration withCredentials(BceCredentials credentials) {
         this.setCredentials(credentials);
+        return this;
+    }
+
+    /**
+     * Returns the credentials provider used by the client.
+     *
+     * @return the credentials provider used by the client.
+     */
+    public BceCredentialsProvider getCredentialsProvider() {
+        return this.credentialsProvider;
+    }
+
+    /**
+     * Sets the credentials provider used by the client.
+     *
+     * @param credentialsProvider the credentials provider to be used by the client.
+     */
+    public void setCredentialsProvider(BceCredentialsProvider credentialsProvider) {
+        checkNotNull(credentialsProvider, "credentialsProvider should not be null.");
+        this.credentialsProvider = credentialsProvider;
+    }
+
+    /**
+     * Sets the credentials provider used by the client, and returns the updated configuration instance.
+     *
+     * @param credentialsProvider the credentials provider to be used by the client.
+     * @return the updated configuration instance.
+     */
+    public BceClientConfiguration withCredentialsProvider(BceCredentialsProvider credentialsProvider) {
+        this.setCredentialsProvider(credentialsProvider);
         return this;
     }
 

@@ -74,7 +74,29 @@ com.baidubce
 
 ### 示例
 
-下面以百度云服务器（BCC）为例，给出一个基本的使用示例，详细使用说明请参考各服务的详细说明文档。
+下面以百度云服务器（BCC）为例，给出两种基本的使用示例。
+
+#### 1. 使用 Fluent Builder (推荐)
+
+这是最现代且简洁的初始化方式，支持自动从环境变量或系统属性加载凭证。
+
+```java
+// 默认从环境变量 BCE_ACCESS_KEY_ID 和 BCE_SECRET_ACCESS_KEY 加载凭证
+BccClient client = BccClientBuilder.create()
+    .withRegion(Region.CN_S1) // 广州区域
+    .build();
+```
+
+或者手动指定凭证：
+
+```java
+BccClient client = BccClientBuilder.create()
+    .withCredentials("your-ak", "your-sk")
+    .withRegion(Region.CN_N1) // 北京区域
+    .build();
+```
+
+#### 2. 使用 Configuration 对象 (传统方式)
 
 ```java
 public class Sample {
@@ -108,6 +130,15 @@ BccClient client = new BccClient(config);
 > **注意：** ENDPOINT参数只能用指定的包含区域的域名来进行定义，不指定时默认为北京区域`http://bcc.bj.baidubce.com`。百度智能云目前开放了多区域支持，请参考[区域选择说明](https://cloud.baidu.com/doc/Reference/s/2jwvz23xx)。
 
 ## 配置
+
+### 自动凭证加载 (Credentials Providers)
+
+SDK 现在支持自动凭证发现。如果不手动调用 `setCredentials`，SDK 会按以下顺序尝试加载凭证：
+
+1.  **系统属性 (System Properties)**: `bce.accessKeyId` 和 `bce.secretAccessKey`
+2.  **环境变量 (Environment Variables)**: `BCE_ACCESS_KEY_ID` 和 `BCE_SECRET_ACCESS_KEY`
+
+这使得在 CI/CD 环境或 Docker 容器中管理密钥更加安全和方便。
 
 ### 使用HTTPS协议
 
