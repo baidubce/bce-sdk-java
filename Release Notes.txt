@@ -1,5 +1,12 @@
 发行说明：记录每次SDK更新的说明，最新版本的SDK包含以前所有版本的更新内容。
 ---------------------------------------------------------------------
+【版本：v0.10.448】
+涉及产品：通用，SDK 现代化改进：
+1. 新增 BceClientBuilder 和 BosClientBuilder，支持更简洁的 Fluent 链式调用初始化 Client。
+2. 新增 CredentialsProvider 体系，支持从环境变量（BCE_ACCESS_KEY_ID/BCE_SECRET_ACCESS_KEY）和系统属性自动加载凭证。
+3. 扩展 Region 枚举，增加广州、上海、苏州、保定、香港、新加坡等常用区域支持。
+4. 在 AbstractBceClient 中增加 getClientConfiguration 方法，方便获取客户端配置。
+
 【版本：v0.10.358】
 涉及产品:VPC 新增参数模板、专线网关、安全组、子网等接口；新增CSN带宽包询价接口，更新查询列表、详情等接口出入参字段。
 
