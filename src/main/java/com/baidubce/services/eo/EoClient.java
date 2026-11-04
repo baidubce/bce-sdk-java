@@ -37,8 +37,34 @@ import com.baidubce.services.eo.model.logmodel.GetDomainListLogRequest;
 import com.baidubce.services.eo.model.logmodel.GetDomainListLogResponse;
 import com.baidubce.services.eo.model.stat.GetStatMetricRequest;
 import com.baidubce.services.eo.model.stat.GetStatMetricResponse;
+import com.baidubce.services.eo.model.domain.CreateDomainRequest;
+import com.baidubce.services.eo.model.domain.CreateDomainResponse;
+import com.baidubce.services.eo.model.domain.CreateLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.CreateOriginPoolRequest;
+import com.baidubce.services.eo.model.domain.DeleteLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.DeleteOriginPoolRequest;
+import com.baidubce.services.eo.model.domain.DomainConfigResponse;
+import com.baidubce.services.eo.model.domain.DomainOperationRequest;
+import com.baidubce.services.eo.model.domain.DomainOperationResponse;
+import com.baidubce.services.eo.model.domain.LoadBalanceResponse;
+import com.baidubce.services.eo.model.domain.OriginPoolResponse;
+import com.baidubce.services.eo.model.domain.QueryDomainConfigRequest;
+import com.baidubce.services.eo.model.domain.QueryDomainListRequest;
+import com.baidubce.services.eo.model.domain.QueryDomainListResponse;
+import com.baidubce.services.eo.model.domain.QueryLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.QueryLoadBalanceResponse;
+import com.baidubce.services.eo.model.domain.QueryOriginPoolRequest;
+import com.baidubce.services.eo.model.domain.QueryOriginPoolResponse;
+import com.baidubce.services.eo.model.domain.UpdateDomainConfigRequest;
+import com.baidubce.services.eo.model.domain.UpdateLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.UpdateOriginPoolRequest;
 import com.baidubce.services.eo.model.site.GetSiteConfigRequest;
 import com.baidubce.services.eo.model.site.GetSiteConfigResponse;
+import com.baidubce.services.eo.model.site.DeleteLimitConsumptionRequest;
+import com.baidubce.services.eo.model.site.GetLimitConsumptionRequest;
+import com.baidubce.services.eo.model.site.GetLimitConsumptionResponse;
+import com.baidubce.services.eo.model.site.LimitConsumptionResponse;
+import com.baidubce.services.eo.model.site.SetLimitConsumptionRequest;
 import com.baidubce.services.eo.model.site.SetSiteConfigRequest;
 import com.baidubce.services.eo.model.site.SetSiteConfigResponse;
 import com.baidubce.util.HttpUtils;
@@ -79,9 +105,29 @@ public class EoClient extends AbstractBceClient {
     private static final String CONFIG = "config";
 
     /**
+     * The URI prefix for domain operation.
+     */
+    private static final String DOMAIN = "domain";
+
+    /**
+     * The URI prefix for origin pool operation.
+     */
+    private static final String ORIGIN_POOL = "origin-pool";
+
+    /**
+     * The URI prefix for load balance operation.
+     */
+    private static final String LOAD_BALANCE = "load-balance";
+
+    /**
      * The URI prefix for cache operation.
      */
     private static final String CACHE = "cache";
+
+    /**
+     * The URI prefix for consumption limit operation.
+     */
+    private static final String LIMIT_CONSUMPTION = "limit-consumption";
 
     /**
      * The URI prefix for cache purge operation.
@@ -360,5 +406,358 @@ public class EoClient extends AbstractBceClient {
         InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST, EO, STAT);
         this.attachRequestToBody(request, internalRequest);
         return this.invokeHttpClient(internalRequest, GetStatMetricResponse.class);
+    }
+
+    /**
+     * Set the consumption limit of a site or domain.
+     *
+     * Corresponds to { POST /v2/geo/limit-consumption?action=update}.
+     *
+     * @param request The request containing the consumption limit configuration.
+     * @return Whether the consumption limit is set successfully.
+     */
+    public LimitConsumptionResponse setLimitConsumption(SetLimitConsumptionRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, LIMIT_CONSUMPTION);
+        internalRequest.addParameter("action", "update");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, LimitConsumptionResponse.class);
+    }
+
+    /**
+     * Query the consumption limit rules of a site.
+     *
+     * Corresponds to { POST /v2/geo/limit-consumption?action=query}.
+     *
+     * @param request The request containing the query conditions.
+     * @return The consumption limit rules.
+     */
+    public GetLimitConsumptionResponse getLimitConsumption(GetLimitConsumptionRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, LIMIT_CONSUMPTION);
+        internalRequest.addParameter("action", "query");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, GetLimitConsumptionResponse.class);
+    }
+
+    /**
+     * Delete a consumption limit rule of a site or domain.
+     *
+     * Corresponds to { POST /v2/geo/limit-consumption?action=delete}.
+     *
+     * @param request The request containing the site and the target object.
+     * @return Whether the consumption limit rule is deleted successfully.
+     */
+    public LimitConsumptionResponse deleteLimitConsumption(DeleteLimitConsumptionRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, LIMIT_CONSUMPTION);
+        internalRequest.addParameter("action", "delete");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, LimitConsumptionResponse.class);
+    }
+
+    /**
+     * Create an origin pool of a site.
+     *
+     * Corresponds to { POST /v2/geo/origin-pool?action=create}.
+     *
+     * @param request The request containing the site and the origin pool configuration.
+     * @return Whether the origin pool is created successfully.
+     */
+    public OriginPoolResponse createOriginPool(CreateOriginPoolRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, ORIGIN_POOL);
+        internalRequest.addParameter("action", "create");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, OriginPoolResponse.class);
+    }
+
+    /**
+     * Query the origin pools of a site.
+     *
+     * Corresponds to { POST /v2/geo/origin-pool?action=query}.
+     *
+     * @param request The request containing the query conditions.
+     * @return The origin pools of the site.
+     */
+    public QueryOriginPoolResponse queryOriginPool(QueryOriginPoolRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, ORIGIN_POOL);
+        internalRequest.addParameter("action", "query");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, QueryOriginPoolResponse.class);
+    }
+
+    /**
+     * Update an origin pool of a site.
+     *
+     * Corresponds to { POST /v2/geo/origin-pool?action=update}.
+     *
+     * @param request The request containing the site, origin pool id and configuration.
+     * @return Whether the origin pool is updated successfully.
+     */
+    public OriginPoolResponse updateOriginPool(UpdateOriginPoolRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, ORIGIN_POOL);
+        internalRequest.addParameter("action", "update");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, OriginPoolResponse.class);
+    }
+
+    /**
+     * Delete an origin pool of a site.
+     *
+     * Corresponds to { POST /v2/geo/origin-pool?action=delete}.
+     *
+     * @param request The request containing the site and the origin pool id.
+     * @return Whether the origin pool is deleted successfully.
+     */
+    public OriginPoolResponse deleteOriginPool(DeleteOriginPoolRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, ORIGIN_POOL);
+        internalRequest.addParameter("action", "delete");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, OriginPoolResponse.class);
+    }
+
+    /**
+     * Create a load balance of a site.
+     *
+     * Corresponds to { POST /v2/geo/load-balance}.
+     *
+     * @param request The request containing the load balance configuration.
+     * @return Whether the load balance is created successfully.
+     */
+    public LoadBalanceResponse createLoadBalance(CreateLoadBalanceRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkNotNull(request.getSiteId(), "The parameter siteId should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, LOAD_BALANCE);
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, LoadBalanceResponse.class);
+    }
+
+    /**
+     * Query the load balances of a site.
+     *
+     * Corresponds to { GET /v2/geo/load-balance}.
+     *
+     * @param request The request containing the query conditions.
+     * @return The load balances of the site.
+     */
+    public QueryLoadBalanceResponse queryLoadBalance(QueryLoadBalanceRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkNotNull(request.getSiteId(), "The parameter siteId should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET,
+                EO, LOAD_BALANCE);
+        internalRequest.addParameter("siteId", request.getSiteId().toString());
+        if (request.getName() != null) {
+            internalRequest.addParameter("name", request.getName());
+        }
+        if (request.getId() != null) {
+            internalRequest.addParameter("id", request.getId());
+        }
+        if (request.getFetchAll() != null) {
+            internalRequest.addParameter("fetchAll", request.getFetchAll().toString());
+        }
+        if (request.getPageNo() != null) {
+            internalRequest.addParameter("pageNo", request.getPageNo().toString());
+        }
+        if (request.getPageSize() != null) {
+            internalRequest.addParameter("pageSize", request.getPageSize().toString());
+        }
+        return this.invokeHttpClient(internalRequest, QueryLoadBalanceResponse.class);
+    }
+
+    /**
+     * Update a load balance of a site.
+     *
+     * Corresponds to { PUT /v2/geo/load-balance/{id}}.
+     *
+     * @param request The request containing the load balance id and configuration.
+     * @return Whether the load balance is updated successfully.
+     */
+    public LoadBalanceResponse updateLoadBalance(UpdateLoadBalanceRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkNotNull(request.getSiteId(), "The parameter siteId should NOT be null.");
+        Validate.checkStringNotEmpty(request.getId(), "The parameter id should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT,
+                EO, LOAD_BALANCE, request.getId());
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, LoadBalanceResponse.class);
+    }
+
+    /**
+     * Delete a load balance of a site.
+     *
+     * Corresponds to { DELETE /v2/geo/load-balance/{id}}.
+     *
+     * @param request The request containing the site id and the load balance id.
+     * @return Whether the load balance is deleted successfully.
+     */
+    public LoadBalanceResponse deleteLoadBalance(DeleteLoadBalanceRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkNotNull(request.getSiteId(), "The parameter siteId should NOT be null.");
+        Validate.checkStringNotEmpty(request.getId(), "The parameter id should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE,
+                EO, LOAD_BALANCE, request.getId());
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, LoadBalanceResponse.class);
+    }
+
+    /**
+     * Create an accelerate domain.
+     *
+     * Corresponds to { POST /v2/geo/domain?action=create}.
+     *
+     * @param request The request containing the domain and its origin configuration.
+     * @return The create result including the generated cname.
+     */
+    public CreateDomainResponse createDomain(CreateDomainRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getDomain(), "The parameter domain should NOT be empty.");
+        Validate.checkNotNull(request.getSiteId(), "The parameter siteId should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, DOMAIN);
+        internalRequest.addParameter("action", "create");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, CreateDomainResponse.class);
+    }
+
+    /**
+     * Update an accelerate domain configuration.
+     *
+     * Corresponds to { POST /v2/geo/domain/config?action=update}.
+     *
+     * @param request The request containing the domain and the configuration to update.
+     * @return The update result.
+     */
+    public DomainOperationResponse updateDomainConfig(UpdateDomainConfigRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getSite(), "The parameter site should NOT be empty.");
+        Validate.checkNotNull(request.getConfig(), "The parameter config should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, DOMAIN, CONFIG);
+        internalRequest.addParameter("action", "update");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, DomainOperationResponse.class);
+    }
+
+    /**
+     * Query an accelerate domain configuration.
+     *
+     * Corresponds to { POST /v2/geo/domain/config?action=query}.
+     *
+     * @param request The request containing the domain.
+     * @return The domain configuration.
+     */
+    public DomainConfigResponse queryDomainConfig(QueryDomainConfigRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+        Validate.checkStringNotEmpty(request.getDomain(), "The parameter domain should NOT be empty.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, DOMAIN, CONFIG);
+        internalRequest.addParameter("action", "query");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, DomainConfigResponse.class);
+    }
+
+    /**
+     * Query the accelerate domain list with simple configuration.
+     *
+     * Corresponds to { POST /v2/geo/domain?action=queryDomainsWithConfig}.
+     *
+     * @param request The request containing the query conditions.
+     * @return The domain list.
+     */
+    public QueryDomainListResponse queryDomainList(QueryDomainListRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, DOMAIN);
+        internalRequest.addParameter("action", "queryDomainsWithConfig");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, QueryDomainListResponse.class);
+    }
+
+    /**
+     * Start an accelerate domain.
+     *
+     * Corresponds to { POST /v2/geo/domain?action=start}.
+     *
+     * @param request The request containing the domains to start.
+     * @return The operation result.
+     */
+    public DomainOperationResponse startDomain(DomainOperationRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, DOMAIN);
+        internalRequest.addParameter("action", "start");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, DomainOperationResponse.class);
+    }
+
+    /**
+     * Stop an accelerate domain.
+     *
+     * Corresponds to { POST /v2/geo/domain?action=stop}.
+     *
+     * @param request The request containing the domains to stop.
+     * @return The operation result.
+     */
+    public DomainOperationResponse stopDomain(DomainOperationRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, DOMAIN);
+        internalRequest.addParameter("action", "stop");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, DomainOperationResponse.class);
+    }
+
+    /**
+     * Delete an accelerate domain.
+     *
+     * Corresponds to { POST /v2/geo/domain?action=delete}.
+     *
+     * @param request The request containing the domains to delete.
+     * @return The operation result.
+     */
+    public DomainOperationResponse deleteDomain(DomainOperationRequest request) {
+        Validate.checkNotNull(request, "The parameter request should NOT be null.");
+
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.POST,
+                EO, DOMAIN);
+        internalRequest.addParameter("action", "delete");
+        this.attachRequestToBody(request, internalRequest);
+        return this.invokeHttpClient(internalRequest, DomainOperationResponse.class);
     }
 }

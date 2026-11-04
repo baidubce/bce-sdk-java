@@ -3,6 +3,33 @@ package com.baidubce.services.eo;
 import com.baidubce.BceClientConfiguration;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.eo.model.cache.*;
+import com.baidubce.services.eo.model.domain.CreateDomainRequest;
+import com.baidubce.services.eo.model.domain.CreateDomainResponse;
+import com.baidubce.services.eo.model.domain.CreateLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.CreateOriginPoolRequest;
+import com.baidubce.services.eo.model.domain.DeleteLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.DeleteOriginPoolRequest;
+import com.baidubce.services.eo.model.domain.DetectConfig;
+import com.baidubce.services.eo.model.domain.DomainConfig;
+import com.baidubce.services.eo.model.domain.DomainConfigResponse;
+import com.baidubce.services.eo.model.domain.DomainOperationRequest;
+import com.baidubce.services.eo.model.domain.DomainOperationResponse;
+import com.baidubce.services.eo.model.domain.Ipv6Dispatch;
+import com.baidubce.services.eo.model.domain.LoadBalanceResponse;
+import com.baidubce.services.eo.model.domain.OriginConfig;
+import com.baidubce.services.eo.model.domain.OriginPool;
+import com.baidubce.services.eo.model.domain.OriginPoolResponse;
+import com.baidubce.services.eo.model.domain.QueryDomainConfigRequest;
+import com.baidubce.services.eo.model.domain.QueryDomainListRequest;
+import com.baidubce.services.eo.model.domain.QueryDomainListResponse;
+import com.baidubce.services.eo.model.domain.QueryLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.QueryLoadBalanceResponse;
+import com.baidubce.services.eo.model.domain.QueryOriginPoolRequest;
+import com.baidubce.services.eo.model.domain.QueryOriginPoolResponse;
+import com.baidubce.services.eo.model.domain.ThirdBucketAuth;
+import com.baidubce.services.eo.model.domain.UpdateDomainConfigRequest;
+import com.baidubce.services.eo.model.domain.UpdateLoadBalanceRequest;
+import com.baidubce.services.eo.model.domain.UpdateOriginPoolRequest;
 import com.baidubce.services.eo.model.logmodel.GetDomainListLogRequest;
 import com.baidubce.services.eo.model.logmodel.GetDomainListLogResponse;
 import com.baidubce.services.eo.model.rule.*;
@@ -834,7 +861,7 @@ public class EoClientTest {
                         .withAddHeaders(addHeaders)
                         .withRemoveHeaders(removeHeaders))
                 // originConfig 与 originPool 不能同时设置，这里用 originConfig
-                .withOriginConfig(Arrays.asList(new OriginConfig()
+                .withOriginConfig(Arrays.asList(new com.baidubce.services.eo.model.rule.OriginConfig()
                         .withAddr("1.1.1.1")
                         .withType("IP")
                         .withHttpPort(80)
@@ -879,5 +906,325 @@ public class EoClientTest {
                 .withSite(SITE);
         Map<String, Object> pageRules = eoClient.getSiteConfig(request, "pageRules");
         System.out.println(JsonUtils.toJsonPrettyString(pageRules));
+    }
+
+    /**
+     * Set the consumption limit of a site.
+     */
+    @Test
+    public void testSetLimitConsumption() throws Exception {
+        // 设置站点的用量封顶：流量，100GB，周期 300 秒，达到阈值停止加速
+        SetLimitConsumptionRequest request = new SetLimitConsumptionRequest()
+                .withSite(SITE)
+                .withObject("site")
+                .withEnabled(true)
+                .withType("flow")
+                .withThreshold("100GB")
+                .withStatisticalCycle(300)
+                .withAction("stop");
+        LimitConsumptionResponse response = eoClient.setLimitConsumption(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Query the consumption limit rules of a site.
+     */
+    @Test
+    public void testGetLimitConsumption() throws Exception {
+        GetLimitConsumptionRequest request = new GetLimitConsumptionRequest()
+                .withSite(SITE)
+                .withPageNo(1)
+                .withPageSize(20);
+        GetLimitConsumptionResponse response = eoClient.getLimitConsumption(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Delete a consumption limit rule of a site.
+     */
+    @Test
+    public void testDeleteLimitConsumption() throws Exception {
+        // 删除站点的用量封顶规则
+        DeleteLimitConsumptionRequest request = new DeleteLimitConsumptionRequest()
+                .withSite(SITE)
+                .withObject("site");
+        LimitConsumptionResponse response = eoClient.deleteLimitConsumption(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Create an origin pool of a site.
+     */
+    @Test
+    public void testCreateOriginPool() throws Exception {
+        // 源站类的模型类名在 rule 包下也有同名类，此处显式 import domain 包（优先于 rule.* 通配符导入）
+        // BOS 对象存储源站（关闭私有鉴权）
+        OriginConfig bosOrigin =
+                new OriginConfig()
+                        .withAddr("your.bos.bucket.name")
+                        .withType("BUCKET")
+                        .withHost("test.host.com")
+                        .withWeight(50)
+                        .withThirdBucketAuth(
+                                new ThirdBucketAuth()
+                                        .withAuthType("bos")
+                                        .withEnabled(false));
+        // S3 对象存储源站（开启私有鉴权）
+        OriginConfig s3Origin =
+                new OriginConfig()
+                        .withAddr("test.s3.com")
+                        .withType("DOMAIN")
+                        .withHost("test.host.com")
+                        .withWeight(50)
+                        .withThirdBucketAuth(
+                                new ThirdBucketAuth()
+                                        .withAuthType("aws_v4")
+                                        .withEnabled(true)
+                                        .withAk("your ak")
+                                        .withSk("your sk")
+                                        .withBucket("your bucket"));
+        // IP 源站
+        OriginConfig ipOrigin =
+                new OriginConfig()
+                        .withAddr("1.2.3.4")
+                        .withType("IP")
+                        .withWeight(50)
+                        .withHost("test.host.com");
+
+        OriginPool originPool =
+                new OriginPool()
+                        .withName("test")
+                        .addOriginConfig(bosOrigin)
+                        .addOriginConfig(s3Origin)
+                        .addOriginConfig(ipOrigin);
+
+        CreateOriginPoolRequest request = new CreateOriginPoolRequest()
+                .withSite(SITE)
+                .withOriginPool(originPool);
+        OriginPoolResponse response = eoClient.createOriginPool(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Query the origin pools of a site.
+     */
+    @Test
+    public void testQueryOriginPool() throws Exception {
+        QueryOriginPoolRequest request = new QueryOriginPoolRequest()
+                .withSite(SITE)
+                .withOriginPoolId("geo_BlPYtnsFFdaQ");
+        QueryOriginPoolResponse response = eoClient.queryOriginPool(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Update an origin pool of a site.
+     */
+    @Test
+    public void testUpdateOriginPool() throws Exception {
+        OriginPool originPool =
+                new OriginPool()
+                        .withName("test")
+                        .addOriginConfig(new OriginConfig()
+                                .withAddr("1.2.3.5")
+                                .withType("IP")
+                                .withWeight(50)
+                                .withHost("test.host.com"));
+        UpdateOriginPoolRequest request = new UpdateOriginPoolRequest()
+                .withSite(SITE)
+                .withOriginPoolId("geo_BlPYtnsFFdaQ")
+                .withOriginPool(originPool);
+        OriginPoolResponse response = eoClient.updateOriginPool(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Delete an origin pool of a site.
+     */
+    @Test
+    public void testDeleteOriginPool() throws Exception {
+        DeleteOriginPoolRequest request = new DeleteOriginPoolRequest()
+                .withSite(SITE)
+                .withOriginPoolId("geo_BlPYtnsFFdaQ");
+        OriginPoolResponse response = eoClient.deleteOriginPool(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Create a load balance of a site.
+     */
+    @Test
+    public void testCreateLoadBalance() throws Exception {
+        // 加权轮询（weight_mode）+ ICMP 健康探测
+        DetectConfig detectConfig = new DetectConfig()
+                .withHealthCheckType("ICMP")
+                .withProbeInterval(10)
+                .withProbeMinSuccesses(5)
+                .withProbeMaxFails(5)
+                .withProbeTimeout(3);
+        CreateLoadBalanceRequest request = new CreateLoadBalanceRequest()
+                .withSiteId(1)
+                .withName("test")
+                .withDispatchMode("weight_mode")
+                .withSessionMode("OFF")
+                .withDetectConfig(detectConfig)
+                .withOriginPoolIds(Arrays.asList("geo_3cqkYITgMSKa"))
+                .withWeights(Arrays.asList(10))
+                .withFallbackOriginPoolId("geo_3cqkYITgMSKa");
+        LoadBalanceResponse response = eoClient.createLoadBalance(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Query the load balances of a site.
+     */
+    @Test
+    public void testQueryLoadBalance() throws Exception {
+        QueryLoadBalanceRequest request = new QueryLoadBalanceRequest()
+                .withSiteId(1)
+                .withName("test")
+                .withId("eo_lb_epjv7ZbIcBlp")
+                .withFetchAll(true);
+        QueryLoadBalanceResponse response = eoClient.queryLoadBalance(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Update a load balance of a site.
+     */
+    @Test
+    public void testUpdateLoadBalance() throws Exception {
+        DetectConfig detectConfig = new DetectConfig()
+                .withProbeInterval(100)
+                .withProbeMinSuccesses(5)
+                .withProbeMaxFails(5)
+                .withProbeSucceedCode("2xx")
+                .withProbeUrl("/test")
+                .withProbeTimeout(3)
+                .withProbeMethod("GET");
+        UpdateLoadBalanceRequest request = new UpdateLoadBalanceRequest()
+                .withId("eo_lb_epjv7ZbIcBlp")
+                .withSiteId(1)
+                .withName("test1102")
+                .withDispatchMode("weight_mode")
+                .withSessionMode("OFF")
+                .withDetectConfig(detectConfig)
+                .withOriginPoolIds(Arrays.asList("geo_5ibOcWgV2WZQ"))
+                .withWeights(Arrays.asList(50))
+                .withFallbackOriginPoolId("geo_5ibOcWgV2WZQ");
+        LoadBalanceResponse response = eoClient.updateLoadBalance(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Delete a load balance of a site.
+     */
+    @Test
+    public void testDeleteLoadBalance() throws Exception {
+        DeleteLoadBalanceRequest request = new DeleteLoadBalanceRequest()
+                .withSiteId(1)
+                .withId("eo_lb_gG5WnKassxm6");
+        LoadBalanceResponse response = eoClient.deleteLoadBalance(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Create an accelerate domain.
+     */
+    @Test
+    public void testCreateDomain() throws Exception {
+        OriginConfig origin = new OriginConfig()
+                .withAddr("1.2.3.4")
+                .withType("IP")
+                .withUpstreamProtocol("http")
+                .withHttpPort(80)
+                .withHost("test.eo.com");
+        CreateDomainRequest request = new CreateDomainRequest()
+                .withSiteId(1)
+                .withDomain("a.test.com")
+                .withOriginConfig(Arrays.asList(origin));
+        CreateDomainResponse response = eoClient.createDomain(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Update an accelerate domain configuration.
+     */
+    @Test
+    public void testUpdateDomainConfig() throws Exception {
+        DomainConfig config = new DomainConfig()
+                .withOriginConfig(Arrays.asList(new OriginConfig()
+                        .withAddr("1.2.3.4")
+                        .withType("IP")
+                        .withHost("test.host.com")
+                        .withHttpPort(80)
+                        .withUpstreamProtocol("http")))
+                .withIpv6Dispatch(new Ipv6Dispatch().withEnable("ON"))
+                .withHttpsEnabled("ON")
+                .withCertId("xxx");
+        UpdateDomainConfigRequest request = new UpdateDomainConfigRequest()
+                .withSite(SITE)
+                .withDomain("1.test.com")
+                .withConfig(config);
+        DomainOperationResponse response = eoClient.updateDomainConfig(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Query an accelerate domain configuration.
+     */
+    @Test
+    public void testQueryDomainConfig() throws Exception {
+        QueryDomainConfigRequest request = new QueryDomainConfigRequest()
+                .withDomain("1.test.com");
+        DomainConfigResponse response = eoClient.queryDomainConfig(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Query the accelerate domain list.
+     */
+    @Test
+    public void testQueryDomainList() throws Exception {
+        QueryDomainListRequest request = new QueryDomainListRequest()
+                .withSiteId(1)
+                .withStatus("RUNNING")
+                .withPageNo(1)
+                .withPageSize(10);
+        QueryDomainListResponse response = eoClient.queryDomainList(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Start an accelerate domain.
+     */
+    @Test
+    public void testStartDomain() throws Exception {
+        DomainOperationRequest request = new DomainOperationRequest()
+                .withDomains(Arrays.asList("1.test.com", "2.test.com"));
+        DomainOperationResponse response = eoClient.startDomain(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Stop an accelerate domain.
+     */
+    @Test
+    public void testStopDomain() throws Exception {
+        DomainOperationRequest request = new DomainOperationRequest()
+                .withDomain("1.test.com");
+        DomainOperationResponse response = eoClient.stopDomain(request);
+        System.out.println(response);
+    }
+
+    /**
+     * Delete an accelerate domain.
+     */
+    @Test
+    public void testDeleteDomain() throws Exception {
+        DomainOperationRequest request = new DomainOperationRequest()
+                .withDomain("1.test.com");
+        DomainOperationResponse response = eoClient.deleteDomain(request);
+        System.out.println(response);
     }
 }

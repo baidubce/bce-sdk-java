@@ -4555,4 +4555,166 @@ public class BosClient extends AbstractBceClient {
 
         this.invokeHttpClient(internalRequest, BosResponse.class);
     }
+
+    /**
+     * Sets the ObjectSet configuration for a bucket.
+     */
+    public void putBucketObjectSetConfiguration(String bucketName, int pathLevel,
+                                                 Long storageQuota, Long objectCountQuota) {
+        this.putBucketObjectSetConfiguration(new PutBucketObjectSetConfigurationRequest(
+                bucketName, pathLevel, storageQuota, objectCountQuota));
+    }
+
+    public void putBucketObjectSetConfiguration(PutBucketObjectSetConfigurationRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        internalRequest.addParameter("objectsetconfiguration", null);
+        this.setJsonContent(internalRequest, request);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Gets the ObjectSet configuration for a bucket.
+     */
+    public GetBucketObjectSetConfigurationResponse getBucketObjectSetConfiguration(String bucketName) {
+        return this.getBucketObjectSetConfiguration(new GetBucketObjectSetConfigurationRequest(bucketName));
+    }
+
+    public GetBucketObjectSetConfigurationResponse getBucketObjectSetConfiguration(
+            GetBucketObjectSetConfigurationRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("objectsetconfiguration", null);
+        return this.invokeHttpClient(internalRequest, GetBucketObjectSetConfigurationResponse.class);
+    }
+
+    /**
+     * Creates an ObjectSet in a bucket.
+     */
+    public void putObjectSet(String bucketName, String objectSetName) {
+        this.putObjectSet(new PutObjectSetRequest(bucketName, objectSetName));
+    }
+
+    public void putObjectSet(PutObjectSetRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        this.addObjectSetParameter(internalRequest, "objectset", request.getObjectSetName());
+        this.setZeroContentLength(internalRequest);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Gets basic information for an ObjectSet.
+     */
+    public GetObjectSetResponse getObjectSet(String bucketName, String objectSetName) {
+        return this.getObjectSet(new GetObjectSetRequest(bucketName, objectSetName));
+    }
+
+    public GetObjectSetResponse getObjectSet(GetObjectSetRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        this.addObjectSetParameter(internalRequest, "objectset", request.getObjectSetName());
+        return this.invokeHttpClient(internalRequest, GetObjectSetResponse.class);
+    }
+
+    /**
+     * Gets storage usage statistics for an ObjectSet.
+     */
+    public GetObjectSetStorageResponse getObjectSetStorage(String bucketName, String objectSetName) {
+        return this.getObjectSetStorage(new GetObjectSetStorageRequest(bucketName, objectSetName));
+    }
+
+    public GetObjectSetStorageResponse getObjectSetStorage(GetObjectSetStorageRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        this.addObjectSetParameter(internalRequest, "objectsetstorage", request.getObjectSetName());
+        return this.invokeHttpClient(internalRequest, GetObjectSetStorageResponse.class);
+    }
+
+    /**
+     * Deletes ObjectSet metadata. Objects belonging to the ObjectSet are not deleted.
+     */
+    public void deleteObjectSet(String bucketName, String objectSetName) {
+        this.deleteObjectSet(new DeleteObjectSetRequest(bucketName, objectSetName));
+    }
+
+    public void deleteObjectSet(DeleteObjectSetRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.DELETE);
+        this.addObjectSetParameter(internalRequest, "objectset", request.getObjectSetName());
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Lists ObjectSets in a bucket.
+     */
+    public ListObjectSetResponse listObjectSet(String bucketName) {
+        return this.listObjectSet(new ListObjectSetRequest(bucketName));
+    }
+
+    public ListObjectSetResponse listObjectSet(ListObjectSetRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        internalRequest.addParameter("objectsets", null);
+        if (request.getPrefix() != null) {
+            internalRequest.addParameter("prefix", request.getPrefix());
+        }
+        if (request.getMarker() != null) {
+            internalRequest.addParameter("marker", request.getMarker());
+        }
+        if (request.getMaxKeys() != null) {
+            internalRequest.addParameter("max-keys", String.valueOf(request.getMaxKeys()));
+        }
+        return this.invokeHttpClient(internalRequest, ListObjectSetResponse.class);
+    }
+
+    /**
+     * Sets storage and object-count quotas for an ObjectSet.
+     */
+    public void putObjectSetQuota(String bucketName, String objectSetName,
+                                  Long storageQuota, Long objectCountQuota) {
+        this.putObjectSetQuota(new PutObjectSetQuotaRequest(
+                bucketName, objectSetName, storageQuota, objectCountQuota));
+    }
+
+    public void putObjectSetQuota(PutObjectSetQuotaRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.PUT);
+        this.addObjectSetParameter(internalRequest, "objectsetquota", request.getObjectSetName());
+        this.setJsonContent(internalRequest, request);
+        this.invokeHttpClient(internalRequest, BosResponse.class);
+    }
+
+    /**
+     * Gets storage and object-count quotas for an ObjectSet.
+     */
+    public GetObjectSetQuotaResponse getObjectSetQuota(String bucketName, String objectSetName) {
+        return this.getObjectSetQuota(new GetObjectSetQuotaRequest(bucketName, objectSetName));
+    }
+
+    public GetObjectSetQuotaResponse getObjectSetQuota(GetObjectSetQuotaRequest request) {
+        checkNotNull(request, "request should not be null.");
+        InternalRequest internalRequest = this.createRequest(request, HttpMethodName.GET);
+        this.addObjectSetParameter(internalRequest, "objectsetquota", request.getObjectSetName());
+        return this.invokeHttpClient(internalRequest, GetObjectSetQuotaResponse.class);
+    }
+
+    private void addObjectSetParameter(InternalRequest request, String operation, String objectSetName) {
+        request.addParameter(operation, null);
+        request.addParameter("ObjectSetName", objectSetName);
+    }
+
+    private void setJsonContent(InternalRequest internalRequest, Object value) {
+        byte[] json;
+        try {
+            json = JsonUtils.getObjectMapper().writeValueAsString(value).getBytes(DEFAULT_ENCODING);
+        } catch (JsonProcessingException e) {
+            throw new BceClientException("Fail to generate json", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new BceClientException("Fail to get UTF-8 bytes", e);
+        }
+        internalRequest.addHeader(Headers.CONTENT_LENGTH, String.valueOf(json.length));
+        internalRequest.addHeader(Headers.CONTENT_TYPE, Constants.APPLICATION_JSON);
+        internalRequest.setContent(RestartableInputStream.wrap(json));
+    }
 }
